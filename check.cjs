@@ -9,6 +9,7 @@ const sourceFiles = fs.readdirSync('dist', { recursive: true }).map(file => path
 assert.ok(!sourceFiles.some(file => /\.png$/i.test(file)), 'Convert served PNG assets with python tools/convert-webp.py');
 for (const sourceFile of sourceFiles.filter(file => /\.(html|css)$/.test(file))) {
   const source = fs.readFileSync(sourceFile, 'utf8');
+  assert.ok(!/Gilroy/i.test(source), `Use Be Vietnam Pro and Playfair Display in ${sourceFile}`);
   const references = sourceFile.endsWith('.html') ? /(?:src|href)="([^"#][^"]*)"/g : /url\(['"]?([^'"\)]+)['"]?\)/g;
   for (const [, reference] of source.matchAll(references)) {
     if (/^(https?:|mailto:|tel:|data:)/.test(reference)) continue;
@@ -21,6 +22,14 @@ for (const sourceFile of sourceFiles.filter(file => /\.(html|css)$/.test(file)))
   }
 }
 assert.equal((html.match(/data-project="/g) || []).length, 6);
+for (const page of ['', 'blog/', 'photobooth/', 'admin/']) {
+  const typography = fs.readFileSync(`dist/${page}style.css`, 'utf8');
+  assert.ok(typography.includes("font-family:'Be Vietnam Pro'"));
+  assert.ok(typography.includes("font-family:'Playfair Display'"));
+  for (const name of ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold', 'Black']) {
+    assert.equal(fs.readFileSync(`dist/${page}fonts/BeVietnamPro-${name}.woff2`).subarray(0, 4).toString(), 'wOF2');
+  }
+}
 assert.equal((html.match(/<h1\b/g) || []).length, 1);
 assert.ok(html.includes('concept-disclaimer'));
 assert.ok(css.includes('prefers-reduced-motion'));

@@ -1,11 +1,17 @@
 import { coverCrop, applyFilterPixels } from './core.mjs?v=2';
-import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter } from './design.mjs?v=1';
+import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter } from './design.mjs?v=2';
 
 const $ = selector => document.querySelector(selector);
 const video = $('#camera');
 const strip = $('#strip');
 const ctx = strip.getContext('2d');
 const nativeCanvasFilters = 'filter' in ctx;
+const frameFontsReady = Promise.all([
+  document.fonts.load('700 20px "Be Vietnam Pro"', 'HỘP ẢNH CỦA BẠN'),
+  document.fonts.load('800 24px "Be Vietnam Pro"', 'Kỷ niệm'),
+  document.fonts.load('italic 600 46px "Playfair Display"', 'Một chút hôm nay'),
+  document.fonts.ready
+]);
 let filteredPhotoCache = new WeakMap();
 const status = $('#status');
 const photos = Array(4).fill(null);
@@ -353,7 +359,7 @@ $('#download').addEventListener('click', async () => {
   if (checkPhotoExpiry() || !photos.every(Boolean) || busy) return;
   $('#download').disabled = true;
   try {
-    await document.fonts.ready;
+    await frameFontsReady;
     if (checkPhotoExpiry() || !photos.every(Boolean)) return;
     renderStrip();
     downloadBlob(await webpBlob(strip), `hop-anh-hung-${new Date().toLocaleDateString('sv-SE')}.webp`);
@@ -425,7 +431,7 @@ $('#apply-design').addEventListener('click', () => {
 });
 $('#download-template').addEventListener('click', async () => {
   try {
-    await document.fonts.ready;
+    await frameFontsReady;
     downloadBlob(await webpBlob(frameOnlyCanvas(readDesignForm())), 'khung-hop-anh-cua-minh.webp');
     $('#design-status').textContent = 'Đã tải khung WebP trống, không có ảnh chụp của bạn.';
   } catch { $('#design-status').textContent = 'Chưa tải được khung WebP. Hãy thử lại trên trình duyệt mới hơn.'; }
@@ -508,7 +514,7 @@ $('#contribution-form').addEventListener('submit', async event => {
     const authorLink = $('#author-link').value.trim();
     if (authorLink && !['http:', 'https:'].includes(new URL(authorLink).protocol)) throw new Error('Liên kết công khai cần bắt đầu bằng http hoặc https.');
     const design = readDesignForm();
-    await document.fonts.ready;
+    await frameFontsReady;
     // The submitted canvas is created from design only, never from the photo strip.
     const imageDataUrl = frameOnlyCanvas(design).toDataURL('image/webp', .92);
     if (!imageDataUrl.startsWith('data:image/webp;')) throw new Error('Trình duyệt chưa xuất được WebP. Hãy thử trình duyệt mới hơn.');
@@ -538,7 +544,7 @@ for (const name of ['blue', 'yellow', 'purple', 'coral', 'heart', 'star']) {
   image.onload = () => { stickers[name] = image; renderStrip(); renderDesignPreview(); };
   image.src = ['heart', 'star'].includes(name) ? `assets/${name}.svg` : `assets/asterisk-${name}-face.svg`;
 }
-document.fonts.ready.then(() => { renderStrip(); renderDesignPreview(); });
+frameFontsReady.then(() => { renderStrip(); renderDesignPreview(); }).catch(() => tell('Chưa tải được phông chữ. Kiểm tra kết nối trước khi tải ảnh hoặc gửi khung.', true));
 updateUI();
 renderDesignPreview();
 loadCommunityFrames();

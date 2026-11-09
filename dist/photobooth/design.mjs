@@ -32,11 +32,11 @@ export function drawFrameFooter(ctx, rawDesign, assets = {}, caption, date = '')
   ctx.fillStyle = design.ink;
   ctx.textAlign = 'center';
   let size = 37;
-  do { ctx.font = `600 italic ${size--}px Playfair, Georgia, serif`; } while (ctx.measureText(caption ?? design.footer).width > 620 && size > 20);
+  do { ctx.font = `italic 600 ${size--}px "Playfair Display", Georgia, serif`; } while (ctx.measureText(caption ?? design.footer).width > 620 && size > 20);
   ctx.fillText(caption ?? design.footer, 360, 2028, 620);
-  ctx.font = '700 20px Gilroy, sans-serif';
+  ctx.font = '700 20px "Be Vietnam Pro", sans-serif';
   ctx.fillText(date, 360, 2071, 440);
-  ctx.font = '800 20px Gilroy, sans-serif';
+  ctx.font = '800 20px "Be Vietnam Pro", sans-serif';
   ctx.fillText('HỘP ẢNH CỦA HÙNG', 360, 2130, 450);
   const sticker = assets[design.sticker];
   if (sticker) {
@@ -65,7 +65,7 @@ export function drawFrameTemplate(ctx, rawDesign, assets = {}) {
   ctx.restore();
   ctx.fillStyle = design.ink;
   ctx.textAlign = 'center';
-  ctx.font = '800 24px Gilroy, sans-serif';
+  ctx.font = '800 24px "Be Vietnam Pro", sans-serif';
   ctx.fillText(design.title, 360, 57, 640);
   for (let index = 0; index < 4; index++) {
     const y = 100 + index * 470;
@@ -73,7 +73,7 @@ export function drawFrameTemplate(ctx, rawDesign, assets = {}) {
     ctx.fillRect(40, y, 640, 450);
     ctx.fillStyle = design.ink;
     ctx.globalAlpha = .4;
-    ctx.font = '800 74px Gilroy, sans-serif';
+    ctx.font = '800 74px "Be Vietnam Pro", sans-serif';
     ctx.fillText(`0${index + 1}`, 360, y + 250);
     ctx.globalAlpha = 1;
     ctx.strokeStyle = design.ink;

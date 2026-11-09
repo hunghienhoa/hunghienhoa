@@ -54,7 +54,7 @@ const document = {
   },
   querySelectorAll(selector) { return ({ '[data-slot]': slotButtons, '[data-remove]': removeButtons, '[data-frame]': frameButtons, '[data-filter]': filterButtons })[selector] || []; },
   createElement: tag => tag === 'canvas' ? new Canvas() : new Element(),
-  fonts: { ready: Promise.resolve() },
+  fonts: { ready: Promise.resolve(), load: async () => [] },
   addEventListener: (type, callback) => { events['document:' + type] = callback; },
   hidden: false,
   body: new Element()

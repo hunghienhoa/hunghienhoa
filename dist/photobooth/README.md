@@ -24,4 +24,4 @@ Trong portfolio, chỉ cần thay URL ở liên kết mở Hộp Ảnh khi có t
 
 `node core.test.mjs` kiểm tra cắt ảnh và sắc ảnh; `node design.test.mjs` kiểm tra cấu hình khung, hạn phiên và bộ vẽ khung-only. `node server/server.test.mjs` từ thư mục gốc kiểm tra duyệt, hết hạn, quyền và dữ liệu riêng. Bản cộng đồng mới chưa kiểm tra trực quan do quyền trình duyệt Work đang tắt; camera/Safari thật chưa kiểm tra.
 
-Phông Gilroy được giữ từ dự án gốc theo yêu cầu người dùng. Playfair Display theo SIL OFL, giấy phép ở `fonts/Playfair-Display-OFL.txt`. Sticker vector là tài sản gốc dùng chung với portfolio, không sao chép ảnh/khung của website tham khảo.
+Phông Be Vietnam Pro và Playfair Display được lưu cục bộ dưới WOFF2, giấy phép SIL OFL tương ứng ở `fonts/BeVietnamPro-OFL.txt` và `fonts/Playfair-Display-OFL.txt`. Canvas chờ tải đủ hai họ phông trước khi xuất ảnh hoặc gửi khung trống. Sticker vector là tài sản gốc dùng chung với portfolio, không sao chép ảnh/khung của website tham khảo.

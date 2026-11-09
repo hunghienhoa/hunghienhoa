@@ -1,6 +1,6 @@
 # Góc nhỏ của Hùng
 
-Trang chia sẻ các điều thú vị bằng tiếng Việt, cùng màu giấy kem/xanh tím/vàng và phông Gilroy/Playfair của hồ sơ. Nội dung lấy từ các bài đã đăng qua API, không tự dựng bài khi mất kết nối.
+Trang chia sẻ các điều thú vị bằng tiếng Việt, cùng màu giấy kem/xanh tím/vàng và phông Be Vietnam Pro / Playfair Display của hồ sơ. Nội dung lấy từ các bài đã đăng qua API, không tự dựng bài khi mất kết nối.
 
 ## Chạy và tách tên miền
 

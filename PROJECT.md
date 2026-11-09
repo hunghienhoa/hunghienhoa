@@ -51,9 +51,9 @@ Mọi raster phục vụ trên web dùng WebP, giữ SVG gốc. Sáu logo PNG đ
 | 05 Mộc / Packaging | `22b98e…gif` | Hai dải họa tiết dồn về giữa rồi tách ra, bộ hình thoi trượt ngang và nhãn trà thả xuống. |
 | 06 Những điều bé xíu / Illustration | `ed8fc2…gif` | Hai cánh giấy mở ngang sau bìa và thu lại, thẻ sách hạ xuống riêng. |
 - `dist/assets/`: sticker SVG gốc, có thể thay bằng hình dự án thật.
-- `dist/fonts/`: SVN-Gilroy từ dự án hiện có theo yêu cầu người dùng. Quyền sử dụng webfont chưa được xác minh.
+- `dist/fonts/` và các bản tương ứng trong trang con: Be Vietnam Pro WOFF2 có đủ dấu tiếng Việt, cùng Playfair Display. Nguồn, giấy phép SIL OFL và cách chuyển định dạng nằm trong `FONT-SOURCES.md`. Phông Gilroy cũ được giữ ngoài webroot ở `source-assets/original-fonts`.
 
-Phối chữ: SVN-Gilroy giữ vai trò chính cho nội dung, điều hướng, nút và thiết kế dự án. Playfair Display SemiBold nghiêng nhấn ở “Ý TƯỞNG”, các đoạn tiêu đề như “đã làm.”, “ý tưởng.”, “Hùng.”, “MỞ HỘP.” và ghi chú viết nghiêng; bản đứng dùng cho lời dẫn phần giới thiệu. Hai WOFF2 được lưu cùng website, gồm ký tự tiếng Việt; giấy phép SIL OFL1.1 đi kèm ở `dist/fonts/Playfair-Display-OFL.txt`.
+Phối chữ: Be Vietnam Pro (400, 500, 600, 700, 800, 900) giữ vai trò chính cho nội dung, điều hướng, biểu mẫu và thiết kế dự án trên cả bốn trang. Playfair Display SemiBold đứng/nghiêng nhấn ở “Ý TƯỞNG”, các đoạn tiêu đề, lời dẫn và ghi chú. Canvas photobooth dùng cùng hai họ phông và chờ tải phông trước khi xuất WebP hoặc gửi khung trống. Mọi WOFF2 được lưu cùng website, không cần gọi Google Fonts từ trình duyệt; giấy phép SIL OFL1.1 đi kèm mỗi bộ phông.
 
 Sáu dự án đều là concept minh họa; không phải khách hàng, kinh nghiệm hay dự án thực tế của chủ portfolio. Tên gọi là Hùng; tên hiển thị đầy đủ Hùng Hiền Hòa, trong đó Hiền Hòa là phần tên theo sau. Không sao chép thông tin cá nhân hoặc đồ án của tác giả bộ ảnh tham khảo.
 
