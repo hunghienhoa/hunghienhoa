@@ -32,6 +32,7 @@ test('quản trị loopback dùng cookie/CSRF cục bộ và không gửi mật 
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(app.node('#email').hidden, true);
   assert.equal(app.node('#auth-submit').textContent, 'Tạo mật khẩu');
+  assert.equal(app.node('#password').minLength, 12);
   app.node('#password').value = 'fake-test-password';
   await app.node('#auth-form').handlers.submit({ preventDefault() {} });
   assert.equal(app.requests.at(-1).path, '/api/admin/setup');
@@ -53,6 +54,21 @@ test('tài khoản online bị từ chối không giữ lại token', async () =
   assert.equal(app.storage.size, 0);
   assert.equal(app.requests.at(-1).options.headers.Authorization, 'Bearer test-access');
   assert.match(app.node('#auth-status').textContent, /chưa có quyền/);
+});
+
+test('đăng nhập online không áp dụng quy tắc tạo mật khẩu và báo rõ lỗi xác nhận email', async () => {
+  const html = readFileSync('dist/admin/index.html', 'utf8');
+  const input = html.match(/<input\b[^>]*id="password"[^>]*>/)?.[0];
+  assert.ok(input); assert.doesNotMatch(input, /minlength|maxlength/);
+  for (const [code, expected] of [['email_not_confirmed', /chưa được xác nhận/], ['invalid_credentials', /Authentication → Users/]]) {
+    const app = admin('admin.hunghienhoa.com', () => Response.json({ error_code: code, msg: 'English server error' }, { status: 400 }));
+    await new Promise(resolve => setImmediate(resolve));
+    app.node('#email').value = 'owner@example.test'; app.node('#password').value = 'short';
+    await app.node('#auth-form').handlers.submit({ preventDefault() {} });
+    assert.equal(JSON.parse(app.requests[0].options.body).password, 'short');
+    assert.match(app.node('#auth-status').textContent, expected);
+    assert.equal(app.storage.size, 0);
+  }
 });
 
 test('ảnh chờ duyệt được tải bằng Bearer token rồi giải phóng khi đăng xuất', async () => {

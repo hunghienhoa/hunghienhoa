@@ -21,3 +21,13 @@
 Không đưa tài khoản kiểm thử, mật khẩu mặc định hoặc ảnh cá nhân lên production. Không tạo thêm nội dung thử trong database ở lượt kiểm tra này.
 
 Hướng dẫn hoàn tất hai bước tài khoản nằm trong [DEPLOYMENT.md](DEPLOYMENT.md).
+
+## Sửa biểu mẫu đăng nhập — 10/11/2026
+
+- Hùng báo đã tạo tài khoản nhưng chưa đăng nhập được; chưa cung cấp thông báo lỗi cụ thể.
+- Kiểm chứng kết nối: HTML/config/JS production đều 200, Supabase Auth settings 200, email provider bật, xác nhận email bắt buộc và CORS preflight 200. API quản trị chưa có token trả 401 đúng thiết kế.
+- Phát hiện biểu mẫu đang đặt `minlength=12` cả lúc đăng nhập Supabase. Đã bỏ quy tắc tạo mật khẩu khỏi bước đăng nhập; chỉ áp dụng tối thiểu 12 ký tự khi tạo mật khẩu quản trị cục bộ. Không thay đổi mật khẩu hay chính sách xác thực của Supabase.
+- Thông báo lỗi Auth đã phân biệt email chưa xác nhận, sai thông tin, giới hạn số lần thử, tài khoản bị khóa và lỗi kết nối bằng tiếng Việt. Script admin đổi URL sang `app.js?v=2` để tải bản mới.
+- `npm run check`: 12 nhóm kiểm thử đạt. Live HTML không còn ràng buộc độ dài lúc đăng nhập; live JS khớp mã nguồn. Smoke 97 tài nguyên/API, bốn chuyển hướng và năm API quản trị tiếp tục đạt.
+- Worker production: `48df0aad-334d-4579-a52a-0f4ad2bc4a9d`.
+- Chưa coi lỗi tài khoản thật đã được giải quyết: connector Supabase vẫn từ chối quyền đọc log/advisors; cần Hùng thử lại và cung cấp dòng lỗi nếu còn thất bại. Không yêu cầu hoặc lưu mật khẩu, không gửi thử mật khẩu sai tới tài khoản thật.

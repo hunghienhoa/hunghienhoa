@@ -12,9 +12,21 @@ const make = (tag, text, className) => { const element = document.createElement(
 function readSession() { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)) || null; } catch { sessionStorage.removeItem(SESSION_KEY); return null; } }
 function saveSession(value) { session = value; if (value) sessionStorage.setItem(SESSION_KEY, JSON.stringify(value)); else sessionStorage.removeItem(SESSION_KEY); }
 async function authRequest(path, body, token = '') {
-  const response = await fetch(`${SUPABASE.url}/auth/v1/${path}`, { method: 'POST', cache: 'no-store', headers: { apikey: SUPABASE.key, 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body: JSON.stringify(body) });
+  let response;
+  try { response = await fetch(`${SUPABASE.url}/auth/v1/${path}`, { method: 'POST', cache: 'no-store', headers: { apikey: SUPABASE.key, 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body: JSON.stringify(body) }); }
+  catch { throw new Error('Không kết nối được dịch vụ đăng nhập. Kiểm tra mạng rồi thử lại.'); }
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.msg || data.error_description || data.message || 'Chưa đăng nhập được. Hãy kiểm tra lại email và mật khẩu.');
+  if (!response.ok) {
+    const messages = {
+      invalid_credentials: 'Email hoặc mật khẩu chưa đúng. Hãy dùng tài khoản trong Authentication → Users của dự án hunghienhoa, không phải tài khoản Supabase Dashboard.',
+      email_not_confirmed: 'Email này chưa được xác nhận. Kiểm tra thư xác nhận hoặc trạng thái user trong Supabase Authentication → Users.',
+      user_banned: 'Tài khoản này đang bị khóa. Kiểm tra trạng thái user trong Supabase Authentication → Users.',
+      over_request_rate_limit: 'Bạn đã thử đăng nhập quá nhiều lần. Chờ vài phút rồi thử lại.',
+      captcha_failed: 'Dịch vụ đăng nhập đang yêu cầu xác minh CAPTCHA. Cần kiểm tra cấu hình Supabase Auth.'
+    };
+    const code = data.error_code || data.code;
+    throw new Error(messages[code] || `Dịch vụ đăng nhập chưa xử lý được yêu cầu (HTTP ${response.status}${code ? `, ${code}` : ''}).`);
+  }
   return data;
 }
 async function refreshSession() {
@@ -112,6 +124,8 @@ async function initialize() {
       const data = await api('/api/admin/session');
       if (data.authenticated) { csrfToken = data.csrfToken; await enter(); return; }
       needsSetup = data.needsSetup; showAuth(); $('#auth-form').hidden = false;
+      $('#password').minLength = needsSetup ? 12 : 0; $('#password').maxLength = 128;
+      $('#password').autocomplete = needsSetup ? 'new-password' : 'current-password';
       $('#auth-submit').textContent = needsSetup ? 'Tạo mật khẩu' : 'Đăng nhập';
       $('#auth-submit').disabled = !!needsSetup && !data.setupAllowed;
       $('#auth-note').textContent = needsSetup ? 'Tạo mật khẩu riêng để quản trị bản trên máy này.' : 'Đăng nhập bằng mật khẩu quản trị trên máy này.';
