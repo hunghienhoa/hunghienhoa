@@ -1,8 +1,12 @@
 const $ = selector => document.querySelector(selector);
+if (location.hostname === 'admin.hunghienhoa.com') $('header a[target="_blank"]').href = 'https://hunghienhoa.com/';
 const API = (window.HUNG_API_BASE || '').replace(/\/$/, '');
 const SUPABASE = window.HUNG_SUPABASE;
 const SESSION_KEY = 'hung_admin_session';
-let session = readSession(), posts = [], frames = [], submissions = [], coverData;
+const LOCAL = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+let session = LOCAL ? null : readSession(), csrfToken = '', needsSetup = false, posts = [], frames = [], submissions = [], coverData;
+const privateImageUrls = new Set();
+if (LOCAL) { $('#email').hidden = true; $('#email').required = false; $('label[for="email"]').hidden = true; }
 const message = (element, text = '', error = false) => { element.textContent = text; element.classList.toggle('error', error); };
 const make = (tag, text, className) => { const element = document.createElement(tag); if (text !== undefined) element.textContent = text; if (className) element.className = className; return element; };
 function readSession() { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)) || null; } catch { sessionStorage.removeItem(SESSION_KEY); return null; } }
@@ -22,18 +26,32 @@ async function refreshSession() {
   } catch { saveSession(null); return false; }
 }
 function assetUrl(path) { const url = new URL(path, API || location.origin); if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Địa chỉ ảnh không hợp lệ.'); return url.href; }
+function clearPrivateImages() { for (const url of privateImageUrls) URL.revokeObjectURL(url); privateImageUrls.clear(); }
+async function setImage(element, path) {
+  element.removeAttribute('src');
+  if (LOCAL || !new URL(assetUrl(path)).pathname.startsWith('/api/admin/')) { element.src = assetUrl(path); return; }
+  if (session?.expires_at <= Date.now() + 30000) await refreshSession();
+  const activeToken = session?.access_token;
+  try {
+    const blob = await api(path, {}, true);
+    if (!session || session.access_token !== activeToken) return;
+    const url = URL.createObjectURL(blob); privateImageUrls.add(url); element.src = url;
+  } catch (error) { message($('#page-status'), error.message, true); }
+}
 function showAuth() {
+  clearPrivateImages();
+  csrfToken = '';
   posts = []; frames = []; submissions = [];
   $('#workspace').hidden = true; $('#auth-box').hidden = false; $('#logout').hidden = true;
   for (const id of ['submissions-list', 'frames-list', 'posts-list', 'stats']) $('#' + id).replaceChildren();
   $('#post-form').reset(); $('#site-form').reset(); $('#auth-form').reset();
   $('#cover-preview').hidden = true; $('#cover-preview').removeAttribute('src'); coverData = undefined;
 }
-async function api(path, options = {}) {
+async function api(path, options = {}, asBlob = false) {
   if (session?.expires_at <= Date.now() + 30000) await refreshSession();
   const write = options.method && options.method !== 'GET';
-  const response = await fetch(API + path, { credentials: 'omit', cache: 'no-store', ...options, headers: { ...(write ? { 'Content-Type': 'application/json' } : {}), ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}), ...options.headers } });
-  const data = await response.json().catch(() => ({ error: 'Máy chủ trả về dữ liệu chưa hợp lệ.' }));
+  const response = await fetch(API + path, { credentials: LOCAL ? 'same-origin' : 'omit', cache: 'no-store', ...options, headers: { ...(write ? { 'Content-Type': 'application/json' } : {}), ...(LOCAL && write && csrfToken ? { 'X-CSRF-Token': csrfToken } : {}), ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}), ...options.headers } });
+  const data = response.ok && asBlob ? await response.blob() : await response.json().catch(() => ({ error: 'Máy chủ trả về dữ liệu chưa hợp lệ.' }));
   if (response.status === 401) { saveSession(null); showAuth(); }
   if (!response.ok) throw new Error(data.error || 'Chưa thực hiện được. Hãy thử lại.');
   return data;
@@ -48,7 +66,7 @@ function renderFrames(pending) {
   if (!list.length) { empty(target, pending ? 'Chưa có khung nào đang chờ duyệt.' : 'Chưa có khung đã duyệt. Khung được chọn sẽ hiện ở đây và trong Hộp Ảnh.'); return; }
   target.replaceChildren(...list.map(item => {
     const card = make('article', undefined, 'item'), image = make('img'), copy = make('div');
-    image.src = assetUrl(item.imageUrl); image.alt = `Thiết kế khung ${item.name}`; image.loading = 'lazy';
+    setImage(image, item.imageUrl); image.alt = `Thiết kế khung ${item.name}`; image.loading = 'lazy';
     copy.append(make('h3', item.name), make('p', `Tác giả: ${item.authorName}`));
     const link = item.authorLink && creditLink(item.authorLink); if (link) copy.append(link);
     if (pending) {
@@ -68,7 +86,7 @@ function editPost(post) {
   for (const key of ['id', 'title', 'slug', 'excerpt', 'content', 'category', 'status']) form.elements.namedItem(key).value = post?.[key] || (key === 'status' ? 'draft' : '');
   form.elements.tags.value = (post?.tags || []).join(', '); form.elements.isSample.checked = !!post?.isSample;
   coverData = undefined; $('#post-cover').value = ''; $('#cover-preview').hidden = !post?.coverUrl;
-  if (post?.coverUrl) $('#cover-preview').src = assetUrl(post.coverUrl); else $('#cover-preview').removeAttribute('src');
+  if (post?.coverUrl) setImage($('#cover-preview'), post.coverUrl); else $('#cover-preview').removeAttribute('src');
   message($('#post-status'));
 }
 function renderPosts() {
@@ -82,6 +100,7 @@ function renderPosts() {
 async function loadAll() {
   const [postData, pendingData, frameData, site] = await Promise.all([api('/api/admin/posts'), api('/api/admin/submissions'), api('/api/admin/frames'), api('/api/admin/site')]);
   posts = postData.posts; submissions = pendingData.submissions; frames = frameData.frames;
+  clearPrivateImages();
   renderStats(); renderPosts(); renderFrames(true); renderFrames(false);
   const settings = site.site || site;
   for (const key of ['displayName', 'shortName', 'intro', 'about', 'email', 'phone', 'blogTitle', 'blogIntro']) $('#site-form').elements.namedItem(key).value = settings[key] || '';
@@ -89,24 +108,37 @@ async function loadAll() {
 async function enter() { $('#auth-form').reset(); $('#auth-box').hidden = true; $('#workspace').hidden = false; $('#logout').hidden = false; message($('#auth-status')); await loadAll(); }
 async function initialize() {
   try {
+    if (LOCAL) {
+      const data = await api('/api/admin/session');
+      if (data.authenticated) { csrfToken = data.csrfToken; await enter(); return; }
+      needsSetup = data.needsSetup; showAuth(); $('#auth-form').hidden = false;
+      $('#auth-submit').textContent = needsSetup ? 'Tạo mật khẩu' : 'Đăng nhập';
+      $('#auth-submit').disabled = !!needsSetup && !data.setupAllowed;
+      $('#auth-note').textContent = needsSetup ? 'Tạo mật khẩu riêng để quản trị bản trên máy này.' : 'Đăng nhập bằng mật khẩu quản trị trên máy này.';
+      return;
+    }
     if (!session && !(await refreshSession())) { showAuth(); $('#auth-form').hidden = false; $('#auth-note').textContent = 'Đăng nhập bằng tài khoản Supabase của Hùng để quản lý nội dung và duyệt khung.'; return; }
     const data = await api('/api/admin/session');
     if (data.authenticated) { await enter(); return; }
     saveSession(null); showAuth(); $('#auth-form').hidden = false;
     $('#auth-note').textContent = 'Tài khoản này chưa có quyền quản trị.';
-  } catch (error) { showAuth(); message($('#auth-status'), 'Chưa kết nối được máy chủ quản trị. Hãy chạy máy chủ hoặc kiểm tra cấu hình kết nối.', true); $('#auth-note').textContent = 'Nội dung quản trị cần kết nối máy chủ.'; }
+  } catch (error) { saveSession(null); showAuth(); $('#auth-form').hidden = false; message($('#auth-status'), error.message || 'Chưa kết nối được máy chủ quản trị.', true); }
 }
 $('#auth-form').addEventListener('submit', async event => {
   event.preventDefault(); const button = $('#auth-submit'); button.disabled = true; message($('#auth-status'));
   try {
+    if (LOCAL) {
+      const data = await api(needsSetup ? '/api/admin/setup' : '/api/admin/login', { method: 'POST', body: JSON.stringify({ password: $('#password').value }) });
+      csrfToken = data.csrfToken; await enter(); return;
+    }
     const data = await authRequest('token?grant_type=password', { email: $('#email').value.trim(), password: $('#password').value });
     saveSession({ access_token: data.access_token, refresh_token: data.refresh_token, expires_at: Date.now() + data.expires_in * 1000 });
     const allowed = await api('/api/admin/session');
     if (!allowed.authenticated) throw new Error('Tài khoản này chưa có quyền quản trị.');
     await enter();
-  } catch (error) { saveSession(null); message($('#auth-status'), error.message, true); } finally { button.disabled = false; }
+  } catch (error) { saveSession(null); showAuth(); $('#auth-form').hidden = false; message($('#auth-status'), error.message, true); } finally { button.disabled = false; }
 });
-$('#logout').addEventListener('click', async () => { try { if (session?.access_token) await authRequest('logout', {}, session.access_token); } catch {} finally { saveSession(null); showAuth(); await initialize(); } });
+$('#logout').addEventListener('click', async () => { try { if (LOCAL) await api('/api/admin/logout', { method: 'POST', body: '{}' }); else if (session?.access_token) await authRequest('logout', {}, session.access_token); } catch {} finally { saveSession(null); showAuth(); await initialize(); } });
 document.querySelectorAll('[data-panel]').forEach(button => button.addEventListener('click', () => { document.querySelectorAll('[data-panel]').forEach(item => item.setAttribute('aria-pressed', String(item === button))); document.querySelectorAll('[data-view]').forEach(view => { view.hidden = view.dataset.view !== button.dataset.panel; }); message($('#page-status')); }));
 $('#refresh-submissions').addEventListener('click', async () => { try { await loadAll(); message($('#page-status'), 'Đã cập nhật danh sách chờ duyệt.'); } catch (error) { message($('#page-status'), error.message, true); } });
 $('#new-post').addEventListener('click', () => editPost());
@@ -142,5 +174,5 @@ $('#site-form').addEventListener('submit', async event => {
 });
 window.addEventListener('pagehide', showAuth);
 window.addEventListener('pageshow', event => { if (event.persisted) initialize(); });
-setInterval(async () => { if (!session) return; try { const data = await api('/api/admin/session'); if (!data.authenticated) await initialize(); } catch { saveSession(null); showAuth(); } }, 60000);
+setInterval(async () => { if (!LOCAL && !session) return; try { const data = await api('/api/admin/session'); if (!data.authenticated) await initialize(); } catch { saveSession(null); showAuth(); } }, 60000);
 initialize();

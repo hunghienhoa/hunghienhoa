@@ -10,7 +10,7 @@ Mục `#projects` có Hộp Ảnh và Góc tò mò, trang chia sẻ những đi�
 
 Hộp Ảnh mở bằng liên kết `#photobooth-project` trong cửa sổ riêng; nếu trình duyệt chặn cửa sổ bật lên, liên kết thông thường vẫn mở được trong thẻ mới. Luồng chụp bốn ảnh → chọn khung → tải về tham khảo cấu trúc Fotogram tại `https://www.fotogramstudios.com/`, dùng giao diện, nội dung và tài sản riêng theo phong cách hiện tại.
 
-`dist/photobooth/`, `dist/blog/` và `dist/admin/` chứa giao diện riêng, phông chữ và tài sản cần thiết. Cloudflare Worker phục vụ API cùng origin và ánh xạ `admin`, `blog`, `photobooth` theo hostname; tên miền chỉ hoạt động sau khi zone Cloudflare được kích hoạt. Xem `server/README.md`, `API-CONTRACT.md` và `DEPLOYMENT.md` trước khi triển khai.
+`dist/photobooth/`, `dist/blog/` và `dist/admin/` chứa giao diện riêng, phông chữ và tài sản cần thiết. Cloudflare Worker phục vụ API cùng origin trên `hunghienhoa.com`, `admin.hunghienhoa.com`, `blog.hunghienhoa.com` và `photobooth.hunghienhoa.com`; HTTPS đã hoạt động. Xem `DEPLOYMENT.md` để hoàn tất cấp quyền GitHub tự triển khai và tạo tài khoản quản trị online.
 
 Logo mạng xã hội hiện dùng ảnh chính thức tại `dist/assets/social/` thay cho ký tự mô phỏng. Xem nguồn trong `SOCIAL-LOGO-SOURCES.md`.
 
@@ -24,7 +24,7 @@ Sau khi thêm blog, đã tách giấy ghi chú khỏi chữ trong thẻ dự án
 
 Chạy `node server/server.mjs` trong thư mục này, mở http://127.0.0.1:4180. Các trang: `/photobooth/`, `/blog/`, `/admin/`. Dừng máy chủ xem tĩnh cũ nếu cổng đang bận. Không dùng Python HTTP server cho tính năng bài viết và duyệt khung vì không có API.
 
-Lần đầu mở `/admin/`, **Hùng tự tạo mật khẩu** từ 12 ký tự. Không có tài khoản hay mật khẩu mặc định. Trên Windows, dữ liệu SQLite riêng mặc định ở `%LOCALAPPDATA%/HungHienHoa/portfolio-data`, ngoài webroot và ngoài OneDrive; môi trường khác dùng `private-data/` hoặc `DATA_DIR`. Không đóng gói dữ liệu riêng vào Git/ZIP. Chưa có database cloud hoặc tên miền công khai.
+Lần đầu mở `/admin/` trên loopback, **Hùng tự tạo mật khẩu** từ 12 ký tự. Bản online dùng Supabase Auth theo `DEPLOYMENT.md`; không có mật khẩu mặc định. Trên Windows, dữ liệu SQLite riêng mặc định ở `%LOCALAPPDATA%/HungHienHoa/portfolio-data`, ngoài webroot và ngoài OneDrive; môi trường khác dùng `private-data/` hoặc `DATA_DIR`. Không đóng gói dữ liệu riêng vào Git/ZIP; dữ liệu cục bộ không tự đồng bộ lên database cloud.
 
 ## Xưởng khung, dữ liệu và WebP
 

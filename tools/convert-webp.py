@@ -3,7 +3,6 @@ from pathlib import Path
 from shutil import copy2
 import os
 import sys
-from PIL import Image
 
 project = Path(__file__).resolve().parent.parent
 web = (project / 'dist').resolve()
@@ -14,6 +13,8 @@ if '--check' in sys.argv:
         raise SystemExit('Còn PNG trong web: ' + ', '.join(str(path.relative_to(web)) for path in files))
     print('PASS: không có PNG được phục vụ trong dist.')
     raise SystemExit(0)
+
+from PIL import Image
 
 old_total = new_total = 0
 for source in files:

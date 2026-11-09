@@ -95,11 +95,11 @@ function pendingData(row) {
   return { id: row.id, name: row.name, authorName: row.author_name, authorContact: row.author_contact || '', authorLink: row.author_link || '', design: row.design, imageUrl: `/api/admin/submissions/${row.id}/image.webp`, createdAt: Date.parse(row.created_at), expiresAt: Date.parse(row.expires_at) };
 }
 
-function image(base64) {
+function image(base64, privateImage = false) {
   if (!base64) fail(404, 'Không tìm thấy ảnh.');
   const binary = atob(base64), bytes = new Uint8Array(binary.length);
   for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
-  return new Response(bytes, { headers: { 'Content-Type': 'image/webp', 'Cache-Control': 'public, max-age=300', 'X-Content-Type-Options': 'nosniff' } });
+  return new Response(bytes, { headers: { 'Content-Type': 'image/webp', 'Cache-Control': privateImage ? 'no-store' : 'public, max-age=300', 'X-Content-Type-Options': 'nosniff' } });
 }
 
 function originAllowed(request) {
@@ -184,7 +184,7 @@ async function adminApi(request, env, route) {
   let match = route.match(/^\/api\/admin\/posts\/([^/]+)\/cover\.webp$/);
   if (request.method === 'GET' && match) {
     const rows = await rest(env, 'posts', { token, query: { select: 'cover_base64', id: `eq.${decodeURIComponent(match[1])}`, limit: 1 } });
-    return image(rows?.[0]?.cover_base64);
+    return image(rows?.[0]?.cover_base64, true);
   }
   match = route.match(/^\/api\/admin\/posts\/([^/]+)$/);
   if (match && request.method === 'PUT') {
@@ -204,7 +204,7 @@ async function adminApi(request, env, route) {
   match = route.match(/^\/api\/admin\/submissions\/([^/]+)\/image\.webp$/);
   if (request.method === 'GET' && match) {
     const rows = await rest(env, 'frame_submissions', { token, query: { select: 'image_base64', id: `eq.${decodeURIComponent(match[1])}`, expires_at: `gt.${new Date().toISOString()}`, limit: 1 } });
-    return image(rows?.[0]?.image_base64);
+    return image(rows?.[0]?.image_base64, true);
   }
   match = route.match(/^\/api\/admin\/submissions\/([^/]+)\/(approve|reject)$/);
   if (request.method === 'POST' && match) {
@@ -235,6 +235,12 @@ function assetRequest(request) {
   const url = new URL(request.url), host = url.hostname.toLowerCase();
   if (host === 'www.hunghienhoa.com') {
     url.hostname = 'hunghienhoa.com';
+    return new Response(null, { status: 308, headers: { Location: url.href } });
+  }
+  const projectPath = url.pathname.match(/^\/(admin|blog|photobooth)(?:\/|$)/);
+  if (host === 'hunghienhoa.com' && projectPath) {
+    url.hostname = `${projectPath[1]}.hunghienhoa.com`;
+    url.pathname = url.pathname.slice(projectPath[1].length + 1) || '/';
     return new Response(null, { status: 308, headers: { Location: url.href } });
   }
   const section = host === 'admin.hunghienhoa.com' ? 'admin' : host === 'blog.hunghienhoa.com' ? 'blog' : host === 'photobooth.hunghienhoa.com' ? 'photobooth' : '';
