@@ -3,7 +3,7 @@
 ## Kiến trúc đang dùng
 
 ```text
-GitHub (mã nguồn) → Workers Builds (chờ cấp quyền GitHub) → Cloudflare Worker
+GitHub (mã nguồn) → GitHub Actions (kiểm tra/build/deploy) → Cloudflare Worker
                                                    ↓
 Trình duyệt → hunghienhoa.com / các miền phụ → Supabase Auth + Postgres
 ```
@@ -45,26 +45,23 @@ Bốn Custom Domain đã được khai báo trong `cloudflare.config.ts` của W
 
 Cloudflare tự tạo DNS và chứng chỉ TLS cho Custom Domain. `www.hunghienhoa.com` đã chuyển hướng 308 về `hunghienhoa.com`; các đường dẫn `/admin/`, `/blog/`, `/photobooth/` trên trang chính chuyển đến miền phụ tương ứng. Không thêm bản ghi A/CNAME thủ công trỏ sang IP hay dịch vụ khác.
 
-## Hoàn tất GitHub → Cloudflare tự triển khai
+## GitHub → Cloudflare tự triển khai
 
-Mã nguồn đã có trên GitHub, nhưng **tự triển khai chưa được kết nối**. API Workers Builds báo Git account chưa được cấp quyền. Hùng cần xác nhận GitHub App trong dashboard; đăng nhập CLI GitHub không tự cấp quyền này.
+Quy trình nằm trong `.github/workflows/deploy.yml`; xem các lượt chạy tại [GitHub Actions](https://github.com/hunghienhoa/hunghienhoa/actions/workflows/deploy.yml). Dùng GitHub Actions để không phụ thuộc kết nối GitHub App của Workers Builds đang thiếu quyền. Không cần bật thêm một quy trình Workers Builds thứ hai cho cùng Worker.
 
-1. Mở [Cloudflare Dashboard](https://dash.cloudflare.com/), chọn tài khoản `hunghienhoa2110@gmail.com`.
-2. Vào **Workers & Pages** → Worker `hunghienhoa` → **Settings → Builds → Connect**.
-3. Chọn GitHub và đăng nhập tài khoản `hunghienhoa`. Nếu có màn hình cài ứng dụng, chọn **Only select repositories** và chỉ cấp kho `hunghienhoa/hunghienhoa`.
-4. Chọn nhánh production `main`, thư mục gốc `/`, đặt cấu hình:
+1. Push hoặc merge vào `main` sẽ chạy `npm ci` và `npm run check`.
+2. Build một lần bằng `npm run build -- --mode production`, rồi dry-run đúng build đó.
+3. Chỉ nhánh `main` và sự kiện push/chạy thủ công được nhận token để deploy bằng `npx cf deploy --prebuilt --mode production`.
+4. Sau deploy, kiểm tra website thật bằng `node tools/cloud-smoke.mjs`.
+5. Pull request chỉ kiểm tra/build/dry-run; không nhận token và không triển khai production.
 
-   | Trường | Giá trị |
-   | --- | --- |
-   | Build command | `npm run check && npm run build` |
-   | Deploy command | `npx cf deploy --prebuilt --mode production` |
-   | Node.js | `.node-version` đã khóa `24.22.1`, khớp build image hiện tại |
-   | Previews / non-production branches | Tạm tắt; chỉ triển khai `main` |
+Node.js được khóa ở `24.22.1` trong `.node-version`, thư viện khóa bởi `package-lock.json`, hai GitHub Actions chính thức khóa theo commit SHA. Có thể chạy lại từ **Actions → Triển khai hunghienhoa → Run workflow** trên nhánh `main`.
 
-5. Chọn build token tự quản lý mà Cloudflare đề xuất. Không gửi token qua chat, không chép token vào Git.
-6. Lưu kết nối và bấm build/retry nếu có. Nếu giao diện yêu cầu, push commit kế tiếp để chạy bản đầu. Chỉ coi tự triển khai hoàn tất khi có một build thành công trong dashboard.
+Khóa `CLOUDFLARE_API_TOKEN` đã lưu mã hóa trong **GitHub Settings → Secrets and variables → Actions**. Biến `CLOUDFLARE_ACCOUNT_ID` chọn đúng tài khoản. Token chỉ có Workers Scripts Write trong tài khoản Cloudflare đang dùng, cùng Workers Routes Write và Zone Read cho zone `hunghienhoa.com`; không có quyền Supabase, quản lý token hay sửa DNS tùy ý.
 
-Nguồn hướng dẫn: [Connect an existing Worker](https://developers.cloudflare.com/workers/ci-cd/builds/#connect-an-existing-worker), [cf trong CI](https://developers.cloudflare.com/cf/ci/) và [Build image](https://developers.cloudflare.com/workers/ci-cd/builds/build-image/).
+Token tên `hunghienhoa-github-deploy` hết hạn **10/11/2027**. Trước ngày này, tạo token mới cùng phạm vi trong Cloudflare, cập nhật GitHub Secret, chạy workflow kiểm tra rồi thu hồi token cũ. Không chép token vào file, commit hay chat.
+
+Nguồn hướng dẫn: [Dùng cf với GitHub Actions](https://developers.cloudflare.com/cf/ci/).
 
 ## Tạo tài khoản quản trị Supabase
 
@@ -75,7 +72,7 @@ Mã nguồn không chứa mật khẩu mặc định. Hùng tự tạo tài kho�
 3. Vào Authentication → URL Configuration, đặt Site URL là `https://admin.hunghienhoa.com` và thêm cùng URL vào Redirect URLs.
 4. Mở https://admin.hunghienhoa.com/ và đăng nhập thử. Sau đó tắt **Allow new users to sign up**. RLS chỉ cấp quyền quản trị cho đúng email trên, nhưng tắt signup vẫn giảm tài khoản rác.
 
-Chưa kiểm chứng đăng nhập bằng tài khoản thật: Hùng tự đặt mật khẩu trong dashboard. Lần kiểm tra connector gần nhất bị từ chối quyền quản trị Supabase; API công khai của web vẫn hoạt động. Không tạo user trực tiếp bằng SQL vào bảng `auth.users`.
+Hùng đã xác nhận đăng nhập bằng tài khoản thật thành công sau bản sửa `95c4e6b`. Lần kiểm tra connector gần nhất bị từ chối quyền quản trị Supabase; quyền connector độc lập với đăng nhập admin của website. Không tạo user trực tiếp bằng SQL vào bảng `auth.users`.
 
 Không gửi mật khẩu qua chat và không thêm mật khẩu, access token, database URL hoặc secret key vào GitHub.
 
@@ -95,11 +92,11 @@ Các migration Supabase nằm trong `supabase/migrations`. Sau mỗi thay đổi
 
 1. Sửa và kiểm tra trên máy.
 2. Commit rồi push nhánh `main` lên GitHub.
-3. Sau khi cấp quyền theo mục trên, Workers Builds build và triển khai Worker `hunghienhoa`. Trước đó chạy `npm run deploy` thủ công từ máy đã đăng nhập đúng Cloudflare.
+3. Theo dõi GitHub Actions đến khi toàn bộ lượt chạy xanh. Nếu kiểm thử lỗi, website giữ nguyên bản production trước đó. Vẫn có thể chạy `npm run deploy` thủ công từ máy đã đăng nhập đúng Cloudflare khi cần.
 4. Thay đổi nội dung hằng ngày thực hiện tại `admin.hunghienhoa.com`; nội dung được lưu trực tiếp trong Supabase, không cần commit Git.
 
 ## Giới hạn đã ghi nhận
 
 - Bản cục bộ tiếp tục dùng cookie/CSRF và SQLite riêng; dữ liệu trên máy và dữ liệu Supabase online là hai bộ dữ liệu khác nhau. Không tự đồng bộ database riêng lên GitHub.
-- `cf` beta trên máy Windows hiện in `spawn UNKNOWN` ở bước mô phỏng Miniflare, nhưng build output, upload và triển khai production đều thành công. Kiểm tra trang thật bằng lệnh smoke sau mỗi lần deploy. Chưa kiểm chứng build đầu tiên trên Workers Builds cho đến khi GitHub App được cấp quyền.
+- `cf` beta trên máy Windows hiện in `spawn UNKNOWN` ở bước mô phỏng Miniflare, nhưng build output, upload và triển khai production đều thành công. GitHub Actions chạy Ubuntu; bước smoke kiểm tra trang thật sau mỗi lần deploy.
 - WebP guard chỉ cần Python chuẩn; Pillow chỉ cần khi chạy chuyển đổi ảnh, không cần để kiểm tra `--check`.

@@ -10,7 +10,7 @@ Mục `#projects` có Hộp Ảnh và Góc tò mò, trang chia sẻ những đi�
 
 Hộp Ảnh mở bằng liên kết `#photobooth-project` trong cửa sổ riêng; nếu trình duyệt chặn cửa sổ bật lên, liên kết thông thường vẫn mở được trong thẻ mới. Luồng chụp bốn ảnh → chọn khung → tải về tham khảo cấu trúc Fotogram tại `https://www.fotogramstudios.com/`, dùng giao diện, nội dung và tài sản riêng theo phong cách hiện tại.
 
-`dist/photobooth/`, `dist/blog/` và `dist/admin/` chứa giao diện riêng, phông chữ và tài sản cần thiết. Cloudflare Worker phục vụ API cùng origin trên `hunghienhoa.com`, `admin.hunghienhoa.com`, `blog.hunghienhoa.com` và `photobooth.hunghienhoa.com`; HTTPS đã hoạt động. Xem `DEPLOYMENT.md` để hoàn tất cấp quyền GitHub tự triển khai và tạo tài khoản quản trị online.
+`dist/photobooth/`, `dist/blog/` và `dist/admin/` chứa giao diện riêng, phông chữ và tài sản cần thiết. Cloudflare Worker phục vụ API cùng origin trên `hunghienhoa.com`, `admin.hunghienhoa.com`, `blog.hunghienhoa.com` và `photobooth.hunghienhoa.com`; HTTPS đã hoạt động, Hùng đã xác nhận đăng nhập admin thành công. Push `main` kích hoạt kiểm tra/build/triển khai bằng `.github/workflows/deploy.yml`; xem `DEPLOYMENT.md` để theo dõi GitHub Actions và quản lý khóa triển khai.
 
 Logo mạng xã hội hiện dùng ảnh chính thức tại `dist/assets/social/` thay cho ký tự mô phỏng. Xem nguồn trong `SOCIAL-LOGO-SOURCES.md`.
 
