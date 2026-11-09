@@ -1,0 +1,14 @@
+private-data/
+.env
+.env.*
+!.env.example
+tmp/
+outputs/
+*.zip
+node_modules/
+.cloudflare/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example

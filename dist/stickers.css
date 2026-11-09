@@ -1,0 +1,11 @@
+/* SVG ornaments stay identical on phones that substitute symbol fonts. */
+.inline-flower{display:inline-block;width:1em;height:1em;max-width:none;vertical-align:-.13em;object-fit:contain}
+.marquee .inline-flower{width:50px;height:50px;vertical-align:middle}
+.scene-props .prop-flower{width:1em;height:1em;line-height:0;-webkit-text-stroke:0}
+.poster-flower .inline-flower,.tea-flower .inline-flower,.portrait-star .inline-flower,.postcard-mark .inline-flower{vertical-align:top}
+.brand-box>b>span .inline-flower{vertical-align:-.05em}
+.motion-pack .pack-ribbon{display:flex;align-items:center;gap:12px;letter-spacing:0;text-shadow:none;height:25px}
+.motion-pack .pack-ribbon .inline-flower{width:25px;height:25px;flex:0 0 25px}
+.ribbon-diamond{display:block;flex:0 0 12px;width:12px;height:12px;border:2px solid #d97491;rotate:45deg}
+.pack-diamonds .inline-flower{width:65%;height:65%;rotate:-45deg}
+@media(max-width:760px){.marquee .inline-flower{width:37px;height:37px}.motion-pack .pack-ribbon{height:21px;gap:9px}.motion-pack .pack-ribbon .inline-flower{width:21px;height:21px;flex-basis:21px}.ribbon-diamond{width:10px;height:10px;flex-basis:10px}}

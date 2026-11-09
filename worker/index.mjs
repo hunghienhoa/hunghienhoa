@@ -1,0 +1,265 @@
+import { fail, post, siteSettings, submission } from '../server/validation.mjs';
+
+const API_LIMIT = 1600000;
+const POSTS_SELECT = 'id,slug,title,excerpt,content,category,tags,status,is_sample,created_at,published_at,has_cover';
+const FRAME_SELECT = 'id,name,author_name,author_link,design,created_at';
+const SUBMISSION_SELECT = 'id,name,author_name,author_contact,author_link,design,created_at,expires_at';
+
+function json(value, status = 200) {
+  return new Response(JSON.stringify(value), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
+}
+
+function withSecurity(response, env) {
+  const headers = new Headers(response.headers);
+  headers.set('Content-Security-Policy', `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' ${env.SUPABASE_URL}; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'`);
+  headers.set('Permissions-Policy', 'camera=(self), microphone=(), geolocation=()');
+  headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  headers.set('X-Content-Type-Options', 'nosniff');
+  headers.set('X-Frame-Options', 'DENY');
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
+async function readJson(request) {
+  if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) fail(415, 'Yêu cầu cần dùng dữ liệu JSON.');
+  const declared = Number(request.headers.get('content-length') || 0);
+  if (declared > API_LIMIT) fail(413, 'Dữ liệu gửi lên quá lớn.');
+  if (!request.body) fail(400, 'Dữ liệu gửi lên đang trống.');
+  const reader = request.body.getReader(), chunks = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > API_LIMIT) { await reader.cancel(); fail(413, 'Dữ liệu gửi lên quá lớn.'); }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  try { return JSON.parse(new TextDecoder().decode(bytes)); } catch { fail(400, 'Dữ liệu JSON chưa hợp lệ.'); }
+}
+
+function bearer(request) {
+  const value = request.headers.get('authorization') || '';
+  return value.startsWith('Bearer ') ? value.slice(7) : '';
+}
+
+async function rest(env, resource, { method = 'GET', token = '', query = {}, body, prefer = '' } = {}) {
+  const url = new URL(`/rest/v1/${resource}`, env.SUPABASE_URL);
+  for (const [name, value] of Object.entries(query)) if (value !== undefined) url.searchParams.set(name, String(value));
+  const response = await fetch(url, {
+    method,
+    headers: {
+      apikey: env.SUPABASE_PUBLISHABLE_KEY,
+      Accept: 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+      ...(prefer ? { Prefer: prefer } : {})
+    },
+    ...(body === undefined ? {} : { body: JSON.stringify(body) })
+  });
+  const raw = await response.text();
+  let data = null;
+  if (raw) try { data = JSON.parse(raw); } catch { data = raw; }
+  if (!response.ok) {
+    const duplicate = data?.code === '23505';
+    fail(duplicate ? 409 : response.status, duplicate ? 'Đường dẫn bài viết đã được sử dụng.' : (data?.message || 'Chưa truy cập được dữ liệu.'));
+  }
+  return data;
+}
+
+async function requireAdmin(request, env) {
+  const token = bearer(request);
+  if (!token) fail(401, 'Cần đăng nhập quản trị.');
+  const response = await fetch(new URL('/auth/v1/user', env.SUPABASE_URL), { headers: { apikey: env.SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${token}` } });
+  if (!response.ok) fail(401, 'Phiên đăng nhập đã hết hạn.');
+  const user = await response.json();
+  if (String(user.email || '').toLowerCase() !== env.ADMIN_EMAIL.toLowerCase()) fail(403, 'Tài khoản này chưa có quyền quản trị.');
+  return token;
+}
+
+function postData(row, admin = false) {
+  return {
+    id: String(row.id), slug: row.slug, title: row.title, excerpt: row.excerpt, content: row.content,
+    category: row.category, tags: row.tags || [], publishedAt: row.published_at ? Date.parse(row.published_at) : null,
+    isSample: !!row.is_sample, coverUrl: row.has_cover ? `${admin ? '/api/admin' : '/api'}/posts/${row.id}/cover.webp` : null,
+    ...(admin ? { status: row.status, createdAt: Date.parse(row.created_at) } : {})
+  };
+}
+
+function frameData(row) {
+  return { id: row.id, name: row.name, authorName: row.author_name, authorLink: row.author_link || '', design: row.design, imageUrl: `/api/frames/${row.id}/image.webp`, createdAt: Date.parse(row.created_at) };
+}
+
+function pendingData(row) {
+  return { id: row.id, name: row.name, authorName: row.author_name, authorContact: row.author_contact || '', authorLink: row.author_link || '', design: row.design, imageUrl: `/api/admin/submissions/${row.id}/image.webp`, createdAt: Date.parse(row.created_at), expiresAt: Date.parse(row.expires_at) };
+}
+
+function image(base64) {
+  if (!base64) fail(404, 'Không tìm thấy ảnh.');
+  const binary = atob(base64), bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
+  return new Response(bytes, { headers: { 'Content-Type': 'image/webp', 'Cache-Control': 'public, max-age=300', 'X-Content-Type-Options': 'nosniff' } });
+}
+
+function originAllowed(request) {
+  const origin = request.headers.get('origin');
+  return !origin || origin === new URL(request.url).origin;
+}
+
+async function publicApi(request, env, route) {
+  if (!originAllowed(request)) fail(403, 'Nguồn gửi yêu cầu không được phép.');
+  if (request.method === 'GET' && route === '/api/health') return json({ ok: true, service: 'hunghienhoa' });
+  if (request.method === 'GET' && route === '/api/site') {
+    const rows = await rest(env, 'site_settings', { query: { select: 'data', id: 'eq.1', limit: 1 } });
+    if (!rows?.[0]) fail(503, 'Nội dung trang chưa được khởi tạo.');
+    return json(rows[0].data);
+  }
+  if (request.method === 'GET' && route === '/api/posts') {
+    const rows = await rest(env, 'posts', { query: { select: POSTS_SELECT, status: 'eq.published', order: 'published_at.desc,id.asc' } });
+    return json({ posts: rows.map(row => postData(row)) });
+  }
+  let match = route.match(/^\/api\/posts\/([^/]+)\/cover\.webp$/);
+  if (request.method === 'GET' && match) {
+    const rows = await rest(env, 'posts', { query: { select: 'cover_base64', id: `eq.${decodeURIComponent(match[1])}`, status: 'eq.published', limit: 1 } });
+    return image(rows?.[0]?.cover_base64);
+  }
+  match = route.match(/^\/api\/posts\/([^/]+)$/);
+  if (request.method === 'GET' && match) {
+    const rows = await rest(env, 'posts', { query: { select: POSTS_SELECT, slug: `eq.${decodeURIComponent(match[1])}`, status: 'eq.published', limit: 1 } });
+    if (!rows?.[0]) fail(404, 'Không tìm thấy bài viết.');
+    return json({ post: postData(rows[0]) });
+  }
+  if (request.method === 'GET' && route === '/api/frames') {
+    const rows = await rest(env, 'frames', { query: { select: FRAME_SELECT, order: 'created_at.desc,id.asc' } });
+    return json({ frames: rows.map(frameData) });
+  }
+  match = route.match(/^\/api\/frames\/([^/]+)\/image\.webp$/);
+  if (request.method === 'GET' && match) {
+    const rows = await rest(env, 'frames', { query: { select: 'image_base64', id: `eq.${decodeURIComponent(match[1])}`, limit: 1 } });
+    return image(rows?.[0]?.image_base64);
+  }
+  if (request.method === 'POST' && route === '/api/frame-submissions') {
+    const value = submission(await readJson(request)), id = crypto.randomUUID(), created = new Date(), expires = new Date(created.getTime() + 3600000);
+    await rest(env, 'frame_submissions', { method: 'POST', body: { id, name: value.name, author_name: value.authorName, author_contact: value.authorContact, author_link: value.authorLink, consent: true, design: value.design, image_base64: value.image.toString('base64'), created_at: created.toISOString(), expires_at: expires.toISOString() }, prefer: 'return=minimal' });
+    return json({ id, status: 'pending', expiresAt: expires.getTime() }, 201);
+  }
+  return null;
+}
+
+function dbPost(value) {
+  const data = { slug: value.slug, title: value.title, excerpt: value.excerpt, content: value.content, category: value.category, tags: value.tags, status: value.status, is_sample: value.isSample, published_at: value.status === 'published' ? new Date().toISOString() : null };
+  if (value.cover !== undefined) data.cover_base64 = value.cover ? value.cover.toString('base64') : null;
+  return data;
+}
+
+async function adminApi(request, env, route) {
+  if (route === '/api/admin/session' && request.method === 'GET') {
+    await requireAdmin(request, env);
+    return json({ authenticated: true });
+  }
+  const token = await requireAdmin(request, env);
+  if (!originAllowed(request)) fail(403, 'Nguồn gửi yêu cầu không được phép.');
+  if (route === '/api/admin/logout' && request.method === 'POST') return json({ ok: true });
+  if (route === '/api/admin/site') {
+    if (request.method === 'GET') {
+      const rows = await rest(env, 'site_settings', { token, query: { select: 'data', id: 'eq.1', limit: 1 } });
+      return json(rows?.[0]?.data || {});
+    }
+    if (request.method === 'PUT') {
+      const value = siteSettings(await readJson(request));
+      const rows = await rest(env, 'site_settings', { method: 'PATCH', token, query: { id: 'eq.1', select: 'data' }, body: { data: value, updated_at: new Date().toISOString() }, prefer: 'return=representation' });
+      return json(rows[0].data);
+    }
+  }
+  if (route === '/api/admin/posts' && request.method === 'GET') {
+    const rows = await rest(env, 'posts', { token, query: { select: POSTS_SELECT, order: 'created_at.desc,id.asc' } });
+    return json({ posts: rows.map(row => postData(row, true)) });
+  }
+  if (route === '/api/admin/posts' && request.method === 'POST') {
+    const value = post(await readJson(request));
+    const rows = await rest(env, 'posts', { method: 'POST', token, query: { select: POSTS_SELECT }, body: dbPost(value), prefer: 'return=representation' });
+    return json({ post: postData(rows[0], true) }, 201);
+  }
+  let match = route.match(/^\/api\/admin\/posts\/([^/]+)\/cover\.webp$/);
+  if (request.method === 'GET' && match) {
+    const rows = await rest(env, 'posts', { token, query: { select: 'cover_base64', id: `eq.${decodeURIComponent(match[1])}`, limit: 1 } });
+    return image(rows?.[0]?.cover_base64);
+  }
+  match = route.match(/^\/api\/admin\/posts\/([^/]+)$/);
+  if (match && request.method === 'PUT') {
+    const id = decodeURIComponent(match[1]), value = post(await readJson(request));
+    const rows = await rest(env, 'posts', { method: 'PATCH', token, query: { id: `eq.${id}`, select: POSTS_SELECT }, body: dbPost(value), prefer: 'return=representation' });
+    if (!rows?.[0]) fail(404, 'Không tìm thấy bài viết.');
+    return json({ post: postData(rows[0], true) });
+  }
+  if (match && request.method === 'DELETE') {
+    await rest(env, 'posts', { method: 'DELETE', token, query: { id: `eq.${decodeURIComponent(match[1])}` }, prefer: 'return=minimal' });
+    return json({ ok: true });
+  }
+  if (route === '/api/admin/submissions' && request.method === 'GET') {
+    const rows = await rest(env, 'frame_submissions', { token, query: { select: SUBMISSION_SELECT, expires_at: `gt.${new Date().toISOString()}`, order: 'created_at.desc,id.asc' } });
+    return json({ submissions: rows.map(pendingData) });
+  }
+  match = route.match(/^\/api\/admin\/submissions\/([^/]+)\/image\.webp$/);
+  if (request.method === 'GET' && match) {
+    const rows = await rest(env, 'frame_submissions', { token, query: { select: 'image_base64', id: `eq.${decodeURIComponent(match[1])}`, expires_at: `gt.${new Date().toISOString()}`, limit: 1 } });
+    return image(rows?.[0]?.image_base64);
+  }
+  match = route.match(/^\/api\/admin\/submissions\/([^/]+)\/(approve|reject)$/);
+  if (request.method === 'POST' && match) {
+    const id = decodeURIComponent(match[1]);
+    await readJson(request);
+    if (match[2] === 'reject') {
+      await rest(env, 'frame_submissions', { method: 'DELETE', token, query: { id: `eq.${id}`, expires_at: `gt.${new Date().toISOString()}` }, prefer: 'return=minimal' });
+      return json({ ok: true });
+    }
+    await rest(env, 'rpc/approve_frame_submission', { method: 'POST', token, body: { p_id: id } });
+    const rows = await rest(env, 'frames', { token, query: { select: FRAME_SELECT, id: `eq.${id}`, limit: 1 } });
+    if (!rows?.[0]) fail(404, 'Bản đóng góp đã hết hạn hoặc không còn tồn tại.');
+    return json({ frame: frameData(rows[0]) });
+  }
+  if (route === '/api/admin/frames' && request.method === 'GET') {
+    const rows = await rest(env, 'frames', { token, query: { select: FRAME_SELECT, order: 'created_at.desc,id.asc' } });
+    return json({ frames: rows.map(frameData) });
+  }
+  match = route.match(/^\/api\/admin\/frames\/([^/]+)$/);
+  if (request.method === 'DELETE' && match) {
+    await rest(env, 'frames', { method: 'DELETE', token, query: { id: `eq.${decodeURIComponent(match[1])}` }, prefer: 'return=minimal' });
+    return json({ ok: true });
+  }
+  fail(404, 'Không tìm thấy chức năng quản trị.');
+}
+
+function assetRequest(request) {
+  const url = new URL(request.url), host = url.hostname.toLowerCase();
+  if (host === 'www.hunghienhoa.com') {
+    url.hostname = 'hunghienhoa.com';
+    return new Response(null, { status: 308, headers: { Location: url.href } });
+  }
+  const section = host === 'admin.hunghienhoa.com' ? 'admin' : host === 'blog.hunghienhoa.com' ? 'blog' : host === 'photobooth.hunghienhoa.com' ? 'photobooth' : '';
+  if (section && !url.pathname.startsWith(`/${section}/`)) url.pathname = `/${section}${url.pathname === '/' ? '/' : url.pathname}`;
+  return new Request(url, request);
+}
+
+export default {
+  async fetch(request, env) {
+    const route = new URL(request.url).pathname;
+    try {
+      if (route.startsWith('/api/')) {
+        const response = route.startsWith('/api/admin/') ? await adminApi(request, env, route) : await publicApi(request, env, route);
+        if (response) return response;
+        fail(404, 'Không tìm thấy API.');
+      }
+      const mapped = assetRequest(request);
+      if (mapped instanceof Response) return mapped;
+      return withSecurity(await env.ASSETS.fetch(mapped), env);
+    } catch (error) {
+      const status = Number(error?.status) || 500;
+      if (status >= 500) console.error(JSON.stringify({ message: 'request_failed', status, path: route, error: error instanceof Error ? error.message : String(error) }));
+      return json({ error: status >= 500 ? 'Máy chủ đang gặp sự cố. Hãy thử lại sau.' : error.message }, status);
+    }
+  }
+};
+
+export { assetRequest, readJson };

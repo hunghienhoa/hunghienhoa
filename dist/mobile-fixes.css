@@ -1,0 +1,78 @@
+.project-art{grid-template-columns:minmax(0,1fr)}
+.campaign-poster .poster-flower{font-size:58px;right:-18px;top:55px}
+@media(min-width:761px) and (max-width:1100px){
+  .parcel{left:calc(50% - 245px);top:calc(50% - 200px);transform:rotate(-7deg)}
+  .parcel:hover{transform:translateY(-6px) rotate(-3deg)}
+}
+@media(min-width:761px) and (max-width:1000px){
+  .hero{grid-template-columns:minmax(0,1fr);min-height:0}
+  .hero-copy{padding:60px 0 0}
+  .hero h1{font-size:90px;letter-spacing:-3px}
+  .parcel-scene{width:100%;height:440px;margin:20px 0}
+  .open-hint{bottom:0;left:30%}
+  .round-stamp{top:0;right:8%}
+  .side-note{right:4%;top:100px}
+}
+@media(max-width:760px){
+  header{height:auto;min-height:110px;display:grid;grid-template-columns:minmax(0,1fr);gap:6px 16px;padding:12px 6% 8px}
+  header>.logo{grid-column:1;grid-row:1;justify-self:start;align-self:center}
+  header nav{grid-column:1/-1;grid-row:2;margin:0;justify-content:space-between;gap:12px;font-size:13px}
+  header nav a{white-space:nowrap;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  header nav .nav-contact{padding:10px 15px}
+  .hero{scroll-margin-top:20px}
+  .parcel-scene{height:340px;margin-top:20px}
+  .parcel{left:calc(50% - 245px);top:calc(50% - 200px);scale:.64;transform:rotate(-7deg)}
+  .parcel:hover{transform:translateY(-6px) rotate(-3deg)}
+  .round-stamp{right:0;top:0;scale:.75}
+  .open-hint{bottom:0;left:12%;font-size:12px}
+  .side-note{right:0;top:90px}
+  .about-lead{font-size:21px;line-height:1.45}
+  .project-art .tea-pack{scale:.85}
+  .motion-media .media-tag{top:82%}
+  .filters button{min-height:44px}
+  dialog{max-height:90vh;max-height:90dvh;padding-top:58px}
+  .dialog-close{width:44px;height:44px;top:8px;right:8px}
+}
+@media(max-width:430px){.parcel{scale:.6}}
+@media(max-width:375px){
+  .parcel{scale:.5}
+  .parcel-scene{height:300px}
+  .about-art{overflow:visible}
+  #dialog-art .motion-brand .brand-box{scale:.56}
+  #dialog-art .motion-media .campaign-poster{scale:.65}
+  #dialog-art .motion-event .cassette{scale:.54}
+  #dialog-art .project-art .tea-pack{scale:.75}
+  #dialog-art .motion-illustration .illustration-book{scale:.58}
+}
+@media(max-width:430px){.social-links{grid-template-columns:minmax(0,1fr)}}
+@media(min-width:500px) and (max-width:760px){.parcel{scale:.82}.parcel-scene{height:430px}}
+
+@media(max-width:1000px){
+  .parcel-scene{margin-bottom:28px}
+  .open-hint{bottom:0;right:0;line-height:1.6;transform-origin:left center}
+  .about{grid-template-columns:minmax(0,1fr);gap:56px}
+  .about .about-art{max-width:390px;width:100%;margin-inline:auto}
+  .about .about-copy{min-width:0}
+  .contact .contact-channels{grid-template-columns:minmax(0,1fr);gap:32px}
+  .contact .thank-note{position:relative;inset:auto;display:table;margin:45px auto 0;scale:1}
+}
+@media(max-width:760px){
+  .hero-top,.hero-bottom{flex-wrap:wrap;gap:8px 18px;line-height:1.6}
+  .hero .hero-copy h1{line-height:1.16}
+  .section .section-head h2,.contact #contact-title{line-height:1.2}
+  .hero-copy,.section-head>div,.about-copy,.contact-channels>*{min-width:0;overflow-wrap:anywhere}
+  .project-grid .project-caption{display:block}
+  .project-grid .project-caption h3{line-height:1.3;overflow-wrap:anywhere}
+  .project-grid .project-caption>span{max-width:none;margin-top:6px;text-align:left;font-size:10px;line-height:1.5}
+  .about .about-art{display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:32px;min-height:0;padding:0 8px}
+  .about .about-art>.label{position:relative;inset:auto;max-width:100%;line-height:1.6;justify-self:start;transform:rotate(-3deg)}
+  .about .id-card{width:270px;max-width:calc(100% - 24px);height:auto;margin:12px auto 0;transform:rotate(-4deg);padding:18px}
+  .about .id-card>.id-barcode{font-size:20px!important;line-height:1.5;overflow-wrap:anywhere}
+  .about .scribble{position:relative;inset:auto;max-width:100%;justify-self:start;font-size:18px;line-height:1.6;transform:rotate(-3deg)}
+  .about .about-star{width:82px;right:0;top:240px;pointer-events:none}
+  .about .about-copy h2{font-size:clamp(42px,12vw,58px);line-height:1.2;overflow-wrap:anywhere}
+  .about .about-copy h2 em{max-width:100%}
+  .contact .contact-postcard{padding-bottom:76px}
+  .contact .contact-postcard>p:not(.contact-email){max-width:100%}
+  .contact .contact-bottom>p{line-height:1.7}
+}

@@ -1,0 +1,33 @@
+/* Vietnamese accents and longer labels need a little more breathing room. */
+.hero h1{font-size:clamp(62px,6.3vw,90px);line-height:1.03;letter-spacing:-3px}
+.hero .ideas{white-space:nowrap}
+.hero .ideas img{width:70px;right:-58px;top:-28px}
+.hero-copy{padding-top:56px;padding-bottom:58px}
+.box-left>b{font-size:22px;line-height:1.1}
+.box-surprise{font-size:19px;line-height:1.25}
+.round-stamp small{font-size:8px;letter-spacing:.25px}
+.section-head h2{font-size:clamp(46px,4.4vw,64px);line-height:1.08}
+.project-art .mini-label{max-width:calc(100% - 24px);font-size:8px;letter-spacing:.55px;text-align:center}
+.brand-box>small{letter-spacing:1px}
+.brand-bottom{letter-spacing:.6px}
+.motion-brand .brand-tag small{letter-spacing:.3px}
+.motion-media .media-tag b{font-size:12px;line-height:1.8}
+.cassette-bottom{font-size:7px;letter-spacing:1.2px}
+.cd-sleeve>span{font-size:6.4px;line-height:1.45}
+.skills span{line-height:1.3}
+.contact h2{font-size:clamp(56px,6.5vw,92px);line-height:1.08;letter-spacing:-3px}
+.thank-note{max-width:220px;line-height:1.5}
+@media(max-width:760px){
+  .hero-copy{padding-top:45px;padding-bottom:0}
+  .hero h1{font-size:clamp(45px,11.3vw,74px);line-height:1.06;letter-spacing:-1.8px}
+  .hero .ideas img{width:52px;right:-32px;top:-25px}
+  .section-head h2{font-size:46px}
+  .project-art .mini-label{font-size:7px;white-space:normal;line-height:1.4}
+  .contact h2{font-size:clamp(38px,9vw,68px);letter-spacing:-2px}
+}
+@media(max-width:375px){
+  .hero h1{font-size:44px}
+  .hero .ideas img{width:46px;right:-30px;top:-22px}
+  .project-caption h3{font-size:17px}
+  .project-caption>span{max-width:100px}
+}

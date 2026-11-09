@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const base = process.env.TEST_BASE || 'http://127.0.0.1:4180';
+const results = [];
+for (const [route, expectedType] of [['/', 'text/html'], ['/photobooth/', 'text/html'], ['/blog/', 'text/html'], ['/admin/', 'text/html'], ['/assets/social/instagram.webp', 'image/webp'], ['/admin/app.js?v=1', 'text/javascript'], ['/photobooth/design.mjs?v=1', 'text/javascript']]) {
+  const response = await fetch(base + route);
+  assert.equal(response.status, 200, route);
+  assert.ok(response.headers.get('content-type').startsWith(expectedType), route);
+  assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  results.push({ route, status: response.status, type: response.headers.get('content-type') });
+}
+const read = async route => (await fetch(base + route)).json();
+assert.equal((await read('/api/health')).ok, true);
+const site = await read('/api/site'), posts = (await read('/api/posts')).posts;
+assert.equal(site.shortName, 'Hùng');
+assert.equal(posts.length, 3);
+assert.ok(posts.every(post => post.isSample && post.slug && post.title && post.content));
+for (const post of posts) assert.equal((await read('/api/posts/' + post.slug)).post.id, post.id);
+const frames = await read('/api/frames');
+assert.ok(Array.isArray(frames.frames));
+assert.equal(JSON.stringify(frames).includes('authorContact'), false);
+assert.equal((await fetch(base + '/api/admin/posts')).status, 401);
+assert.equal((await fetch(base + '/api/admin/submissions')).status, 401);
+for (const route of ['/private-data/content.sqlite', '/server/server.mjs', '/assets/social/instagram.png']) assert.equal((await fetch(base + route)).status, 404);
+const admin = await read('/api/admin/session');
+assert.equal(admin.needsSetup, true, 'Live owner account must remain for the user to set up.');
+assert.equal(admin.authenticated, false);
+const report = { checkedAt: new Date().toISOString(), base, static: results, publicPosts: posts.length, publicFrames: frames.frames.length, privateAdminBlocked: true, ownerSetupUntouched: true, browserQA: 'Không thực hiện được: local browser disabled in Work settings.' };
+fs.mkdirSync('outputs', { recursive: true });
+fs.writeFileSync('outputs/HTTP-SMOKE.json', JSON.stringify(report, null, 2));
+console.log('PASS: four live pages, WebP MIME, public articles, blocked private APIs/files, and owner account left unconfigured.');

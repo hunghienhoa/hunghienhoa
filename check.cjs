@@ -1,37 +1,75 @@
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
+const path = require('node:path');
 const html = fs.readFileSync('dist/index.html', 'utf8');
 const css = fs.readFileSync('dist/style.css', 'utf8');
 new vm.Script(fs.readFileSync('dist/app.js', 'utf8'));
-for (const [, file] of html.matchAll(/(?:src|href)="([^"#][^"]*)"/g)) {
-  if (!/^(https?:|mailto:|tel:)/.test(file)) assert.ok(fs.existsSync('dist/' + file), `Missing asset ${file}`);
-}
-for (const file of fs.readdirSync('dist').filter(file => file.endsWith('.css'))) {
-  for (const [, asset] of fs.readFileSync('dist/' + file, 'utf8').matchAll(/url\(['"]?([^'"\)]+)['"]?\)/g)) {
-    assert.ok(fs.existsSync('dist/' + asset), `Missing CSS asset ${asset}`);
+const sourceFiles = fs.readdirSync('dist', { recursive: true }).map(file => path.join('dist', file));
+assert.ok(!sourceFiles.some(file => /\.png$/i.test(file)), 'Convert served PNG assets with python tools/convert-webp.py');
+for (const sourceFile of sourceFiles.filter(file => /\.(html|css)$/.test(file))) {
+  const source = fs.readFileSync(sourceFile, 'utf8');
+  const references = sourceFile.endsWith('.html') ? /(?:src|href)="([^"#][^"]*)"/g : /url\(['"]?([^'"\)]+)['"]?\)/g;
+  for (const [, reference] of source.matchAll(references)) {
+    if (/^(https?:|mailto:|tel:|data:)/.test(reference)) continue;
+    const file = reference.split(/[?#]/)[0];
+    const resolved = file.startsWith('/') ? path.resolve('dist', file.slice(1)) : path.resolve(path.dirname(sourceFile), file);
+    assert.ok(fs.existsSync(resolved), `Missing asset ${reference} in ${sourceFile}`);
+  }
+  if (sourceFile.endsWith('.html')) {
+    for (const [, id] of source.matchAll(/href="#([^"]+)"/g)) assert.ok(source.includes(`id="${id}"`), `Missing anchor ${id} in ${sourceFile}`);
   }
 }
-for (const [, id] of html.matchAll(/href="#([^"]+)"/g)) assert.ok(html.includes(`id="${id}"`), `Missing anchor ${id}`);
 assert.equal((html.match(/data-project="/g) || []).length, 6);
 assert.equal((html.match(/<h1\b/g) || []).length, 1);
 assert.ok(html.includes('concept-disclaimer'));
 assert.ok(css.includes('prefers-reduced-motion'));
 assert.ok(html.includes('<dialog'));
 console.log('PASS: assets, anchors, six concepts, JS syntax, dialog and reduced-motion support.');
+for (const mode of ['success', 'blocked', 'modified']) {
+  let click, openCalls = 0, prevented = false;
+  const popup = { opener: 'portfolio' };
+  const link = { href: 'https://example.test/photobooth/', addEventListener: (_, handler) => { click = handler; } };
+  vm.runInNewContext(fs.readFileSync('dist/project-window.js', 'utf8'), {
+    document: { querySelectorAll: selector => { assert.equal(selector, '[data-project-window]'); return [link]; } },
+    window: { open: (url, target, features) => {
+      openCalls++;
+      assert.equal(url, link.href);
+      assert.equal(target, '_blank');
+      assert.ok(features.includes('popup'));
+      return mode === 'blocked' ? null : popup;
+    } }
+  });
+  click({ button: 0, ctrlKey: mode === 'modified', preventDefault: () => { prevented = true; } });
+  assert.equal(openCalls, mode === 'modified' ? 0 : 1);
+  assert.equal(prevented, mode === 'success');
+  assert.equal(popup.opener, mode === 'success' ? null : 'portfolio');
+}
+console.log('PASS: popup opens without an opener; blocked and modified clicks keep native link behavior.');
 (async () => {
   for (const clipboardWorks of [true, false]) {
-    let click, copied;
+    let click, copied, clearFeedback, feedbackDelay;
     const status = { textContent: '' };
     const button = { dataset: { wechatId: 'test-wechat-id' }, addEventListener: (_, handler) => { click = handler; } };
     vm.runInNewContext(fs.readFileSync('dist/contact.js', 'utf8'), {
       document: { querySelector: selector => selector === '#wechat-copy' ? button : status },
-      navigator: { clipboard: { writeText: async text => { if (!clipboardWorks) throw new Error('denied'); copied = text; } } }
+      navigator: { clipboard: { writeText: async text => { if (!clipboardWorks) throw new Error('denied'); copied = text; } } },
+      setTimeout: (callback, delay) => { clearFeedback = callback; feedbackDelay = delay; return 1; },
+      clearTimeout: () => { clearFeedback = undefined; }
     });
+    assert.equal(status.textContent, '');
+    assert.equal(copied, undefined);
     await click();
     if (clipboardWorks) assert.equal(copied, button.dataset.wechatId);
     assert.ok(status.textContent.includes(button.dataset.wechatId));
     assert.ok(status.textContent.includes(clipboardWorks ? 'Đã sao chép' : 'Bạn có thể chọn'));
+    if (clipboardWorks) {
+      assert.equal(feedbackDelay, 3000);
+      clearFeedback();
+      assert.equal(status.textContent, '');
+    } else {
+      assert.equal(clearFeedback, undefined);
+    }
   }
-  console.log('PASS: WeChat copy success and clipboard-denied fallback.');
+  console.log('PASS: WeChat starts empty, success clears after 3s, denied-copy fallback stays visible.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

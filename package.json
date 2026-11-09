@@ -1,0 +1,19 @@
+{
+  "name": "hunghienhoa",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "cf build",
+    "check": "node check.cjs && node --test server/server.test.mjs dist/photobooth/core.test.mjs dist/photobooth/design.test.mjs dist/blog/core.test.mjs worker/index.test.mjs && python tools/convert-webp.py --check",
+    "deploy": "cf deploy"
+  },
+  "devDependencies": {
+    "cf": "1.0.0-beta.28",
+    "wrangler": "4.159.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "workerd@1.20261104.1": true,
+    "workerd@1.20261109.1": true
+  }
+}
