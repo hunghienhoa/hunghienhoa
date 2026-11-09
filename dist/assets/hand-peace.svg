@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 190">
+ <defs><path id="hand" d="M67 174 51 148C40 128 47 108 64 94L78 82 79 36Q79 22 90 22Q103 22 102 37L101 78 136 17Q143 5 154 11Q165 17 157 31L124 93 146 76Q156 68 164 77Q172 86 161 96L143 113Q159 106 166 117Q173 129 158 139L132 159 122 179Z"/></defs>
+ <use href="#hand" fill="#ac83de" stroke="#fffaf0" stroke-width="13" stroke-linejoin="round"/>
+ <use href="#hand" fill="#ac83de" stroke="#303487" stroke-width="2.6" stroke-linejoin="round"/>
+ <path d="M66 98Q81 92 93 102L111 123Q118 135 107 141Q99 146 90 137L72 120M96 88Q101 99 112 105M132 118 117 132M143 134 126 146M66 148Q78 158 97 160" fill="none" stroke="#303487" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+ <path d="M56 143Q69 153 74 166" fill="none" stroke="#d3b6ef" stroke-width="5" stroke-linecap="round"/>
+</svg>

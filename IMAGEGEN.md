@@ -8,7 +8,7 @@ Use case: product-mockup. Asset type: transparent photographic bubble-wrap mater
 
 ## Chuyển động
 
-Đối chiếu các khung của GIF người dùng cung cấp: lớp xốp và đồ vật chính đứng yên; sticker trượt ra từ phía sau trong khoảng 0–0,8 giây, giữ nhịp rồi thu lại. Chu kỳ branding khoảng4,96 giây, minh họa/cassette khoảng3,6 giây. Móc treo rơi xuống và lắc nhẹ. Đây là tái dựng cho concept hiện có, không sao chép chính xác đồ họa của tác giả tham khảo.
+Sáu GIF dùng sáu bộ chuyển động khác nhau. Bảng đối chiếu từng cảnh nằm trong `README.md`. Lớp xốp dùng chung và đứng yên; chuyển động riêng nằm trong `dist/motion-123.css` và `dist/motion-456.css`. Đây là tái dựng cho concept hiện có, không sao chép chính xác đồ họa của tác giả tham khảo.
 
-Thực thi: `dist/bubble-wrap.css`; props trang trí `aria-hidden` trong sáu cảnh ở `dist/index.html`, tự giữ khi clone vào dialog. Lớp xốp sau đồ vật và lớp film screen-blend phía trước dùng cùng ảnh alpha. Không thêm JavaScript hay dependency. Chuyển động tuân theo nút dừng toàn trang và prefers-reduced-motion.
+Chất liệu thực thi trong `dist/bubble-wrap.css`; props trang trí `aria-hidden` riêng trong sáu cảnh ở `dist/index.html`, tự giữ khi clone vào dialog. Lớp xốp sau đồ vật và lớp film screen-blend phía trước dùng cùng ảnh alpha. Chuyển động không cần thêm JavaScript hay dependency, tuân theo nút dừng toàn trang và prefers-reduced-motion.
 

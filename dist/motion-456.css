@@ -1,0 +1,64 @@
+/* 04: a disc enters from the side, then emerges below the fixed sleeve. */
+.motion-layout .cd-sleeve,.project-open:hover .motion-layout .cd-sleeve{translate:0 -25px;scale:.72}
+.motion-layout{--disc-drop:140px}
+.motion-layout .disc,.project-open:hover .motion-layout .disc{left:calc(50% - 110px);top:calc(50% - 110px);translate:0 var(--disc-drop);scale:.64;rotate:200deg;animation:layout-disc 3.6s linear infinite}
+.motion-layout .layout-strip{left:calc(50% - 45px);top:43%;width:90px;height:230px;background:var(--yellow);transform-origin:50% 0;animation:layout-strip 3.6s ease-in-out infinite}
+@keyframes layout-disc{
+  0%{translate:calc(50cqw + 80px) -25px;rotate:0deg;opacity:0}
+  5%{opacity:1}
+  25%,42%{translate:0 -25px;rotate:90deg;opacity:1}
+  64%{translate:0 var(--disc-drop);rotate:200deg;opacity:1}
+  79%{translate:0 var(--disc-drop);rotate:235deg;opacity:1}
+  100%{translate:0 -25px;rotate:320deg;opacity:1}
+}
+@keyframes layout-strip{0%,27%,100%{scale:1 0}45%,82%{scale:1 1}}
+
+/* 05: patterned bands fold toward the middle; diamond rows shuttle behind the pouch. */
+.motion-pack .pack-ribbon{left:-25%;width:150%;white-space:nowrap;font-size:25px;line-height:1;letter-spacing:11px;color:#88ab3e;text-shadow:26px 0 #df7884;opacity:.8}
+.motion-pack .pack-ribbon-top{top:24%;animation:pack-ribbon-top 1.8s ease-in-out infinite}
+.motion-pack .pack-ribbon-middle{top:48%}
+.motion-pack .pack-ribbon-bottom{top:72%;animation:pack-ribbon-bottom 1.8s ease-in-out infinite}
+.motion-pack .pack-diamonds{display:flex;gap:8px;width:clamp(90px,26cqw,170px);top:43%;align-items:center}
+.motion-pack .pack-diamonds i{display:grid;place-items:center;flex:1;aspect-ratio:1;rotate:45deg;border:1px solid #30348788;background:#e98cab;color:#fff9;font-size:29px;font-style:normal;box-shadow:inset 0 0 0 5px #fff3}
+.motion-pack .pack-diamonds i:nth-child(2){background:#e99077}.motion-pack .pack-diamonds i:nth-child(3){background:#a7c86a}
+.motion-pack .pack-diamonds-left{right:calc(50% + 90px);animation:pack-diamonds-left 1.8s ease-in-out infinite}
+.motion-pack .pack-diamonds-right{left:calc(50% + 90px);animation:pack-diamonds-right 1.8s ease-in-out infinite}
+.motion-pack .pack-tag{left:calc(50% - 85px);top:84%;width:170px;min-height:62px;padding:5px 15px;text-align:center;background:var(--cream);color:#3a633c;border-top:4px solid #9ac356;border-bottom:4px solid #df7884;animation:pack-label-drop 3.6s ease-in-out infinite}
+.motion-pack .pack-tag b{display:block;font-size:24px;font-weight:800;line-height:1}.motion-pack .pack-tag small{font-size:9px;letter-spacing:1.3px}
+@keyframes pack-ribbon-top{0%,100%{top:24%}50%{top:48%}}
+@keyframes pack-ribbon-bottom{0%,100%{top:72%}50%{top:48%}}
+@keyframes pack-diamonds-left{0%,100%{translate:0 0}50%{translate:22cqw 0}}
+@keyframes pack-diamonds-right{0%,100%{translate:0 0}50%{translate:-22cqw 0}}
+@keyframes pack-label-drop{0%,12%,100%{translate:0 -105px;opacity:0}35%,72%{translate:0 0;opacity:1}}
+
+/* 06: two paper wings unfurl sideways; the book-shaped plaque drops separately. */
+.motion-illustration .illustration-book,.project-open:hover .motion-illustration .illustration-book{scale:.8}
+.motion-illustration .illustration-wing{width:clamp(170px,40cqw,270px);top:32%;height:auto}
+.motion-illustration .illustration-wing-left{right:50%;scale:-1 1;translate:-45px 0;animation:illustration-wing-left 3.6s ease-in-out infinite}
+.motion-illustration .illustration-wing-right{left:50%;translate:45px 0;animation:illustration-wing-right 3.6s ease-in-out infinite}
+.motion-illustration .illustration-tag{left:calc(50% - 80px);top:82%;width:160px;height:63px;padding:12px 7px 6px;text-align:center;color:var(--cream);background:#d76573;border:3px double var(--cream);outline:2px solid var(--blue);clip-path:polygon(7% 0,93% 0,93% 10%,100% 18%,100% 82%,93% 90%,93% 100%,7% 100%,7% 90%,0 82%,0 18%,7% 10%);animation:illustration-book-tag 3.6s ease-in-out infinite}
+.motion-illustration .illustration-tag::before{content:'';position:absolute;left:38%;right:38%;top:-8px;height:14px;border:2px solid var(--blue);background:var(--yellow);transform:rotate(-4deg)}
+.motion-illustration .illustration-tag b{display:block;font-size:12px;letter-spacing:.6px}.motion-illustration .illustration-tag small{font-size:19px;font-weight:800;line-height:1}
+@keyframes illustration-wing-left{0%,100%{translate:130px 0;opacity:0}28%,70%{translate:-45px 0;opacity:1}}
+@keyframes illustration-wing-right{0%,100%{translate:-130px 0;opacity:0}28%,70%{translate:45px 0;opacity:1}}
+@keyframes illustration-book-tag{0%,12%,100%{translate:0 -100px;opacity:0}36%,69%{translate:0 0;opacity:1}}
+
+@media(max-width:760px){
+  .motion-layout{--disc-drop:125px}
+  .motion-layout .cd-sleeve,.project-open:hover .motion-layout .cd-sleeve{scale:.62}
+  #dialog-art .motion-layout>.cd-sleeve{scale:.62}
+  .motion-layout .disc,.project-open:hover .motion-layout .disc{scale:.55;translate:0 125px}
+  #dialog-art .motion-layout>.disc{scale:.55}
+  .motion-layout .layout-strip{height:220px;width:75px;left:calc(50% - 37.5px)}
+  .motion-pack .pack-ribbon{font-size:21px;letter-spacing:8px}
+  .motion-pack .pack-diamonds{gap:5px}.motion-pack .pack-diamonds i{font-size:18px}
+  .motion-pack .pack-tag{width:150px;left:calc(50% - 75px);min-height:58px;padding-inline:8px}
+  .motion-illustration .illustration-book,.project-open:hover .motion-illustration .illustration-book{scale:.64}
+  #dialog-art .motion-illustration>.illustration-book{scale:.64}
+  .motion-illustration .illustration-wing{width:160px;top:35%}
+  .motion-illustration .illustration-tag{width:140px;left:calc(50% - 70px);height:57px;padding-top:10px}
+  .motion-illustration .illustration-tag b{font-size:10px}.motion-illustration .illustration-tag small{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){
+  .motion-layout .disc,.motion-layout .layout-strip,.motion-pack .scene-props>*,.motion-illustration .scene-props>*{animation:none}
+}

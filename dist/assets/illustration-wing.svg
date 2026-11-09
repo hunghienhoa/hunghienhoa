@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 180">
+  <defs>
+    <pattern id="wing-speckle" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".7" fill="#303487" opacity=".2"/><circle cx="6" cy="6" r=".7" fill="#fffaf0" opacity=".5"/></pattern>
+  </defs>
+  <path d="M6 34C28 41 31 17 47 28 39 31 42 38 56 31L83 18C96 12 105 16 109 23 96 21 96 31 111 25L145 13C158 8 164 13 165 18 155 17 157 24 170 19L218 7C230 4 239 10 231 17 226 10 218 19 229 20L269 11 257 29 239 36 254 43 224 52 234 63 206 73 217 83 190 94 200 104 174 115 181 127 152 136 159 145 125 154 130 165 93 170 99 179 67 174 6 167Z" fill="#ec6d7b" stroke="#303487" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M12 44 254 20 13 160Z" fill="#fbf2e3" stroke="#303487" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M21 51 230 30 22 147Z" fill="#43b9cc" stroke="#303487" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M31 59 205 41 32 131Z" fill="#ffdc38" stroke="#303487" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M43 67 179 52 44 114Z" fill="#99c65b" stroke="#303487" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M55 74 153 63 56 99Z" fill="#ee91b5" stroke="#303487" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="m70 78 54-7-53 18Z" fill="#fbf2e3" stroke="#303487" stroke-width="1.2"/>
+  <path d="m20 49 210-19-208 116Z" fill="url(#wing-speckle)"/>
+  <path d="m31 43 12 2m20-6 12 2m19-6 12 2m21-6 12 2m20-6 12 2m-123 97 9-6m15-8 9-6m16-8 9-6m14-8 9-6m15-8 9-6" fill="none" stroke="#fffaf0" stroke-width="3" stroke-linecap="round"/>
+  <path d="M9 41 9 158" stroke="#303487" stroke-width="5"/>
+</svg>
