@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1140" height="156" viewBox="0 0 1140 156" role="img" aria-labelledby="title desc">
+  <title id="title">Ý tưởng hay thường bắt đầu từ một lời chào</title>
+  <desc id="desc">Dải giấy màu xanh tím, lời nhắn màu kem, nhãn vàng và trái tim hồng.</desc>
+  <defs><pattern id="grid" width="38" height="38" patternUnits="userSpaceOnUse"><path d="M38 0H0V38" fill="none" stroke="#fff4e3" stroke-opacity=".09"/></pattern></defs>
+  <rect width="1140" height="156" rx="16" fill="#37358a"/>
+  <rect width="1140" height="156" rx="16" fill="url(#grid)"/>
+  <g fill="#fff4e3">
+    <text x="38" y="43" font-family="Segoe UI, Arial, sans-serif" font-size="12" letter-spacing="2.4">CHIẾC HỘP TIẾP THEO</text>
+    <text x="38" y="97" font-family="Georgia, serif" font-style="italic" font-size="32">Ý tưởng hay thường bắt đầu từ một lời chào.</text>
+    <text x="39" y="128" font-family="Segoe UI, Arial, sans-serif" font-size="13" opacity=".75">Gửi từ một góc nhỏ đầy tò mò. — Hùng</text>
+  </g>
+  <g transform="translate(906 84) rotate(-7)">
+    <rect x="-23" y="-35" width="197" height="46" fill="#ffda38"/>
+    <text x="-5" y="-5" fill="#37358a" font-family="Segoe UI, Arial, sans-serif" font-weight="700" font-size="17">CÙNG MỞ HỘP ↗</text>
+  </g>
+  <path d="M851 39C834 16 813 38 830 55L849 72 868 54C884 38 866 21 851 39Z" fill="#f28b9a" stroke="#fff4e3" stroke-width="3"/>
+</svg>
