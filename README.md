@@ -25,6 +25,8 @@ Chạy `python -m http.server 4180 --directory dist` trong thư mục này, mở
 - `dist/assets/`: sticker SVG gốc, có thể thay bằng hình dự án thật.
 - `dist/fonts/`: SVN-Gilroy từ dự án hiện có theo yêu cầu người dùng. Quyền sử dụng webfont chưa được xác minh.
 
+Phối chữ: SVN-Gilroy giữ vai trò chính cho nội dung, điều hướng, nút và thiết kế dự án. Playfair Display SemiBold nghiêng nhấn ở “IDEAS”, các đoạn tiêu đề `h2 em` (“work.”, “Hòa.”, “UNBOX IT.”) và ghi chú viết nghiêng; bản đứng dùng cho lời dẫn phần giới thiệu. Hai WOFF2 được lưu cùng website, gồm ký tự tiếng Việt; giấy phép SIL OFL1.1 đi kèm ở `dist/fonts/Playfair-Display-OFL.txt`.
+
 Sáu dự án đều là concept minh họa; không phải khách hàng, kinh nghiệm hay dự án thực tế của chủ portfolio. Tên đang dùng theo tên workspace và cần xác nhận. Không sao chép thông tin cá nhân hoặc đồ án của tác giả bộ ảnh tham khảo.
 
 Phần liên hệ dùng email và số điện thoại do người dùng cung cấp: nút gửi email mở ứng dụng thư, số điện thoại mở trình gọi và Zalo dùng liên kết theo số điện thoại. Facebook, Instagram, Threads và TikTok trỏ tới URL người dùng cung cấp; WeChat sao chép ID `bqhtit`, có hiển thị ID để sao chép thủ công nếu trình duyệt từ chối clipboard. Không gửi tin nhắn tự động. Chỉ YouTube đang chờ link: thay `span.social-link.pending` bằng `a.social-link` với URL HTTPS thật khi có. Giao diện liên hệ nằm trong `dist/contact.css`, xử lý WeChat trong `dist/contact.js`.
