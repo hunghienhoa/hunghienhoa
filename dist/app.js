@@ -52,4 +52,4 @@ document.querySelectorAll('[data-project]').forEach(button => button.addEventLis
 document.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
 document.querySelector('.next-project').addEventListener('click', () => showProject((currentProject + 1) % projects.length));
 dialog.addEventListener('click', event => { if (event.target === dialog) { const rect = dialog.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close(); } });
-document.querySelector('#contact-info').addEventListener('click', () => { document.querySelector('#contact-status').hidden = false; });
+
