@@ -11,6 +11,7 @@ Chạy `python -m http.server 4180 --directory dist` trong thư mục này, mở
 - `dist/index.html`: tên, giới thiệu, nhãn dự án, phần liên hệ.
 - `dist/app.js`: mô tả các concept và hành vi tương tác.
 - `dist/style.css`: màu, bố cục và hiệu ứng.
+- `dist/bubble-wrap.css` và `dist/assets/bubble-wrap.svg`: tấm xốp bong bóng trong suốt, viền nổi và ánh nilon lướt chậm phía sau sáu concept; dùng chung cho thẻ và cửa sổ chi tiết, tuân theo nút dừng và cài đặt giảm chuyển động.
 - `dist/assets/`: sticker SVG gốc, có thể thay bằng hình dự án thật.
 - `dist/fonts/`: SVN-Gilroy từ dự án hiện có theo yêu cầu người dùng. Quyền sử dụng webfont chưa được xác minh.
 
