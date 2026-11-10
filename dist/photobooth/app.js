@@ -376,7 +376,18 @@ function renderFramePreviews() {
     drawFrameTemplate(previewContext, frames[button.dataset.frame], frameAssets(frames[button.dataset.frame]));
     button.querySelector('i').replaceChildren(preview);
   });
+  document.querySelectorAll('[data-showcase]').forEach(button => {
+    const preview = document.createElement('canvas');
+    preview.width = 216; preview.height = 654;
+    const context = preview.getContext('2d'); context.scale(.3, .3);
+    const design = frames[button.dataset.showcase];
+    drawFrameTemplate(context, design, frameAssets(design));
+    button.querySelector('i').replaceChildren(preview);
+  });
 }
+document.querySelectorAll('[data-showcase]').forEach(button => button.addEventListener('click', () => {
+  selectDesign(frames[button.dataset.showcase], button.textContent.trim());
+}));
 frameFontsReady.then(renderFramePreviews);
 document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
   filter = button.dataset.filter;

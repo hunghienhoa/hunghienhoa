@@ -46,13 +46,14 @@ for (const [key, value] of Object.entries(DEFAULT_DESIGN)) elements.get('#design
 const slotButtons = Array.from({ length: 4 }, (_, slot) => Object.assign(new Element(), { dataset: { slot: String(slot) } }));
 const removeButtons = Array.from({ length: 4 }, (_, slot) => Object.assign(new Element(), { dataset: { remove: String(slot) } }));
 const frameButtons = [...html.matchAll(/data-frame="([^"]+)"/g)].map(([,frame]) => Object.assign(new Element(), { dataset: { frame }, textContent: frame }));
+const showcaseButtons = [...html.matchAll(/data-showcase="([^"]+)"/g)].map(([,showcase]) => Object.assign(new Element(), {dataset:{showcase}, textContent:showcase}));
 const filterButtons = ['original', 'mono', 'warm', 'nostalgia', 'clear', 'peach', 'soft'].map(filter => Object.assign(new Element(), { dataset: { filter } }));
 const document = {
   querySelector(selector) {
     if (selector.startsWith('[data-remove=')) return removeButtons[Number(selector.match(/"(\d)"/)[1])];
     return elements.get(selector) || null;
   },
-  querySelectorAll(selector) { return ({ '[data-slot]': slotButtons, '[data-remove]': removeButtons, '[data-frame]': frameButtons, '[data-filter]': filterButtons })[selector] || []; },
+  querySelectorAll(selector) { return ({ '[data-slot]': slotButtons, '[data-remove]': removeButtons, '[data-frame]': frameButtons, '[data-showcase]': showcaseButtons, '[data-filter]': filterButtons })[selector] || []; },
   createElement: tag => tag === 'canvas' ? new Canvas() : new Element(),
   fonts: { ready: Promise.resolve(), load: async () => [] },
   addEventListener: (type, callback) => { events['document:' + type] = callback; },
@@ -174,3 +175,15 @@ assert.equal(new URL(destination).pathname,'/shoot');
 const shared = JSON.parse(new URL(destination).searchParams.get('thietke'));
 assert.equal(shared.title,'TIỆM THƯ TÌNH');
 assert.ok(!JSON.stringify(shared).includes('PRIVATE-PHOTO'));
+
+assert.ok(html.includes('Bắt đầu chụp') && html.includes('Đóng góp khung của bạn'));
+assert.equal([...html.matchAll(/data-showcase="/g)].length,16);
+assert.match(html,/class="showcase-group" aria-hidden="true" inert/);
+assert.ok(!shootHtml.includes('data-showcase=') && !shootHtml.includes('landing.css'));
+const landingCss=fs.readFileSync('dist/photobooth/landing.css','utf8');
+assert.match(landingCss,/translateX\(-50%\)/);
+assert.match(landingCss,/prefers-reduced-motion:reduce/);
+assert.match(landingCss,/:focus-within/);
+
+showcaseButtons[0].listeners.click();
+assert.equal(JSON.parse(new URL(destination).searchParams.get('thietke')).title,'SÂN KHẤU NHẠC POP');
