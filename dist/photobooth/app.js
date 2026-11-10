@@ -1,4 +1,4 @@
-import { coverCrop, applyFilterPixels } from './core.mjs?v=3';
+import { coverCrop, applyFilterPixels } from './core.mjs?v=4';
 import { importedFrames } from './imported-frames.mjs';
 import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow } from './design.mjs?v=4';
 
@@ -66,6 +66,7 @@ let submitting = false;
 let submissionRequest;
 const apiBase = String(window.HUNG_API_BASE || '').replace(/\/+$/, '');
 let filter = 'original';
+let photoZoom = 1;
 let stream = null;
 let busy = false;
 let startingCamera = false;
@@ -115,13 +116,14 @@ function updateUI() {
   });
   video.classList.toggle('mirrored', $('#mirror').checked);
   video.style.filter = filters[filter];
+  video.style.transform = `scale(${($('#mirror').checked ? -1 : 1)*photoZoom}, ${photoZoom})`;
   strip.setAttribute('aria-label', `Dải ảnh xem trước: ${count} trên 4 ảnh, khung ${selectedFrameLabel}.`);
   $('#session-note').textContent = photoExpiresAt ? `Ảnh chỉ ở bộ nhớ tạm và tự xóa lúc ${new Date(photoExpiresAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}, hoặc ngay khi rời trang.` : 'Ảnh chỉ ở bộ nhớ tạm, không tải lên máy chủ. Phiên ảnh tự xóa sau 1 giờ.';
   renderStrip();
 }
 
 function drawPhoto(photo, x, y, width, height, target = ctx, resolution = 1) {
-  const crop = coverCrop(photo.image.width, photo.image.height, width, height);
+  const crop = coverCrop(photo.image.width, photo.image.height, width, height, photoZoom);
   if ((nativeCanvasFilters && !['clear','peach','soft'].includes(filter)) || filter === 'original') {
     target.save();
     if (nativeCanvasFilters) target.filter = filters[filter];
@@ -131,7 +133,8 @@ function drawPhoto(photo, x, y, width, height, target = ctx, resolution = 1) {
   }
   let cache = filteredPhotoCache.get(photo);
   if (!cache) { cache = new Map(); filteredPhotoCache.set(photo, cache); }
-  let filtered = cache.get(filter + resolution);
+  const cacheKey = `${filter}:${resolution}:${photoZoom}:${width}:${height}`;
+  let filtered = cache.get(cacheKey);
   if (!filtered) {
     filtered = document.createElement('canvas');
     filtered.width = width * resolution;
@@ -141,7 +144,7 @@ function drawPhoto(photo, x, y, width, height, target = ctx, resolution = 1) {
     const pixels = context.getImageData(0, 0, filtered.width, filtered.height);
     pixels.data.set(applyFilterPixels(pixels.data, filter));
     context.putImageData(pixels, 0, 0);
-    cache.set(filter + resolution, filtered);
+    cache.set(cacheKey, filtered);
   }
   target.drawImage(filtered, x, y, width, height);
 }
@@ -434,6 +437,14 @@ if (importedGallery) {
 document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
   filter = button.dataset.filter;
   document.querySelectorAll('[data-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+  downloaded = false;
+  updateUI();
+}));
+document.querySelectorAll('[data-photo-zoom]').forEach(button => button.addEventListener('click', () => {
+  const value = Number(button.dataset.photoZoom);
+  if (![1,1.5,2].includes(value)) return;
+  photoZoom = value;
+  document.querySelectorAll('[data-photo-zoom]').forEach(item => item.setAttribute('aria-pressed',String(item===button)));
   downloaded = false;
   updateUI();
 }));

@@ -50,13 +50,14 @@ const slotButtons = Array.from({ length: 4 }, (_, slot) => Object.assign(new Ele
 const removeButtons = Array.from({ length: 4 }, (_, slot) => Object.assign(new Element(), { dataset: { remove: String(slot) } }));
 const frameButtons = [...html.matchAll(/data-frame="([^"]+)"/g)].map(([,frame]) => Object.assign(new Element(), { dataset: { frame }, textContent: frame }));
 const showcaseButtons = [...html.matchAll(/data-showcase="([^"]+)"/g)].map(([,showcase]) => Object.assign(new Element(), {dataset:{showcase}, textContent:showcase}));
+const zoomButtons=[1,1.5,2].map(photoZoom=>Object.assign(new Element(),{dataset:{photoZoom:String(photoZoom)}}));
 const filterButtons = ['original', 'mono', 'warm', 'nostalgia', 'clear', 'peach', 'soft'].map(filter => Object.assign(new Element(), { dataset: { filter } }));
 const document = {
   querySelector(selector) {
     if (selector.startsWith('[data-remove=')) return removeButtons[Number(selector.match(/"(\d)"/)[1])];
     return elements.get(selector) || null;
   },
-  querySelectorAll(selector) { return ({ '[data-imported]':elements.get('#imported-frame-options').children, '#frame-categories button':elements.get('#frame-categories').children, '[data-slot]': slotButtons, '[data-remove]': removeButtons, '[data-frame]': frameButtons, '[data-showcase]': showcaseButtons, '[data-filter]': filterButtons })[selector] || []; },
+  querySelectorAll(selector) { return ({ '[data-imported]':elements.get('#imported-frame-options').children, '#frame-categories button':elements.get('#frame-categories').children, '[data-slot]': slotButtons, '[data-remove]': removeButtons, '[data-frame]': frameButtons, '[data-showcase]': showcaseButtons, '[data-filter]': filterButtons, '[data-photo-zoom]':zoomButtons })[selector] || []; },
   createElement: tag => tag === 'canvas' ? new Canvas() : new Element(),
   fonts: { ready: Promise.resolve(), load: async () => [] },
   addEventListener: (type, callback) => { events['document:' + type] = callback; },
@@ -214,3 +215,8 @@ assert.ok(importedChoices.every(item=>!item.hidden));
 
 assert.ok(!html.includes('edit-reminder') && !shootHtml.includes('edit-reminder'));
 assert.ok(!script.includes('Kéo xuống'));
+
+assert.equal([...shootHtml.matchAll(/data-filter="/g)].length,7);
+assert.equal([...shootHtml.matchAll(/data-photo-zoom="/g)].length,3);
+for(const button of zoomButtons){button.listeners.click();assert.equal(button.attributes['aria-pressed'],'true');assert.equal(vm.runInContext('photoZoom',context),Number(button.dataset.photoZoom));}
+zoomButtons[0].listeners.click();

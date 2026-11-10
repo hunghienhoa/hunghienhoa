@@ -1,10 +1,11 @@
-export function coverCrop(sourceWidth, sourceHeight, targetWidth, targetHeight) {
+export function coverCrop(sourceWidth, sourceHeight, targetWidth, targetHeight, zoom = 1) {
+  if (![1,1.5,2].includes(zoom)) throw new RangeError('Mức phóng ảnh không hợp lệ.');
   if (![sourceWidth, sourceHeight, targetWidth, targetHeight].every(value => Number.isFinite(value) && value > 0)) {
     throw new RangeError('Kích thước ảnh phải là số hữu hạn lớn hơn 0.');
   }
   const scale = Math.max(targetWidth / sourceWidth, targetHeight / sourceHeight);
-  const sw = targetWidth / scale;
-  const sh = targetHeight / scale;
+  const sw = targetWidth / scale / zoom;
+  const sh = targetHeight / scale / zoom;
   return { sx: (sourceWidth - sw) / 2, sy: (sourceHeight - sh) / 2, sw, sh };
 }
 

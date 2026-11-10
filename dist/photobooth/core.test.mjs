@@ -50,3 +50,12 @@ for(const filter of ['clear','peach','soft']) {
  assert.equal(output.length,input.length);assert.equal(output[3],255);assert.equal(output[7],120);
  assert.notDeepEqual(output,input);assert.deepEqual([...input],[110,80,60,255,0,0,0,120]);
 }
+
+for(const zoom of [1,1.5,2]) {
+ const crop=coverCrop(1600,1200,640,450,zoom);
+ assert.equal(crop.sw,1600/zoom);
+ assert.equal(crop.sh,1125/zoom);
+ assert.equal(crop.sx,(1600-crop.sw)/2);
+ assert.equal(crop.sy,(1200-crop.sh)/2);
+}
+assert.throws(()=>coverCrop(1600,1200,640,450,0),RangeError);
