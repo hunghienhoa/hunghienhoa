@@ -17,3 +17,5 @@
 
 
 
+
+.edit-reminder{background:var(--yellow);border:1px solid var(--blue);padding:16px;margin:16px 0;line-height:1.6;font-size:14px}.edit-reminder p{margin:8px 0}.edit-reminder a{font-weight:800;text-underline-offset:4px}
