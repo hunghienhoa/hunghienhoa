@@ -6,6 +6,8 @@ test('miền phụ được ánh xạ vào đúng thư mục giao diện', () =>
   assert.equal(new URL(assetRequest(new Request('https://admin.hunghienhoa.com/')).url).pathname, '/admin/');
   assert.equal(new URL(assetRequest(new Request('https://blog.hunghienhoa.com/style.css')).url).pathname, '/blog/style.css');
   assert.equal(new URL(assetRequest(new Request('https://photobooth.hunghienhoa.com/assets/star.svg')).url).pathname, '/photobooth/assets/star.svg');
+  assert.equal(new URL(assetRequest(new Request('https://photobooth.hunghienhoa.com/shoot')).url).pathname, '/photobooth/shoot');
+  assert.equal(assetRequest(new Request('https://photobooth.hunghienhoa.com/shoot/')).headers.get('location'), 'https://photobooth.hunghienhoa.com/shoot');
   assert.equal(assetRequest(new Request('https://hunghienhoa.com/blog/?bai=vui')).headers.get('location'), 'https://blog.hunghienhoa.com/?bai=vui');
   assert.equal(assetRequest(new Request('https://hunghienhoa.com/photobooth')).headers.get('location'), 'https://photobooth.hunghienhoa.com/');
   assert.equal(new URL(assetRequest(new Request('http://127.0.0.1:4180/blog/')).url).pathname, '/blog/');

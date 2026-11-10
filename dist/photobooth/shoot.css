@@ -1,0 +1,12 @@
+.shoot-page>footer,.shoot-page>.page-social,.shoot-page>.footer-wish,.shoot-page>main>:not(.studio),.shoot-page .creator-actions{display:none}
+.shoot-page .site-header{padding-block:16px}.shoot-page .site-header nav{display:flex}.shoot-page .site-header>img{display:none}
+.shoot-page .studio{padding-top:28px}.shoot-page .section-heading h2{font-size:clamp(26px,4vw,42px)}.shoot-page .section-heading{margin-bottom:20px}
+.shoot-page .capture-panel,.shoot-page .result-panel{border-radius:24px;background:var(--cream);box-shadow:4px 5px 0 #30348726}
+.shoot-page .source-actions{grid-template-columns:1fr}.shoot-page .capture-actions{display:grid;grid-template-columns:minmax(0,1fr) 52px 52px;gap:10px}
+.shoot-page .capture-actions .button{border-radius:999px;min-height:52px;padding:10px;font-size:clamp(12px,2vw,15px)}
+.shoot-page .icon-action{display:flex;align-items:center;justify-content:center;position:relative}.icon-action svg{width:23px;height:23px;flex-shrink:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.shoot-page .camera-help{text-align:center;line-height:1.6}.shoot-page .editor{padding-top:28px}.selected-frame{font-weight:800}#change-frame{border-radius:999px;width:100%;max-width:420px;box-shadow:3px 4px 0 var(--blue);margin-bottom:12px}
+#frame-picker{width:min(1080px,94vw);max-height:88dvh;border:2px solid var(--blue);border-radius:22px;background:var(--cream);color:var(--blue);padding:20px;overflow:auto}
+#frame-picker::backdrop{background:#17193d99}.picker-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:-20px;background:var(--cream);padding:12px 0;z-index:2}.picker-heading h2{font-size:22px}.picker-heading button{border-radius:999px}
+@media(max-width:600px){.shoot-page .site-header nav a{font-size:12px}.shoot-page .capture-actions{gap:6px;grid-template-columns:minmax(0,1fr) 46px 46px}.shoot-page .capture-actions .button{min-height:46px}.shoot-page .steps{font-size:11px}.shoot-page .section-heading>p{display:none}#frame-picker{padding:14px}.picker-heading h2{font-size:18px}}

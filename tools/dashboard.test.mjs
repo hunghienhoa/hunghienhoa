@@ -37,3 +37,7 @@ node.textContent='Changed by older content loader';events['hung-content-ready'](
 for(const folder of ['blog','photobooth','admin'])assert.equal(readFileSync(`dist/${folder}/page-customization.js`,'utf8'),readFileSync('dist/page-customization.js','utf8'));
 db.close();
 console.log('PASS: aggregate-only analytics, time windows, retention, safe text customization and strict settings validation.');
+
+assert.equal(pageForVisit('/photobooth/shoot'),'photobooth');
+assert.equal(pageForVisit('/photobooth/shoot.html'),'photobooth');
+assert.equal(pageForVisit('/photobooth/shootxhtml'),null);

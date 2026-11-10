@@ -293,6 +293,8 @@ export function createApp(options = {}) {
     const adminHost = options.adminHost ?? process.env.ADMIN_HOST ?? 'admin.hunghienhoa.com';
     const requestHost = (req.headers.host || '').split(':')[0];
     if (requestHost === adminHost) route = `/admin${route}`;
+    if (route === '/photobooth/shoot/') { res.writeHead(308, {Location:'/photobooth/shoot'}); return res.end(); }
+    if (route === '/photobooth/shoot') route = '/photobooth/shoot.html';
     let file = path.resolve(dist, `.${route}`);
     const relative = path.relative(dist, file);
     if (relative.startsWith('..') || path.isAbsolute(relative)) fail(404, 'Không tìm thấy trang.');

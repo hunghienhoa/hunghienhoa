@@ -85,9 +85,11 @@ function updateUI() {
   $('#start-camera').disabled = !!stream || startingCamera || busy;
   $('#stop-camera').disabled = !stream && !startingCamera;
   $('#capture-auto').disabled = !stream || busy;
-  $('#capture-auto').textContent = count === 4 ? 'Chụp lại 4 tấm' : 'Chụp 4 tấm';
+  $('#capture-auto').textContent = count === 4 ? 'Chụp lại 4 tấm' : 'Chụp tự động 4 tấm';
   $('#capture-one').disabled = !stream || busy || (count === 4 && selectedSlot < 0);
-  $('#capture-one').textContent = selectedSlot >= 0 && photos[selectedSlot] ? `Chụp lại ảnh ${selectedSlot + 1}` : 'Chụp 1 tấm';
+  const captureLabel = selectedSlot >= 0 && photos[selectedSlot] ? `Chụp lại ảnh ${selectedSlot + 1}` : 'Chụp 1 tấm';
+  if ($('#capture-one').dataset.compact) $('#capture-one').setAttribute('aria-label', captureLabel);
+  else $('#capture-one').textContent = captureLabel;
   $('#mirror').disabled = busy;
   $('#upload').disabled = busy;
   $('.upload-button').classList.toggle('disabled', busy);
@@ -432,6 +434,12 @@ $('#download').addEventListener('click', async () => {
 });
 
 function selectDesign(design, label, image = null, id = 'custom') {
+  if (document.body?.classList.contains('booth-landing')) {
+    const next = new URL('shoot', window.location.href);
+    next.searchParams.set('thietke', JSON.stringify(normalizeDesign(design)));
+    window.location.assign(next.href);
+    return;
+  }
   activeDesign = normalizeDesign(design);
   selectedFrameLabel = label;
   communityFrameImage = image;
@@ -609,4 +617,13 @@ for (const name of ['blue', 'yellow', 'purple', 'coral', 'heart', 'star', 'bow',
 frameFontsReady.then(() => { renderStrip(); renderDesignPreview(); }).catch(() => tell('Chưa tải được phông chữ. Kiểm tra kết nối trước khi tải ảnh hoặc gửi khung.', true));
 updateUI();
 renderDesignPreview();
+if (window.location?.search) {
+  try {
+    const shared = new URLSearchParams(window.location.search).get('thietke');
+    if (shared && shared.length < 1500) {
+      const design = normalizeDesign(JSON.parse(shared));
+      selectDesign(design, design.title);
+    }
+  } catch { tell('Khung trong liên kết chưa hợp lệ. Bạn vẫn có thể chọn một khung khác.', true); }
+}
 loadCommunityFrames();

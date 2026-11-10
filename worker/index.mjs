@@ -260,6 +260,7 @@ function assetRequest(request) {
     return new Response(null, { status: 308, headers: { Location: url.href } });
   }
   const section = host === 'admin.hunghienhoa.com' ? 'admin' : host === 'blog.hunghienhoa.com' ? 'blog' : host === 'photobooth.hunghienhoa.com' ? 'photobooth' : '';
+  if (section === 'photobooth' && url.pathname === '/shoot/') return new Response(null, {status:308,headers:{Location:new URL('/shoot',url).href}});
   if (section && !url.pathname.startsWith(`/${section}/`)) url.pathname = `/${section}${url.pathname === '/' ? '/' : url.pathname}`;
   return new Request(url, request);
 }

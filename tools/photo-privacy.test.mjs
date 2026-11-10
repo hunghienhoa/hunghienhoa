@@ -8,7 +8,7 @@ import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired,
 const events = {}, requests = [], elements = new Map(), timers = new Map();
 let timerId = 0, clock = 1000000, requestedCamera = 0;
 class Element {
-  constructor() { this.value = ''; this.checked = false; this.dataset = {}; this.style = {}; this.listeners = {}; this.attributes = {}; this.children = []; this.textContent = ''; this.firstChild = { textContent: '' }; this.width = 720; this.height = 2180; this.classList = { add() {}, remove() {}, toggle() {} }; }
+  constructor() { this.value = ''; this.checked = false; this.dataset = {}; this.style = {}; this.listeners = {}; this.attributes = {}; this.children = []; this.textContent = ''; this.firstChild = { textContent: '' }; this.width = 720; this.height = 2180; this.classList = { add() {}, remove() {}, toggle() {}, contains() { return false; } }; }
   addEventListener(type, callback) { this.listeners[type] = callback; }
   setAttribute(key, value) { this.attributes[key] = value; }
   removeAttribute(key) { delete this.attributes[key]; if (key === 'src') this.src = ''; }
@@ -75,6 +75,21 @@ const context = vm.createContext({
   coverCrop, applyFilterPixels, DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow
 });
 const script = fs.readFileSync(new URL('../dist/photobooth/app.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '');
+const shootHtml = fs.readFileSync('dist/photobooth/shoot.html','utf8');
+assert.match(shootHtml, /id="frame-picker"/);
+assert.equal([...shootHtml.matchAll(/data-frame="/g)].length,32);
+assert.match(shootHtml, /data-compact="true"/);
+assert.match(html, /<section hidden class="studio wrap"/);
+assert.match(html, /href="shoot"/);
+const pickerNodes = new Map();
+const pickerNode = id => {if(!pickerNodes.has(id)) pickerNodes.set(id, {listeners:{}, addEventListener(event,fn){this.listeners[event]=fn;},showModal(){this.open=true;},close(){this.open=false;},focus(){this.focused=true;},querySelectorAll(){return [pickerNode('choice')];},textContent:'Khung thử',getAttribute(){return '';}});return pickerNodes.get(id);};
+vm.runInNewContext(fs.readFileSync('dist/photobooth/shoot.js','utf8'), {document:{querySelector:pickerNode},MutationObserver:class {observe(){}}});
+pickerNode('#change-frame').listeners.click();
+assert.equal(pickerNode('#frame-picker').open,true);
+pickerNode('choice').listeners.click();
+assert.equal(pickerNode('#frame-picker').open,false);
+assert.equal(pickerNode('#selected-frame').textContent,'Khung thử');
+assert.equal(pickerNode('#change-frame').focused,true);
 new vm.Script(script).runInContext(context);
 await new Promise(resolve => setImmediate(resolve));
 assert.equal(requestedCamera, 0);
@@ -149,3 +164,13 @@ assert.equal(requestedCamera, 0);
 console.log('PASS: real photo handlers keep images in memory, submit frame-only with four photos present, clear at 1h and pagehide, never auto-start camera.');
 assert.equal(await vm.runInContext(`jpegBlob({toBlob(callback, type) { callback({type}); }}).then(blob => blob.type)`, context), 'image/jpeg');
 await assert.rejects(vm.runInContext(`jpegBlob({toBlob(callback) { callback({type: 'image/webp'}); }})`, context));
+
+let destination;
+context.URL = URL;
+context.document.body = {classList:{contains:name=>name==='booth-landing'}};
+context.window.location = {href:'https://photobooth.hunghienhoa.com/',assign:value=>{destination=value;}};
+vm.runInContext("selectDesign(frames.pink, 'Tiệm thư tình')",context);
+assert.equal(new URL(destination).pathname,'/shoot');
+const shared = JSON.parse(new URL(destination).searchParams.get('thietke'));
+assert.equal(shared.title,'TIỆM THƯ TÌNH');
+assert.ok(!JSON.stringify(shared).includes('PRIVATE-PHOTO'));

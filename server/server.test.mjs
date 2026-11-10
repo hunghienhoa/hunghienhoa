@@ -186,6 +186,10 @@ const production = createApp({ port: 0, host: '127.0.0.1', dataDir: publicData, 
 try {
   await production.listen();
   const origin = `http://127.0.0.1:${production.server.address().port}`;
+  const shoot = await fetch(origin + '/photobooth/shoot');
+  assert.equal(shoot.status, 200);
+  assert.match(await shoot.text(), /class="shoot-page"/);
+  assert.equal((await fetch(origin + '/photobooth/shoot/', {redirect:'manual'})).status, 308);
   assert.equal((await (await fetch(origin + '/api/admin/session')).json()).setupAllowed, false);
   const response = await fetch(origin + '/api/admin/setup', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ password: 'Isolated-test-password-123' }) });
   assert.equal(response.status, 403);

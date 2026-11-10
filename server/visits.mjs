@@ -19,6 +19,6 @@ export function visitSummary(sql, now = Date.now()) {
 export function pageForVisit(path) {
   if (path === '/' || path === '/index.html') return 'main';
   if (/^\/blog\/(?:index.html)?$/.test(path)) return 'blog';
-  if (/^\/photobooth\/(?:index.html)?$/.test(path)) return 'photobooth';
+  if (/^\/photobooth\/(?:index\.html|shoot(?:\.html)?)?$/.test(path)) return 'photobooth';
   return null;
 }

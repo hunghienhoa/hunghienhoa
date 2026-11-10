@@ -15,7 +15,7 @@ for (const sourceFile of sourceFiles.filter(file => /\.(html|css)$/.test(file)))
     if (/^(https?:|mailto:|tel:|data:)/.test(reference)) continue;
     const file = reference.split(/[?#]/)[0];
     const resolved = file.startsWith('/') ? path.resolve('dist', file.slice(1)) : path.resolve(path.dirname(sourceFile), file);
-    assert.ok(fs.existsSync(resolved), `Missing asset ${reference} in ${sourceFile}`);
+    assert.ok(fs.existsSync(resolved) || (file === 'shoot' && fs.existsSync(resolved + '.html')), `Missing asset ${reference} in ${sourceFile}`);
   }
   if (sourceFile.endsWith('.html')) {
     for (const [, id] of source.matchAll(/href="#([^"]+)"/g)) assert.ok(source.includes(`id="${id}"`), `Missing anchor ${id} in ${sourceFile}`);
