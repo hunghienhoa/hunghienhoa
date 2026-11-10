@@ -95,8 +95,8 @@ assert.equal(vm.runInContext('photoFromImage({width:640,height:480}).url',contex
 Canvas.prototype.toDataURL = () => 'data:,';
 assert.throws(()=>vm.runInContext('photoFromImage({width:640,height:480})',context),/Chưa xử lý được ảnh/);
 Canvas.prototype.toDataURL = originalEncode;
-assert.equal(frameButtons.length, 16);
-assert.equal(vm.runInContext('new Set(Object.values(frames).map(frame => frame.title)).size', context), 16);
+assert.equal(frameButtons.length, 32);
+assert.equal(vm.runInContext('new Set(Object.values(frames).map(frame => frame.title)).size', context), 32);
 assert.ok(html.includes('Nhật ký bạc hà') && html.includes('Biển xanh gọi tên'));
 for (const button of frameButtons) {
   button.listeners.click();

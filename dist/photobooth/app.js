@@ -33,7 +33,23 @@ const frames = {
   cherry: normalizeDesign({"background": "#ad173d", "ink": "#fff0ce", "accent": "#efaeae", "pattern": "hearts", "sticker": "heart", "title": "TIM ĐỎ ĐIỆN ẢNH", "footer": "Thước phim này có bạn ở trong."}),
   cats: normalizeDesign({"background": "#d1ead6", "ink": "#285e46", "accent": "#87ba89", "pattern": "doodles", "sticker": "cat", "title": "CÂU LẠC BỘ MÈO", "footer": "Meo một tiếng, vui cả ngày."}),
   sky: normalizeDesign({"background": "#a0e0f1", "ink": "#135b87", "accent": "#fff5b9", "pattern": "waves", "sticker": "cloud", "title": "BIỂN XANH GỌI TÊN", "footer": "Bỏ túi một mùa hè lấp lánh."}),
-  dream: normalizeDesign({"background": "#d7c5f3", "ink": "#63418d", "accent": "#fff3ad", "pattern": "sparkles", "sticker": "butterfly", "title": "VƯỜN MƠ TÍM", "footer": "Hẹn gặp nhau ở một giấc mơ đẹp."})
+  dream: normalizeDesign({"background": "#d7c5f3", "ink": "#63418d", "accent": "#fff3ad", "pattern": "sparkles", "sticker": "butterfly", "title": "VƯỜN MƠ TÍM", "footer": "Hẹn gặp nhau ở một giấc mơ đẹp."}),
+  pop: normalizeDesign({"background": "#623fac", "ink": "#fff0c7", "accent": "#ff91c8", "pattern": "sparkles", "sticker": "star", "title": "SÂN KHẤU NHẠC POP", "footer": "Bật nhạc lên, mình là nhân vật chính."}),
+  pinktour: normalizeDesign({"background": "#ec9eba", "ink": "#713146", "accent": "#fff7e7", "pattern": "film", "sticker": "bow", "title": "VÉ DIỄN HỒNG", "footer": "Một đêm vui, cả cuộn kỷ niệm."}),
+  roseparty: normalizeDesign({"background": "#fff8ef", "ink": "#835f6a", "accent": "#efbdc9", "pattern": "lace", "sticker": "cherry", "title": "SINH NHẬT HOA HỒNG", "footer": "Chúc mình thêm một năm rực rỡ."}),
+  superstar: normalizeDesign({"background": "#153d29", "ink": "#f5ffe7", "accent": "#8bf145", "pattern": "checker", "sticker": "star", "title": "SIÊU SAO XANH LÁ", "footer": "Hôm nay đến lượt mình tỏa sáng."}),
+  newspaper: normalizeDesign({"background": "#e1ddd2", "ink": "#393b3d", "accent": "#b7b1a5", "pattern": "stripes", "sticker": "butterfly", "title": "MẨU BÁO NGÀY CŨ", "footer": "Chuyện hôm nay, mai thành kỷ niệm."}),
+  midnight: normalizeDesign({"background": "#11171f", "ink": "#fff2b8", "accent": "#d9c577", "pattern": "sparkles", "sticker": "star", "title": "ĐOM ĐÓM NỬA ĐÊM", "footer": "Có những ngày nhỏ mà sáng rất lâu."}),
+  autumn: normalizeDesign({"background": "#e5d1a4", "ink": "#6b4932", "accent": "#d9914c", "pattern": "doodles", "sticker": "cat", "title": "KHU VƯỜN MÙA THU", "footer": "Đi chậm một chút, thương nhiều một chút."}),
+  vietnam: normalizeDesign({"background": "#b51f32", "ink": "#fff5cd", "accent": "#ffda57", "pattern": "confetti", "sticker": "star", "title": "VIỆT NAM TRONG TIM", "footer": "Một dải ảnh nhỏ, một niềm tự hào lớn."}),
+  postcard: normalizeDesign({"background": "#fff7df", "ink": "#a62932", "accent": "#edb64a", "pattern": "stripes", "sticker": "heart", "title": "BƯU THIẾP QUÊ NHÀ", "footer": "Mang theo một chút Việt Nam."}),
+  melon: normalizeDesign({"background": "#d9f28d", "ink": "#365f37", "accent": "#f28d97", "pattern": "waves", "sticker": "cherry", "title": "DƯA HẤU MÙA HÈ", "footer": "Mát lành như một ngày không vội."}),
+  bluehour: normalizeDesign({"background": "#bfd7ed", "ink": "#354f79", "accent": "#fff2cb", "pattern": "film", "sticker": "cloud", "title": "GIỜ XANH DỊU DÀNG", "footer": "Cất một khoảng trời ở trong túi."}),
+  lavender: normalizeDesign({"background": "#e9d7ee", "ink": "#75518b", "accent": "#c59cdb", "pattern": "lace", "sticker": "butterfly", "title": "THƯ TÍM HOA OẢI HƯƠNG", "footer": "Gửi người một chút dịu dàng."}),
+  blackcat: normalizeDesign({"background": "#e7d6ba", "ink": "#29282d", "accent": "#ae967c", "pattern": "doodles", "sticker": "cat", "title": "MÈO ĐEN TINH NGHỊCH", "footer": "Không cần hoàn hảo, chỉ cần meo."}),
+  candy: normalizeDesign({"background": "#f8d9ed", "ink": "#875376", "accent": "#a6cde5", "pattern": "hearts", "sticker": "bow", "title": "KẸO NGỌT TAN CHẢY", "footer": "Ngọt vừa đủ, vui thật nhiều."}),
+  minimal: normalizeDesign({"background": "#fffefa", "ink": "#33333d", "accent": "#d9dce2", "pattern": "plain", "sticker": "none", "title": "TRẮNG MỘT CHÚT THÔI", "footer": "Bốn tấm ảnh, chẳng cần thêm gì."}),
+  sunset: normalizeDesign({"background": "#f6c4a9", "ink": "#8d443b", "accent": "#ffe4a2", "pattern": "waves", "sticker": "cloud", "title": "HOÀNG HÔN CAM ĐÀO", "footer": "Ngày khép lại, nụ cười còn đây."})
 };
 const stickers = {};
 let selectedSlot = 0;

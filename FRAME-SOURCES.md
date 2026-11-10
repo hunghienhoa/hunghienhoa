@@ -17,3 +17,8 @@ Bộ sáng tạo bổ sung gồm sáu frame Nơ hồng điệu đà, Tiệc neon
 Thay toàn bộ 16 lựa chọn mặc định theo hướng collage từ ảnh tham khảo Fotogram do Hùng gửi: Nhật ký bạc hà, Đêm thiên hà, Tiệm thư tình, Tiệc sinh nhật, Băng ghi hình, Báo tường tuổi trẻ, Truyện tranh nổi loạn, Vé tàu thanh xuân, Bánh kem dâu, Bản nhạc của mình, Nơ hồng công chúa, Sân khấu ánh sao, Tim đỏ điện ảnh, Câu lạc bộ mèo, Biển xanh gọi tên và Vườn mơ tím.
 
 Thiết kế tự dựng bằng canvas và SVG sẵn có: ô ảnh hình tim xen kẽ, bầu dục, bo góc bất đối xứng; nhãn chữ nghiêng, sticker chồng viền và chi tiết lấp lánh. Không lấy ảnh người, nhân vật hoặc file khung trong ảnh tham khảo. Đường cắt ô ảnh được dùng chung cho preview, JPEG và khung trống gửi duyệt; ảnh cá nhân không đưa vào poster đóng góp.
+
+
+## Bộ bổ sung thứ hai
+
+16 mẫu tự dựng thêm từ ảnh danh mục Hùng gửi; giữ nguyên bộ 16 mẫu trước. Không sao chép logo ban nhạc, nhân vật hay file khung bên thứ ba. Các mẫu mới: Sân khấu nhạc pop, Vé diễn hồng, Sinh nhật hoa hồng, Siêu sao xanh lá, Mẩu báo ngày cũ, Đom đóm nửa đêm, Khu vườn mùa thu, Việt Nam trong tim, Bưu thiếp quê nhà, Dưa hấu mùa hè, Giờ xanh dịu dàng, Thư tím hoa oải hương, Mèo đen tinh nghịch, Kẹo ngọt tan chảy, Trắng một chút thôi, Hoàng hôn cam đào. Tổng cộng 32 lựa chọn. Dùng lại bộ renderer canvas và SVG gốc; không thêm ảnh raster hoặc dịch vụ gửi ảnh.
