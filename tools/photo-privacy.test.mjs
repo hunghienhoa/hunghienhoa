@@ -46,7 +46,7 @@ for (const [key, value] of Object.entries(DEFAULT_DESIGN)) elements.get('#design
 const slotButtons = Array.from({ length: 4 }, (_, slot) => Object.assign(new Element(), { dataset: { slot: String(slot) } }));
 const removeButtons = Array.from({ length: 4 }, (_, slot) => Object.assign(new Element(), { dataset: { remove: String(slot) } }));
 const frameButtons = [...html.matchAll(/data-frame="([^"]+)"/g)].map(([,frame]) => Object.assign(new Element(), { dataset: { frame }, textContent: frame }));
-const filterButtons = ['original', 'mono', 'warm', 'nostalgia'].map(filter => Object.assign(new Element(), { dataset: { filter } }));
+const filterButtons = ['original', 'mono', 'warm', 'nostalgia', 'clear', 'peach', 'soft'].map(filter => Object.assign(new Element(), { dataset: { filter } }));
 const document = {
   querySelector(selector) {
     if (selector.startsWith('[data-remove=')) return removeButtons[Number(selector.match(/"(\d)"/)[1])];
@@ -79,6 +79,12 @@ new vm.Script(script).runInContext(context);
 await new Promise(resolve => setImmediate(resolve));
 assert.equal(requestedCamera, 0);
 assert.equal(requests.length, 0);
+assert.ok(html.indexOf('class="camera-filters"') < html.indexOf('id="capture-one"'));
+for (const button of filterButtons) {
+  button.listeners.click();
+  assert.equal(button.attributes['aria-pressed'], 'true');
+  assert.ok(elements.get('#camera').style.filter);
+}
 const originalEncode = Canvas.prototype.toDataURL;
 Canvas.prototype.toDataURL = function(type) { return type === 'image/webp' ? 'data:image/png;base64,fallback' : 'data:image/jpeg;base64,synthetic'; };
 assert.equal(vm.runInContext('photoFromImage({width:640,height:480}).url',context),'data:image/jpeg;base64,synthetic');

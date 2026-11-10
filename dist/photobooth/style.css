@@ -12,3 +12,5 @@
 .filter-options button{min-width:44px}
 
 .frame-option>i{width:42px;height:127px;border:0;outline:1px solid #30348744;background:none;display:block}.frame-option>i canvas{display:block;width:100%;height:100%}.frame-option{min-height:166px}.frame-options{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}
+
+.camera-filters{border:1px solid #30348744;padding:14px;margin:18px 0}.camera-filters legend{font-size:12px;font-weight:800;padding:0 7px}.camera-filters .filter-options{display:flex;flex-wrap:wrap;gap:8px}.camera-filters .filter-options button{flex:1 0 95px;min-height:44px}.camera-filters .editor-note{font-size:11px;line-height:1.6;margin-top:10px}
