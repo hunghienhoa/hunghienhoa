@@ -1,6 +1,7 @@
-import { fail, post, siteSettings, submission } from '../server/validation.mjs';
+import { fail, post, siteSettings, submission, defaultSite } from '../server/validation.mjs';
 import { pageForVisit } from '../server/visits.mjs';
 import { adsenseHtml } from '../server/adsense.mjs';
+import {agentRoute,pageContext,representation,markdown404,decorateHtml} from '../server/agent-content.mjs';
 export { VisitCounter } from './visits.mjs';
 
 const API_LIMIT = 1600000;
@@ -12,7 +13,7 @@ function json(value, status = 200) {
   return new Response(JSON.stringify(value), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
 }
 
-async function withSecurity(response, env) {
+async function withSecurity(response, env, metadata) {
   const headers = new Headers(response.headers);
   let body = response.body;
   headers.set('Content-Security-Policy', `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' ${env.SUPABASE_URL}; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'`);
@@ -21,7 +22,11 @@ async function withSecurity(response, env) {
   headers.set('X-Content-Type-Options', 'nosniff');
   headers.set('X-Frame-Options', 'DENY');
   if (headers.get('content-type')?.includes('text/html')) {
-    const html = await response.text();
+    let html = await response.text();
+    if(metadata) {
+      html=decorateHtml(html,metadata.site,metadata.ctx,metadata.url);
+      headers.append('Vary','Accept');headers.set('Cache-Control','no-store');headers.delete('ETag');headers.delete('Content-Length');
+    }
     const ads = adsenseHtml(html, crypto.randomUUID().replaceAll('-',''));
     body = ads?.body ?? html;
     if (ads) {headers.set('Content-Security-Policy',ads.csp);headers.set('Cache-Control','no-store');headers.delete('ETag');headers.delete('Content-Length');}
@@ -270,13 +275,27 @@ export default {
       }
       const mapped = assetRequest(request);
       if (mapped instanceof Response) return mapped;
+      const url=new URL(request.url),ctxPage=pageContext(url);
+      const data={
+        site:async()=>{const rows=await rest(env,'site_settings',{query:{select:'data',id:'eq.1',limit:1}});if(!rows?.[0])fail(503,'Nội dung chưa sẵn sàng.');return rows[0].data;},
+        posts:async()=>{
+          const posts=[];
+          for(let offset=0;offset<50000;offset+=1000){const rows=await rest(env,'posts',{query:{select:'slug,title,excerpt,is_sample',status:'eq.published',order:'published_at.desc,id.asc',limit:1000,offset}});posts.push(...rows.map(row=>({...row,isSample:!!row.is_sample})));if(rows.length<1000)return posts;}
+          fail(503,'Danh sách cần được chia thành nhiều sitemap.');
+        },
+        post:async slug=>{const rows=await rest(env,'posts',{query:{select:POSTS_SELECT,status:'eq.published',slug:'eq.'+slug,limit:1}});return rows[0]?postData(rows[0]):null;}
+      };
+      const agent=await agentRoute(request,data);
+      if(agent)return withSecurity(agent,env);
       const response = await env.ASSETS.fetch(mapped);
+      if(response.status===404&&representation(request.headers.get('accept'))==='text/markdown')return withSecurity(markdown404(ctxPage,request.method==='HEAD'),env);
       const page = pageForVisit(new URL(mapped.url).pathname);
       if (env.VISITS && page && request.method === 'GET' && response.ok && response.headers.get('content-type')?.includes('text/html') && !/bot|crawler|spider|headless/i.test(request.headers.get('user-agent') || '')) {
         const count = env.VISITS.get(env.VISITS.idFromName('site')).fetch(`https://counter/record?page=${page}`, {method:'POST'}).catch(() => console.error('visit_count_failed'));
         if (ctx?.waitUntil) ctx.waitUntil(count); else await count;
       }
-      return withSecurity(response, env);
+      const metadata=ctxPage&&['/','/index.html'].includes(ctxPage.path)&&response.ok&&response.headers.get('content-type')?.includes('text/html')?{ctx:ctxPage,url,site:await data.site().catch(()=>defaultSite)}:null;
+      return withSecurity(response, env, metadata);
     } catch (error) {
       const status = Number(error?.status) || 500;
       if (status >= 500) console.error(JSON.stringify({ message: 'request_failed', status, path: route, error: error instanceof Error ? error.message : String(error) }));

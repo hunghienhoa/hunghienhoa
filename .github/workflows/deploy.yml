@@ -45,3 +45,6 @@ jobs:
       - name: Kiểm tra website thật
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: node tools/cloud-smoke.mjs
+      - name: Kiểm tra nội dung dành cho agent trên website thật
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: node tools/agent-smoke.mjs

@@ -7,6 +7,7 @@ import { randomBytes, randomUUID, createHash, scrypt, timingSafeEqual } from 'no
 import { promisify } from 'node:util';
 import { initVisits, recordVisit, visitSummary, pageForVisit } from './visits.mjs';
 import { adsenseHtml } from './adsense.mjs';
+import {agentRoute,pageContext,representation,markdown404,decorateHtml} from './agent-content.mjs';
 import { HOUR, fail, keys, text, password, defaultSite, siteSettings, submission, post } from './validation.mjs';
 
 const derive = promisify(scrypt);
@@ -281,6 +282,13 @@ export function createApp(options = {}) {
       fail(404, 'Không tìm thấy nội dung yêu cầu.');
     }
     if (!['GET', 'HEAD'].includes(req.method)) fail(405, 'Chỉ hỗ trợ đọc trang.');
+    const pageURL=new URL(req.url,`http://${req.headers.host}`),ctxPage=pageContext(pageURL);
+    const agent=await agentRoute(new Request(pageURL,{method:req.method,headers:{Accept:req.headers.accept||'*/*'}}),{
+      site:async()=>JSON.parse(getSetting('site')),
+      posts:async()=>db.prepare("SELECT slug,title,excerpt,is_sample FROM posts WHERE status='published' ORDER BY published_at DESC,id").all().map(row=>({...row,isSample:!!row.is_sample})),
+      post:async slug=>{const row=db.prepare("SELECT * FROM posts WHERE slug=? AND status='published'").get(slug);return row?postData(row):null;}
+    });
+    if(agent){res.writeHead(agent.status,Object.fromEntries(agent.headers));return res.end(req.method==='HEAD'?undefined:Buffer.from(await agent.arrayBuffer()));}
     if (route.includes('\0') || route.split(/[\\/]/).some(part => part.startsWith('.'))) fail(404, 'Không tìm thấy trang.');
     const adminHost = options.adminHost ?? process.env.ADMIN_HOST ?? 'admin.hunghienhoa.com';
     const requestHost = (req.headers.host || '').split(':')[0];
@@ -295,14 +303,21 @@ export function createApp(options = {}) {
     const content = fs.readFileSync(file);
     const visitPage = pageForVisit(route);
     if (visitPage && req.method === 'GET' && contentType.includes('text/html') && !/bot|crawler|spider|headless/i.test(req.headers['user-agent'] || '')) recordVisit(visitSQL, visitPage, now());
-    const ads = contentType.includes('text/html') ? adsenseHtml(content.toString('utf8'),randomBytes(16).toString('base64')) : null;
-    const output = ads ? Buffer.from(ads.body) : content;
+    const metadata=contentType.includes('text/html')&&ctxPage&&['/','/index.html'].includes(ctxPage.path);
+    const html=metadata?decorateHtml(content.toString('utf8'),JSON.parse(getSetting('site')),ctxPage,pageURL):contentType.includes('text/html')?content.toString('utf8'):'';
+    if(metadata)res.setHeader('Vary','Accept');
+    const ads = contentType.includes('text/html') ? adsenseHtml(html,randomBytes(16).toString('base64')) : null;
+    const output = ads ? Buffer.from(ads.body) : metadata?Buffer.from(html):content;
     if (ads) res.setHeader('Content-Security-Policy',ads.csp);
     res.writeHead(200, { 'Content-Type': contentType, 'Content-Length': output.length, 'Cache-Control': ads ? 'no-store' : 'no-cache' });
     res.end(req.method === 'HEAD' ? undefined : output);
   }
   const server = http.createServer((req, res) => { handle(req, res).catch(error => {
     if (res.headersSent) { res.destroy(); return; }
+    if(error.status===404&&!req.url.startsWith('/api/')&&representation(req.headers.accept)==='text/markdown'){
+      const response=markdown404(pageContext(new URL(req.url,`http://${req.headers.host}`)),req.method==='HEAD');
+      res.writeHead(404,Object.fromEntries(response.headers));response.text().then(body=>res.end(req.method==='HEAD'?undefined:body));return;
+    }
     json(res, { error: error.status ? error.message : 'Máy chủ chưa xử lý được thao tác. Vui lòng thử lại.' }, error.status || 500);
     if (!error.status) console.error('Lỗi máy chủ:', error.code || error.name);
   }); });
