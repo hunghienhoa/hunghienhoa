@@ -590,9 +590,16 @@ async function loadFrameArtwork(file) {
       image.src=url;
     });
     if(token!==frameUploadToken) return;
-    if(image.width!==720 || image.height!==2180) throw new Error('Khung cần đúng kích thước 720 × 2180 px. Hãy dùng mẫu bố cục bên trên.');
+    const suppliedTemplate=image.width===707 && image.height===2000;
+    if(!suppliedTemplate && (image.width!==720 || image.height!==2180)) throw new Error('Khung cần 707 × 2000 px theo mẫu hoặc 720 × 2180 px.');
     const canvas=document.createElement('canvas');canvas.width=720;canvas.height=2180;
-    const context=canvas.getContext('2d');context.drawImage(image,0,0);
+    const context=canvas.getContext('2d');
+    if(suppliedTemplate){
+      // Align the supplied template's four windows to the booth's canonical photo slots.
+      const sx=[0,39,669,707],dx=[0,40,680,720];
+      const sy=[0,64,446,466,849,864,1246,1259,1642,2000],dy=[0,100,550,570,1020,1040,1490,1510,1960,2180];
+      for(let y=0;y<sy.length-1;y++)for(let x=0;x<3;x++)context.drawImage(image,sx[x],sy[y],sx[x+1]-sx[x],sy[y+1]-sy[y],dx[x],dy[y],dx[x+1]-dx[x],dy[y+1]-dy[y]);
+    }else context.drawImage(image,0,0);
     for(let index=0;index<4;index++) if(context.getImageData(360,325+470*index,1,1).data[3]>20) throw new Error('Bốn ô ảnh cần để trong suốt theo mẫu, không đặt ảnh cá nhân vào khung.');
     if(frameImageDataUrl(canvas).startsWith('data:image/jpeg')) throw new Error('Khung trong suốt cần dưới 1 MB sau xử lý. Hãy giảm chi tiết hoặc dung lượng rồi thử lại.');
     uploadedFrameCanvas=canvas;$('#remove-frame-art').hidden=false;
@@ -603,9 +610,14 @@ $('#frame-art-upload')?.addEventListener('change',event=>loadFrameArtwork(event.
 $('#frame-drop')?.addEventListener('dragover',event=>event.preventDefault());
 $('#frame-drop')?.addEventListener('drop',event=>{event.preventDefault();loadFrameArtwork(event.dataTransfer.files[0]);});
 $('#remove-frame-art')?.addEventListener('click',()=>{frameUploadToken++;uploadedFrameCanvas=null;$('#frame-art-upload').value='';$('#remove-frame-art').hidden=true;$('#frame-upload-status').textContent='Đã bỏ file. Bạn có thể tự thiết kế hoặc chọn file khác.';renderDesignPreview();});
-$('#download-frame-guide')?.addEventListener('click',()=>{
-  const windows=Array.from({length:4},(_,i)=>`<rect x="40" y="${100+i*470}" width="640" height="450" fill="none" stroke="#303487" stroke-dasharray="8 8"/>`).join('');
-  downloadBlob(new Blob([`<svg xmlns="http://www.w3.org/2000/svg" width="720" height="2180" viewBox="0 0 720 2180">${windows}</svg>`],{type:'image/svg+xml'}),'mau-bo-cuc-4-anh.svg');
+$('#download-frame-guide')?.addEventListener('click',async()=>{
+  try{
+    const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src='assets/frame-guide-707x2000.webp';});
+    const canvas=document.createElement('canvas');canvas.width=707;canvas.height=2000;canvas.getContext('2d').drawImage(image,0,0);
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+    if(!blob || blob.type!=='image/png')throw new Error();
+    downloadBlob(blob,'mau-khung-hop-anh-707x2000.png');
+  }catch{$('#frame-upload-status').textContent='Chưa tải được mẫu. Hãy thử lại.';}
 });
 $('#apply-design').addEventListener('click', () => {
   try {

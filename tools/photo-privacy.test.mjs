@@ -236,3 +236,13 @@ assert.equal(elements.get('#remove-frame-art').hidden,false);
 elements.get('#remove-frame-art').listeners.click();
 assert.equal(vm.runInContext('uploadedFrameCanvas',context),null);
 context.Image=priorImage;document.createElement=priorCreate;
+
+assert.ok(html.includes('Tải mẫu khung PNG ↓') && !html.includes('Tải mẫu bố cục SVG'));
+assert.ok(script.includes('mau-khung-hop-anh-707x2000.png'));
+context.Image=class extends TestImage{constructor(){super();this.width=707;this.height=2000;}};
+document.createElement=tag=>{const element=priorCreate(tag);if(tag==='canvas')element.context.getImageData=()=>({data:new Uint8ClampedArray([0,0,0,0])});return element;};
+await vm.runInContext("loadFrameArtwork({type:'image/png',size:100,name:'mau707.png'})",context);
+assert.ok(vm.runInContext('uploadedFrameCanvas',context));
+assert.equal(vm.runInContext('uploadedFrameCanvas.width',context),720);
+assert.equal(vm.runInContext('uploadedFrameCanvas.height',context),2180);
+context.Image=priorImage;document.createElement=priorCreate;
