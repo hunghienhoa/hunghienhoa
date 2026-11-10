@@ -208,7 +208,7 @@ async function loadCustomization(settings) {
     contentFields=await response.json();
   }
   const container=$('#customize-fields');container.replaceChildren();
-  const global=make('details');global.open=true;global.append(make('summary','Màu giao diện và mạng xã hội'));
+  const global=make('details');global.append(make('summary','Màu giao diện và mạng xã hội'));
   for(const [key,fallback] of Object.entries({cream:'#fbf2e3',blue:'#303487',yellow:'#ffdc38'})) {
     const label=make('label',({cream:'Màu nền',blue:'Màu chữ / chủ đạo',yellow:'Màu nhấn'})[key]),input=make('input');input.type='color';input.dataset.theme=key;input.value=settings.theme?.[key] || fallback;label.append(input);global.append(label);
   }
@@ -223,12 +223,21 @@ async function loadCustomization(settings) {
     }
     container.append(group);
   }
+  for (const group of container.querySelectorAll('details')) group.addEventListener('toggle',()=>{
+    if(group.open) for(const other of container.querySelectorAll('details')) if(other!==group) other.open=false;
+  });
 }
 $('#refresh-analytics').addEventListener('click',loadAnalytics);
 $('#customize-search').addEventListener('input',event=>{
   const query=event.target.value.toLocaleLowerCase('vi-VN').trim();
   for(const label of document.querySelectorAll('.custom-field'))label.hidden=!!query && !(label.textContent+' '+label.querySelector('textarea').value).toLocaleLowerCase('vi-VN').includes(query);
-  if(query) for(const group of document.querySelectorAll('#customize-fields details'))group.open=true;
+  let first;
+  for(const group of document.querySelectorAll('#customize-fields details')) {
+    const fields=[...group.querySelectorAll('.custom-field')];
+    group.hidden=!!query && !fields.some(field=>!field.hidden);
+    if(query && !group.hidden && !first) first=group;
+  }
+  if(first) first.open=true;
 });
 $('#customize-form').addEventListener('submit',async event=>{
   event.preventDefault();const button=$('#save-customization');button.disabled=true;
