@@ -217,9 +217,10 @@ async function loadCustomization(settings) {
   container.append(global);
   for(const [page,name] of Object.entries({main:'Trang chính',blog:'Blog',photobooth:'Photobooth',admin:'Quản trị'})) {
     const group=make('details');group.append(make('summary',name));
+    const grid=make('div',undefined,'field-grid');group.append(grid);
     for(const field of contentFields.filter(field=>field.page===page)) {
       const label=make('label',field.label,'custom-field'),input=make('textarea');input.rows=2;input.maxLength=3000;input.dataset.textKey=field.key;input.value=settings.pageTexts?.[field.key] ?? field.default;
-      const reset=action('Khôi phục chữ gốc',async()=>{input.value=field.default;});label.append(input,reset);group.append(label);
+      const reset=action('Khôi phục chữ gốc',async()=>{input.value=field.default;});label.append(input,reset);grid.append(label);
     }
     container.append(group);
   }
@@ -228,6 +229,9 @@ async function loadCustomization(settings) {
   });
 }
 $('#refresh-analytics').addEventListener('click',loadAnalytics);
+$('#editor-columns').addEventListener('change',event=>{
+  if(['2','3','4'].includes(event.target.value)) $('#customize-fields').style.setProperty('--editor-columns',event.target.value);
+});
 $('#customize-search').addEventListener('input',event=>{
   const query=event.target.value.toLocaleLowerCase('vi-VN').trim();
   for(const label of document.querySelectorAll('.custom-field'))label.hidden=!!query && !(label.textContent+' '+label.querySelector('textarea').value).toLocaleLowerCase('vi-VN').includes(query);
