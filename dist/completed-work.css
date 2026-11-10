@@ -39,3 +39,5 @@
   .completed-blog .blog-notebook{top:18%}
   .completed-blog .blog-note{top:auto;bottom:18px;right:7%;max-width:calc(100% - 100px)}
 }
+
+.completed-copy{justify-content:center;gap:0}.completed-copy>p{margin-top:18px;max-width:38ch}.completed-copy .completed-cta{margin-top:28px}.completed-copy h3{line-height:1.15}
