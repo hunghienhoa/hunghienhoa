@@ -116,3 +116,13 @@ test('lượt truy cập chỉ gửi mã băm, tải lại cùng trang không t�
     assert.ok(calls.every(url=>/[?&]key=[a-f0-9]{64}$/.test(url)&&!url.includes('192.0.2.')));
   } finally {db.close();}
 });
+
+
+test('HTML giữ CSP và không cho tự chèn script thống kê', async () => {
+ const env={ASSETS:{fetch:async()=>new Response('<!doctype html><title>Quản trị</title>',{headers:{'Content-Type':'text/html','Cache-Control':'public, max-age=0'}})}};
+ const response=await worker.fetch(new Request('https://admin.hunghienhoa.com/'),env);
+ assert.equal(response.status,200);
+ assert.match(response.headers.get('Cache-Control'),/no-transform/);
+ assert.ok(response.headers.get('Content-Security-Policy').includes("script-src 'self'"));
+ assert.ok(!(await response.text()).includes('cloudflareinsights'));
+});

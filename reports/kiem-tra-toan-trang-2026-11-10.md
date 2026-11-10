@@ -19,13 +19,14 @@ Trang chính, Blog và trình đọc bài, Photobooth, phòng chụp /shoot, Adm
 - Nhập nhiều ảnh bị lỗi giữa chừng hoặc rời trang chưa dọn các canvas đã giải mã: giải phóng ngay và hủy việc nhập còn lại.
 - Mở lại nút tự tạo khung trong /shoot; đưa nút dùng/tải khung ra khỏi nhóm tùy chọn thu gọn.
 - JPEG tải khung trống từ artwork trong suốt có vùng đen: trải nền đúng màu trước khi xuất JPEG.
+- Kiểm tra trên web thật phát hiện script thống kê tự chèn bị CSP Admin chặn. Bổ sung `Cache-Control: no-transform` cho HTML để giữ nguyên nội dung/CSP và không tự chèn beacon; bộ đếm riêng vẫn hoạt động.
 - Chính sách CSP chặn thẻ base cùng nguồn của /shoot: cho phép base cùng nguồn, giữ các giới hạn nguồn khác.
 - Liên kết chính sách ở /shoot chưa có CSS, bị dính chữ: thêm kiểu và vùng bấm phù hợp.
 - Sửa lời giới thiệu đóng góp cho cả tải file và tự thiết kế; bỏ số lượng khung cố định dễ sai ở hướng dẫn; chuẩn hóa nhãn mạng xã hội trong Admin.
 
 ## Kiểm tra
 
-- `npm run check`: 26 nhóm kiểm tra đạt, bao gồm phiên, phân quyền, CSRF, hết hạn, nội dung nháp, định dạng ảnh, quyền riêng tư, blog, Markdown/HTML negotiation và sitemap.
+- `npm run check`: 27 nhóm kiểm tra đạt, bao gồm phiên, phân quyền, CSRF, hết hạn, nội dung nháp, định dạng ảnh, quyền riêng tư, blog, Markdown/HTML negotiation và sitemap.
 - `python tools/convert-webp.py --check`: không có PNG tĩnh được phục vụ trong dist; SVG và trường hợp tải mẫu PNG có chủ đích được giữ nguyên.
 - Ma trận trình duyệt: 9 trang × 7 chiều rộng 320/360/390/430/768/1440/1920 px. Không tràn ngang, không lỗi JavaScript.
 - 36 trường hợp Admin sau đăng nhập, trình đọc bài, hộp tạo khung và hộp chọn khung ở 320/390/768/1440 px: không tràn ngang.

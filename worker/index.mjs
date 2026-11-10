@@ -31,6 +31,9 @@ async function withSecurity(response, env, metadata) {
     const ads = adsenseHtml(html, crypto.randomUUID().replaceAll('-',''));
     body = ads?.body ?? html;
     if (ads) {headers.set('Content-Security-Policy',ads.csp);headers.set('Cache-Control','no-store');headers.delete('ETag');headers.delete('Content-Length');}
+    // Keep HTML/CSP intact; the site's own counter does not need an injected analytics beacon.
+    const cacheControl = headers.get('Cache-Control') || 'no-store';
+    headers.set('Cache-Control', /(?:^|,)\s*no-transform(?:,|$)/i.test(cacheControl) ? cacheControl : cacheControl + ', no-transform');
   }
   return new Response(body, { status: response.status, statusText: response.statusText, headers });
 }
