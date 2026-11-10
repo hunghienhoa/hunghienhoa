@@ -37,10 +37,10 @@ assert.ok(html.includes('<dialog'));
 console.log('PASS: assets, anchors, six concepts, JS syntax, dialog and reduced-motion support.');
 for (const id of ['photobooth-project','blog-project']) {
   const link = html.match(new RegExp('<a[^>]+id="'+id+'"[^>]*>'))[0];
-  assert.ok(!link.includes('target=') && !link.includes('data-project-window'));
+  assert.ok(link.includes('target="_blank"') && link.includes('rel="noopener noreferrer"') && !link.includes('data-project-window'));
 }
 assert.ok(!html.includes('project-window.js'));
-console.log('PASS: project links use normal same-tab navigation.');
+console.log('PASS: project links use native new tabs without popup scripts.');
 (async () => {
   for (const clipboardWorks of [true, false]) {
     let click, copied, clearFeedback, feedbackDelay;
