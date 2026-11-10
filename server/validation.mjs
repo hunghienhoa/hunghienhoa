@@ -1,3 +1,4 @@
+import contentFields from '../dist/content-fields.json' with { type: 'json' };
 export const HOUR = 60 * 60 * 1000;
 export const MAX_IMAGE_BYTES = 1024 * 1024;
 export function fail(status, message) { throw Object.assign(new Error(message), { status }); }
@@ -64,7 +65,9 @@ export const defaultSite = {
   intro: 'Một chút tò mò. Một chút khác biệt.\nVà rất nhiều điều muốn kể bằng thiết kế.',
   about: 'Đây là góc nhỏ dành cho những điều mình sáng tạo: từ một nét vẽ, một câu chuyện đến một thế giới hình ảnh hoàn chỉnh. Mình tin sự tò mò luôn là điểm bắt đầu thú vị.',
   email: 'hunghienhoa2110@gmail.com', phone: '0898.29.8886',
-  blogTitle: 'Góc tò mò của Hùng', blogIntro: 'Những điều nhỏ mà thú vị, những ý tưởng muốn giữ lại và những câu chuyện muốn chia sẻ.'
+  blogTitle: 'Góc tò mò của Hùng', blogIntro: 'Những điều nhỏ mà thú vị, những ý tưởng muốn giữ lại và những câu chuyện muốn chia sẻ.',
+  pageTexts: {}, theme: { cream:'#fbf2e3',blue:'#303487',yellow:'#ffdc38' },
+  socials: {facebook:'https://www.facebook.com/quanghungdethuong',instagram:'https://www.instagram.com/im.bqhung/',threads:'https://www.threads.com/@im.bqhung',tiktok:'https://www.tiktok.com/@im.bqhung',zalo:'https://zalo.me/0898298886',youtube:'https://www.youtube.com/@hunghienhoa98886',wechat:'bqhtit'}
 };
 export function siteSettings(value) {
   keys(value, Object.keys(defaultSite));
@@ -75,6 +78,22 @@ export function siteSettings(value) {
     blogTitle: text(value.blogTitle, 100, true), blogIntro: text(value.blogIntro, 400, true, true)
   };
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(result.email) || !/^[+\d\s().-]{7,40}$/.test(result.phone)) fail(400, 'Email hoặc số điện thoại chưa hợp lệ.');
+  const pageTexts = value.pageTexts ?? {};
+  keys(pageTexts, contentFields.map(field => field.key));
+  result.pageTexts = Object.fromEntries(Object.entries(pageTexts).map(([key,value]) => [key,text(value,3000,false,true)]));
+  if (value.theme!==undefined) keys(value.theme,Object.keys(defaultSite.theme));
+  result.theme = {...defaultSite.theme,...value.theme};
+  keys(result.theme,Object.keys(defaultSite.theme));
+  for (const color of Object.values(result.theme)) if (typeof color!=='string' || !/^#[a-f\d]{6}$/i.test(color)) fail(400,'Màu giao diện cần dạng #RRGGBB.');
+  if (value.socials!==undefined) keys(value.socials,Object.keys(defaultSite.socials));
+  result.socials = {...defaultSite.socials,...value.socials};
+  keys(result.socials,Object.keys(defaultSite.socials));
+  for (const [name,link] of Object.entries(result.socials)) {
+    if (typeof link!=='string') fail(400,'Liên kết mạng xã hội cần là văn bản.');
+    if (name==='wechat') {result.socials[name]=text(link,80,true);continue;}
+    let url;try {url=new URL(link);}catch {fail(400,'Liên kết mạng xã hội chưa hợp lệ.');}
+    if (url.protocol!=='https:' || url.username || url.password || link.length>500) fail(400,'Mạng xã hội cần liên kết HTTPS hợp lệ.');
+  }
   return result;
 }
 export function design(value) {

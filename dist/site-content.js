@@ -17,4 +17,5 @@ fetch(siteAPI + '/api/site', { credentials: 'omit', cache: 'no-store' }).then(re
   const phone = document.querySelector('.contact-phone');
   phone.firstChild.textContent = site.phone + ' '; phone.href = 'tel:' + site.phone.replace(/[^+\d]/g, '');
   document.querySelector('.draft-label')?.remove();
+  window.dispatchEvent(new Event('hung-content-ready'));
 }).catch(() => { /* Nội dung trong HTML vẫn dùng được khi chưa có máy chủ nội dung. */ });

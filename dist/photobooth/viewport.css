@@ -1,2 +1,4 @@
 html,body{touch-action:pan-x pan-y}
 @media(pointer:coarse){input,textarea,select{font-size:16px!important}}
+
+.footer-wish{max-width:900px;margin:24px auto 0;padding:28px 24px 40px;text-align:center;border-top:1px solid #30348744;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-size:clamp(16px,2vw,22px);line-height:1.7;color:var(--blue)}

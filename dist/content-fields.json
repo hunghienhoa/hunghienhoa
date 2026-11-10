@@ -1,0 +1,2078 @@
+[
+  {
+    "key": "main-001",
+    "page": "main",
+    "label": "Đến các dự án",
+    "default": "Đến các dự án"
+  },
+  {
+    "key": "main-002",
+    "page": "main",
+    "label": "®",
+    "default": "®"
+  },
+  {
+    "key": "main-003",
+    "page": "main",
+    "label": "hhh",
+    "default": "hhh"
+  },
+  {
+    "key": "main-004",
+    "page": "main",
+    "label": "Dự án",
+    "default": "Dự án"
+  },
+  {
+    "key": "main-005",
+    "page": "main",
+    "label": "Về mình",
+    "default": "Về mình"
+  },
+  {
+    "key": "main-006",
+    "page": "main",
+    "label": "↗",
+    "default": "↗"
+  },
+  {
+    "key": "main-007",
+    "page": "main",
+    "label": "Kết nối",
+    "default": "Kết nối"
+  },
+  {
+    "key": "main-008",
+    "page": "main",
+    "label": "HỒ SƠ SÁNG TẠO / TẬP 01",
+    "default": "HỒ SƠ SÁNG TẠO / TẬP 01"
+  },
+  {
+    "key": "main-009",
+    "page": "main",
+    "label": "HÙNG HIỀN HÒA · 2026",
+    "default": "HÙNG HIỀN HÒA · 2026"
+  },
+  {
+    "key": "main-010",
+    "page": "main",
+    "label": "Cẩn thận: bên trong có nhiều ý tưởng!",
+    "default": "Cẩn thận: bên trong có nhiều ý tưởng!"
+  },
+  {
+    "key": "main-011",
+    "page": "main",
+    "label": "Một hộp",
+    "default": "Một hộp"
+  },
+  {
+    "key": "main-012",
+    "page": "main",
+    "label": "đầy ý tưởng.",
+    "default": "đầy ý tưởng."
+  },
+  {
+    "key": "main-013",
+    "page": "main",
+    "label": "↘",
+    "default": "↘"
+  },
+  {
+    "key": "main-014",
+    "page": "main",
+    "label": "Mở hộp cùng mình",
+    "default": "Mở hộp cùng mình"
+  },
+  {
+    "key": "main-015",
+    "page": "main",
+    "label": "ĐIỀU HAY Ở BÊN TRONG ↓",
+    "default": "ĐIỀU HAY Ở BÊN TRONG ↓"
+  },
+  {
+    "key": "main-016",
+    "page": "main",
+    "label": "▥▥ ▥▥▥ ▥ ▥▥▥",
+    "default": "▥▥ ▥▥▥ ▥ ▥▥▥"
+  },
+  {
+    "key": "main-017",
+    "page": "main",
+    "label": "↑↑   ◇   ☂",
+    "default": "↑↑   ◇   ☂"
+  },
+  {
+    "key": "main-018",
+    "page": "main",
+    "label": "ĐẦY Ý TƯỞNG",
+    "default": "ĐẦY Ý TƯỞNG"
+  },
+  {
+    "key": "main-019",
+    "page": "main",
+    "label": "NHẸ TAY",
+    "default": "NHẸ TAY"
+  },
+  {
+    "key": "main-020",
+    "page": "main",
+    "label": "chào!",
+    "default": "chào!"
+  },
+  {
+    "key": "main-021",
+    "page": "main",
+    "label": "LÀM BẰNG SỰ TÒ MÒ",
+    "default": "LÀM BẰNG SỰ TÒ MÒ"
+  },
+  {
+    "key": "main-022",
+    "page": "main",
+    "label": "▥▥▥▥▥▥▥",
+    "default": "▥▥▥▥▥▥▥"
+  },
+  {
+    "key": "main-023",
+    "page": "main",
+    "label": "↖ chạm để mở một ý tưởng",
+    "default": "↖ chạm để mở một ý tưởng"
+  },
+  {
+    "key": "main-024",
+    "page": "main",
+    "label": "100%",
+    "default": "100%"
+  },
+  {
+    "key": "main-025",
+    "page": "main",
+    "label": "THIẾT KẾ · KỂ CHUYỆN · KHÁM PHÁ",
+    "default": "THIẾT KẾ · KỂ CHUYỆN · KHÁM PHÁ"
+  },
+  {
+    "key": "main-026",
+    "page": "main",
+    "label": "Cuộn để khám phá ↓",
+    "default": "Cuộn để khám phá ↓"
+  },
+  {
+    "key": "main-027",
+    "page": "main",
+    "label": "01 / DỰ ÁN CỦA MÌNH",
+    "default": "01 / DỰ ÁN CỦA MÌNH"
+  },
+  {
+    "key": "main-028",
+    "page": "main",
+    "label": "đã làm.",
+    "default": "đã làm."
+  },
+  {
+    "key": "main-029",
+    "page": "main",
+    "label": "Dự án",
+    "default": "Dự án"
+  },
+  {
+    "key": "main-030",
+    "page": "main",
+    "label": "DỰ ÁN CÁ NHÂN / 2026",
+    "default": "DỰ ÁN CÁ NHÂN / 2026"
+  },
+  {
+    "key": "main-031",
+    "page": "main",
+    "label": "Phòng chụp của Hùng.",
+    "default": "Phòng chụp của Hùng."
+  },
+  {
+    "key": "main-032",
+    "page": "main",
+    "label": "Hộp Ảnh",
+    "default": "Hộp Ảnh"
+  },
+  {
+    "key": "main-033",
+    "page": "main",
+    "label": "Một góc chụp ảnh nho nhỏ ngay trên trình duyệt. Chụp bốn tấm, chọn khung yêu thích và lưu lại một ch",
+    "default": "Một góc chụp ảnh nho nhỏ ngay trên trình duyệt. Chụp bốn tấm, chọn khung yêu thích và lưu lại một chút vui của hôm nay."
+  },
+  {
+    "key": "main-034",
+    "page": "main",
+    "label": "Vào phòng chụp",
+    "default": "Vào phòng chụp"
+  },
+  {
+    "key": "main-035",
+    "page": "main",
+    "label": "Mở trên trang riêng.",
+    "default": "Mở trên trang riêng."
+  },
+  {
+    "key": "main-036",
+    "page": "main",
+    "label": "DỰ ÁN CÁ NHÂN / 2026",
+    "default": "DỰ ÁN CÁ NHÂN / 2026"
+  },
+  {
+    "key": "main-037",
+    "page": "main",
+    "label": "Chuyện hay, mình cùng kể.",
+    "default": "Chuyện hay, mình cùng kể."
+  },
+  {
+    "key": "main-038",
+    "page": "main",
+    "label": "Góc tò mò",
+    "default": "Góc tò mò"
+  },
+  {
+    "key": "main-039",
+    "page": "main",
+    "label": "Một trang để chia sẻ những điều thú vị về hình ảnh, sáng tạo và cuộc sống. Đọc chậm một chút, thử mộ",
+    "default": "Một trang để chia sẻ những điều thú vị về hình ảnh, sáng tạo và cuộc sống. Đọc chậm một chút, thử một góc nhìn mới và mang về một ý tưởng hay."
+  },
+  {
+    "key": "main-040",
+    "page": "main",
+    "label": "Ghé góc chia sẻ",
+    "default": "Ghé góc chia sẻ"
+  },
+  {
+    "key": "main-041",
+    "page": "main",
+    "label": "Mở trên trang riêng.",
+    "default": "Mở trên trang riêng."
+  },
+  {
+    "key": "main-042",
+    "page": "main",
+    "label": "02 / NHỮNG CHIẾC HỘP SÁNG TẠO",
+    "default": "02 / NHỮNG CHIẾC HỘP SÁNG TẠO"
+  },
+  {
+    "key": "main-043",
+    "page": "main",
+    "label": "ý tưởng.",
+    "default": "ý tưởng."
+  },
+  {
+    "key": "main-044",
+    "page": "main",
+    "label": "Cùng mở",
+    "default": "Cùng mở"
+  },
+  {
+    "key": "main-045",
+    "page": "main",
+    "label": "BỘ SƯU TẬP THIẾT KẾ MẪU",
+    "default": "BỘ SƯU TẬP THIẾT KẾ MẪU"
+  },
+  {
+    "key": "main-046",
+    "page": "main",
+    "label": "01",
+    "default": "01"
+  },
+  {
+    "key": "main-047",
+    "page": "main",
+    "label": "MỞ HỘP ĐẦU TIÊN NÀO.",
+    "default": "MỞ HỘP ĐẦU TIÊN NÀO."
+  },
+  {
+    "key": "main-048",
+    "page": "main",
+    "label": "NHẬN DIỆN THƯƠNG HIỆU",
+    "default": "NHẬN DIỆN THƯƠNG HIỆU"
+  },
+  {
+    "key": "main-049",
+    "page": "main",
+    "label": "nắng",
+    "default": "nắng"
+  },
+  {
+    "key": "main-050",
+    "page": "main",
+    "label": "MỘT CHÚT NẮNG CHO MỖI NGÀY.",
+    "default": "MỘT CHÚT NẮNG CHO MỖI NGÀY."
+  },
+  {
+    "key": "main-051",
+    "page": "main",
+    "label": "↗",
+    "default": "↗"
+  },
+  {
+    "key": "main-052",
+    "page": "main",
+    "label": "Nắng",
+    "default": "Nắng"
+  },
+  {
+    "key": "main-053",
+    "page": "main",
+    "label": "Nhận diện / 2026",
+    "default": "Nhận diện / 2026"
+  },
+  {
+    "key": "main-054",
+    "page": "main",
+    "label": "02",
+    "default": "02"
+  },
+  {
+    "key": "main-055",
+    "page": "main",
+    "label": "THỂ HIỆN CHẤT RIÊNG.",
+    "default": "THỂ HIỆN CHẤT RIÊNG."
+  },
+  {
+    "key": "main-056",
+    "page": "main",
+    "label": "Ý TƯỞNG TRUYỀN THÔNG",
+    "default": "Ý TƯỞNG TRUYỀN THÔNG"
+  },
+  {
+    "key": "main-057",
+    "page": "main",
+    "label": "CỨ LÀ MÌNH. CỨ KHÁC BIỆT.",
+    "default": "CỨ LÀ MÌNH. CỨ KHÁC BIỆT."
+  },
+  {
+    "key": "main-058",
+    "page": "main",
+    "label": "↗",
+    "default": "↗"
+  },
+  {
+    "key": "main-059",
+    "page": "main",
+    "label": "Bật chất riêng",
+    "default": "Bật chất riêng"
+  },
+  {
+    "key": "main-060",
+    "page": "main",
+    "label": "Truyền thông / 2026",
+    "default": "Truyền thông / 2026"
+  },
+  {
+    "key": "main-061",
+    "page": "main",
+    "label": "03",
+    "default": "03"
+  },
+  {
+    "key": "main-062",
+    "page": "main",
+    "label": "BẬT TẦN SỐ NÀO!",
+    "default": "BẬT TẦN SỐ NÀO!"
+  },
+  {
+    "key": "main-063",
+    "page": "main",
+    "label": "MẶT A · CHỈ CÓ NIỀM VUI",
+    "default": "MẶT A · CHỈ CÓ NIỀM VUI"
+  },
+  {
+    "key": "main-064",
+    "page": "main",
+    "label": "TẦN SỐ",
+    "default": "TẦN SỐ"
+  },
+  {
+    "key": "main-065",
+    "page": "main",
+    "label": "▰   BĂNG NHẠC Ý TƯỞNG   ▰",
+    "default": "▰   BĂNG NHẠC Ý TƯỞNG   ▰"
+  },
+  {
+    "key": "main-066",
+    "page": "main",
+    "label": "↗",
+    "default": "↗"
+  },
+  {
+    "key": "main-067",
+    "page": "main",
+    "label": "Tần Số — Câu lạc bộ sáng tạo",
+    "default": "Tần Số — Câu lạc bộ sáng tạo"
+  },
+  {
+    "key": "main-068",
+    "page": "main",
+    "label": "Nhận diện sự kiện / 2026",
+    "default": "Nhận diện sự kiện / 2026"
+  },
+  {
+    "key": "main-069",
+    "page": "main",
+    "label": "04",
+    "default": "04"
+  },
+  {
+    "key": "main-070",
+    "page": "main",
+    "label": "LẮNG NGHE NHÉ.",
+    "default": "LẮNG NGHE NHÉ."
+  },
+  {
+    "key": "main-071",
+    "page": "main",
+    "label": "TẠP CHÍ VỀ CẢM XÚC",
+    "default": "TẠP CHÍ VỀ CẢM XÚC"
+  },
+  {
+    "key": "main-072",
+    "page": "main",
+    "label": "chạm.",
+    "default": "chạm."
+  },
+  {
+    "key": "main-073",
+    "page": "main",
+    "label": "SỐ 01 / CẢM HỨNG Ở KHẮP NƠI",
+    "default": "SỐ 01 / CẢM HỨNG Ở KHẮP NƠI"
+  },
+  {
+    "key": "main-074",
+    "page": "main",
+    "label": "↗",
+    "default": "↗"
+  },
+  {
+    "key": "main-075",
+    "page": "main",
+    "label": "Chạm — Một chút cảm xúc",
+    "default": "Chạm — Một chút cảm xúc"
+  },
+  {
+    "key": "main-076",
+    "page": "main",
+    "label": "Thiết kế ấn phẩm / 2026",
+    "default": "Thiết kế ấn phẩm / 2026"
+  },
+  {
+    "key": "main-077",
+    "page": "main",
+    "label": "05",
+    "default": "05"
+  },
+  {
+    "key": "main-078",
+    "page": "main",
+    "label": "NHẤP MỘT NGỤM AN YÊN.",
+    "default": "NHẤP MỘT NGỤM AN YÊN."
+  },
+  {
+    "key": "main-079",
+    "page": "main",
+    "label": "100% AN YÊN",
+    "default": "100% AN YÊN"
+  },
+  {
+    "key": "main-080",
+    "page": "main",
+    "label": "mộc.",
+    "default": "mộc."
+  },
+  {
+    "key": "main-081",
+    "page": "main",
+    "label": "↗",
+    "default": "↗"
+  },
+  {
+    "key": "main-082",
+    "page": "main",
+    "label": "Mộc — Một chút an yên",
+    "default": "Mộc — Một chút an yên"
+  },
+  {
+    "key": "main-083",
+    "page": "main",
+    "label": "Thiết kế bao bì / 2026",
+    "default": "Thiết kế bao bì / 2026"
+  },
+  {
+    "key": "main-084",
+    "page": "main",
+    "label": "06",
+    "default": "06"
+  },
+  {
+    "key": "main-085",
+    "page": "main",
+    "label": "ĐIỀU NHỎ, CẢM XÚC LỚN.",
+    "default": "ĐIỀU NHỎ, CẢM XÚC LỚN."
+  },
+  {
+    "key": "main-086",
+    "page": "main",
+    "label": "MỘT TÚI ĐẦY CÂU CHUYỆN",
+    "default": "MỘT TÚI ĐẦY CÂU CHUYỆN"
+  },
+  {
+    "key": "main-087",
+    "page": "main",
+    "label": "GOM MỘT CHÚT VUI MỖI NGÀY.",
+    "default": "GOM MỘT CHÚT VUI MỖI NGÀY."
+  },
+  {
+    "key": "main-088",
+    "page": "main",
+    "label": "↗",
+    "default": "↗"
+  },
+  {
+    "key": "main-089",
+    "page": "main",
+    "label": "Những điều bé xíu",
+    "default": "Những điều bé xíu"
+  },
+  {
+    "key": "main-090",
+    "page": "main",
+    "label": "Minh họa cá nhân / 2026",
+    "default": "Minh họa cá nhân / 2026"
+  },
+  {
+    "key": "main-091",
+    "page": "main",
+    "label": "Các thiết kế mẫu minh họa cách trưng bày hồ sơ, chưa đại diện cho dự án hay khách hàng thực tế.",
+    "default": "Các thiết kế mẫu minh họa cách trưng bày hồ sơ, chưa đại diện cho dự án hay khách hàng thực tế."
+  },
+  {
+    "key": "main-092",
+    "page": "main",
+    "label": "NGƯỜI ĐỨNG SAU Ý TƯỞNG",
+    "default": "NGƯỜI ĐỨNG SAU Ý TƯỞNG"
+  },
+  {
+    "key": "main-093",
+    "page": "main",
+    "label": "GÓC SÁNG TẠO",
+    "default": "GÓC SÁNG TẠO"
+  },
+  {
+    "key": "main-094",
+    "page": "main",
+    "label": ":)",
+    "default": ":)"
+  },
+  {
+    "key": "main-095",
+    "page": "main",
+    "label": "HÙNG HIỀN HÒA",
+    "default": "HÙNG HIỀN HÒA"
+  },
+  {
+    "key": "main-096",
+    "page": "main",
+    "label": "THIẾT KẾ · SÁNG TẠO · LẶP LẠI",
+    "default": "THIẾT KẾ · SÁNG TẠO · LẶP LẠI"
+  },
+  {
+    "key": "main-097",
+    "page": "main",
+    "label": "▥▥▥ ▥ ▥▥▥▥ ▥▥ ▥▥▥",
+    "default": "▥▥▥ ▥ ▥▥▥▥ ▥▥ ▥▥▥"
+  },
+  {
+    "key": "main-098",
+    "page": "main",
+    "label": "rất vui được gặp bạn! ↗",
+    "default": "rất vui được gặp bạn! ↗"
+  },
+  {
+    "key": "main-099",
+    "page": "main",
+    "label": "03 / NGƯỜI ĐÓNG GÓI Ý TƯỞNG",
+    "default": "03 / NGƯỜI ĐÓNG GÓI Ý TƯỞNG"
+  },
+  {
+    "key": "main-100",
+    "page": "main",
+    "label": "Hùng.",
+    "default": "Hùng."
+  },
+  {
+    "key": "main-101",
+    "page": "main",
+    "label": "Đây là góc nhỏ dành cho những điều mình sáng tạo: từ một nét vẽ, một câu chuyện đến một thế giới hìn",
+    "default": "Đây là góc nhỏ dành cho những điều mình sáng tạo: từ một nét vẽ, một câu chuyện đến một thế giới hình ảnh hoàn chỉnh. Mình tin sự tò mò luôn là điểm bắt đầu thú vị."
+  },
+  {
+    "key": "main-102",
+    "page": "main",
+    "label": "Giới thiệu mẫu — chờ câu chuyện thật của bạn.",
+    "default": "Giới thiệu mẫu — chờ câu chuyện thật của bạn."
+  },
+  {
+    "key": "main-103",
+    "page": "main",
+    "label": "Nhận diện hình ảnh",
+    "default": "Nhận diện hình ảnh"
+  },
+  {
+    "key": "main-104",
+    "page": "main",
+    "label": "Tư duy sáng tạo",
+    "default": "Tư duy sáng tạo"
+  },
+  {
+    "key": "main-105",
+    "page": "main",
+    "label": "Minh họa",
+    "default": "Minh họa"
+  },
+  {
+    "key": "main-106",
+    "page": "main",
+    "label": "Thiết kế số",
+    "default": "Thiết kế số"
+  },
+  {
+    "key": "main-107",
+    "page": "main",
+    "label": "↗",
+    "default": "↗"
+  },
+  {
+    "key": "main-108",
+    "page": "main",
+    "label": "Cùng tạo nên điều tiếp theo",
+    "default": "Cùng tạo nên điều tiếp theo"
+  },
+  {
+    "key": "main-109",
+    "page": "main",
+    "label": "04 / CHIẾC HỘP TIẾP THEO",
+    "default": "04 / CHIẾC HỘP TIẾP THEO"
+  },
+  {
+    "key": "main-110",
+    "page": "main",
+    "label": "Có ý tưởng?",
+    "default": "Có ý tưởng?"
+  },
+  {
+    "key": "main-111",
+    "page": "main",
+    "label": "mở hộp.",
+    "default": "mở hộp."
+  },
+  {
+    "key": "main-112",
+    "page": "main",
+    "label": "Cùng",
+    "default": "Cùng"
+  },
+  {
+    "key": "main-113",
+    "page": "main",
+    "label": "↗",
+    "default": "↗"
+  },
+  {
+    "key": "main-114",
+    "page": "main",
+    "label": "Gửi một lời chào",
+    "default": "Gửi một lời chào"
+  },
+  {
+    "key": "main-115",
+    "page": "main",
+    "label": "LIÊN HỆ TRỰC TIẾP",
+    "default": "LIÊN HỆ TRỰC TIẾP"
+  },
+  {
+    "key": "main-116",
+    "page": "main",
+    "label": "hunghienhoa2110@gmail.com",
+    "default": "hunghienhoa2110@gmail.com"
+  },
+  {
+    "key": "main-117",
+    "page": "main",
+    "label": "Gọi điện ↗",
+    "default": "Gọi điện ↗"
+  },
+  {
+    "key": "main-118",
+    "page": "main",
+    "label": "0898.29.8886",
+    "default": "0898.29.8886"
+  },
+  {
+    "key": "main-119",
+    "page": "main",
+    "label": "GẶP MÌNH TRÊN MẠNG XÃ HỘI",
+    "default": "GẶP MÌNH TRÊN MẠNG XÃ HỘI"
+  },
+  {
+    "key": "main-120",
+    "page": "main",
+    "label": "Facebook",
+    "default": "Facebook"
+  },
+  {
+    "key": "main-121",
+    "page": "main",
+    "label": "Instagram",
+    "default": "Instagram"
+  },
+  {
+    "key": "main-122",
+    "page": "main",
+    "label": "Threads",
+    "default": "Threads"
+  },
+  {
+    "key": "main-123",
+    "page": "main",
+    "label": "TikTok",
+    "default": "TikTok"
+  },
+  {
+    "key": "main-124",
+    "page": "main",
+    "label": "Zalo",
+    "default": "Zalo"
+  },
+  {
+    "key": "main-125",
+    "page": "main",
+    "label": "bqhtit",
+    "default": "bqhtit"
+  },
+  {
+    "key": "main-126",
+    "page": "main",
+    "label": "YouTube",
+    "default": "YouTube"
+  },
+  {
+    "key": "main-127",
+    "page": "main",
+    "label": "CẢM ƠN BẠN!",
+    "default": "CẢM ƠN BẠN!"
+  },
+  {
+    "key": "main-128",
+    "page": "main",
+    "label": "®",
+    "default": "®"
+  },
+  {
+    "key": "main-129",
+    "page": "main",
+    "label": "hhh",
+    "default": "hhh"
+  },
+  {
+    "key": "main-130",
+    "page": "main",
+    "label": "© 2026 Hùng Hiền Hòa · Được tạo nên bằng sự tò mò.",
+    "default": "© 2026 Hùng Hiền Hòa · Được tạo nên bằng sự tò mò."
+  },
+  {
+    "key": "main-131",
+    "page": "main",
+    "label": "Về đầu trang ↑",
+    "default": "Về đầu trang ↑"
+  },
+  {
+    "key": "main-132",
+    "page": "main",
+    "label": "THIẾT KẾ MẪU / 2026",
+    "default": "THIẾT KẾ MẪU / 2026"
+  },
+  {
+    "key": "main-133",
+    "page": "main",
+    "label": "Ý tưởng",
+    "default": "Ý tưởng"
+  },
+  {
+    "key": "main-134",
+    "page": "main",
+    "label": "Phạm vi thiết kế",
+    "default": "Phạm vi thiết kế"
+  },
+  {
+    "key": "main-135",
+    "page": "main",
+    "label": "Bản minh họa cách trưng bày hồ sơ. Thay bằng dự án thực tế khi giới thiệu năng lực.",
+    "default": "Bản minh họa cách trưng bày hồ sơ. Thay bằng dự án thực tế khi giới thiệu năng lực."
+  },
+  {
+    "key": "main-136",
+    "page": "main",
+    "label": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!",
+    "default": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!"
+  },
+  {
+    "key": "blog-001",
+    "page": "blog",
+    "label": "Đến các bài viết",
+    "default": "Đến các bài viết"
+  },
+  {
+    "key": "blog-002",
+    "page": "blog",
+    "label": "✦",
+    "default": "✦"
+  },
+  {
+    "key": "blog-003",
+    "page": "blog",
+    "label": "góc nhỏ của Hùng.",
+    "default": "góc nhỏ của Hùng."
+  },
+  {
+    "key": "blog-004",
+    "page": "blog",
+    "label": "gh",
+    "default": "gh"
+  },
+  {
+    "key": "blog-005",
+    "page": "blog",
+    "label": "Bài viết",
+    "default": "Bài viết"
+  },
+  {
+    "key": "blog-006",
+    "page": "blog",
+    "label": "Về góc nhỏ",
+    "default": "Về góc nhỏ"
+  },
+  {
+    "key": "blog-007",
+    "page": "blog",
+    "label": "NHẶT MỘT CHÚT HAY.",
+    "default": "NHẶT MỘT CHÚT HAY."
+  },
+  {
+    "key": "blog-008",
+    "page": "blog",
+    "label": "NHỮNG TRANG NHỎ · NHỮNG ĐIỀU HAY",
+    "default": "NHỮNG TRANG NHỎ · NHỮNG ĐIỀU HAY"
+  },
+  {
+    "key": "blog-009",
+    "page": "blog",
+    "label": "Mở một trang. Gặp một ý tưởng.",
+    "default": "Mở một trang. Gặp một ý tưởng."
+  },
+  {
+    "key": "blog-010",
+    "page": "blog",
+    "label": "của Hùng.",
+    "default": "của Hùng."
+  },
+  {
+    "key": "blog-011",
+    "page": "blog",
+    "label": "Góc nhỏ",
+    "default": "Góc nhỏ"
+  },
+  {
+    "key": "blog-012",
+    "page": "blog",
+    "label": "Một nơi để nhặt nhạnh những điều thú vị, lưu lại một ý tưởng vừa ghé qua và kể thêm một chút chuyện ",
+    "default": "Một nơi để nhặt nhạnh những điều thú vị, lưu lại một ý tưởng vừa ghé qua và kể thêm một chút chuyện hay."
+  },
+  {
+    "key": "blog-013",
+    "page": "blog",
+    "label": "Cùng đọc một chút",
+    "default": "Cùng đọc một chút"
+  },
+  {
+    "key": "blog-014",
+    "page": "blog",
+    "label": "01 / NHỮNG TRANG VỪA MỞ",
+    "default": "01 / NHỮNG TRANG VỪA MỞ"
+  },
+  {
+    "key": "blog-015",
+    "page": "blog",
+    "label": "Biết thêm một điều.",
+    "default": "Biết thêm một điều."
+  },
+  {
+    "key": "blog-016",
+    "page": "blog",
+    "label": "Đọc một chút.",
+    "default": "Đọc một chút."
+  },
+  {
+    "key": "blog-017",
+    "page": "blog",
+    "label": "Bạn muốn tìm điều gì?",
+    "default": "Bạn muốn tìm điều gì?"
+  },
+  {
+    "key": "blog-018",
+    "page": "blog",
+    "label": "Đang mở những trang viết…",
+    "default": "Đang mở những trang viết…"
+  },
+  {
+    "key": "blog-019",
+    "page": "blog",
+    "label": "Chờ một chút để góc nhỏ lấy các bài đã được đăng.",
+    "default": "Chờ một chút để góc nhỏ lấy các bài đã được đăng."
+  },
+  {
+    "key": "blog-020",
+    "page": "blog",
+    "label": "← Về các bài viết",
+    "default": "← Về các bài viết"
+  },
+  {
+    "key": "blog-021",
+    "page": "blog",
+    "label": "Đọc thêm những trang khác",
+    "default": "Đọc thêm những trang khác"
+  },
+  {
+    "key": "blog-022",
+    "page": "blog",
+    "label": "MỘT GÓC NHỎ ĐỂ CHIA SẺ",
+    "default": "MỘT GÓC NHỎ ĐỂ CHIA SẺ"
+  },
+  {
+    "key": "blog-023",
+    "page": "blog",
+    "label": "Vui thì kể.",
+    "default": "Vui thì kể."
+  },
+  {
+    "key": "blog-024",
+    "page": "blog",
+    "label": "Hay thì giữ.",
+    "default": "Hay thì giữ."
+  },
+  {
+    "key": "blog-025",
+    "page": "blog",
+    "label": "Góc nhỏ này dành cho những điều thú vị trong sáng tạo, hình ảnh và cuộc sống thường ngày. Mỗi bài vi",
+    "default": "Góc nhỏ này dành cho những điều thú vị trong sáng tạo, hình ảnh và cuộc sống thường ngày. Mỗi bài viết là một lời mời cùng tò mò thêm một chút."
+  },
+  {
+    "key": "blog-026",
+    "page": "blog",
+    "label": "HẸN BẠN Ở TRANG TIẾP THEO.",
+    "default": "HẸN BẠN Ở TRANG TIẾP THEO."
+  },
+  {
+    "key": "blog-027",
+    "page": "blog",
+    "label": "Góc nhỏ của Hùng.",
+    "default": "Góc nhỏ của Hùng."
+  },
+  {
+    "key": "blog-028",
+    "page": "blog",
+    "label": "Được viết bằng sự tò mò và một chút vui.",
+    "default": "Được viết bằng sự tò mò và một chút vui."
+  },
+  {
+    "key": "blog-029",
+    "page": "blog",
+    "label": "Về đầu trang ↑",
+    "default": "Về đầu trang ↑"
+  },
+  {
+    "key": "blog-030",
+    "page": "blog",
+    "label": "LIÊN HỆ TRỰC TIẾP",
+    "default": "LIÊN HỆ TRỰC TIẾP"
+  },
+  {
+    "key": "blog-031",
+    "page": "blog",
+    "label": "hunghienhoa2110@gmail.com",
+    "default": "hunghienhoa2110@gmail.com"
+  },
+  {
+    "key": "blog-032",
+    "page": "blog",
+    "label": "Gọi điện ↗",
+    "default": "Gọi điện ↗"
+  },
+  {
+    "key": "blog-033",
+    "page": "blog",
+    "label": "0898.29.8886",
+    "default": "0898.29.8886"
+  },
+  {
+    "key": "blog-034",
+    "page": "blog",
+    "label": "GẶP MÌNH TRÊN MẠNG XÃ HỘI",
+    "default": "GẶP MÌNH TRÊN MẠNG XÃ HỘI"
+  },
+  {
+    "key": "blog-035",
+    "page": "blog",
+    "label": "Facebook",
+    "default": "Facebook"
+  },
+  {
+    "key": "blog-036",
+    "page": "blog",
+    "label": "Instagram",
+    "default": "Instagram"
+  },
+  {
+    "key": "blog-037",
+    "page": "blog",
+    "label": "Threads",
+    "default": "Threads"
+  },
+  {
+    "key": "blog-038",
+    "page": "blog",
+    "label": "TikTok",
+    "default": "TikTok"
+  },
+  {
+    "key": "blog-039",
+    "page": "blog",
+    "label": "Zalo",
+    "default": "Zalo"
+  },
+  {
+    "key": "blog-040",
+    "page": "blog",
+    "label": "bqhtit",
+    "default": "bqhtit"
+  },
+  {
+    "key": "blog-041",
+    "page": "blog",
+    "label": "YouTube",
+    "default": "YouTube"
+  },
+  {
+    "key": "blog-042",
+    "page": "blog",
+    "label": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!",
+    "default": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!"
+  },
+  {
+    "key": "photobooth-001",
+    "page": "photobooth",
+    "label": "Đến phòng chụp",
+    "default": "Đến phòng chụp"
+  },
+  {
+    "key": "photobooth-002",
+    "page": "photobooth",
+    "label": "của Hùng.",
+    "default": "của Hùng."
+  },
+  {
+    "key": "photobooth-003",
+    "page": "photobooth",
+    "label": "Hộp Ảnh",
+    "default": "Hộp Ảnh"
+  },
+  {
+    "key": "photobooth-004",
+    "page": "photobooth",
+    "label": "Phòng chụp",
+    "default": "Phòng chụp"
+  },
+  {
+    "key": "photobooth-005",
+    "page": "photobooth",
+    "label": "Khung ảnh",
+    "default": "Khung ảnh"
+  },
+  {
+    "key": "photobooth-006",
+    "page": "photobooth",
+    "label": "Cách chơi",
+    "default": "Cách chơi"
+  },
+  {
+    "key": "photobooth-007",
+    "page": "photobooth",
+    "label": "Riêng tư",
+    "default": "Riêng tư"
+  },
+  {
+    "key": "photobooth-008",
+    "page": "photobooth",
+    "label": "MỘT DỰ ÁN CỦA HÙNG · MỞ MỘT CHÚT VUI",
+    "default": "MỘT DỰ ÁN CỦA HÙNG · MỞ MỘT CHÚT VUI"
+  },
+  {
+    "key": "photobooth-009",
+    "page": "photobooth",
+    "label": "Cười một cái. Giữ lại thật lâu.",
+    "default": "Cười một cái. Giữ lại thật lâu."
+  },
+  {
+    "key": "photobooth-010",
+    "page": "photobooth",
+    "label": "dải kỷ niệm.",
+    "default": "dải kỷ niệm."
+  },
+  {
+    "key": "photobooth-011",
+    "page": "photobooth",
+    "label": "↘",
+    "default": "↘"
+  },
+  {
+    "key": "photobooth-012",
+    "page": "photobooth",
+    "label": "Vào phòng chụp",
+    "default": "Vào phòng chụp"
+  },
+  {
+    "key": "photobooth-013",
+    "page": "photobooth",
+    "label": "Không cần đăng nhập · Ảnh được xử lý ngay trên máy bạn",
+    "default": "Không cần đăng nhập · Ảnh được xử lý ngay trên máy bạn"
+  },
+  {
+    "key": "photobooth-014",
+    "page": "photobooth",
+    "label": "01 / PHÒNG CHỤP NHỎ",
+    "default": "01 / PHÒNG CHỤP NHỎ"
+  },
+  {
+    "key": "photobooth-015",
+    "page": "photobooth",
+    "label": "lên hình?",
+    "default": "lên hình?"
+  },
+  {
+    "key": "photobooth-016",
+    "page": "photobooth",
+    "label": "Sẵn sàng",
+    "default": "Sẵn sàng"
+  },
+  {
+    "key": "photobooth-017",
+    "page": "photobooth",
+    "label": "01",
+    "default": "01"
+  },
+  {
+    "key": "photobooth-018",
+    "page": "photobooth",
+    "label": "02",
+    "default": "02"
+  },
+  {
+    "key": "photobooth-019",
+    "page": "photobooth",
+    "label": "03",
+    "default": "03"
+  },
+  {
+    "key": "photobooth-020",
+    "page": "photobooth",
+    "label": "MÁY ẢNH CỦA BẠN",
+    "default": "MÁY ẢNH CỦA BẠN"
+  },
+  {
+    "key": "photobooth-021",
+    "page": "photobooth",
+    "label": "Đang tắt",
+    "default": "Đang tắt"
+  },
+  {
+    "key": "photobooth-022",
+    "page": "photobooth",
+    "label": "Một nụ cười đang chờ lên hình.",
+    "default": "Một nụ cười đang chờ lên hình."
+  },
+  {
+    "key": "photobooth-023",
+    "page": "photobooth",
+    "label": "ĐANG XEM TRỰC TIẾP",
+    "default": "ĐANG XEM TRỰC TIẾP"
+  },
+  {
+    "key": "photobooth-024",
+    "page": "photobooth",
+    "label": "Lật gương",
+    "default": "Lật gương"
+  },
+  {
+    "key": "photobooth-025",
+    "page": "photobooth",
+    "label": "↗",
+    "default": "↗"
+  },
+  {
+    "key": "photobooth-026",
+    "page": "photobooth",
+    "label": "＋",
+    "default": "＋"
+  },
+  {
+    "key": "photobooth-027",
+    "page": "photobooth",
+    "label": "Chọn ảnh từ máy",
+    "default": "Chọn ảnh từ máy"
+  },
+  {
+    "key": "photobooth-028",
+    "page": "photobooth",
+    "label": "Mỗi tấm đếm ngược 3 giây. Chọn một ô ảnh để chụp lại hoặc thay ảnh riêng ô đó.",
+    "default": "Mỗi tấm đếm ngược 3 giây. Chọn một ô ảnh để chụp lại hoặc thay ảnh riêng ô đó."
+  },
+  {
+    "key": "photobooth-029",
+    "page": "photobooth",
+    "label": "01",
+    "default": "01"
+  },
+  {
+    "key": "photobooth-030",
+    "page": "photobooth",
+    "label": "02",
+    "default": "02"
+  },
+  {
+    "key": "photobooth-031",
+    "page": "photobooth",
+    "label": "03",
+    "default": "03"
+  },
+  {
+    "key": "photobooth-032",
+    "page": "photobooth",
+    "label": "04",
+    "default": "04"
+  },
+  {
+    "key": "photobooth-033",
+    "page": "photobooth",
+    "label": "Ảnh chỉ ở bộ nhớ tạm, không tải lên máy chủ. Phiên ảnh tự xóa sau 1 giờ.",
+    "default": "Ảnh chỉ ở bộ nhớ tạm, không tải lên máy chủ. Phiên ảnh tự xóa sau 1 giờ."
+  },
+  {
+    "key": "photobooth-034",
+    "page": "photobooth",
+    "label": "DẢI KỶ NIỆM CỦA BẠN",
+    "default": "DẢI KỶ NIỆM CỦA BẠN"
+  },
+  {
+    "key": "photobooth-035",
+    "page": "photobooth",
+    "label": "Xem trước · Tệp tải về giữ nguyên tỷ lệ",
+    "default": "Xem trước · Tệp tải về giữ nguyên tỷ lệ"
+  },
+  {
+    "key": "photobooth-036",
+    "page": "photobooth",
+    "label": "↓",
+    "default": "↓"
+  },
+  {
+    "key": "photobooth-037",
+    "page": "photobooth",
+    "label": "02 / THÊM CÁ TÍNH CỦA BẠN",
+    "default": "02 / THÊM CÁ TÍNH CỦA BẠN"
+  },
+  {
+    "key": "photobooth-038",
+    "page": "photobooth",
+    "label": "Nhiều cảm xúc.",
+    "default": "Nhiều cảm xúc."
+  },
+  {
+    "key": "photobooth-039",
+    "page": "photobooth",
+    "label": "Một khung ảnh.",
+    "default": "Một khung ảnh."
+  },
+  {
+    "key": "photobooth-040",
+    "page": "photobooth",
+    "label": "✦",
+    "default": "✦"
+  },
+  {
+    "key": "photobooth-041",
+    "page": "photobooth",
+    "label": "Xem khung cộng đồng ↘",
+    "default": "Xem khung cộng đồng ↘"
+  },
+  {
+    "key": "photobooth-042",
+    "page": "photobooth",
+    "label": "Chọn khung · 16 mẫu",
+    "default": "Chọn khung · 16 mẫu"
+  },
+  {
+    "key": "photobooth-043",
+    "page": "photobooth",
+    "label": "Sắc ảnh",
+    "default": "Sắc ảnh"
+  },
+  {
+    "key": "photobooth-044",
+    "page": "photobooth",
+    "label": "Tối đa 40 ký tự",
+    "default": "Tối đa 40 ký tự"
+  },
+  {
+    "key": "photobooth-045",
+    "page": "photobooth",
+    "label": "Viết một lời nhắn",
+    "default": "Viết một lời nhắn"
+  },
+  {
+    "key": "photobooth-046",
+    "page": "photobooth",
+    "label": "Bạn có thể đổi khung và sắc ảnh cả sau khi chụp.",
+    "default": "Bạn có thể đổi khung và sắc ảnh cả sau khi chụp."
+  },
+  {
+    "key": "photobooth-047",
+    "page": "photobooth",
+    "label": "TỪ MỘT Ý TƯỞNG, THÀNH NIỀM VUI CHUNG",
+    "default": "TỪ MỘT Ý TƯỞNG, THÀNH NIỀM VUI CHUNG"
+  },
+  {
+    "key": "photobooth-048",
+    "page": "photobooth",
+    "label": "mọi người.",
+    "default": "mọi người."
+  },
+  {
+    "key": "photobooth-049",
+    "page": "photobooth",
+    "label": "Khung từ",
+    "default": "Khung từ"
+  },
+  {
+    "key": "photobooth-050",
+    "page": "photobooth",
+    "label": "Những khung đã được Hùng duyệt. Chọn một khung để dùng ngay, hoặc tự thiết kế một chút cá tính của r",
+    "default": "Những khung đã được Hùng duyệt. Chọn một khung để dùng ngay, hoặc tự thiết kế một chút cá tính của riêng bạn."
+  },
+  {
+    "key": "photobooth-051",
+    "page": "photobooth",
+    "label": "Bạn có một ý tưởng đáng yêu?",
+    "default": "Bạn có một ý tưởng đáng yêu?"
+  },
+  {
+    "key": "photobooth-052",
+    "page": "photobooth",
+    "label": "03 / BA BƯỚC NHỎ",
+    "default": "03 / BA BƯỚC NHỎ"
+  },
+  {
+    "key": "photobooth-053",
+    "page": "photobooth",
+    "label": "Chuyện còn lại để đây.",
+    "default": "Chuyện còn lại để đây."
+  },
+  {
+    "key": "photobooth-054",
+    "page": "photobooth",
+    "label": "Cứ tự nhiên.",
+    "default": "Cứ tự nhiên."
+  },
+  {
+    "key": "photobooth-055",
+    "page": "photobooth",
+    "label": "01",
+    "default": "01"
+  },
+  {
+    "key": "photobooth-056",
+    "page": "photobooth",
+    "label": "Chụp bốn khoảnh khắc",
+    "default": "Chụp bốn khoảnh khắc"
+  },
+  {
+    "key": "photobooth-057",
+    "page": "photobooth",
+    "label": "Cho phép dùng máy ảnh khi bạn bấm nút, tạo dáng theo đếm ngược hoặc chọn ảnh có sẵn từ máy.",
+    "default": "Cho phép dùng máy ảnh khi bạn bấm nút, tạo dáng theo đếm ngược hoặc chọn ảnh có sẵn từ máy."
+  },
+  {
+    "key": "photobooth-058",
+    "page": "photobooth",
+    "label": "02",
+    "default": "02"
+  },
+  {
+    "key": "photobooth-059",
+    "page": "photobooth",
+    "label": "Chọn một chút cá tính",
+    "default": "Chọn một chút cá tính"
+  },
+  {
+    "key": "photobooth-060",
+    "page": "photobooth",
+    "label": "Đổi khung, thử sắc ảnh và viết một lời nhắn. Dải ảnh luôn cập nhật để bạn xem ngay.",
+    "default": "Đổi khung, thử sắc ảnh và viết một lời nhắn. Dải ảnh luôn cập nhật để bạn xem ngay."
+  },
+  {
+    "key": "photobooth-061",
+    "page": "photobooth",
+    "label": "03",
+    "default": "03"
+  },
+  {
+    "key": "photobooth-062",
+    "page": "photobooth",
+    "label": "Mang kỷ niệm về nhà",
+    "default": "Mang kỷ niệm về nhà"
+  },
+  {
+    "key": "photobooth-063",
+    "page": "photobooth",
+    "label": "Khi đã đủ bốn tấm, tải dải ảnh JPEG. Bạn có thể in ra hoặc tự chia sẻ cho người mình muốn.",
+    "default": "Khi đã đủ bốn tấm, tải dải ảnh JPEG. Bạn có thể in ra hoặc tự chia sẻ cho người mình muốn."
+  },
+  {
+    "key": "photobooth-064",
+    "page": "photobooth",
+    "label": "ẢNH CỦA BẠN, DO BẠN GIỮ",
+    "default": "ẢNH CỦA BẠN, DO BẠN GIỮ"
+  },
+  {
+    "key": "photobooth-065",
+    "page": "photobooth",
+    "label": "Cứ yên tâm cười.",
+    "default": "Cứ yên tâm cười."
+  },
+  {
+    "key": "photobooth-066",
+    "page": "photobooth",
+    "label": "Kỷ niệm riêng.",
+    "default": "Kỷ niệm riêng."
+  },
+  {
+    "key": "photobooth-067",
+    "page": "photobooth",
+    "label": "Ảnh chụp và ảnh chọn để ghép chỉ ở bộ nhớ trình duyệt, không gửi lên máy chủ và không lưu vào databa",
+    "default": "Ảnh chụp và ảnh chọn để ghép chỉ ở bộ nhớ trình duyệt, không gửi lên máy chủ và không lưu vào database. Phiên ảnh tự xóa sau 1 giờ hoặc khi rời trang. Chỉ thiết kế khung bạn chủ động đóng góp mới được gửi để duyệt."
+  },
+  {
+    "key": "photobooth-068",
+    "page": "photobooth",
+    "label": "Không bật được máy ảnh thì sao?",
+    "default": "Không bật được máy ảnh thì sao?"
+  },
+  {
+    "key": "photobooth-069",
+    "page": "photobooth",
+    "label": "Kiểm tra quyền máy ảnh của trình duyệt và đóng ứng dụng khác đang dùng máy ảnh. Bạn cũng có thể chọn",
+    "default": "Kiểm tra quyền máy ảnh của trình duyệt và đóng ứng dụng khác đang dùng máy ảnh. Bạn cũng có thể chọn ảnh PNG, JPEG hoặc WebP từ máy để tạo dải ảnh."
+  },
+  {
+    "key": "photobooth-070",
+    "page": "photobooth",
+    "label": "Tôi có thể chụp lại một tấm không?",
+    "default": "Tôi có thể chụp lại một tấm không?"
+  },
+  {
+    "key": "photobooth-071",
+    "page": "photobooth",
+    "label": "Có. Chọn ô ảnh cần thay, rồi bấm “Chụp 1 tấm” hoặc chọn một ảnh từ máy. Khung và lời nhắn vẫn được g",
+    "default": "Có. Chọn ô ảnh cần thay, rồi bấm “Chụp 1 tấm” hoặc chọn một ảnh từ máy. Khung và lời nhắn vẫn được giữ."
+  },
+  {
+    "key": "photobooth-072",
+    "page": "photobooth",
+    "label": "Ảnh có được giữ lại khi đóng trang?",
+    "default": "Ảnh có được giữ lại khi đóng trang?"
+  },
+  {
+    "key": "photobooth-073",
+    "page": "photobooth",
+    "label": "Không. Trang không lưu ảnh của bạn. Phiên ảnh tự xóa sau 1 giờ hoặc ngay khi bạn rời trang. Hãy tải ",
+    "default": "Không. Trang không lưu ảnh của bạn. Phiên ảnh tự xóa sau 1 giờ hoặc ngay khi bạn rời trang. Hãy tải dải ảnh về trước khi đóng hoặc tải lại trang."
+  },
+  {
+    "key": "photobooth-074",
+    "page": "photobooth",
+    "label": "một dự án của Hùng.",
+    "default": "một dự án của Hùng."
+  },
+  {
+    "key": "photobooth-075",
+    "page": "photobooth",
+    "label": "Hộp Ảnh",
+    "default": "Hộp Ảnh"
+  },
+  {
+    "key": "photobooth-076",
+    "page": "photobooth",
+    "label": "Một chút hôm nay, để dành cho ngày mai.",
+    "default": "Một chút hôm nay, để dành cho ngày mai."
+  },
+  {
+    "key": "photobooth-077",
+    "page": "photobooth",
+    "label": "Về đầu trang ↑",
+    "default": "Về đầu trang ↑"
+  },
+  {
+    "key": "photobooth-078",
+    "page": "photobooth",
+    "label": "XƯỞNG KHUNG NHỎ CỦA BẠN",
+    "default": "XƯỞNG KHUNG NHỎ CỦA BẠN"
+  },
+  {
+    "key": "photobooth-079",
+    "page": "photobooth",
+    "label": "Đậm chất riêng.",
+    "default": "Đậm chất riêng."
+  },
+  {
+    "key": "photobooth-080",
+    "page": "photobooth",
+    "label": "Một khung ảnh.",
+    "default": "Một khung ảnh."
+  },
+  {
+    "key": "photobooth-081",
+    "page": "photobooth",
+    "label": "Chọn màu, thêm chữ và một nhãn dán. Đây là khung trống; ảnh chụp của bạn không được đưa vào bản đóng",
+    "default": "Chọn màu, thêm chữ và một nhãn dán. Đây là khung trống; ảnh chụp của bạn không được đưa vào bản đóng góp."
+  },
+  {
+    "key": "photobooth-082",
+    "page": "photobooth",
+    "label": "Bảng màu của bạn",
+    "default": "Bảng màu của bạn"
+  },
+  {
+    "key": "photobooth-083",
+    "page": "photobooth",
+    "label": "Màu giấy",
+    "default": "Màu giấy"
+  },
+  {
+    "key": "photobooth-084",
+    "page": "photobooth",
+    "label": "Màu chữ",
+    "default": "Màu chữ"
+  },
+  {
+    "key": "photobooth-085",
+    "page": "photobooth",
+    "label": "Màu nhấn",
+    "default": "Màu nhấn"
+  },
+  {
+    "key": "photobooth-086",
+    "page": "photobooth",
+    "label": "Chữ ở đầu khung",
+    "default": "Chữ ở đầu khung"
+  },
+  {
+    "key": "photobooth-087",
+    "page": "photobooth",
+    "label": "Lời nhắn trên khung",
+    "default": "Lời nhắn trên khung"
+  },
+  {
+    "key": "photobooth-088",
+    "page": "photobooth",
+    "label": "Họa tiết",
+    "default": "Họa tiết"
+  },
+  {
+    "key": "photobooth-089",
+    "page": "photobooth",
+    "label": "Nhãn dán",
+    "default": "Nhãn dán"
+  },
+  {
+    "key": "photobooth-090",
+    "page": "photobooth",
+    "label": "Bạn có thể dùng khung ngay mà không cần đăng tải hoặc để lại thông tin.",
+    "default": "Bạn có thể dùng khung ngay mà không cần đăng tải hoặc để lại thông tin."
+  },
+  {
+    "key": "photobooth-091",
+    "page": "photobooth",
+    "label": "Khung trống do bạn thiết kế",
+    "default": "Khung trống do bạn thiết kế"
+  },
+  {
+    "key": "photobooth-092",
+    "page": "photobooth",
+    "label": "CHIA SẺ MỘT CHÚT VUI",
+    "default": "CHIA SẺ MỘT CHÚT VUI"
+  },
+  {
+    "key": "photobooth-093",
+    "page": "photobooth",
+    "label": "Gửi khung vào thư viện chung.",
+    "default": "Gửi khung vào thư viện chung."
+  },
+  {
+    "key": "photobooth-094",
+    "page": "photobooth",
+    "label": "Chỉ bản thiết kế khung được gửi. Bản chờ và thông tin liên hệ tự xóa sau 1 giờ nếu chưa được duyệt. ",
+    "default": "Chỉ bản thiết kế khung được gửi. Bản chờ và thông tin liên hệ tự xóa sau 1 giờ nếu chưa được duyệt. Khung đã duyệt được giữ cùng tên hiển thị, còn thông tin liên hệ riêng được xóa."
+  },
+  {
+    "key": "photobooth-095",
+    "page": "photobooth",
+    "label": "Tên khung",
+    "default": "Tên khung"
+  },
+  {
+    "key": "photobooth-096",
+    "page": "photobooth",
+    "label": "Tên hiển thị của bạn",
+    "default": "Tên hiển thị của bạn"
+  },
+  {
+    "key": "photobooth-097",
+    "page": "photobooth",
+    "label": "Không bắt buộc, chỉ quản trị xem",
+    "default": "Không bắt buộc, chỉ quản trị xem"
+  },
+  {
+    "key": "photobooth-098",
+    "page": "photobooth",
+    "label": "Liên hệ riêng",
+    "default": "Liên hệ riêng"
+  },
+  {
+    "key": "photobooth-099",
+    "page": "photobooth",
+    "label": "Không bắt buộc",
+    "default": "Không bắt buộc"
+  },
+  {
+    "key": "photobooth-100",
+    "page": "photobooth",
+    "label": "Liên kết công khai",
+    "default": "Liên kết công khai"
+  },
+  {
+    "key": "photobooth-101",
+    "page": "photobooth",
+    "label": "Tôi đồng ý gửi thiết kế khung và thông tin trên để xét duyệt. Nếu được duyệt, khung, tên hiển thị và",
+    "default": "Tôi đồng ý gửi thiết kế khung và thông tin trên để xét duyệt. Nếu được duyệt, khung, tên hiển thị và liên kết công khai sẽ xuất hiện trong thư viện."
+  },
+  {
+    "key": "photobooth-102",
+    "page": "photobooth",
+    "label": "LIÊN HỆ TRỰC TIẾP",
+    "default": "LIÊN HỆ TRỰC TIẾP"
+  },
+  {
+    "key": "photobooth-103",
+    "page": "photobooth",
+    "label": "hunghienhoa2110@gmail.com",
+    "default": "hunghienhoa2110@gmail.com"
+  },
+  {
+    "key": "photobooth-104",
+    "page": "photobooth",
+    "label": "Gọi điện ↗",
+    "default": "Gọi điện ↗"
+  },
+  {
+    "key": "photobooth-105",
+    "page": "photobooth",
+    "label": "0898.29.8886",
+    "default": "0898.29.8886"
+  },
+  {
+    "key": "photobooth-106",
+    "page": "photobooth",
+    "label": "GẶP MÌNH TRÊN MẠNG XÃ HỘI",
+    "default": "GẶP MÌNH TRÊN MẠNG XÃ HỘI"
+  },
+  {
+    "key": "photobooth-107",
+    "page": "photobooth",
+    "label": "Facebook",
+    "default": "Facebook"
+  },
+  {
+    "key": "photobooth-108",
+    "page": "photobooth",
+    "label": "Instagram",
+    "default": "Instagram"
+  },
+  {
+    "key": "photobooth-109",
+    "page": "photobooth",
+    "label": "Threads",
+    "default": "Threads"
+  },
+  {
+    "key": "photobooth-110",
+    "page": "photobooth",
+    "label": "TikTok",
+    "default": "TikTok"
+  },
+  {
+    "key": "photobooth-111",
+    "page": "photobooth",
+    "label": "Zalo",
+    "default": "Zalo"
+  },
+  {
+    "key": "photobooth-112",
+    "page": "photobooth",
+    "label": "bqhtit",
+    "default": "bqhtit"
+  },
+  {
+    "key": "photobooth-113",
+    "page": "photobooth",
+    "label": "YouTube",
+    "default": "YouTube"
+  },
+  {
+    "key": "photobooth-114",
+    "page": "photobooth",
+    "label": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!",
+    "default": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!"
+  },
+  {
+    "key": "admin-001",
+    "page": "admin",
+    "label": "GÓC QUẢN TRỊ",
+    "default": "GÓC QUẢN TRỊ"
+  },
+  {
+    "key": "admin-002",
+    "page": "admin",
+    "label": "Hùng",
+    "default": "Hùng"
+  },
+  {
+    "key": "admin-003",
+    "page": "admin",
+    "label": "Chăm chút những điều mình tạo nên.",
+    "default": "Chăm chút những điều mình tạo nên."
+  },
+  {
+    "key": "admin-004",
+    "page": "admin",
+    "label": "Xem trang chính ↗",
+    "default": "Xem trang chính ↗"
+  },
+  {
+    "key": "admin-005",
+    "page": "admin",
+    "label": "CHỈ DÀNH CHO NGƯỜI QUẢN TRỊ",
+    "default": "CHỈ DÀNH CHO NGƯỜI QUẢN TRỊ"
+  },
+  {
+    "key": "admin-006",
+    "page": "admin",
+    "label": "Email quản trị",
+    "default": "Email quản trị"
+  },
+  {
+    "key": "admin-007",
+    "page": "admin",
+    "label": "Mật khẩu",
+    "default": "Mật khẩu"
+  },
+  {
+    "key": "admin-008",
+    "page": "admin",
+    "label": "BÀN LÀM VIỆC CỦA HÙNG",
+    "default": "BÀN LÀM VIỆC CỦA HÙNG"
+  },
+  {
+    "key": "admin-009",
+    "page": "admin",
+    "label": "Tổng quan",
+    "default": "Tổng quan"
+  },
+  {
+    "key": "admin-010",
+    "page": "admin",
+    "label": "Khung chờ duyệt",
+    "default": "Khung chờ duyệt"
+  },
+  {
+    "key": "admin-011",
+    "page": "admin",
+    "label": "Thư viện khung",
+    "default": "Thư viện khung"
+  },
+  {
+    "key": "admin-012",
+    "page": "admin",
+    "label": "Bài viết",
+    "default": "Bài viết"
+  },
+  {
+    "key": "admin-013",
+    "page": "admin",
+    "label": "Nội dung web",
+    "default": "Nội dung web"
+  },
+  {
+    "key": "admin-014",
+    "page": "admin",
+    "label": "Ảnh chụp của khách không được gửi hoặc lưu ở đây.",
+    "default": "Ảnh chụp của khách không được gửi hoặc lưu ở đây."
+  },
+  {
+    "key": "admin-015",
+    "page": "admin",
+    "label": "MỘT CHÚT CHĂM CHÚT MỖI NGÀY",
+    "default": "MỘT CHÚT CHĂM CHÚT MỖI NGÀY"
+  },
+  {
+    "key": "admin-016",
+    "page": "admin",
+    "label": "nhiều ý tưởng.",
+    "default": "nhiều ý tưởng."
+  },
+  {
+    "key": "admin-017",
+    "page": "admin",
+    "label": "Góc nhỏ,",
+    "default": "Góc nhỏ,"
+  },
+  {
+    "key": "admin-018",
+    "page": "admin",
+    "label": "Lượt xem các trang",
+    "default": "Lượt xem các trang"
+  },
+  {
+    "key": "admin-019",
+    "page": "admin",
+    "label": "Số liệu bắt đầu từ khi bật bộ đếm. Đây là lượt tải trang, không phải số người duy nhất; không lưu IP",
+    "default": "Số liệu bắt đầu từ khi bật bộ đếm. Đây là lượt tải trang, không phải số người duy nhất; không lưu IP, cookie hay ảnh cá nhân. Không đếm trang quản trị và các bot nhận diện được. Múi giờ Việt Nam."
+  },
+  {
+    "key": "admin-020",
+    "page": "admin",
+    "label": "Nội dung của mình, mình quyết định.",
+    "default": "Nội dung của mình, mình quyết định."
+  },
+  {
+    "key": "admin-021",
+    "page": "admin",
+    "label": "Khung đóng góp chỉ xuất hiện công khai sau khi được duyệt. Bản chờ và thông tin liên hệ riêng được x",
+    "default": "Khung đóng góp chỉ xuất hiện công khai sau khi được duyệt. Bản chờ và thông tin liên hệ riêng được xóa khi quá một giờ; khung đã duyệt được giữ trong thư viện."
+  },
+  {
+    "key": "admin-022",
+    "page": "admin",
+    "label": "Ở mục bài viết, Hùng có thể lưu nháp, xuất bản và chỉnh sửa. Mục nội dung web chỉnh sửa nội dung, mà",
+    "default": "Ở mục bài viết, Hùng có thể lưu nháp, xuất bản và chỉnh sửa. Mục nội dung web chỉnh sửa nội dung, màu sắc và thông tin của các trang."
+  },
+  {
+    "key": "admin-023",
+    "page": "admin",
+    "label": "CHỌN NHỮNG CHIẾC KHUNG ĐÁNG YÊU",
+    "default": "CHỌN NHỮNG CHIẾC KHUNG ĐÁNG YÊU"
+  },
+  {
+    "key": "admin-024",
+    "page": "admin",
+    "label": "Hùng duyệt.",
+    "default": "Hùng duyệt."
+  },
+  {
+    "key": "admin-025",
+    "page": "admin",
+    "label": "Chờ",
+    "default": "Chờ"
+  },
+  {
+    "key": "admin-026",
+    "page": "admin",
+    "label": "Bản chờ hết hạn sau một giờ tính từ lúc gửi. Khi duyệt, chỉ giữ thiết kế và thông tin ghi công công ",
+    "default": "Bản chờ hết hạn sau một giờ tính từ lúc gửi. Khi duyệt, chỉ giữ thiết kế và thông tin ghi công công khai; thông tin liên hệ riêng được xóa."
+  },
+  {
+    "key": "admin-027",
+    "page": "admin",
+    "label": "NHỮNG CHIẾC KHUNG ĐÃ ĐƯỢC CHỌN",
+    "default": "NHỮNG CHIẾC KHUNG ĐÃ ĐƯỢC CHỌN"
+  },
+  {
+    "key": "admin-028",
+    "page": "admin",
+    "label": "khung ảnh.",
+    "default": "khung ảnh."
+  },
+  {
+    "key": "admin-029",
+    "page": "admin",
+    "label": "Thư viện",
+    "default": "Thư viện"
+  },
+  {
+    "key": "admin-030",
+    "page": "admin",
+    "label": "NHỮNG ĐIỀU THÚ VỊ MUỐN KỂ",
+    "default": "NHỮNG ĐIỀU THÚ VỊ MUỐN KỂ"
+  },
+  {
+    "key": "admin-031",
+    "page": "admin",
+    "label": "bài viết.",
+    "default": "bài viết."
+  },
+  {
+    "key": "admin-032",
+    "page": "admin",
+    "label": "Góc",
+    "default": "Góc"
+  },
+  {
+    "key": "admin-033",
+    "page": "admin",
+    "label": "Tiêu đề",
+    "default": "Tiêu đề"
+  },
+  {
+    "key": "admin-034",
+    "page": "admin",
+    "label": "Đường dẫn ngắn",
+    "default": "Đường dẫn ngắn"
+  },
+  {
+    "key": "admin-035",
+    "page": "admin",
+    "label": "Tóm tắt",
+    "default": "Tóm tắt"
+  },
+  {
+    "key": "admin-036",
+    "page": "admin",
+    "label": "Chuyên mục",
+    "default": "Chuyên mục"
+  },
+  {
+    "key": "admin-037",
+    "page": "admin",
+    "label": "Thẻ, cách nhau bằng dấu phẩy",
+    "default": "Thẻ, cách nhau bằng dấu phẩy"
+  },
+  {
+    "key": "admin-038",
+    "page": "admin",
+    "label": "PNG, JPEG hoặc WebP; sẽ chuyển thành WebP.",
+    "default": "PNG, JPEG hoặc WebP; sẽ chuyển thành WebP."
+  },
+  {
+    "key": "admin-039",
+    "page": "admin",
+    "label": "Ảnh bìa",
+    "default": "Ảnh bìa"
+  },
+  {
+    "key": "admin-040",
+    "page": "admin",
+    "label": "Nội dung",
+    "default": "Nội dung"
+  },
+  {
+    "key": "admin-041",
+    "page": "admin",
+    "label": "Trạng thái",
+    "default": "Trạng thái"
+  },
+  {
+    "key": "admin-042",
+    "page": "admin",
+    "label": "Đánh dấu bài viết mẫu",
+    "default": "Đánh dấu bài viết mẫu"
+  },
+  {
+    "key": "admin-043",
+    "page": "admin",
+    "label": "ĐỂ TRANG WEB MANG ĐÚNG CÂU CHUYỆN CỦA MÌNH",
+    "default": "ĐỂ TRANG WEB MANG ĐÚNG CÂU CHUYỆN CỦA MÌNH"
+  },
+  {
+    "key": "admin-044",
+    "page": "admin",
+    "label": "trang web.",
+    "default": "trang web."
+  },
+  {
+    "key": "admin-045",
+    "page": "admin",
+    "label": "Nội dung",
+    "default": "Nội dung"
+  },
+  {
+    "key": "admin-046",
+    "page": "admin",
+    "label": "Tên hiển thị đầy đủ",
+    "default": "Tên hiển thị đầy đủ"
+  },
+  {
+    "key": "admin-047",
+    "page": "admin",
+    "label": "Tên gọi",
+    "default": "Tên gọi"
+  },
+  {
+    "key": "admin-048",
+    "page": "admin",
+    "label": "Lời giới thiệu trang đầu",
+    "default": "Lời giới thiệu trang đầu"
+  },
+  {
+    "key": "admin-049",
+    "page": "admin",
+    "label": "Đoạn giới thiệu về Hùng",
+    "default": "Đoạn giới thiệu về Hùng"
+  },
+  {
+    "key": "admin-050",
+    "page": "admin",
+    "label": "Email liên hệ",
+    "default": "Email liên hệ"
+  },
+  {
+    "key": "admin-051",
+    "page": "admin",
+    "label": "Số điện thoại",
+    "default": "Số điện thoại"
+  },
+  {
+    "key": "admin-052",
+    "page": "admin",
+    "label": "Tên trang chia sẻ",
+    "default": "Tên trang chia sẻ"
+  },
+  {
+    "key": "admin-053",
+    "page": "admin",
+    "label": "Lời dẫn trang chia sẻ",
+    "default": "Lời dẫn trang chia sẻ"
+  },
+  {
+    "key": "admin-054",
+    "page": "admin",
+    "label": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!",
+    "default": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!"
+  }
+]

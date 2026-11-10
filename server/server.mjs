@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { randomBytes, randomUUID, createHash, scrypt, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
+import { initVisits, recordVisit, visitSummary, pageForVisit } from './visits.mjs';
 import { HOUR, fail, keys, text, password, defaultSite, siteSettings, submission, post } from './validation.mjs';
 
 const derive = promisify(scrypt);
@@ -39,6 +40,8 @@ export function createApp(options = {}) {
   if (!dataRelativeToDist.startsWith('..') && !path.isAbsolute(dataRelativeToDist)) throw new Error('Thư mục dữ liệu riêng phải nằm ngoài dist.');
   fs.mkdirSync(dataDir, { recursive: true, mode: 0o700 });
   const db = new DatabaseSync(path.join(dataDir, 'content.sqlite'));
+  const visitSQL = (query, ...params) => /^SELECT/i.test(query) ? db.prepare(query).all(...params) : (db.prepare(query).run(...params), []);
+  initVisits(visitSQL);
   db.exec(`PRAGMA journal_mode=DELETE; PRAGMA secure_delete=ON; PRAGMA busy_timeout=5000;
     CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS sessions(token_hash TEXT PRIMARY KEY,csrf TEXT NOT NULL,expires_at INTEGER NOT NULL);
@@ -211,6 +214,7 @@ export function createApp(options = {}) {
       }
       if (route.startsWith('/api/admin/')) {
         const session = auth(req, req.method !== 'GET' && req.method !== 'HEAD');
+        if (route === '/api/admin/analytics' && req.method === 'GET') return json(res, visitSummary(visitSQL, now()));
         if (req.method === 'POST' && route === '/api/admin/logout') {
           db.prepare('DELETE FROM sessions WHERE token_hash=?').run(session.token_hash);
           sessionCookie(res, '', 0);
@@ -288,6 +292,8 @@ export function createApp(options = {}) {
     const contentType = types[path.extname(file).toLowerCase()];
     if (!stat.isFile() || !contentType) fail(404, 'Không tìm thấy trang.');
     const content = fs.readFileSync(file);
+    const visitPage = pageForVisit(route);
+    if (visitPage && req.method === 'GET' && contentType.includes('text/html') && !/bot|crawler|spider|headless/i.test(req.headers['user-agent'] || '')) recordVisit(visitSQL, visitPage, now());
     res.writeHead(200, { 'Content-Type': contentType, 'Content-Length': content.length, 'Cache-Control': 'no-cache' });
     res.end(req.method === 'HEAD' ? undefined : content);
   }

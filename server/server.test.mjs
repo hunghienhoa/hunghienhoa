@@ -64,6 +64,17 @@ try {
   const editedSite = { ...defaultSite, intro: 'Một lời giới thiệu được cập nhật trong kiểm tra.' };
   assert.equal((await request('/api/admin/site', { method: 'PUT', body: editedSite })).response.status, 200);
   assert.equal((await request('/api/site')).data.intro, editedSite.intro);
+  assert.equal((await request('/api/admin/analytics',{anonymous:true})).response.status,401);
+  await fetch(base+'/'); await fetch(base+'/blog/');
+  const views=(await request('/api/admin/analytics')).data;
+  assert.equal(views.today,2); assert.equal(views.total,2);
+  await fetch(base+'/',{method:'HEAD'});await fetch(base+'/',{headers:{'User-Agent':'test-crawler'}});
+  assert.equal((await request('/api/admin/analytics')).data.total,2);
+  const contentKey=JSON.parse(fs.readFileSync(new URL('../dist/content-fields.json',import.meta.url),'utf8'))[0].key;
+  const customSite={...editedSite,pageTexts:{[contentKey]:'Nội dung đã tùy chỉnh'},theme:{cream:'#fff0df',blue:'#403080',yellow:'#ffcc33'}};
+  assert.equal((await request('/api/admin/site',{method:'PUT',body:customSite})).response.status,200);
+  assert.equal((await request('/api/site')).data.pageTexts[contentKey],'Nội dung đã tùy chỉnh');
+  assert.equal((await request('/api/admin/site',{method:'PUT',body:{...customSite,pageTexts:{'bad-key':'x'}}})).response.status,400);
   assert.equal((await request('/api/posts')).data.posts.length, 3);
   assert.ok((await request('/api/posts')).data.posts.every(value => value.isSample));
   console.log('PASS: first-run setup, hashed password session, auth, CSRF, Origin and site editing.');

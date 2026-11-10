@@ -27,8 +27,9 @@ jobs:
         shell: bash
         run: |
           tag=$(cat outputs/release/tag.txt)
+          title="Portfolio Hùng Hiền Hòa V.$(printf '%03d' "$GITHUB_RUN_NUMBER")"
           if gh release view "$tag" >/dev/null 2>&1; then
             echo "Phiên bản này đã được lưu."
             exit 0
           fi
-          gh release create "$tag" "outputs/release/hunghienhoa-source-$tag.zip" "outputs/release/hunghienhoa-web-$tag.zip" outputs/release/SHA256SUMS.txt --target "$(git rev-parse HEAD)" --title "Bản web · $tag" --notes-file outputs/release/notes.md
+          gh release create "$tag" "outputs/release/hunghienhoa-source-$tag.zip" "outputs/release/hunghienhoa-web-$tag.zip" outputs/release/SHA256SUMS.txt --target "$(git rev-parse HEAD)" --title "$title" --notes-file outputs/release/notes.md

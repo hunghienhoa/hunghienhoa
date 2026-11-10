@@ -234,6 +234,7 @@ getJSON('/api/site').then(site => {
     if ($('#reader').hidden) document.title = `${blogName} — Những điều thú vị`;
   }
   if (typeof site.blogIntro === 'string' && site.blogIntro.trim()) $('#blog-intro').textContent = site.blogIntro.trim().slice(0, 800);
+  window.dispatchEvent(new Event('hung-content-ready'));
 }).catch(() => {});
 
 await loadPosts();

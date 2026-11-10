@@ -1,4 +1,6 @@
 import { fail, post, siteSettings, submission } from '../server/validation.mjs';
+import { pageForVisit } from '../server/visits.mjs';
+export { VisitCounter } from './visits.mjs';
 
 const API_LIMIT = 1600000;
 const POSTS_SELECT = 'id,slug,title,excerpt,content,category,tags,status,is_sample,created_at,published_at,has_cover';
@@ -159,6 +161,7 @@ async function adminApi(request, env, route) {
     return json({ authenticated: true });
   }
   const token = await requireAdmin(request, env);
+  if (route === '/api/admin/analytics' && request.method === 'GET') return env.VISITS.get(env.VISITS.idFromName('site')).fetch('https://counter/summary');
   if (!originAllowed(request)) fail(403, 'Nguồn gửi yêu cầu không được phép.');
   if (route === '/api/admin/logout' && request.method === 'POST') return json({ ok: true });
   if (route === '/api/admin/site') {
@@ -249,7 +252,7 @@ function assetRequest(request) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const route = new URL(request.url).pathname;
     try {
       if (route.startsWith('/api/')) {
@@ -259,7 +262,13 @@ export default {
       }
       const mapped = assetRequest(request);
       if (mapped instanceof Response) return mapped;
-      return withSecurity(await env.ASSETS.fetch(mapped), env);
+      const response = await env.ASSETS.fetch(mapped);
+      const page = pageForVisit(new URL(mapped.url).pathname);
+      if (env.VISITS && page && request.method === 'GET' && response.ok && response.headers.get('content-type')?.includes('text/html') && !/bot|crawler|spider|headless/i.test(request.headers.get('user-agent') || '')) {
+        const count = env.VISITS.get(env.VISITS.idFromName('site')).fetch(`https://counter/record?page=${page}`, {method:'POST'}).catch(() => console.error('visit_count_failed'));
+        if (ctx?.waitUntil) ctx.waitUntil(count); else await count;
+      }
+      return withSecurity(response, env);
     } catch (error) {
       const status = Number(error?.status) || 500;
       if (status >= 500) console.error(JSON.stringify({ message: 'request_failed', status, path: route, error: error instanceof Error ? error.message : String(error) }));

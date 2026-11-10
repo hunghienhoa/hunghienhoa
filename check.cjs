@@ -35,26 +35,12 @@ assert.ok(html.includes('concept-disclaimer'));
 assert.ok(css.includes('prefers-reduced-motion'));
 assert.ok(html.includes('<dialog'));
 console.log('PASS: assets, anchors, six concepts, JS syntax, dialog and reduced-motion support.');
-for (const mode of ['success', 'blocked', 'modified']) {
-  let click, openCalls = 0, prevented = false;
-  const popup = { opener: 'portfolio' };
-  const link = { href: 'https://example.test/photobooth/', addEventListener: (_, handler) => { click = handler; } };
-  vm.runInNewContext(fs.readFileSync('dist/project-window.js', 'utf8'), {
-    document: { querySelectorAll: selector => { assert.equal(selector, '[data-project-window]'); return [link]; } },
-    window: { open: (url, target, features) => {
-      openCalls++;
-      assert.equal(url, link.href);
-      assert.equal(target, '_blank');
-      assert.ok(features.includes('popup'));
-      return mode === 'blocked' ? null : popup;
-    } }
-  });
-  click({ button: 0, ctrlKey: mode === 'modified', preventDefault: () => { prevented = true; } });
-  assert.equal(openCalls, mode === 'modified' ? 0 : 1);
-  assert.equal(prevented, mode === 'success');
-  assert.equal(popup.opener, mode === 'success' ? null : 'portfolio');
+for (const id of ['photobooth-project','blog-project']) {
+  const link = html.match(new RegExp('<a[^>]+id="'+id+'"[^>]*>'))[0];
+  assert.ok(!link.includes('target=') && !link.includes('data-project-window'));
 }
-console.log('PASS: popup opens without an opener; blocked and modified clicks keep native link behavior.');
+assert.ok(!html.includes('project-window.js'));
+console.log('PASS: project links use normal same-tab navigation.');
 (async () => {
   for (const clipboardWorks of [true, false]) {
     let click, copied, clearFeedback, feedbackDelay;
