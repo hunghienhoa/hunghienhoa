@@ -33,3 +33,9 @@ jobs:
             exit 0
           fi
           gh release create "$tag" "outputs/release/hunghienhoa-source-$tag.zip" "outputs/release/hunghienhoa-web-$tag.zip" outputs/release/SHA256SUMS.txt --target "$(git rev-parse HEAD)" --title "$title" --notes-file outputs/release/notes.md
+      - name: Chỉ giữ ba bản sao lưu mới nhất
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 tools/prune-releases.py --check
+          python3 tools/prune-releases.py --apply

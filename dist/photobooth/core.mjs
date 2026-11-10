@@ -9,7 +9,7 @@ export function coverCrop(sourceWidth, sourceHeight, targetWidth, targetHeight) 
 }
 
 export function applyFilterPixels(pixels, filter) {
-  const recipes = { original: [0, 1, 1, 1], mono: [0, 0, 1.08, 1], warm: [.24, 1.2, 1.04, 1], nostalgia: [.4, .72, .94, 1.05] };
+  const recipes = { original: [0, 1, 1, 1], mono: [0, 0, 1.08, 1], warm: [.24, 1.2, 1.04, 1], nostalgia: [.4, .72, .94, 1.05], clear:[0,1.04,.96,1.08], peach:[.08,1.06,.94,1.06], soft:[0,.98,.9,1.06] };
   if (typeof filter !== 'string' || !Object.hasOwn(recipes, filter)) throw new RangeError('Bộ lọc ảnh không hợp lệ.');
   if (!pixels || !Number.isSafeInteger(pixels.length) || pixels.length < 0 || pixels.length % 4 !== 0) {
     throw new TypeError('Dữ liệu ảnh phải gồm các nhóm RGBA.');
@@ -37,6 +37,7 @@ export function applyFilterPixels(pixels, filter) {
     output[i] = clamp(((r - 127.5) * contrast + 127.5) * brightness);
     output[i + 1] = clamp(((g - 127.5) * contrast + 127.5) * brightness);
     output[i + 2] = clamp(((b - 127.5) * contrast + 127.5) * brightness);
+    if(filter==='peach'){output[i]=clamp(output[i]+5);output[i+2]=clamp(output[i+2]+2);}
   }
   return output;
 }

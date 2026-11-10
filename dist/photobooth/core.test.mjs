@@ -43,3 +43,10 @@ for (const invalid of [[0, 0, 0, NaN], [256, 0, 0, 255], [-1, 0, 0, 255], [0, 0,
 }
 for (const invalid of ['unknown', '__proto__', null]) assert.throws(() => applyFilterPixels(source, invalid), RangeError);
 console.log('PASS: pixel-filter colors, alpha, immutable input, array-like input and validation.');
+
+for(const filter of ['clear','peach','soft']) {
+ const input=Uint8ClampedArray.from([110,80,60,255,0,0,0,120]);
+ const output=applyFilterPixels(input,filter);
+ assert.equal(output.length,input.length);assert.equal(output[3],255);assert.equal(output[7],120);
+ assert.notDeepEqual(output,input);assert.deepEqual([...input],[110,80,60,255,0,0,0,120]);
+}

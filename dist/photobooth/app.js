@@ -1,4 +1,4 @@
-import { coverCrop, applyFilterPixels } from './core.mjs?v=2';
+import { coverCrop, applyFilterPixels } from './core.mjs?v=3';
 import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter } from './design.mjs?v=3';
 
 const $ = selector => document.querySelector(selector);
@@ -15,7 +15,7 @@ const frameFontsReady = Promise.all([
 let filteredPhotoCache = new WeakMap();
 const status = $('#status');
 const photos = Array(4).fill(null);
-const filters = { original: 'none', mono: 'grayscale(1) contrast(1.08)', warm: 'sepia(.24) saturate(1.2) contrast(1.04)', nostalgia: 'sepia(.4) saturate(.72) contrast(.94) brightness(1.05)' };
+const filters = { original: 'none', mono: 'grayscale(1) contrast(1.08)', warm: 'sepia(.24) saturate(1.2) contrast(1.04)', nostalgia: 'sepia(.4) saturate(.72) contrast(.94) brightness(1.05)', clear:'saturate(1.04) contrast(.96) brightness(1.08)', peach:'sepia(.08) saturate(1.06) contrast(.94) brightness(1.06)', soft:'saturate(.98) contrast(.9) brightness(1.06)' };
 const frames = {
   cream: normalizeDesign({}),
   blue: normalizeDesign({ background: '#303487', ink: '#fbf2e3', accent: '#ffdc38' }),
@@ -101,7 +101,7 @@ function updateUI() {
 
 function drawPhoto(photo, x, y, width, height) {
   const crop = coverCrop(photo.image.width, photo.image.height, width, height);
-  if (nativeCanvasFilters || filter === 'original') {
+  if ((nativeCanvasFilters && !['clear','peach','soft'].includes(filter)) || filter === 'original') {
     ctx.save();
     if (nativeCanvasFilters) ctx.filter = filters[filter];
     ctx.drawImage(photo.image, crop.sx, crop.sy, crop.sw, crop.sh, x, y, width, height);

@@ -12,4 +12,4 @@ Mở [GitHub Releases](https://github.com/hunghienhoa/hunghienhoa/releases), ch�
 
 Đây là bản sao mã nguồn/giao diện, **không phải bản sao database**. Bài blog, cấu hình đã sửa trên cloud, khung đã duyệt và tài khoản Supabase cần sao lưu database/storage riêng. Ảnh chụp cá nhân và bản chờ duyệt hết hạn không được đưa vào backup.
 
-Sau mỗi lần triển khai `main` thành công, workflow “Lưu bản web” tự tạo một Release mang ngày giờ UTC và mã commit. Có thể chạy thủ công workflow trong Actions. Mỗi phiên bản có gói source, web và checksum; các bản cũ được giữ lại.
+Sau mỗi lần triển khai `main` thành công, workflow “Lưu bản web” tự tạo một Release mang ngày giờ UTC và mã commit. Có thể chạy thủ công workflow trong Actions. Mỗi phiên bản có gói source, web và checksum; chỉ giữ ba bản mới nhất; bản Releases cũ hơn cùng tệp tải về được xóa tự động, Git tags và lịch sử commit vẫn giữ.
