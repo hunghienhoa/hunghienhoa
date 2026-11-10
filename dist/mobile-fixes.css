@@ -76,3 +76,16 @@
   .contact .contact-postcard>p:not(.contact-email){max-width:100%}
   .contact .contact-bottom>p{line-height:1.7}
 }
+
+@media(max-width:760px){
+ .section{padding-block:40px}
+ .section .section-head{margin-bottom:22px}
+ .about.section{gap:24px}
+ .about .about-art{gap:18px}
+ .about .about-art>.label,.about .scribble{display:none}
+ .about .id-card{margin-top:0}
+ .about .about-copy h2{font-size:38px}
+ .about .about-lead{font-size:20px}
+ .about .about-copy>p{font-size:14px;line-height:1.65}
+ .unified-footer .contact.section{padding-block:24px}
+}
