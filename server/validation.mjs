@@ -1,4 +1,5 @@
 import contentFields from '../dist/content-fields.json' with { type: 'json' };
+import {FRAME_CATEGORIES} from '../dist/photobooth/design.mjs';
 export const HOUR = 60 * 60 * 1000;
 export const MAX_IMAGE_BYTES = 1024 * 1024;
 export function fail(status, message) { throw Object.assign(new Error(message), { status }); }
@@ -144,10 +145,11 @@ export function siteSettings(value) {
   return result;
 }
 export function design(value) {
-  keys(value, ['background', 'ink', 'accent', 'title', 'footer', 'pattern', 'sticker']);
+  keys(value, ['background', 'ink', 'accent', 'title', 'footer', 'pattern', 'sticker','category']);
+  if(value.category!==undefined && !FRAME_CATEGORIES.includes(value.category)) fail(400,'Phân loại khung chưa hợp lệ.');
   for (const field of ['background', 'ink', 'accent']) if (typeof value[field] !== 'string' || !/^#[0-9a-f]{6}$/i.test(value[field])) fail(400, 'Màu khung cần có dạng #RRGGBB.');
   if (!['plain', 'grid', 'dots', 'film', 'checker', 'stripes', 'confetti', 'hearts', 'waves', 'sparkles', 'lace', 'doodles'].includes(value.pattern) || !['star', 'heart', 'flower', 'bow', 'cat', 'cherry', 'cloud', 'butterfly', 'smile', 'none'].includes(value.sticker)) fail(400, 'Họa tiết hoặc nhãn dán chưa hợp lệ.');
-  return { background: value.background, ink: value.ink, accent: value.accent, title: text(value.title, 60), footer: text(value.footer, 60), pattern: value.pattern, sticker: value.sticker };
+  return { background: value.background, ink: value.ink, accent: value.accent, title: text(value.title, 60), footer: text(value.footer, 60), pattern: value.pattern, sticker: value.sticker, ...(value.category?{category:value.category}:{}) };
 }
 export function submission(value) {
   keys(value, ['name', 'authorName', 'authorContact', 'authorLink', 'consent', 'design', 'imageDataUrl']);

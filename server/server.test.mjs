@@ -18,7 +18,7 @@ for (const format of ['png','jpeg']) {
 }
 assert.deepEqual(decodeWebP(frameDataUrl, true), frame);
 for (const value of ['data:image/png;base64,AAAA', 'data:image/webp;base64,AAAA', `${frameDataUrl}!`]) assert.throws(() => decodeWebP(value), { status: 400 });
-const design = { background: '#fbf2e3', ink: '#303487', accent: '#ffdc38', title: 'Khung thử', footer: 'Chỉ thiết kế', pattern: 'grid', sticker: 'star' };
+const design = { background: '#fbf2e3', ink: '#303487', accent: '#ffdc38', title: 'Khung thử', footer: 'Chỉ thiết kế', pattern: 'grid', sticker: 'star', category:'Việt Nam' };
 const pending = { name: 'Khung kiểm tra', authorName: 'Tác giả thử', authorContact: 'private-only@example.test', authorLink: 'https://example.test/designer', consent: true, design, imageDataUrl: frameDataUrl };
 assert.throws(() => submission({ ...pending, photos: ['private photo'] }), { status: 400 });
 assert.throws(() => submission({ ...pending, consent: false }), { status: 400 });
@@ -134,6 +134,7 @@ try {
   app.cleanup();
   const kept = await request('/api/frames', { anonymous: true });
   assert.equal(kept.data.frames.length, 1);
+  assert.equal(kept.data.frames[0].design.category,'Việt Nam');
   assert.equal(JSON.stringify(kept.data).includes(pending.authorContact), false);
   assert.equal((await request(kept.data.frames[0].imageUrl, { anonymous: true })).response.status, 200);
   console.log('PASS: pending posters are private; approval retains only public credit and clears private contact.');

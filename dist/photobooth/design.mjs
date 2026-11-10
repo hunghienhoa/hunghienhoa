@@ -1,4 +1,5 @@
 export const PHOTO_SESSION_MS = 60 * 60 * 1000;
+export const FRAME_CATEGORIES = ['Tối giản','Dễ thương & thiên nhiên','Sinh nhật & lễ hội','Việt Nam','Nhạc pop & Y2K','Nhật ký & vintage'];
 export const DEFAULT_DESIGN = Object.freeze({
   background: '#fbf2e3', ink: '#303487', accent: '#ffdc38',
   title: 'HỘP ẢNH · MỘT CHÚT HÔM NAY', footer: 'Giữ lại một chút vui.', pattern: 'plain', sticker: 'flower'
@@ -7,7 +8,8 @@ export const DEFAULT_DESIGN = Object.freeze({
 export function normalizeDesign(input) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new TypeError('Thiết kế khung không hợp lệ.');
   const keys = Object.keys(DEFAULT_DESIGN);
-  if (Object.keys(input).some(key => !keys.includes(key))) throw new TypeError('Khung có thông tin không được hỗ trợ.');
+  if (Object.keys(input).some(key => ![...keys,'category'].includes(key))) throw new TypeError('Khung có thông tin không được hỗ trợ.');
+  if(input.category!==undefined && !FRAME_CATEGORIES.includes(input.category)) throw new TypeError('Phân loại khung không hợp lệ.');
   const design = { ...DEFAULT_DESIGN, ...input };
   for (const key of ['background', 'ink', 'accent']) {
     if (typeof design[key] !== 'string' || !/^#[a-f\d]{6}$/i.test(design[key])) throw new TypeError('Màu khung cần đúng định dạng sáu ký tự.');

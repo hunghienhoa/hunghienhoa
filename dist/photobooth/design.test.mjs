@@ -54,3 +54,7 @@ for(const item of importedFrames){
  assert.ok([3,4,6].includes(item.slots.length));
  for(const [x,y,w,h] of item.slots) assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=720&&y+h<=2180);
 }
+
+assert.equal(validateSubmissionDesign(normalizeDesign({category:'Việt Nam'})).category,'Việt Nam');
+assert.throws(()=>normalizeDesign({category:'khong-hop-le'}));
+assert.throws(()=>validateSubmissionDesign({...DEFAULT_DESIGN,category:'khong-hop-le'}));

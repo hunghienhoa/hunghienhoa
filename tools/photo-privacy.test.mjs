@@ -145,9 +145,10 @@ assert.equal(await vm.runInContext(`jpegBlob({toBlob(callback,type,quality){call
 assert.equal(timers.size, 1);
 assert.equal([...timers.values()][0].delay, PHOTO_SESSION_MS);
 elements.get('#frame-name').value = 'Khung thử'; elements.get('#author-name').value = 'Tác giả thử';
-elements.get('#author-contact').value = 'private@example.test'; elements.get('#author-link').value = ''; elements.get('#contribution-consent').checked = true;
+elements.get('#author-contact').value = 'private@example.test'; elements.get('#frame-category').value = 'Việt Nam'; elements.get('#contribution-consent').checked = true;
 await elements.get('#contribution-form').listeners.submit({ preventDefault() {}, currentTarget: elements.get('#contribution-form') });
 assert.equal(requests.length, 1);
+assert.equal(requests[0].design.category,'Việt Nam');
 assert.match(elements.get('#community-status').textContent, /Đã gửi khung chờ duyệt/);
 assert.equal(elements.get('#frame-creator').open, false);
 assert.equal(elements.get('#khung-cong-dong').scrolled, true);

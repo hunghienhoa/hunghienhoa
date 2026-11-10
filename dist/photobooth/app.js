@@ -1,6 +1,6 @@
 import { coverCrop, applyFilterPixels } from './core.mjs?v=4';
 import { importedFrames } from './imported-frames.mjs';
-import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow } from './design.mjs?v=4';
+import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow } from './design.mjs?v=5';
 
 const $ = selector => document.querySelector(selector);
 const video = $('#camera');
@@ -560,7 +560,7 @@ function frameOnlyCanvas(design) {
 }
 
 function openCreator() {
-  Object.entries(activeDesign).forEach(([key, value]) => { $(`#design-${key}`).value = value; });
+  Object.keys(DEFAULT_DESIGN).forEach(key => { $(`#design-${key}`).value = activeDesign[key]; });
   if (!$('#frame-name').value) $('#frame-name').value = 'Khung của mình';
   renderDesignPreview();
   $('#frame-creator').showModal();
@@ -649,6 +649,7 @@ async function loadCommunityFrames() {
     const data = await response.json();
     if (!Array.isArray(data.frames)) throw new Error('Thư viện chưa sẵn sàng.');
     $('#community-grid').replaceChildren();
+    document.querySelectorAll('.community-picker-card').forEach(card=>card.remove());
     for (const item of data.frames) {
       try {
         const design = normalizeDesign(item.design);
@@ -691,6 +692,20 @@ async function loadCommunityFrames() {
         }
         card.append(button, author);
         $('#community-grid').append(card);
+        if(importedGallery){
+          const choice=document.createElement('button');choice.type='button';choice.className='frame-option community-picker-card';choice.dataset.imported=String(item.id);choice.dataset.category=design.category||'Dễ thương & thiên nhiên';choice.setAttribute('aria-pressed','false');
+          const thumb=document.createElement('img');thumb.src=imageURL;thumb.loading='lazy';thumb.alt='';thumb.width=144;thumb.height=436;
+          const label=document.createElement('span');label.textContent=String(item.name);
+          const credit=document.createElement('small');credit.textContent=`Bởi ${String(item.authorName)}`;
+          choice.append(thumb,label,credit);
+          choice.addEventListener('click',async()=>{
+            try{
+              const selected=new Image();await new Promise((resolve,reject)=>{selected.onload=resolve;selected.onerror=reject;selected.src=imageURL;});
+              selectDesign(design,String(item.name),selected,String(item.id));choice.setAttribute('aria-pressed','true');document.dispatchEvent(new Event('frame-selected'));
+            }catch{tell('Chưa tải được khung. Hãy thử lại.',true);}
+          });
+          importedGallery.append(choice);
+        }
       } catch { /* Ignore malformed public entries; do not render untrusted markup. */ }
     }
     $('#community-status').textContent = $('#community-grid').children.length ? 'Chỉ hiển thị khung đã được duyệt. Bấm để dùng trong dải ảnh của bạn.' : 'Thư viện đang đợi những khung đầu tiên. Bạn có thể tạo và góp một khung ở bên dưới.';
@@ -708,9 +723,10 @@ $('#contribution-form').addEventListener('submit', async event => {
   $('#submit-frame').disabled = true;
   submissionRequest = new AbortController();
   try {
-    const authorLink = $('#author-link').value.trim();
+    const authorLink = '';
+    const category = $('#frame-category').value;
     if (authorLink && !['http:', 'https:'].includes(new URL(authorLink).protocol)) throw new Error('Liên kết công khai cần bắt đầu bằng http hoặc https.');
-    const design = readDesignForm();
+    const design = {...readDesignForm(), category};
     await frameFontsReady;
     // The submitted canvas is created from design only, never from the photo strip.
     const imageDataUrl = frameImageDataUrl(frameOnlyCanvas(design));
