@@ -79,7 +79,8 @@ new vm.Script(script).runInContext(context);
 await new Promise(resolve => setImmediate(resolve));
 assert.equal(requestedCamera, 0);
 assert.equal(requests.length, 0);
-assert.ok(html.indexOf('class="camera-filters"') < html.indexOf('id="capture-one"'));
+assert.ok(!html.includes('class="camera-filters"'));
+assert.ok(!html.includes('data-filter='));
 for (const button of filterButtons) {
   button.listeners.click();
   assert.equal(button.attributes['aria-pressed'], 'true');
