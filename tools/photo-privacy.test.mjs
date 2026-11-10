@@ -79,7 +79,7 @@ new vm.Script(script).runInContext(context);
 await new Promise(resolve => setImmediate(resolve));
 assert.equal(requestedCamera, 0);
 assert.equal(requests.length, 0);
-assert.equal(frameButtons.length, 10);
+assert.equal(frameButtons.length, 16);
 for (const button of frameButtons) {
   button.listeners.click();
   assert.equal(button.attributes['aria-pressed'], 'true');

@@ -22,7 +22,7 @@ assert.ok(calls.every(call => !call.includes('private')));
 assert.ok(fonts.some(font => font.includes('"Be Vietnam Pro"')));
 assert.ok(fonts.some(font => /^italic 600 \d+px "Playfair Display"/.test(font)));
 assert.ok(fonts.every(font => !/Gilroy|600 italic/.test(font)));
-for (const pattern of ['film', 'checker', 'stripes', 'confetti']) {
+for (const pattern of ['film', 'checker', 'stripes', 'confetti', 'hearts', 'waves', 'sparkles', 'lace', 'doodles']) {
   assert.equal(validateSubmissionDesign(normalizeDesign({ pattern })).pattern, pattern);
   calls.length = 0;
   drawFrameTemplate(ctx, normalizeDesign({ pattern }));
@@ -30,3 +30,10 @@ for (const pattern of ['film', 'checker', 'stripes', 'confetti']) {
   assert.equal(calls.filter(call => call[0] === 'drawImage').length, 0);
 }
 console.log('PASS: strict frame design, exact photo expiry and frame-only renderer without photo inputs.');
+
+for (const sticker of ['bow','cat','cherry','cloud','butterfly','smile']) {
+  const sample = normalizeDesign({sticker});
+  assert.equal(validateSubmissionDesign(sample).sticker,sticker);
+  calls.length = 0; drawFrameTemplate(ctx, sample, {[sticker]: {id:sticker}});
+  assert.equal(calls.filter(call => call[0] === 'drawImage').length,8);
+}

@@ -80,7 +80,7 @@ export function siteSettings(value) {
 export function design(value) {
   keys(value, ['background', 'ink', 'accent', 'title', 'footer', 'pattern', 'sticker']);
   for (const field of ['background', 'ink', 'accent']) if (typeof value[field] !== 'string' || !/^#[0-9a-f]{6}$/i.test(value[field])) fail(400, 'Màu khung cần có dạng #RRGGBB.');
-  if (!['plain', 'grid', 'dots', 'film', 'checker', 'stripes', 'confetti'].includes(value.pattern) || !['star', 'heart', 'flower', 'none'].includes(value.sticker)) fail(400, 'Họa tiết hoặc nhãn dán chưa hợp lệ.');
+  if (!['plain', 'grid', 'dots', 'film', 'checker', 'stripes', 'confetti', 'hearts', 'waves', 'sparkles', 'lace', 'doodles'].includes(value.pattern) || !['star', 'heart', 'flower', 'bow', 'cat', 'cherry', 'cloud', 'butterfly', 'smile', 'none'].includes(value.sticker)) fail(400, 'Họa tiết hoặc nhãn dán chưa hợp lệ.');
   return { background: value.background, ink: value.ink, accent: value.accent, title: text(value.title, 60), footer: text(value.footer, 60), pattern: value.pattern, sticker: value.sticker };
 }
 export function submission(value) {

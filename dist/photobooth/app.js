@@ -1,5 +1,5 @@
 import { coverCrop, applyFilterPixels } from './core.mjs?v=2';
-import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter } from './design.mjs?v=2';
+import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter } from './design.mjs?v=3';
 
 const $ = selector => document.querySelector(selector);
 const video = $('#camera');
@@ -26,7 +26,13 @@ const frames = {
   checker: normalizeDesign({ background: '#fbf2e3', accent: '#303487', pattern: 'checker', sticker: 'heart', title: 'CỨ LÀ CHÍNH MÌNH', footer: 'Một chút tinh nghịch, rất nhiều niềm vui.' }),
   scrapbook: normalizeDesign({ background: '#e7d3b6', ink: '#57402f', accent: '#977658', pattern: 'grid', sticker: 'flower', title: 'TRANG NHẬT KÝ HÔM NAY', footer: 'Nhặt một ngày vui, cất vào đây.' }),
   birthday: normalizeDesign({ background: '#efb9c4', ink: '#303487', accent: '#a34d65', pattern: 'confetti', sticker: 'star', title: 'THÊM MỘT TUỔI, THÊM NIỀM VUI', footer: 'Ước gì cũng thành, cười gì cũng xinh.' }),
-  together: normalizeDesign({ background: '#e6e1f2', ink: '#303487', accent: '#8871b3', pattern: 'stripes', sticker: 'heart', title: 'CHÚNG MÌNH Ở ĐÂY', footer: 'Đi cùng nhau, ngày nào cũng đáng nhớ.' })
+  together: normalizeDesign({ background: '#e6e1f2', ink: '#303487', accent: '#8871b3', pattern: 'stripes', sticker: 'heart', title: 'CHÚNG MÌNH Ở ĐÂY', footer: 'Đi cùng nhau, ngày nào cũng đáng nhớ.' }),
+  coquette: normalizeDesign({ background: '#ffe0ef', ink: '#82385e', accent: '#ffffff', pattern: 'lace', sticker: 'bow', title: 'MỘT CHÚT ĐIỆU ĐÀ', footer: 'Hôm nay xinh theo cách của mình.' }),
+  neon: normalizeDesign({ background: '#241042', ink: '#ffffff', accent: '#b5ff3d', pattern: 'sparkles', sticker: 'smile', title: 'BẬT CHẾ ĐỘ LẤP LÁNH', footer: 'Đêm còn trẻ, mình còn vui!' }),
+  cherry: normalizeDesign({ background: '#fff3e9', ink: '#b32950', accent: '#ed8aab', pattern: 'hearts', sticker: 'cherry', title: 'NGỌT HƠN MỘT CHÚT', footer: 'Một ngày ngọt lành, một người đáng yêu.' }),
+  cats: normalizeDesign({ background: '#d8f3db', ink: '#285749', accent: '#82b795', pattern: 'doodles', sticker: 'cat', title: 'HỘI MÊ MÈO ĐIỂM DANH', footer: 'Meo một tiếng, vui cả ngày.' }),
+  sky: normalizeDesign({ background: '#bceaff', ink: '#245486', accent: '#ffffff', pattern: 'waves', sticker: 'cloud', title: 'MANG CẢ BẦU TRỜI VỀ', footer: 'Nhẹ tênh như một ngày không deadline.' }),
+  dream: normalizeDesign({ background: '#ddd0fa', ink: '#63408e', accent: '#fff4ad', pattern: 'sparkles', sticker: 'butterfly', title: 'LẠC VÀO MỘT GIẤC MƠ', footer: 'Giữ lại những điều lung linh.' })
 };
 const stickers = {};
 let selectedSlot = 0;
@@ -120,7 +126,7 @@ function drawPhoto(photo, x, y, width, height) {
 }
 
 function frameAssets(design = activeDesign) {
-  return { flower: stickers[design.ink === '#fbf2e3' ? 'yellow' : 'blue'], star: stickers.star, heart: stickers.heart };
+  return { ...stickers, flower: stickers[design.ink === '#fbf2e3' ? 'yellow' : 'blue'] };
 }
 
 function renderStrip() {
@@ -334,14 +340,17 @@ document.querySelectorAll('[data-remove]').forEach(button => button.addEventList
 document.querySelectorAll('[data-frame]').forEach(button => button.addEventListener('click', () => {
   selectDesign(frames[button.dataset.frame], button.textContent.trim(), null, button.dataset.frame);
 }));
-frameFontsReady.then(() => {
+function renderFramePreviews() {
   document.querySelectorAll('[data-frame]').forEach(button => {
     const preview = document.createElement('canvas');
-    preview.width = 720; preview.height = 2180;
-    drawFrameTemplate(preview.getContext('2d'), frames[button.dataset.frame], stickers);
+    preview.width = 144; preview.height = 436;
+    const previewContext = preview.getContext('2d');
+    previewContext.scale(.2, .2);
+    drawFrameTemplate(previewContext, frames[button.dataset.frame], frameAssets(frames[button.dataset.frame]));
     button.querySelector('i').replaceChildren(preview);
   });
-});
+}
+frameFontsReady.then(renderFramePreviews);
 document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
   filter = button.dataset.filter;
   document.querySelectorAll('[data-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
@@ -560,10 +569,10 @@ $('#contribution-form').addEventListener('submit', async event => {
   }
 });
 
-for (const name of ['blue', 'yellow', 'purple', 'coral', 'heart', 'star']) {
+for (const name of ['blue', 'yellow', 'purple', 'coral', 'heart', 'star', 'bow', 'cat', 'cherry', 'cloud', 'butterfly', 'smile']) {
   const image = new Image();
-  image.onload = () => { stickers[name] = image; renderStrip(); renderDesignPreview(); };
-  image.src = ['heart', 'star'].includes(name) ? `assets/${name}.svg` : `assets/asterisk-${name}-face.svg`;
+  image.onload = () => { stickers[name] = image; renderStrip(); renderDesignPreview(); frameFontsReady.then(renderFramePreviews); };
+  image.src = ['blue', 'yellow', 'purple', 'coral'].includes(name) ? `assets/asterisk-${name}-face.svg` : `assets/${name}.svg`;
 }
 frameFontsReady.then(() => { renderStrip(); renderDesignPreview(); }).catch(() => tell('Chưa tải được phông chữ. Kiểm tra kết nối trước khi tải ảnh hoặc gửi khung.', true));
 updateUI();

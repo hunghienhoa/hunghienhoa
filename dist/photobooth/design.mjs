@@ -17,7 +17,7 @@ export function normalizeDesign(input) {
     if (typeof design[key] !== 'string' || design[key].trim().length > 60) throw new TypeError('Chữ trên khung tối đa 60 ký tự.');
     design[key] = design[key].trim();
   }
-  if (!['plain', 'grid', 'dots', 'film', 'checker', 'stripes', 'confetti'].includes(design.pattern) || !['star', 'heart', 'flower', 'none'].includes(design.sticker)) throw new TypeError('Họa tiết hoặc nhãn dán không hợp lệ.');
+  if (!['plain', 'grid', 'dots', 'film', 'checker', 'stripes', 'confetti', 'hearts', 'waves', 'sparkles', 'lace', 'doodles'].includes(design.pattern) || !['star', 'heart', 'flower', 'bow', 'cat', 'cherry', 'cloud', 'butterfly', 'smile', 'none'].includes(design.sticker)) throw new TypeError('Họa tiết hoặc nhãn dán không hợp lệ.');
   return design;
 }
 
@@ -42,6 +42,10 @@ export function drawFrameFooter(ctx, rawDesign, assets = {}, caption, date = '')
   if (sticker) {
     ctx.drawImage(sticker, 42, 2057, 75, 75);
     ctx.drawImage(sticker, 605, 2060, 70, 70);
+    for (const y of [510, 980, 1450]) {
+      ctx.drawImage(sticker, 2, y, 36, 36);
+      ctx.drawImage(sticker, 682, y - 30, 36, 36);
+    }
   }
 }
 
@@ -71,6 +75,24 @@ export function drawFrameTemplate(ctx, rawDesign, assets = {}) {
   } else if (design.pattern === 'confetti') {
     ctx.globalAlpha = .65;
     for (let y = 20; y < 2180; y += 75) for (let x = 12; x < 720; x += 85) { ctx.fillRect(x + (y % 3) * 6, y, 7, 16); ctx.beginPath(); ctx.arc(x + 35, y + 30, 4, 0, Math.PI * 2); ctx.fill(); }
+  } else if (design.pattern === 'hearts') {
+    ctx.globalAlpha = .5;
+    for (let y = 30; y < 2180; y += 70) for (let x = 18; x < 720; x += 70) {
+      ctx.beginPath(); ctx.moveTo(x, y + 9); ctx.bezierCurveTo(x - 22, y - 5, x - 8, y - 22, x, y - 10); ctx.bezierCurveTo(x + 8, y - 22, x + 22, y - 5, x, y + 9); ctx.fill();
+    }
+  } else if (design.pattern === 'waves') {
+    ctx.globalAlpha = .5; ctx.lineWidth = 4;
+    for (let y = 0; y < 2180; y += 45) { ctx.beginPath(); ctx.moveTo(0, y); for (let x = 0; x < 720; x += 60) ctx.bezierCurveTo(x + 15, y - 20, x + 45, y + 20, x + 60, y); ctx.stroke(); }
+  } else if (design.pattern === 'sparkles') {
+    ctx.globalAlpha = .75;
+    for (let y = 25; y < 2180; y += 85) for (let x = 20; x < 720; x += 85) { ctx.beginPath(); ctx.moveTo(x, y - 16); ctx.lineTo(x + 5, y - 4); ctx.lineTo(x + 16, y); ctx.lineTo(x + 5, y + 4); ctx.lineTo(x, y + 16); ctx.lineTo(x - 5, y + 4); ctx.lineTo(x - 16, y); ctx.lineTo(x - 5, y - 4); ctx.closePath(); ctx.fill(); }
+  } else if (design.pattern === 'lace') {
+    ctx.globalAlpha = .8; ctx.lineWidth = 3;
+    for (let y = 0; y < 2180; y += 26) for (const x of [15, 705]) { ctx.beginPath(); ctx.arc(x, y, 13, 0, Math.PI * 2); ctx.stroke(); }
+    ctx.strokeRect(30, 75, 660, 1890);
+  } else if (design.pattern === 'doodles') {
+    ctx.globalAlpha = .65; ctx.lineWidth = 3;
+    for (let y = 40; y < 2180; y += 75) for (const x of [18, 702]) { ctx.beginPath(); ctx.arc(x, y, 11, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x - 10, y + 26); ctx.lineTo(x + 9, y + 38); ctx.lineTo(x - 6, y + 51); ctx.stroke(); }
   }
   ctx.restore();
   ctx.fillStyle = design.ink;
