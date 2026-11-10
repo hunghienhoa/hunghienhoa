@@ -17,7 +17,7 @@ export function normalizeDesign(input) {
     if (typeof design[key] !== 'string' || design[key].trim().length > 60) throw new TypeError('Chữ trên khung tối đa 60 ký tự.');
     design[key] = design[key].trim();
   }
-  if (!['plain', 'grid', 'dots'].includes(design.pattern) || !['star', 'heart', 'flower', 'none'].includes(design.sticker)) throw new TypeError('Họa tiết hoặc nhãn dán không hợp lệ.');
+  if (!['plain', 'grid', 'dots', 'film', 'checker', 'stripes', 'confetti'].includes(design.pattern) || !['star', 'heart', 'flower', 'none'].includes(design.sticker)) throw new TypeError('Họa tiết hoặc nhãn dán không hợp lệ.');
   return design;
 }
 
@@ -61,6 +61,16 @@ export function drawFrameTemplate(ctx, rawDesign, assets = {}) {
     for (let y = 0; y <= 2180; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(720, y); ctx.stroke(); }
   } else if (design.pattern === 'dots') {
     for (let y = 18; y < 2180; y += 38) for (let x = 18; x < 720; x += 38) { ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill(); }
+  } else if (design.pattern === 'film') {
+    ctx.globalAlpha = .85;
+    for (let y = 100; y < 1970; y += 55) for (const x of [8, 692]) ctx.fillRect(x, y, 20, 30);
+  } else if (design.pattern === 'checker') {
+    for (let y = 0; y < 2180; y += 24) for (let x = 0; x < 720; x += 24) if ((x / 24 + y / 24) % 2 === 0) ctx.fillRect(x, y, 24, 24);
+  } else if (design.pattern === 'stripes') {
+    for (let x = -2180; x < 720; x += 65) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 2180, 2180); ctx.stroke(); }
+  } else if (design.pattern === 'confetti') {
+    ctx.globalAlpha = .65;
+    for (let y = 20; y < 2180; y += 75) for (let x = 12; x < 720; x += 85) { ctx.fillRect(x + (y % 3) * 6, y, 7, 16); ctx.beginPath(); ctx.arc(x + 35, y + 30, 4, 0, Math.PI * 2); ctx.fill(); }
   }
   ctx.restore();
   ctx.fillStyle = design.ink;

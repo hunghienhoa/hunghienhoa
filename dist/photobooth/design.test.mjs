@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate } from './design.mjs';
+import { design as validateSubmissionDesign } from '../../server/validation.mjs';
 
 assert.deepEqual(normalizeDesign({}), DEFAULT_DESIGN);
 assert.equal(normalizeDesign({ background: '#ABCDEF', title: '  Kỷ niệm  ' }).background, '#abcdef');
@@ -21,4 +22,11 @@ assert.ok(calls.every(call => !call.includes('private')));
 assert.ok(fonts.some(font => font.includes('"Be Vietnam Pro"')));
 assert.ok(fonts.some(font => /^italic 600 \d+px "Playfair Display"/.test(font)));
 assert.ok(fonts.every(font => !/Gilroy|600 italic/.test(font)));
+for (const pattern of ['film', 'checker', 'stripes', 'confetti']) {
+  assert.equal(validateSubmissionDesign(normalizeDesign({ pattern })).pattern, pattern);
+  calls.length = 0;
+  drawFrameTemplate(ctx, normalizeDesign({ pattern }));
+  assert.ok(calls.some(call => call[0] === 'fillRect'));
+  assert.equal(calls.filter(call => call[0] === 'drawImage').length, 0);
+}
 console.log('PASS: strict frame design, exact photo expiry and frame-only renderer without photo inputs.');

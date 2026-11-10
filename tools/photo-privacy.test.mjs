@@ -45,7 +45,7 @@ for (const selector of ['.upload-button', '.print-preview']) elements.set(select
 for (const [key, value] of Object.entries(DEFAULT_DESIGN)) elements.get('#design-' + key).value = value;
 const slotButtons = Array.from({ length: 4 }, (_, slot) => Object.assign(new Element(), { dataset: { slot: String(slot) } }));
 const removeButtons = Array.from({ length: 4 }, (_, slot) => Object.assign(new Element(), { dataset: { remove: String(slot) } }));
-const frameButtons = ['cream', 'blue', 'pink', 'yellow'].map(frame => Object.assign(new Element(), { dataset: { frame }, textContent: frame }));
+const frameButtons = [...html.matchAll(/data-frame="([^"]+)"/g)].map(([,frame]) => Object.assign(new Element(), { dataset: { frame }, textContent: frame }));
 const filterButtons = ['original', 'mono', 'warm', 'nostalgia'].map(filter => Object.assign(new Element(), { dataset: { filter } }));
 const document = {
   querySelector(selector) {
@@ -79,6 +79,11 @@ new vm.Script(script).runInContext(context);
 await new Promise(resolve => setImmediate(resolve));
 assert.equal(requestedCamera, 0);
 assert.equal(requests.length, 0);
+assert.equal(frameButtons.length, 10);
+for (const button of frameButtons) {
+  button.listeners.click();
+  assert.equal(button.attributes['aria-pressed'], 'true');
+}
 const upload = elements.get('#upload');
 vm.runInContext('startingCamera = true; updateUI();', context);
 assert.equal(upload.disabled, false);

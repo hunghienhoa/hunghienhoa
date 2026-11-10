@@ -20,7 +20,13 @@ const frames = {
   cream: normalizeDesign({}),
   blue: normalizeDesign({ background: '#303487', ink: '#fbf2e3', accent: '#ffdc38' }),
   pink: normalizeDesign({ background: '#efb9c4', pattern: 'dots', sticker: 'heart' }),
-  yellow: normalizeDesign({ background: '#ffdc38', accent: '#e67f8f', pattern: 'grid', sticker: 'star' })
+  yellow: normalizeDesign({ background: '#ffdc38', accent: '#e67f8f', pattern: 'grid', sticker: 'star' }),
+  film: normalizeDesign({ background: '#242338', ink: '#fbf2e3', accent: '#ffdc38', pattern: 'film', sticker: 'none', title: 'THƯỚC PHIM CỦA CHÚNG MÌNH', footer: 'Khoảnh khắc này, chỉ một lần.' }),
+  polaroid: normalizeDesign({ background: '#fffaf1', ink: '#303487', accent: '#efb9c4', sticker: 'none', title: 'MỘT NGÀY THẬT ĐẸP', footer: 'Có bạn trong những ngày vui.' }),
+  checker: normalizeDesign({ background: '#fbf2e3', accent: '#303487', pattern: 'checker', sticker: 'heart', title: 'CỨ LÀ CHÍNH MÌNH', footer: 'Một chút tinh nghịch, rất nhiều niềm vui.' }),
+  scrapbook: normalizeDesign({ background: '#e7d3b6', ink: '#57402f', accent: '#977658', pattern: 'grid', sticker: 'flower', title: 'TRANG NHẬT KÝ HÔM NAY', footer: 'Nhặt một ngày vui, cất vào đây.' }),
+  birthday: normalizeDesign({ background: '#efb9c4', ink: '#303487', accent: '#a34d65', pattern: 'confetti', sticker: 'star', title: 'THÊM MỘT TUỔI, THÊM NIỀM VUI', footer: 'Ước gì cũng thành, cười gì cũng xinh.' }),
+  together: normalizeDesign({ background: '#e6e1f2', ink: '#303487', accent: '#8871b3', pattern: 'stripes', sticker: 'heart', title: 'CHÚNG MÌNH Ở ĐÂY', footer: 'Đi cùng nhau, ngày nào cũng đáng nhớ.' })
 };
 const stickers = {};
 let selectedSlot = 0;
@@ -328,6 +334,14 @@ document.querySelectorAll('[data-remove]').forEach(button => button.addEventList
 document.querySelectorAll('[data-frame]').forEach(button => button.addEventListener('click', () => {
   selectDesign(frames[button.dataset.frame], button.textContent.trim(), null, button.dataset.frame);
 }));
+frameFontsReady.then(() => {
+  document.querySelectorAll('[data-frame]').forEach(button => {
+    const preview = document.createElement('canvas');
+    preview.width = 720; preview.height = 2180;
+    drawFrameTemplate(preview.getContext('2d'), frames[button.dataset.frame], stickers);
+    button.querySelector('i').replaceChildren(preview);
+  });
+});
 document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
   filter = button.dataset.filter;
   document.querySelectorAll('[data-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
