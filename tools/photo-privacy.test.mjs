@@ -99,8 +99,6 @@ new vm.Script(script).runInContext(context);
 await new Promise(resolve => setImmediate(resolve));
 assert.equal(requestedCamera, 0);
 assert.equal(requests.length, 0);
-assert.equal(elements.get('#edit-reminder').hidden, true);
-assert.ok(html.includes('href="#editor-title"'));
 assert.ok(!html.includes('class="camera-filters"'));
 assert.ok(!html.includes('data-filter='));
 for (const button of filterButtons) {
@@ -132,14 +130,9 @@ assert.equal(upload.disabled, false);
 await upload.listeners.change({ target: { files: Array.from({ length: 4 }, (_, i) => ({ name: `synthetic-${i}.png`, type: 'image/png', size: 100 })), value: '' } });
 assert.equal(vm.runInContext('startingCamera', context), false);
 assert.equal(elements.get('#photo-count').textContent, '4 / 4');
-assert.equal(elements.get('#edit-reminder').hidden, false);
-assert.match(elements.get('#status').textContent, /Đã đủ 4 tấm ảnh! Kéo xuống/);
 vm.runInContext('downloaded = true; updateUI();', context);
-assert.equal(elements.get('#edit-reminder').hidden, true);
 vm.runInContext('downloaded = false; busy = true; updateUI();', context);
-assert.equal(elements.get('#edit-reminder').hidden, true);
 vm.runInContext('busy = false; updateUI();', context);
-assert.equal(elements.get('#edit-reminder').hidden, false);
 assert.equal(elements.get('#strip').containsPhoto, true);
 const exportSize = vm.runInContext(`(() => {
   const output = document.createElement('canvas'); output.width=1440; output.height=4360;
@@ -173,7 +166,6 @@ assert.equal(elements.get('#photo-count').textContent, '0 / 4');
 assert.equal(elements.get('#strip').containsPhoto, false);
 assert.ok(slotButtons.every(button => button.child.src === ''));
 assert.equal(elements.get('#download').disabled, true);
-assert.equal(elements.get('#edit-reminder').hidden, true);
 await upload.listeners.change({ target: { files: [{ name: 'synthetic.png', type: 'image/png', size: 100 }], value: '' } });
 assert.equal(elements.get('#photo-count').textContent, '1 / 4');
 events['window:pagehide']();
@@ -219,3 +211,6 @@ categoryChoices[1].listeners.click();
 assert.ok(importedChoices.every(item=>item.hidden));
 categoryChoices[0].listeners.click();
 assert.ok(importedChoices.every(item=>!item.hidden));
+
+assert.ok(!html.includes('edit-reminder') && !shootHtml.includes('edit-reminder'));
+assert.ok(!script.includes('Kéo xuống'));

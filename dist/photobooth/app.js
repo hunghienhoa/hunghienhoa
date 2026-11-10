@@ -16,7 +16,6 @@ const frameFontsReady = Promise.all([
 let filteredPhotoCache = new WeakMap();
 const status = $('#status');
 const photos = Array(4).fill(null);
-const completeMessage = 'Đã đủ 4 tấm ảnh! Kéo xuống bên dưới để chọn khung, thêm lời nhắn và chỉnh sửa trước khi tải về nhé.';
 const filters = { original: 'none', mono: 'grayscale(1) contrast(1.08)', warm: 'sepia(.24) saturate(1.2) contrast(1.04)', nostalgia: 'sepia(.4) saturate(.72) contrast(.94) brightness(1.05)', clear:'saturate(1.04) contrast(.96) brightness(1.08)', peach:'sepia(.08) saturate(1.06) contrast(.94) brightness(1.06)', soft:'saturate(.98) contrast(.9) brightness(1.06)' };
 const frames = {
   cream: normalizeDesign({"background": "#d5efcf", "ink": "#24574e", "accent": "#8dbb8d", "pattern": "grid", "sticker": "cat", "title": "NHẬT KÝ BẠC HÀ", "footer": "Nhặt một ngày vui, ép vào trang nhỏ."}),
@@ -82,7 +81,6 @@ function tell(message, error = false) {
 function updateUI() {
   if (checkPhotoExpiry()) return;
   const count = photos.filter(Boolean).length;
-  $('#edit-reminder').hidden = count !== 4 || busy || downloaded;
   $('#photo-count').textContent = `${count} / 4`;
   $('#camera-state').textContent = startingCamera ? 'Đang mở…' : stream ? 'Đang bật' : 'Đang tắt';
   $('#start-camera').disabled = !!stream || startingCamera || busy;
@@ -327,7 +325,7 @@ async function capture(automatic) {
       $('#countdown').textContent = '';
       updateUI();
     }
-    tell(photos.every(Boolean) ? completeMessage : 'Đã chụp xong. Bạn có thể chọn ô khác để chụp tiếp.');
+    tell(photos.every(Boolean) ? '' : 'Đã chụp xong. Bạn có thể chọn ô khác để chụp tiếp.');
   } catch (error) { tell(error.message || 'Chưa chụp được ảnh. Hãy thử lại.', true); }
   finally { if (token === shootToken) { busy = false; $('#countdown').textContent = ''; updateUI(); } }
 }
@@ -355,7 +353,7 @@ $('#upload').addEventListener('change', async event => {
     beginPhotoSession();
     selectedSlot = photos.findIndex(photo => !photo);
     downloaded = false;
-    tell(photos.every(Boolean) ? completeMessage : `Đã thêm ${incoming.length} ảnh. Chọn thêm hoặc bật máy ảnh để chụp tiếp.`);
+    tell(photos.every(Boolean) ? '' : `Đã thêm ${incoming.length} ảnh. Chọn thêm hoặc bật máy ảnh để chụp tiếp.`);
   } catch (error) { tell(error.message || 'Không đọc được ảnh. Hãy thử ảnh khác.', true); }
   finally { if (token === importToken) { busy = false; updateUI(); } }
 });
