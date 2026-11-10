@@ -6,6 +6,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { randomBytes, randomUUID, createHash, scrypt, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import { initVisits, recordVisit, visitSummary, pageForVisit } from './visits.mjs';
+import { adsenseHtml } from './adsense.mjs';
 import { HOUR, fail, keys, text, password, defaultSite, siteSettings, submission, post } from './validation.mjs';
 
 const derive = promisify(scrypt);
@@ -294,8 +295,11 @@ export function createApp(options = {}) {
     const content = fs.readFileSync(file);
     const visitPage = pageForVisit(route);
     if (visitPage && req.method === 'GET' && contentType.includes('text/html') && !/bot|crawler|spider|headless/i.test(req.headers['user-agent'] || '')) recordVisit(visitSQL, visitPage, now());
-    res.writeHead(200, { 'Content-Type': contentType, 'Content-Length': content.length, 'Cache-Control': 'no-cache' });
-    res.end(req.method === 'HEAD' ? undefined : content);
+    const ads = contentType.includes('text/html') ? adsenseHtml(content.toString('utf8'),randomBytes(16).toString('base64')) : null;
+    const output = ads ? Buffer.from(ads.body) : content;
+    if (ads) res.setHeader('Content-Security-Policy',ads.csp);
+    res.writeHead(200, { 'Content-Type': contentType, 'Content-Length': output.length, 'Cache-Control': ads ? 'no-store' : 'no-cache' });
+    res.end(req.method === 'HEAD' ? undefined : output);
   }
   const server = http.createServer((req, res) => { handle(req, res).catch(error => {
     if (res.headersSent) { res.destroy(); return; }

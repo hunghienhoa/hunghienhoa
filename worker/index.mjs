@@ -1,5 +1,6 @@
 import { fail, post, siteSettings, submission } from '../server/validation.mjs';
 import { pageForVisit } from '../server/visits.mjs';
+import { adsenseHtml } from '../server/adsense.mjs';
 export { VisitCounter } from './visits.mjs';
 
 const API_LIMIT = 1600000;
@@ -11,14 +12,21 @@ function json(value, status = 200) {
   return new Response(JSON.stringify(value), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
 }
 
-function withSecurity(response, env) {
+async function withSecurity(response, env) {
   const headers = new Headers(response.headers);
+  let body = response.body;
   headers.set('Content-Security-Policy', `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' ${env.SUPABASE_URL}; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'`);
   headers.set('Permissions-Policy', 'camera=(self), microphone=(), geolocation=()');
   headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   headers.set('X-Content-Type-Options', 'nosniff');
   headers.set('X-Frame-Options', 'DENY');
-  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+  if (headers.get('content-type')?.includes('text/html')) {
+    const html = await response.text();
+    const ads = adsenseHtml(html, crypto.randomUUID().replaceAll('-',''));
+    body = ads?.body ?? html;
+    if (ads) {headers.set('Content-Security-Policy',ads.csp);headers.set('Cache-Control','no-store');headers.delete('ETag');headers.delete('Content-Length');}
+  }
+  return new Response(body, { status: response.status, statusText: response.statusText, headers });
 }
 
 async function readJson(request) {

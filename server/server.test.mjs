@@ -70,6 +70,12 @@ try {
   assert.equal(views.today,2); assert.equal(views.total,2);
   await fetch(base+'/',{method:'HEAD'});await fetch(base+'/',{headers:{'User-Agent':'test-crawler'}});
   assert.equal((await request('/api/admin/analytics')).data.total,2);
+  const firstAdPage=await fetch(base+'/'),secondAdPage=await fetch(base+'/');
+  assert.ok(firstAdPage.headers.get('content-security-policy').includes("'strict-dynamic'"));
+  assert.notEqual(firstAdPage.headers.get('content-security-policy'),secondAdPage.headers.get('content-security-policy'));
+  const adminPage=await fetch(base+'/admin/');
+  assert.ok(adminPage.headers.get('content-security-policy').includes("script-src 'self'"));
+  assert.ok(!(await adminPage.text()).includes('adsbygoogle'));
   const contentKey=JSON.parse(fs.readFileSync(new URL('../dist/content-fields.json',import.meta.url),'utf8'))[0].key;
   const customSite={...editedSite,pageTexts:{[contentKey]:'Nội dung đã tùy chỉnh'},theme:{cream:'#fff0df',blue:'#403080',yellow:'#ffcc33'}};
   assert.equal((await request('/api/admin/site',{method:'PUT',body:customSite})).response.status,200);

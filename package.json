@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "cf build",
-    "check": "node check.cjs && node --test server/server.test.mjs dist/photobooth/core.test.mjs dist/photobooth/design.test.mjs dist/blog/core.test.mjs worker/index.test.mjs tools/admin-auth.test.mjs tools/photo-privacy.test.mjs tools/viewport.test.mjs tools/dashboard.test.mjs && python tools/convert-webp.py --check",
+    "check": "node check.cjs && node --test server/server.test.mjs dist/photobooth/core.test.mjs dist/photobooth/design.test.mjs dist/blog/core.test.mjs worker/index.test.mjs tools/admin-auth.test.mjs tools/photo-privacy.test.mjs tools/viewport.test.mjs tools/dashboard.test.mjs tools/adsense.test.mjs && python tools/convert-webp.py --check",
     "deploy": "cf deploy"
   },
   "devDependencies": {
