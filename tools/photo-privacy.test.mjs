@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import {importedFrames} from '../dist/photobooth/imported-frames.mjs';
 import { coverCrop, applyFilterPixels } from '../dist/photobooth/core.mjs';
 import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow } from '../dist/photobooth/design.mjs';
 
@@ -42,6 +43,7 @@ class TestImage extends Element {
 }
 const html = fs.readFileSync(new URL('../dist/photobooth/index.html', import.meta.url), 'utf8');
 for (const [, id] of html.matchAll(/id="([^"]+)"/g)) elements.set('#' + id, ['strip', 'design-preview'].includes(id) ? new Canvas() : new Element());
+for(const id of ['#imported-frame-options','#frame-categories','#builtin-frame-options']) elements.set(id,new Element());
 for (const selector of ['.upload-button', '.print-preview']) elements.set(selector, new Element());
 for (const [key, value] of Object.entries(DEFAULT_DESIGN)) elements.get('#design-' + key).value = value;
 const slotButtons = Array.from({ length: 4 }, (_, slot) => Object.assign(new Element(), { dataset: { slot: String(slot) } }));
@@ -54,10 +56,11 @@ const document = {
     if (selector.startsWith('[data-remove=')) return removeButtons[Number(selector.match(/"(\d)"/)[1])];
     return elements.get(selector) || null;
   },
-  querySelectorAll(selector) { return ({ '[data-slot]': slotButtons, '[data-remove]': removeButtons, '[data-frame]': frameButtons, '[data-showcase]': showcaseButtons, '[data-filter]': filterButtons })[selector] || []; },
+  querySelectorAll(selector) { return ({ '[data-imported]':elements.get('#imported-frame-options').children, '#frame-categories button':elements.get('#frame-categories').children, '[data-slot]': slotButtons, '[data-remove]': removeButtons, '[data-frame]': frameButtons, '[data-showcase]': showcaseButtons, '[data-filter]': filterButtons })[selector] || []; },
   createElement: tag => tag === 'canvas' ? new Canvas() : new Element(),
   fonts: { ready: Promise.resolve(), load: async () => [] },
   addEventListener: (type, callback) => { events['document:' + type] = callback; },
+  dispatchEvent() {},
   hidden: false,
   body: new Element()
 };
@@ -74,7 +77,7 @@ const context = vm.createContext({
     if (options.method === 'POST') { requests.push(JSON.parse(options.body)); return { ok: true, json: async () => ({ id: 'qa', status: 'pending', expiresAt: clock + PHOTO_SESSION_MS }) }; }
     return { ok: true, json: async () => ({ frames: [] }) };
   },
-  coverCrop, applyFilterPixels, DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow
+  Event: class {}, importedFrames, coverCrop, applyFilterPixels, DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow
 });
 const script = fs.readFileSync(new URL('../dist/photobooth/app.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '');
 const shootHtml = fs.readFileSync('dist/photobooth/shoot.html','utf8');
@@ -85,7 +88,7 @@ assert.match(html, /<section hidden class="studio wrap"/);
 assert.match(html, /href="shoot"/);
 const pickerNodes = new Map();
 const pickerNode = id => {if(!pickerNodes.has(id)) pickerNodes.set(id, {listeners:{}, addEventListener(event,fn){this.listeners[event]=fn;},showModal(){this.open=true;},close(){this.open=false;},focus(){this.focused=true;},querySelectorAll(){return [pickerNode('choice')];},textContent:'Khung thử',getAttribute(){return '';}});return pickerNodes.get(id);};
-vm.runInNewContext(fs.readFileSync('dist/photobooth/shoot.js','utf8'), {document:{querySelector:pickerNode},MutationObserver:class {observe(){}}});
+vm.runInNewContext(fs.readFileSync('dist/photobooth/shoot.js','utf8'), {document:{querySelector:pickerNode,addEventListener(){}},MutationObserver:class {observe(){}}});
 pickerNode('#change-frame').listeners.click();
 assert.equal(pickerNode('#frame-picker').open,true);
 pickerNode('choice').listeners.click();
@@ -202,3 +205,17 @@ assert.match(landingCss,/:focus-within/);
 
 showcaseButtons[0].listeners.click();
 assert.equal(JSON.parse(new URL(destination).searchParams.get('thietke')).title,'SÂN KHẤU NHẠC POP');
+
+vm.runInContext("importedFrame={slots:[[40,100,300,400],[380,100,300,400]],image:{}}; renderStrip(); importedFrame=null;",context);
+
+const importedChoices=elements.get('#imported-frame-options').children;
+assert.equal(importedChoices.length,170);
+await importedChoices[0].listeners.click();
+await new Promise(resolve=>setImmediate(resolve));
+assert.equal(vm.runInContext('importedFrame.id',context),importedFrames[0].id);
+assert.equal(importedChoices[0].attributes['aria-pressed'],'true');
+const categoryChoices=elements.get('#frame-categories').children;
+categoryChoices[1].listeners.click();
+assert.ok(importedChoices.every(item=>item.hidden));
+categoryChoices[0].listeners.click();
+assert.ok(importedChoices.every(item=>!item.hidden));

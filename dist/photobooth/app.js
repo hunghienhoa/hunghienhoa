@@ -1,4 +1,5 @@
 import { coverCrop, applyFilterPixels } from './core.mjs?v=3';
+import { importedFrames } from './imported-frames.mjs';
 import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow } from './design.mjs?v=4';
 
 const $ = selector => document.querySelector(selector);
@@ -57,6 +58,8 @@ let frame = 'cream';
 let activeDesign = frames.cream;
 let selectedFrameLabel = 'Nhật ký bạc hà';
 let communityFrameImage = null;
+let importedFrame = null;
+let frameSelection = 0;
 let photoExpiresAt = 0;
 let photoExpiryTimer;
 let importToken = 0;
@@ -150,6 +153,16 @@ function frameAssets(design = activeDesign) {
 }
 
 function renderStrip(target = ctx, resolution = 1) {
+  if (importedFrame) {
+    target.clearRect(0,0,720,2180); target.fillStyle='#fbf2e3';target.fillRect(0,0,720,2180);
+    importedFrame.slots.forEach(([x,y,w,h],index)=>{
+      const photo=photos[index%4];
+      if(photo) drawPhoto(photo,x,y,w,h,target,resolution);
+      else {target.fillStyle='#eee7df';target.fillRect(x,y,w,h);}
+    });
+    target.drawImage(importedFrame.image,0,0,720,2180);
+    return;
+  }
   if (communityFrameImage) {
     target.clearRect(0, 0, 720, 2180);
     target.drawImage(communityFrameImage, 0, 0, 720, 2180);
@@ -389,6 +402,37 @@ document.querySelectorAll('[data-showcase]').forEach(button => button.addEventLi
   selectDesign(frames[button.dataset.showcase], button.textContent.trim());
 }));
 frameFontsReady.then(renderFramePreviews);
+
+const importedGallery = $('#imported-frame-options');
+if (importedGallery) {
+  const categories=['Tất cả','Bộ Hộp Ảnh',...new Set(importedFrames.map(item=>item.category))];
+  const selectImported=async item=>{
+    const selection=++frameSelection;
+    const image=new Image();
+    await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src=item.src;});
+    if(selection!==frameSelection) return;
+    importedFrame={...item,image};communityFrameImage=null;selectedFrameLabel=item.name;downloaded=false;
+    document.querySelectorAll('[data-frame]').forEach(button=>button.setAttribute('aria-pressed','false'));
+    document.querySelectorAll('[data-imported]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.imported===item.id)));
+    tell(item.slots.length===4?'Đã chọn khung.':`Khung có ${item.slots.length} ô: dùng ảnh theo thứ tự; từ ô thứ 5 sẽ lặp lại ảnh đầu.`);
+    updateUI();document.dispatchEvent(new Event('frame-selected'));
+  };
+  for(const item of importedFrames) {
+    const button=document.createElement('button');button.type='button';button.className='frame-option';button.dataset.imported=item.id;button.dataset.category=item.category;button.setAttribute('aria-pressed','false');
+    const image=document.createElement('img');image.src=item.thumb;image.loading='lazy';image.alt='';image.width=144;image.height=436;
+    const title=document.createElement('span');title.textContent=item.name;
+    const note=document.createElement('small');note.textContent=`${item.slots.length} ô ảnh`;
+    button.append(image,title,note);button.addEventListener('click',()=>selectImported(item).catch(()=>tell('Chưa tải được khung. Hãy thử lại.',true)));importedGallery.append(button);
+  }
+  for(const category of categories) {
+    const button=document.createElement('button');button.type='button';button.textContent=category;button.setAttribute('aria-pressed',String(category==='Tất cả'));
+    button.addEventListener('click',()=>{
+      document.querySelectorAll('#frame-categories button').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+      document.querySelectorAll('[data-imported]').forEach(item=>{item.hidden=category!=='Tất cả'&&item.dataset.category!==category;});
+      $('#builtin-frame-options').hidden=!['Tất cả','Bộ Hộp Ảnh'].includes(category);
+    });$('#frame-categories').append(button);
+  }
+}
 document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
   filter = button.dataset.filter;
   document.querySelectorAll('[data-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
@@ -446,6 +490,8 @@ $('#download').addEventListener('click', async () => {
 });
 
 function selectDesign(design, label, image = null, id = 'custom') {
+  frameSelection++;
+  importedFrame = null;
   if (document.body?.classList.contains('booth-landing')) {
     const next = new URL('shoot', window.location.href);
     next.searchParams.set('thietke', JSON.stringify(normalizeDesign(design)));
@@ -457,6 +503,7 @@ function selectDesign(design, label, image = null, id = 'custom') {
   communityFrameImage = image;
   frame = id;
   document.querySelectorAll('[data-frame]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.frame === id)));
+  document.querySelectorAll('[data-imported]').forEach(button => button.setAttribute('aria-pressed','false'));
   document.querySelectorAll('.community-card').forEach(card => card.classList.toggle('selected', card.dataset.frameId === id));
   downloaded = false;
   const preview = $('.print-preview');

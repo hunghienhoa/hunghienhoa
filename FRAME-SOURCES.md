@@ -22,3 +22,8 @@ Thiết kế tự dựng bằng canvas và SVG sẵn có: ô ảnh hình tim xen
 ## Bộ bổ sung thứ hai
 
 16 mẫu tự dựng thêm từ ảnh danh mục Hùng gửi; giữ nguyên bộ 16 mẫu trước. Không sao chép logo ban nhạc, nhân vật hay file khung bên thứ ba. Các mẫu mới: Sân khấu nhạc pop, Vé diễn hồng, Sinh nhật hoa hồng, Siêu sao xanh lá, Mẩu báo ngày cũ, Đom đóm nửa đêm, Khu vườn mùa thu, Việt Nam trong tim, Bưu thiếp quê nhà, Dưa hấu mùa hè, Giờ xanh dịu dàng, Thư tím hoa oải hương, Mèo đen tinh nghịch, Kẹo ngọt tan chảy, Trắng một chút thôi, Hoàng hôn cam đào. Tổng cộng 32 lựa chọn. Dùng lại bộ renderer canvas và SVG gốc; không thêm ảnh raster hoặc dịch vụ gửi ảnh.
+
+
+## Hai gói khung do Hùng cung cấp
+
+Nhập photobooth_70_frames_v3.zip và photobooth_100_frames_v2.zip (170 mẫu). Bản PNG gốc ở source-assets/original-png/frame-packs, ngoài webroot. Web dùng WebP có alpha 720×2180 và thumbnail WebP 144×436. Vùng ghép suy ra từ các vùng trong suốt, giữ nguyên artwork; không dùng ảnh người làm preview. Chia nhóm Tối giản, Sinh nhật & lễ hội, Việt Nam, Nhạc pop & Y2K, Nhật ký & vintage, Dễ thương & thiên nhiên. Bộ 32 mẫu tự dựng nằm riêng trong Bộ Hộp Ảnh. Mẫu ít hơn bốn ô dùng các ảnh đầu; mẫu sáu ô lặp lại hai ảnh đầu.

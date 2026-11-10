@@ -43,3 +43,14 @@ for (const [pattern, method] of [['hearts','bezierCurveTo'],['waves','ellipse'],
   assert.equal(calls[0][0],'beginPath');
   assert.equal(calls.at(-1)[0],'closePath');
 }
+
+const {importedFrames}=await import('./imported-frames.mjs');
+const fs=await import('node:fs');
+assert.equal(importedFrames.length,170);
+assert.equal(new Set(importedFrames.map(item=>item.id)).size,170);
+for(const item of importedFrames){
+ assert.ok(item.category && item.name);
+ for(const asset of [item.src,item.thumb]) assert.ok(fs.statSync('dist/photobooth/'+asset).size>100);
+ assert.ok([3,4,6].includes(item.slots.length));
+ for(const [x,y,w,h] of item.slots) assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=720&&y+h<=2180);
+}

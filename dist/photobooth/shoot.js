@@ -13,3 +13,5 @@ const preview = document.querySelector('#strip');
 const syncFrameName = () => { const label = preview.getAttribute('aria-label') || ''; const match = label.match(/khung (.*)\.$/); if (match) document.querySelector('#selected-frame').textContent = match[1]; };
 new MutationObserver(syncFrameName).observe(preview, {attributes:true, attributeFilter:['aria-label']});
 syncFrameName();
+
+document.addEventListener('frame-selected', () => { picker.close(); change.focus(); });
