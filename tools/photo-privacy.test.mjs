@@ -85,6 +85,7 @@ for (const button of filterButtons) {
   assert.equal(button.attributes['aria-pressed'], 'true');
   assert.ok(elements.get('#camera').style.filter);
 }
+filterButtons[0].listeners.click();
 const originalEncode = Canvas.prototype.toDataURL;
 Canvas.prototype.toDataURL = function(type) { return type === 'image/webp' ? 'data:image/png;base64,fallback' : 'data:image/jpeg;base64,synthetic'; };
 assert.equal(vm.runInContext('photoFromImage({width:640,height:480}).url',context),'data:image/jpeg;base64,synthetic');
