@@ -220,3 +220,19 @@ assert.equal([...shootHtml.matchAll(/data-filter="/g)].length,7);
 assert.equal([...shootHtml.matchAll(/data-photo-zoom="/g)].length,3);
 for(const button of zoomButtons){button.listeners.click();assert.equal(button.attributes['aria-pressed'],'true');assert.equal(vm.runInContext('photoZoom',context),Number(button.dataset.photoZoom));}
 zoomButtons[0].listeners.click();
+
+assert.ok(html.includes('id="frame-art-upload"') && shootHtml.includes('id="frame-art-upload"'));
+await vm.runInContext("loadFrameArtwork({type:'image/jpeg',size:100})",context);
+assert.match(elements.get('#frame-upload-status').textContent,/PNG hoặc WebP/);
+assert.equal(vm.runInContext('uploadedFrameCanvas',context),null);
+context.URL=TestURL;
+const priorImage=context.Image;
+context.Image=class extends TestImage{constructor(){super();this.width=720;this.height=2180;}};
+const priorCreate=document.createElement;
+document.createElement=tag=>{const element=priorCreate(tag);if(tag==='canvas')element.context.getImageData=()=>({data:new Uint8ClampedArray([0,0,0,0])});return element;};
+await vm.runInContext("loadFrameArtwork({type:'image/png',size:100,name:'khung-thu.png'})",context);
+assert.ok(vm.runInContext('uploadedFrameCanvas',context));
+assert.equal(elements.get('#remove-frame-art').hidden,false);
+elements.get('#remove-frame-art').listeners.click();
+assert.equal(vm.runInContext('uploadedFrameCanvas',context),null);
+context.Image=priorImage;document.createElement=priorCreate;

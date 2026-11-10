@@ -21,7 +21,7 @@ for(const folder of ['dist','dist/blog','dist/photobooth','dist/admin']) {
  const html=fs.readFileSync(`${folder}/index.html`,'utf8');
  assert.equal((html.match(/<footer\b/g)||[]).length,1);
  assert.match(html,/<p class="footer-wish"[^>]*>[^<]+<\/p><\/footer><\/body>/);
- if(folder==='dist') assert.ok(!html.includes('footer-meta'));
+ if(folder!=='dist/admin') assert.ok(!html.includes('footer-meta'));
  else assert.ok(html.indexOf('footer-meta')>html.indexOf('<footer'));
  assert.equal(fs.readFileSync(`${folder}/footer.css`,'utf8'),fs.readFileSync('dist/footer.css','utf8'));
 }

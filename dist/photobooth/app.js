@@ -58,6 +58,8 @@ let activeDesign = frames.cream;
 let selectedFrameLabel = 'Nhật ký bạc hà';
 let communityFrameImage = null;
 let importedFrame = null;
+let uploadedFrameCanvas = null;
+let frameUploadToken = 0;
 let frameSelection = 0;
 let photoExpiresAt = 0;
 let photoExpiryTimer;
@@ -154,6 +156,11 @@ function frameAssets(design = activeDesign) {
 }
 
 function renderStrip(target = ctx, resolution = 1) {
+  if(communityFrameImage?.transparentFrame){
+    target.clearRect(0,0,720,2180);target.fillStyle='#fbf2e3';target.fillRect(0,0,720,2180);
+    photos.forEach((photo,index)=>{if(photo)drawPhoto(photo,40,100+index*470,640,450,target,resolution);});
+    target.drawImage(communityFrameImage,0,0,720,2180);return;
+  }
   if (importedFrame) {
     target.clearRect(0,0,720,2180); target.fillStyle='#fbf2e3';target.fillRect(0,0,720,2180);
     importedFrame.slots.forEach(([x,y,w,h],index)=>{
@@ -293,6 +300,9 @@ $('#start-camera').addEventListener('click', async () => {
 $('#stop-camera').addEventListener('click', () => stopCamera());
 $('#mirror').addEventListener('change', updateUI);
 window.addEventListener('pagehide', () => {
+  frameUploadToken++;
+  if(uploadedFrameCanvas) uploadedFrameCanvas.width=uploadedFrameCanvas.height=1;
+  uploadedFrameCanvas=null;
   clearPhotoSession('', true);
   submissionRequest?.abort();
   $('#contribution-form').reset();
@@ -510,6 +520,12 @@ function selectDesign(design, label, image = null, id = 'custom') {
   activeDesign = normalizeDesign(design);
   selectedFrameLabel = label;
   communityFrameImage = image;
+  if(image){
+    const probe=document.createElement('canvas');probe.width=720;probe.height=2180;
+    const context=probe.getContext('2d');context.drawImage(image,0,0,720,2180);
+    image.transparentFrame=[0,1,2,3].every(i=>context.getImageData(360,325+470*i,1,1).data[3]<=20);
+    probe.width=probe.height=1;
+  }
   frame = id;
   document.querySelectorAll('[data-frame]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.frame === id)));
   document.querySelectorAll('[data-imported]').forEach(button => button.setAttribute('aria-pressed','false'));
@@ -527,6 +543,7 @@ function readDesignForm() {
 
 function renderDesignPreview() {
   try {
+    if(uploadedFrameCanvas){const context=$('#design-preview').getContext('2d');context.clearRect(0,0,720,2180);context.drawImage(uploadedFrameCanvas,0,0);return;}
     const design = readDesignForm();
     drawFrameTemplate($('#design-preview').getContext('2d'), design, frameAssets(design));
     $('#design-status').textContent = '';
@@ -537,6 +554,7 @@ function frameOnlyCanvas(design) {
   const canvas = document.createElement('canvas');
   canvas.width = 720;
   canvas.height = 2180;
+  if(uploadedFrameCanvas){canvas.getContext('2d').drawImage(uploadedFrameCanvas,0,0);return canvas;}
   drawFrameTemplate(canvas.getContext('2d'), design, frameAssets(design));
   return canvas;
 }
@@ -560,6 +578,35 @@ $('#frame-creator').addEventListener('click', event => {
 $('#design-form').addEventListener('submit', event => event.preventDefault());
 $('#design-form').addEventListener('input', renderDesignPreview);
 $('#design-form').addEventListener('change', renderDesignPreview);
+async function loadFrameArtwork(file) {
+  const token=++frameUploadToken;
+  const feedback=$('#frame-upload-status');
+  try {
+    if(!file || !['image/png','image/webp'].includes(file.type) || file.size>15*1024*1024) throw new Error('Chọn PNG hoặc WebP trong suốt, tối đa 15 MB.');
+    const image=await new Promise((resolve,reject)=>{
+      const url=URL.createObjectURL(file),image=new Image();
+      image.onload=()=>{URL.revokeObjectURL(url);resolve(image);};
+      image.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Không đọc được file khung.'));};
+      image.src=url;
+    });
+    if(token!==frameUploadToken) return;
+    if(image.width!==720 || image.height!==2180) throw new Error('Khung cần đúng kích thước 720 × 2180 px. Hãy dùng mẫu bố cục bên trên.');
+    const canvas=document.createElement('canvas');canvas.width=720;canvas.height=2180;
+    const context=canvas.getContext('2d');context.drawImage(image,0,0);
+    for(let index=0;index<4;index++) if(context.getImageData(360,325+470*index,1,1).data[3]>20) throw new Error('Bốn ô ảnh cần để trong suốt theo mẫu, không đặt ảnh cá nhân vào khung.');
+    if(frameImageDataUrl(canvas).startsWith('data:image/jpeg')) throw new Error('Khung trong suốt cần dưới 1 MB sau xử lý. Hãy giảm chi tiết hoặc dung lượng rồi thử lại.');
+    uploadedFrameCanvas=canvas;$('#remove-frame-art').hidden=false;
+    feedback.textContent=`Đã chọn ${file.name}. Chỉ bản thiết kế khung sẽ được gửi.`;renderDesignPreview();
+  } catch(error) {feedback.textContent=error.message;}
+}
+$('#frame-art-upload')?.addEventListener('change',event=>loadFrameArtwork(event.target.files[0]));
+$('#frame-drop')?.addEventListener('dragover',event=>event.preventDefault());
+$('#frame-drop')?.addEventListener('drop',event=>{event.preventDefault();loadFrameArtwork(event.dataTransfer.files[0]);});
+$('#remove-frame-art')?.addEventListener('click',()=>{frameUploadToken++;uploadedFrameCanvas=null;$('#frame-art-upload').value='';$('#remove-frame-art').hidden=true;$('#frame-upload-status').textContent='Đã bỏ file. Bạn có thể tự thiết kế hoặc chọn file khác.';renderDesignPreview();});
+$('#download-frame-guide')?.addEventListener('click',()=>{
+  const windows=Array.from({length:4},(_,i)=>`<rect x="40" y="${100+i*470}" width="640" height="450" fill="none" stroke="#303487" stroke-dasharray="8 8"/>`).join('');
+  downloadBlob(new Blob([`<svg xmlns="http://www.w3.org/2000/svg" width="720" height="2180" viewBox="0 0 720 2180">${windows}</svg>`],{type:'image/svg+xml'}),'mau-bo-cuc-4-anh.svg');
+});
 $('#apply-design').addEventListener('click', () => {
   try {
     selectDesign(readDesignForm(), 'Khung tự tạo');
