@@ -611,6 +611,9 @@ $('#contribution-form').addEventListener('submit', async event => {
     feedback.textContent = `Đã gửi khung chờ duyệt. Nếu chưa được duyệt, bản chờ và thông tin liên hệ sẽ tự xóa lúc ${new Date(data.expiresAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}. Ảnh chụp không được gửi.`;
     $('#author-contact').value = '';
     $('#contribution-consent').checked = false;
+    $('#community-status').textContent = feedback.textContent;
+    $('#frame-creator').close();
+    $('#khung-cong-dong').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   } catch (error) {
     if (error.name !== 'AbortError') feedback.textContent = error instanceof TypeError ? 'Chưa kết nối được máy chủ nhận khung. Bạn vẫn có thể tải khung về để giữ riêng.' : error.message;
   } finally {

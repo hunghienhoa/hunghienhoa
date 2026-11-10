@@ -11,6 +11,7 @@ export default defineConfig({
     env: {
       VISITS: bindings.durableObject({ worker: "hunghienhoa", exportName: "VisitCounter" }),
       ASSETS: bindings.assets(),
+      FRAME_EMAIL: bindings.sendEmail({ destinationAddress: "hunghienhoa2110@gmail.com", allowedSenderAddresses: ["thongbao@hunghienhoa.com"] }),
       SUPABASE_URL: bindings.text("https://sybdjztpsaffwcvjuimd.supabase.co"),
       SUPABASE_PUBLISHABLE_KEY: bindings.text("sb_publishable_77IrLLmapoiJaotnK8BAvw_WUtoOnp4"),
       ADMIN_EMAIL: bindings.text("hunghienhoa2110@gmail.com")

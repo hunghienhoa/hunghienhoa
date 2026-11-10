@@ -20,6 +20,7 @@ class Element {
   pause() {}
   showModal() { this.open = true; }
   close() { this.open = false; }
+  scrollIntoView() { this.scrolled = true; }
 }
 class Canvas extends Element {
   constructor() {
@@ -146,6 +147,16 @@ elements.get('#frame-name').value = 'Khung thử'; elements.get('#author-name').
 elements.get('#author-contact').value = 'private@example.test'; elements.get('#author-link').value = ''; elements.get('#contribution-consent').checked = true;
 await elements.get('#contribution-form').listeners.submit({ preventDefault() {}, currentTarget: elements.get('#contribution-form') });
 assert.equal(requests.length, 1);
+assert.match(elements.get('#community-status').textContent, /Đã gửi khung chờ duyệt/);
+assert.equal(elements.get('#frame-creator').open, false);
+assert.equal(elements.get('#khung-cong-dong').scrolled, true);
+const savedFetch = context.fetch;
+context.fetch = async () => ({ok:false,json:async()=>({error:'Gửi thử thất bại'})});
+elements.get('#frame-creator').open = true;
+await elements.get('#contribution-form').listeners.submit({preventDefault(){},currentTarget:elements.get('#contribution-form')});
+assert.equal(elements.get('#frame-creator').open, true);
+assert.equal(elements.get('#contribution-status').textContent, 'Gửi thử thất bại');
+context.fetch = savedFetch;
 assert.equal(Buffer.from(requests[0].imageDataUrl.split(',')[1], 'base64').toString(), 'FRAME-ONLY');
 assert.equal(JSON.stringify(requests[0]).includes('PRIVATE-PHOTO'), false);
 assert.equal(elements.get('#photo-count').textContent, '4 / 4');

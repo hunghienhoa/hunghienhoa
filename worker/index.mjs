@@ -122,7 +122,7 @@ function originAllowed(request) {
   return !origin || origin === new URL(request.url).origin;
 }
 
-async function publicApi(request, env, route) {
+async function publicApi(request, env, route, ctx) {
   if (!originAllowed(request)) fail(403, 'Nguồn gửi yêu cầu không được phép.');
   if (request.method === 'GET' && route === '/api/health') return json({ ok: true, service: 'hunghienhoa' });
   if (request.method === 'GET' && route === '/api/site') {
@@ -157,9 +157,23 @@ async function publicApi(request, env, route) {
   if (request.method === 'POST' && route === '/api/frame-submissions') {
     const value = submission(await readJson(request)), id = crypto.randomUUID(), created = new Date(), expires = new Date(created.getTime() + 3600000);
     await rest(env, 'frame_submissions', { method: 'POST', body: { id, name: value.name, author_name: value.authorName, author_contact: value.authorContact, author_link: value.authorLink, consent: true, design: value.design, image_base64: value.image.toString('base64'), created_at: created.toISOString(), expires_at: expires.toISOString() }, prefer: 'return=minimal' });
+    const notice = notifyFrameSubmission(env, id, expires).catch(() => console.error('frame_notification_failed'));
+    if (ctx?.waitUntil) ctx.waitUntil(notice); else await notice;
     return json({ id, status: 'pending', expiresAt: expires.getTime() }, 201);
   }
   return null;
+}
+
+async function notifyFrameSubmission(env, id, expires) {
+  if (!env.FRAME_EMAIL) return;
+  // Keep private contacts, contributor text and images out of long-lived mailboxes.
+  await env.FRAME_EMAIL.send({
+    to: 'hunghienhoa2110@gmail.com', from: 'thongbao@hunghienhoa.com',
+    subject: 'Hộp Ảnh: có khung mới chờ Hùng duyệt',
+    text: `Có một khung ảnh mới chờ duyệt.\nMã bản chờ: ${id}\nHết hạn: ${expires.toLocaleString('vi-VN', {timeZone:'Asia/Ho_Chi_Minh'})}\nVào duyệt: https://admin.hunghienhoa.com/\nBản chờ tự xóa sau một giờ nếu chưa được duyệt.`,
+    html: `<p>Có một khung ảnh mới chờ Hùng duyệt.</p><p><a href="https://admin.hunghienhoa.com/">Mở trang quản trị để xem và duyệt</a></p><p>Bản chờ tự xóa sau một giờ nếu chưa được duyệt.</p>`
+  });
+  console.info('frame_notification_sent');
 }
 
 function dbPost(value) {
@@ -270,7 +284,7 @@ export default {
     const route = new URL(request.url).pathname;
     try {
       if (route.startsWith('/api/')) {
-        const response = route.startsWith('/api/admin/') ? await adminApi(request, env, route) : await publicApi(request, env, route);
+        const response = route.startsWith('/api/admin/') ? await adminApi(request, env, route) : await publicApi(request, env, route, ctx);
         if (response) return response;
         fail(404, 'Không tìm thấy API.');
       }
