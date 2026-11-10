@@ -105,3 +105,5 @@ assert.equal(elements.get('#photo-count').textContent, '0 / 4');
 assert.equal(elements.get('#strip').containsPhoto, false);
 assert.equal(requestedCamera, 0);
 console.log('PASS: real photo handlers keep images in memory, submit frame-only with four photos present, clear at 1h and pagehide, never auto-start camera.');
+assert.equal(await vm.runInContext(`jpegBlob({toBlob(callback, type) { callback({type}); }}).then(blob => blob.type)`, context), 'image/jpeg');
+await assert.rejects(vm.runInContext(`jpegBlob({toBlob(callback) { callback({type: 'image/webp'}); }})`, context));

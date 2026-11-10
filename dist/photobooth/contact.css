@@ -1,0 +1,26 @@
+.contact-channels{display:grid;grid-template-columns:1fr 1.25fr;gap:55px;margin-top:55px;padding-top:32px;border-top:1px solid var(--blue)}
+.contact-postcard{position:relative;padding:28px;background:#ffdc3866;border:1px solid #30348755;transform:rotate(-2deg)}
+.contact-postcard::before{content:'';position:absolute;width:65px;height:25px;top:-13px;left:calc(50% - 32px);background:#e5cfaa9c;border:1px solid #fffc;transform:rotate(7deg)}
+.contact-postcard .eyebrow,.contact-socials .eyebrow{margin-bottom:20px}
+.contact-email{font-size:24px;font-weight:800;letter-spacing:-.5px;overflow-wrap:anywhere;display:block;margin-bottom:14px}
+a.contact-email:hover{text-decoration:underline}
+.contact-postcard>p:not(.contact-email){font-size:13px;line-height:1.6;max-width:90%}
+.contact-phone{display:flex;align-items:center;gap:14px;font-size:18px;font-weight:700;margin-bottom:17px;flex-wrap:wrap}
+.contact-phone>span{font-size:10px;border-bottom:1px solid var(--blue);padding-bottom:2px}
+.contact-button{display:inline-flex;align-items:center}
+.postcard-mark{position:absolute;right:18px;bottom:14px;font-size:42px;color:var(--blue)}
+.contact-socials{padding-top:12px}
+.social-links{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.social-link{display:flex;align-items:center;gap:12px;padding:13px 15px;min-height:52px;border:1px solid var(--blue);font-size:13px;font-weight:700;background:var(--cream);transition:transform .2s,background .2s}
+.social-icon{width:26px;height:26px;object-fit:contain;flex:0 0 26px}
+.social-link>span{margin-left:auto;font-size:20px}
+.social-link{width:100%;text-align:left}
+.social-link>small{font-size:10px;font-weight:400}
+.social-links li:last-child:nth-child(odd){grid-column:1/-1}
+#wechat-status:empty{display:none}
+a.social-link:hover,button.social-link:hover{transform:rotate(-2deg);background:var(--yellow)}
+.social-note{font-size:10px;line-height:1.5;margin-top:14px;opacity:.7}
+@media(max-width:760px){.contact-channels{grid-template-columns:1fr;gap:28px;margin-top:40px}.contact-postcard{padding:23px}.contact-email{font-size:22px}.social-link{font-size:12px;padding:12px}.contact-socials{padding-top:0}}
+@media(prefers-reduced-motion:reduce){.social-link{transition:none}}
+
+.page-social .postcard-mark img{width:42px;height:42px}

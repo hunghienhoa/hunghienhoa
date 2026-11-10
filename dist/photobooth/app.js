@@ -59,8 +59,8 @@ function updateUI() {
   $('#capture-one').disabled = !stream || busy || (count === 4 && selectedSlot < 0);
   $('#capture-one').textContent = selectedSlot >= 0 && photos[selectedSlot] ? `Chụp lại ảnh ${selectedSlot + 1}` : 'Chụp 1 tấm';
   $('#mirror').disabled = busy;
-  $('#upload').disabled = busy || startingCamera;
-  $('.upload-button').classList.toggle('disabled', busy || startingCamera);
+  $('#upload').disabled = busy;
+  $('.upload-button').classList.toggle('disabled', busy);
   $('#download').disabled = count !== 4 || busy;
   $('#download').firstChild.textContent = downloaded ? 'Tải lại dải ảnh WebP ' : 'Tải dải ảnh WebP ';
   $('#reset').disabled = count === 0 || busy;
@@ -286,6 +286,7 @@ $('#upload').addEventListener('change', async event => {
   const files = Array.from(event.target.files || []);
   event.target.value = '';
   if (!files.length || busy) return;
+  if (startingCamera) stopCamera(false);
   if (files.length > 4) { tell('Mỗi lần chọn tối đa bốn ảnh nhé.', true); return; }
   if (files.some(file => !['image/png', 'image/jpeg', 'image/webp'].includes(file.type))) { tell('Hãy chọn ảnh PNG, JPEG hoặc WebP.', true); return; }
   if (files.some(file => file.size > 12 * 1024 * 1024)) { tell('Mỗi ảnh cần nhỏ hơn 12 MB. Hãy chọn ảnh nhẹ hơn nhé.', true); return; }
@@ -344,6 +345,12 @@ async function webpBlob(canvas) {
   return blob;
 }
 
+async function jpegBlob(canvas) {
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', .95));
+  if (!blob || blob.type !== 'image/jpeg') throw new Error('Chưa xuất được JPEG. Hãy thử lại.');
+  return blob;
+}
+
 function downloadBlob(blob, filename) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -362,9 +369,9 @@ $('#download').addEventListener('click', async () => {
     await frameFontsReady;
     if (checkPhotoExpiry() || !photos.every(Boolean)) return;
     renderStrip();
-    downloadBlob(await webpBlob(strip), `hop-anh-hung-${new Date().toLocaleDateString('sv-SE')}.webp`);
+    downloadBlob(await jpegBlob(strip), `hop-anh-hung-${new Date().toLocaleDateString('sv-SE')}.jpg`);
     downloaded = true;
-    tell('Đã tạo dải ảnh WebP. Hãy xem tệp tải về của trình duyệt nhé!');
+    tell('Đã tạo dải ảnh JPEG. Hãy xem tệp tải về của trình duyệt nhé!');
   } catch { tell('Chưa tải được WebP. Kiểm tra trình duyệt và kết nối thư viện khung rồi thử lại.', true); }
   finally { updateUI(); }
 });
@@ -432,8 +439,8 @@ $('#apply-design').addEventListener('click', () => {
 $('#download-template').addEventListener('click', async () => {
   try {
     await frameFontsReady;
-    downloadBlob(await webpBlob(frameOnlyCanvas(readDesignForm())), 'khung-hop-anh-cua-minh.webp');
-    $('#design-status').textContent = 'Đã tải khung WebP trống, không có ảnh chụp của bạn.';
+    downloadBlob(await jpegBlob(frameOnlyCanvas(readDesignForm())), 'khung-hop-anh-cua-minh.jpg');
+    $('#design-status').textContent = 'Đã tải khung JPEG trống, không có ảnh chụp của bạn.';
   } catch { $('#design-status').textContent = 'Chưa tải được khung WebP. Hãy thử lại trên trình duyệt mới hơn.'; }
 });
 
