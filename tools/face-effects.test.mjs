@@ -17,6 +17,7 @@ vm.runInContext(source,sandbox);
 const list=elements.get('#face-effects');assert.equal(list.children.length,10);assert.equal(list.children.filter(button=>!button.hidden).length,6);assert.equal(inferences,0);
 const more=elements.get('#more-effects');more.handlers.click({currentTarget:more});assert.equal(list.children.filter(button=>!button.hidden).length,10);more.handlers.click({currentTarget:more});assert.equal(list.children.filter(button=>!button.hidden).length,6);
 await list.children[0].handlers.click();await new Promise(resolve=>setImmediate(resolve));assert.equal(inferences,0);
+assert.equal(list.previous.attributes['aria-pressed'],'false');
 video.paused=false;video.handlers.playing();assert.equal(raf.length,1);raf.shift()(200);assert.equal(inferences,1);
 sandbox.window.hungFaceEffects.paint(ctx,640,480);assert.equal(inferences,2);
 await vm.runInContext("choose('')",sandbox);calls.length=0;sandbox.window.hungFaceEffects.paint(ctx,640,480);assert.equal(inferences,2);

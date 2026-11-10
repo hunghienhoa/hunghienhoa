@@ -34,6 +34,7 @@ function tick(time){
 }
 async function choose(id){
   const token=++generation;selected=id;clear();
+  off.setAttribute('aria-pressed',String(!id));
   for(const button of list.querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.effect===id));
   if(!id){status.textContent='Đã tắt hiệu ứng khuôn mặt.';return;}
   try{await load();if(token!==generation)return;status.textContent=video.paused?'Bật camera để dùng hiệu ứng bám mặt.':'Đưa khuôn mặt vào camera.';if(!video.paused&&!running){running=true;requestAnimationFrame(tick);}}
