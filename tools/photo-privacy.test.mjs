@@ -104,6 +104,13 @@ await upload.listeners.change({ target: { files: Array.from({ length: 4 }, (_, i
 assert.equal(vm.runInContext('startingCamera', context), false);
 assert.equal(elements.get('#photo-count').textContent, '4 / 4');
 assert.equal(elements.get('#strip').containsPhoto, true);
+const exportSize = vm.runInContext(`(() => {
+  const output = document.createElement('canvas'); output.width=1440; output.height=4360;
+  const target=output.getContext('2d'); target.scale(2,2); renderStrip(target,2);
+  return [output.width,output.height,output.containsPhoto];
+})()`,context);
+assert.deepEqual([...exportSize],[1440,4360,true]);
+assert.equal(await vm.runInContext(`jpegBlob({toBlob(callback,type,quality){callback({type,quality});}}).then(blob=>blob.quality)`,context),.98);
 assert.equal(timers.size, 1);
 assert.equal([...timers.values()][0].delay, PHOTO_SESSION_MS);
 elements.get('#frame-name').value = 'Khung thử'; elements.get('#author-name').value = 'Tác giả thử';

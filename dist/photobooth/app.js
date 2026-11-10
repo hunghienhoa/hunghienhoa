@@ -99,45 +99,45 @@ function updateUI() {
   renderStrip();
 }
 
-function drawPhoto(photo, x, y, width, height) {
+function drawPhoto(photo, x, y, width, height, target = ctx, resolution = 1) {
   const crop = coverCrop(photo.image.width, photo.image.height, width, height);
   if ((nativeCanvasFilters && !['clear','peach','soft'].includes(filter)) || filter === 'original') {
-    ctx.save();
-    if (nativeCanvasFilters) ctx.filter = filters[filter];
-    ctx.drawImage(photo.image, crop.sx, crop.sy, crop.sw, crop.sh, x, y, width, height);
-    ctx.restore();
+    target.save();
+    if (nativeCanvasFilters) target.filter = filters[filter];
+    target.drawImage(photo.image, crop.sx, crop.sy, crop.sw, crop.sh, x, y, width, height);
+    target.restore();
     return;
   }
   let cache = filteredPhotoCache.get(photo);
   if (!cache) { cache = new Map(); filteredPhotoCache.set(photo, cache); }
-  let filtered = cache.get(filter);
+  let filtered = cache.get(filter + resolution);
   if (!filtered) {
     filtered = document.createElement('canvas');
-    filtered.width = width;
-    filtered.height = height;
+    filtered.width = width * resolution;
+    filtered.height = height * resolution;
     const context = filtered.getContext('2d');
-    context.drawImage(photo.image, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, width, height);
-    const pixels = context.getImageData(0, 0, width, height);
+    context.drawImage(photo.image, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, filtered.width, filtered.height);
+    const pixels = context.getImageData(0, 0, filtered.width, filtered.height);
     pixels.data.set(applyFilterPixels(pixels.data, filter));
     context.putImageData(pixels, 0, 0);
-    cache.set(filter, filtered);
+    cache.set(filter + resolution, filtered);
   }
-  ctx.drawImage(filtered, x, y, width, height);
+  target.drawImage(filtered, x, y, width, height);
 }
 
 function frameAssets(design = activeDesign) {
   return { ...stickers, flower: stickers[design.ink === '#fbf2e3' ? 'yellow' : 'blue'] };
 }
 
-function renderStrip() {
+function renderStrip(target = ctx, resolution = 1) {
   if (communityFrameImage) {
-    ctx.clearRect(0, 0, 720, 2180);
-    ctx.drawImage(communityFrameImage, 0, 0, 720, 2180);
-  } else drawFrameTemplate(ctx, activeDesign, frameAssets());
+    target.clearRect(0, 0, 720, 2180);
+    target.drawImage(communityFrameImage, 0, 0, 720, 2180);
+  } else drawFrameTemplate(target, activeDesign, frameAssets());
   photos.forEach((photo, index) => {
-    if (photo) drawPhoto(photo, 40, 100 + index * 470, 640, 450);
+    if (photo) drawPhoto(photo, 40, 100 + index * 470, 640, 450, target, resolution);
   });
-  drawFrameFooter(ctx, activeDesign, frameAssets(), $('#caption').value.trim() || activeDesign.footer, new Date().toLocaleDateString('vi-VN'));
+  drawFrameFooter(target, activeDesign, frameAssets(), $('#caption').value.trim() || activeDesign.footer, new Date().toLocaleDateString('vi-VN'));
 }
 
 function disposePhoto(photo) {
@@ -180,7 +180,7 @@ function photoFromImage(image, mirrored = false) {
   const height = image.videoHeight || image.naturalHeight || image.height;
   if (!width || !height) throw new Error('Chưa nhận được hình ảnh. Vui lòng thử lại.');
   if (width * height > 45000000) throw new Error('Ảnh quá lớn. Hãy chọn ảnh dưới 45 triệu điểm ảnh.');
-  const scale = Math.min(1, 1280 / Math.max(width, height));
+  const scale = Math.min(1, 2560 / Math.max(width, height));
   const canvas = document.createElement('canvas');
   canvas.width = Math.max(1, Math.round(width * scale));
   canvas.height = Math.max(1, Math.round(height * scale));
@@ -231,7 +231,7 @@ $('#start-camera').addEventListener('click', async () => {
   tell('Hãy cho phép dùng máy ảnh trong thông báo của trình duyệt.');
   try {
     if (!navigator.mediaDevices?.getUserMedia) throw new Error('Máy ảnh chưa dùng được trên trang này. Bạn vẫn có thể chọn ảnh từ máy.');
-    const media = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false });
+    const media = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 2560 }, height: { ideal: 1920 } }, audio: false });
     if (request !== cameraRequest) { media.getTracks().forEach(track => track.stop()); return; }
     stream = media;
     video.srcObject = stream;
@@ -371,7 +371,7 @@ async function webpBlob(canvas) {
 }
 
 async function jpegBlob(canvas) {
-  const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', .95));
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', .98));
   if (!blob || blob.type !== 'image/jpeg') throw new Error('Chưa xuất được JPEG. Hãy thử lại.');
   return blob;
 }
@@ -393,8 +393,15 @@ $('#download').addEventListener('click', async () => {
   try {
     await frameFontsReady;
     if (checkPhotoExpiry() || !photos.every(Boolean)) return;
-    renderStrip();
-    downloadBlob(await jpegBlob(strip), `hop-anh-hung-${new Date().toLocaleDateString('sv-SE')}.jpg`);
+    const exported = document.createElement('canvas');
+    exported.width = 1440; exported.height = 4360;
+    const output = exported.getContext('2d');
+    output.scale(2, 2);
+    output.imageSmoothingEnabled = true; output.imageSmoothingQuality = 'high';
+    try {
+      renderStrip(output, 2);
+      downloadBlob(await jpegBlob(exported), `hop-anh-hung-${new Date().toLocaleDateString('sv-SE')}.jpg`);
+    } finally { exported.width = exported.height = 1; }
     downloaded = true;
     tell('Đã tạo dải ảnh JPEG. Hãy xem tệp tải về của trình duyệt nhé!');
   } catch { tell('Chưa tải được JPEG. Kiểm tra trình duyệt và kết nối thư viện khung rồi thử lại.', true); }
