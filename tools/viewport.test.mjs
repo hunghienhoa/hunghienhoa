@@ -25,3 +25,11 @@ for(const folder of ['dist','dist/blog','dist/photobooth','dist/admin']) {
  else assert.ok(html.indexOf('footer-meta')>html.indexOf('<footer'));
  assert.equal(fs.readFileSync(`${folder}/footer.css`,'utf8'),fs.readFileSync('dist/footer.css','utf8'));
 }
+
+const compact=fs.readFileSync('dist/mobile-compact.css','utf8');
+for(const folder of ['dist','dist/blog','dist/photobooth','dist/admin']){
+ assert.equal(fs.readFileSync(`${folder}/mobile-compact.css`,'utf8'),compact);
+ assert.match(fs.readFileSync(`${folder}/index.html`,'utf8'),/mobile-compact.css\?v=1/);
+}
+assert.match(fs.readFileSync('dist/photobooth/shoot.html','utf8'),/mobile-compact.css\?v=1/);
+assert.ok(compact.includes('@media(max-width:760px)') && compact.includes('min-height:44px'));

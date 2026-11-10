@@ -1,0 +1,78 @@
+/* Compact mobile layouts; desktop rules remain untouched. */
+@media(max-width:760px){
+ body{overflow-wrap:break-word}
+ input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=file]),select,textarea{font-size:16px!important;max-width:100%}
+ button,a.button,label.button{touch-action:manipulation}
+ .booth-landing .intro,.blog-page .intro{padding-block:28px 24px;gap:16px;min-height:0}
+ .booth-landing .intro-art,.blog-page .intro-art{display:none}
+ .booth-landing h1,.blog-page .intro h1{font-size:clamp(34px,9.3vw,43px);line-height:1.12;letter-spacing:-1.5px}
+ .booth-landing .intro-copy>p,.blog-page .intro-copy>p{font-size:14px;line-height:1.6;margin-top:16px}
+ .booth-landing .paper-label,.blog-page .paper-label{font-size:11px;margin:18px 0}
+ .booth-landing .landing-actions{gap:10px;margin-top:20px}
+ .booth-landing .landing-actions .button{min-height:46px}
+ .booth-landing .landing-promises{margin-top:18px;gap:10px;font-size:10px}
+ .booth-landing .how-to,.booth-landing .community,.booth-landing .privacy{padding-block:32px}
+ .booth-landing .section-heading{margin-bottom:20px}
+ .booth-landing .section-heading h2{font-size:32px;line-height:1.16}
+ .booth-landing .quick-guide .how-grid{gap:12px;margin-top:18px}
+ .booth-landing .quick-guide article{padding:18px}
+ .booth-landing .quick-guide article>span{margin-bottom:12px}
+ .booth-landing .quick-guide .how-grid h3{font-size:17px}
+ .booth-landing .quick-guide .how-grid p{font-size:13px;line-height:1.6}
+ .booth-landing .frame-showcase{margin:20px 0;padding-block:28px}
+ .booth-landing .showcase-heading h2{font-size:30px}
+ .booth-landing .showcase-card{width:112px;padding:6px}
+ .booth-landing .showcase-card span{font-size:10px}
+ .booth-landing .showcase-window{margin-top:24px}
+ .booth-landing .community-invite{padding:16px}
+ .shoot-page .studio{padding-block:22px}
+ .shoot-page .section-heading{margin-bottom:14px}
+ .shoot-page .section-heading h2{font-size:28px}
+ .shoot-page .steps{margin-block:12px 18px;padding-block:12px;gap:8px}
+ .shoot-page .booth-layout{gap:16px}
+ .shoot-page .camera-stage{aspect-ratio:4/3;height:auto;min-height:0}
+ .shoot-page .camera-empty img{width:45px;height:45px}
+ .shoot-page .camera-empty h3{font-size:15px}
+ .shoot-page .camera-empty p{font-size:11px}
+ .shoot-page .print-preview{padding:14px}
+ .shoot-page .print-preview #strip{width:auto;max-width:100%;max-height:360px;height:auto}
+ .shoot-page .photo-effects{padding:14px}
+ .shoot-page .effect-options{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+ .shoot-page .effect-options button{flex-shrink:0}
+ .shoot-page .effects-heading{margin-bottom:10px}
+ .shoot-page .editor{padding:20px 16px;margin-top:18px}
+ .shoot-page .editor h3{font-size:25px}
+ #frame-picker .frame-options{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ #frame-picker .frame-option{padding:7px 4px;min-height:0;font-size:10px;gap:6px}
+ #frame-picker .frame-option>i,#frame-picker #imported-frame-options img{width:62px;height:188px}
+ #frame-picker .frame-categories{flex-wrap:nowrap;overflow-x:auto;gap:6px;margin-bottom:14px}
+ #frame-picker .frame-categories button{flex-shrink:0;padding:8px 10px;font-size:11px}
+ #frame-creator .creator-layout{gap:16px}
+ #frame-creator .creator-preview canvas{width:90px}
+ #frame-creator .creator-preview{padding-top:14px}
+ #frame-creator .contribution-box{padding-top:20px;margin-top:20px}
+ .blog-page .feed{padding-block:30px}
+ .blog-page .section-heading{margin-bottom:20px}
+ .blog-page .section-heading h2{font-size:32px}
+ .blog-page .section-heading>p{display:none}
+ .blog-page .featured-card .post-art,.blog-page .post-card .post-art{min-height:0;height:180px;overflow:hidden}
+ .blog-page .post-art .art-paper{min-height:155px;padding:14px}
+ .blog-page .featured-copy{padding:18px}
+ .blog-page .featured-copy h2{font-size:26px;margin-top:12px}
+ .blog-page .featured-copy>p{line-height:1.6;margin-top:12px}
+ .blog-page .post-grid{gap:22px}
+ .blog-page .search-form{margin-top:20px;padding-top:18px;gap:12px}
+ .blog-page .filter-bar{margin:16px 0 22px;gap:10px}
+ .blog-page .categories{flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding-bottom:4px}
+ .blog-page .categories button{flex-shrink:0;min-height:44px}
+ .admin-page .workspace{min-height:0}
+ .admin-page .auth-box{margin-block:28px 36px;padding:20px}
+ .admin-page .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-block:18px}
+ .admin-page .stats>*{min-width:0;padding:14px;overflow-wrap:anywhere}
+ .admin-page .stats h3,.admin-page .stats strong{font-size:24px}
+ .admin-page .panel-heading{gap:12px}
+ .unified-footer .social-links{gap:7px}
+ .unified-footer .social-link{padding:10px;min-height:44px}
+ .unified-footer .contact-channels{gap:20px}
+}
+@media(max-width:350px){#frame-picker .frame-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
