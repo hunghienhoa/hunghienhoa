@@ -22,3 +22,6 @@ a.social-link:hover,button.social-link:hover{transform:rotate(-2deg);background:
 .social-note{font-size:10px;line-height:1.5;margin-top:14px;opacity:.7}
 @media(max-width:760px){.contact-channels{grid-template-columns:1fr;gap:28px;margin-top:40px}.contact-postcard{padding:23px}.contact-email{font-size:22px}.social-link{font-size:12px;padding:12px}.contact-socials{padding-top:0}}
 @media(prefers-reduced-motion:reduce){.social-link{transition:none}}
+.social-link>span{flex-shrink:0;line-height:1}
+@media(max-width:760px){.contact-email{font-size:clamp(14px,4vw,18px)}}
+@media(max-width:380px){.social-links{grid-template-columns:1fr}}
