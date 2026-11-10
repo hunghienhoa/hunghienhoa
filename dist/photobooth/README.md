@@ -1,6 +1,6 @@
 # Hộp Ảnh — Một dự án của Hùng
 
-Ứng dụng chụp bốn ảnh, chọn/tự tạo khung, thêm sắc ảnh, viết lời nhắn và tải WebP. Ảnh chụp được xử lý trong bộ nhớ trình duyệt, không có API nhận ảnh cá nhân. Thiết kế khung trống có thể gửi vào hàng chờ duyệt với thông tin ghi công và sự đồng ý của tác giả.
+Ứng dụng chụp bốn ảnh, chọn/tự tạo khung, thêm sắc ảnh, viết lời nhắn và tải JPEG. Ảnh chụp được xử lý trong bộ nhớ trình duyệt, không có API nhận ảnh cá nhân. Thiết kế khung trống có thể gửi vào hàng chờ duyệt với thông tin ghi công và sự đồng ý của tác giả.
 
 ## Chạy và tách sang tên miền riêng
 
@@ -14,10 +14,10 @@ Trong portfolio, chỉ cần thay URL ở liên kết mở Hộp Ảnh khi có t
 
 - Camera chỉ được yêu cầu sau khi bấm “Bật máy ảnh”, không thu âm. Có nút tắt; đóng/chuyển khỏi trang sẽ dừng các track camera.
 - Chụp một tấm hoặc chụp bốn tấm liên tiếp, mỗi tấm đếm ngược ba giây. Chọn ô để thay riêng ảnh, xóa ảnh hoặc làm lại.
-- Ảnh chọn từ máy chấp nhận PNG/JPEG/WebP, tối đa bốn ảnh/lần, 12 MB/ảnh và 45 triệu điểm ảnh. Ảnh được thu nhỏ còn tối đa 1280px mỗi chiều để giảm bộ nhớ. Ảnh chọn từ máy không bị lật gương.
-- Bộ lọc chỉ áp dụng một lần khi vẽ bản xuất; ảnh gốc trong bộ nhớ được giữ để đổi bộ lọc. Trình duyệt hỗ trợ `canvas.filter` dùng bộ lọc gốc; trình duyệt chưa hỗ trợ dùng phép biến đổi điểm ảnh và lưu bộ đệm theo ảnh/bộ lọc. Dải tải về là WebP 720×2180.
+- Ảnh chọn từ máy chấp nhận PNG/JPEG/WebP, tối đa bốn ảnh/lần, 12 MB/ảnh và 45 triệu điểm ảnh. Ảnh được thu nhỏ còn tối đa 2560px mỗi chiều để giảm bộ nhớ. Ảnh chọn từ máy không bị lật gương.
+- Bộ lọc chỉ áp dụng một lần khi vẽ bản xuất; ảnh gốc trong bộ nhớ được giữ để đổi bộ lọc. Trình duyệt hỗ trợ `canvas.filter` dùng bộ lọc gốc; trình duyệt chưa hỗ trợ dùng phép biến đổi điểm ảnh và lưu bộ đệm theo ảnh/bộ lọc. Dải tải về là JPEG 1440×4360.
 - Phiên ảnh tự xóa sau một giờ tính từ ảnh đầu, hoặc ngay khi rời trang. Không ghi ảnh vào browser storage, API hoặc database. Người dùng cần tải ảnh xuống trước khi rời đi.
-- Xưởng khung cho sửa ba màu, chữ, họa tiết, nhãn dán; tải khung-only WebP hoặc dùng trực tiếp. Gửi duyệt chỉ tạo canvas từ thiết kế và tài sản cố định, không truyền ảnh cá nhân vào bộ vẽ này.
+- Xưởng khung cho sửa ba màu, chữ, họa tiết, nhãn dán; tải khung trống JPEG hoặc dùng trực tiếp; khung PNG/WebP trong suốt cũng có thể chọn trong phòng chụp. Gửi duyệt chỉ tạo canvas từ thiết kế và tài sản cố định, không truyền ảnh cá nhân vào bộ vẽ này.
 - Bản chờ duyệt và thông tin riêng tự xóa sau một giờ trên máy chủ. Khung được duyệt giữ thiết kế và thông tin ghi công công khai; liên hệ riêng được xóa ngay khi duyệt/từ chối.
 
 ## Kiểm tra

@@ -68,7 +68,7 @@ const document = {
 class TestURL extends URL { static createObjectURL() { return 'blob:qa-photo'; } static revokeObjectURL() {} }
 class TestDate extends Date { constructor(...args) { super(...(args.length ? args : [clock])); } static now() { return clock; } }
 const context = vm.createContext({
-  console, document, Image: TestImage, URL: TestURL, Date: TestDate, AbortController, queueMicrotask,
+  console, document, Image: TestImage, URL: TestURL, URLSearchParams, Date: TestDate, AbortController, queueMicrotask,
   window: { HUNG_API_BASE: '', addEventListener: (type, callback) => { events['window:' + type] = callback; } },
   location: { origin: 'http://localhost' }, navigator: { mediaDevices: { getUserMedia() { requestedCamera++; throw new Error('Camera must not start in this test'); } } },
   matchMedia: () => ({ matches: true }), requestAnimationFrame: callback => callback(),
@@ -187,6 +187,9 @@ assert.equal(new URL(destination).pathname,'/shoot');
 const shared = JSON.parse(new URL(destination).searchParams.get('thietke'));
 assert.equal(shared.title,'TIỆM THƯ TÌNH');
 assert.ok(!JSON.stringify(shared).includes('PRIVATE-PHOTO'));
+vm.runInContext("selectDesign(frames.pink, 'Khung cộng đồng', {}, 'approved-frame')",context);
+assert.equal(new URL(destination).searchParams.get('khung'),'approved-frame');
+assert.equal(new URL(destination).searchParams.has('thietke'),false);
 
 assert.ok(html.includes('Bắt đầu chụp') && html.includes('Đóng góp khung của bạn'));
 assert.equal([...html.matchAll(/data-showcase="/g)].length,16);
@@ -234,9 +237,46 @@ document.createElement=tag=>{const element=priorCreate(tag);if(tag==='canvas')el
 await vm.runInContext("loadFrameArtwork({type:'image/png',size:100,name:'khung-thu.png'})",context);
 assert.ok(vm.runInContext('uploadedFrameCanvas',context));
 assert.equal(elements.get('#remove-frame-art').hidden,false);
+elements.get('#apply-design').listeners.click();
+assert.match(elements.get('#design-status').textContent,/vào phòng chụp rồi chọn lại file/);
+context.document.body = new Element();
+elements.get('#apply-design').listeners.click();
+assert.equal(vm.runInContext('communityFrameImage.transparentFrame',context),true);
+assert.equal(vm.runInContext('communityFrameImage === uploadedFrameCanvas',context),false);
 elements.get('#remove-frame-art').listeners.click();
 assert.equal(vm.runInContext('uploadedFrameCanvas',context),null);
 context.Image=priorImage;document.createElement=priorCreate;
+
+vm.runInContext(`
+  globalThis.savedLoadPhoto = loadPhoto;
+  globalThis.importedTestPhotos = [];
+  loadPhoto = async file => {
+    if (file.fail) throw new Error('Tệp thử bị lỗi');
+    const photo = {image: document.createElement('canvas'), url: 'data:image/webp;base64,synthetic'};
+    importedTestPhotos.push(photo);
+    return photo;
+  };
+`,context);
+await upload.listeners.change({target:{files:[{type:'image/png',size:100},{type:'image/png',size:100,fail:true}],value:''}});
+assert.match(elements.get('#status').textContent,/Tệp thử bị lỗi/);
+assert.equal(vm.runInContext('importedTestPhotos[0].image.width',context),1);
+assert.equal(vm.runInContext('importedTestPhotos[0].url',context),'');
+assert.equal(elements.get('#photo-count').textContent,'0 / 4');
+vm.runInContext(`
+  globalThis.decodedAfterLeave = [];
+  loadPhoto = async () => {
+    const photo = {image: document.createElement('canvas'), url: 'data:image/webp;base64,synthetic'};
+    decodedAfterLeave.push(photo);
+    clearPhotoSession('', true);
+    return photo;
+  };
+`,context);
+await upload.listeners.change({target:{files:[{type:'image/png',size:100},{type:'image/png',size:100}],value:''}});
+assert.equal(vm.runInContext('decodedAfterLeave.length',context),1);
+assert.equal(vm.runInContext('decodedAfterLeave[0].image.width',context),1);
+assert.equal(elements.get('#photo-count').textContent,'0 / 4');
+vm.runInContext('loadPhoto = savedLoadPhoto;',context);
+console.log('PASS: failed multi-import releases decoded photos; transparent artwork applies as an independent frame; approved landing links preserve public frame IDs.');
 
 assert.ok(html.includes('Tải mẫu khung PNG ↓') && !html.includes('Tải mẫu bố cục SVG'));
 assert.ok(script.includes('mau-khung-hop-anh-707x2000.png'));

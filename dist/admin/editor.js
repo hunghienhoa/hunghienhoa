@@ -12,7 +12,10 @@ function pastedMarkdown(root) {
       const fence='`'.repeat(Math.max(3,...(text.match(/`+/g)||[]).map(run=>run.length+1)));
       return '\n\n'+fence+language+'\n'+text+'\n'+fence+'\n\n';
     }
-    const value=Array.from(node.childNodes,walk).join('');
+    let value=Array.from(node.childNodes,walk).join('');
+    const style=node.style;
+    if (!['b','strong'].includes(tag) && (style?.fontWeight === 'bold' || Number(style?.fontWeight) >= 600)) value='**'+value+'**';
+    if (!['i','em'].includes(tag) && style?.fontStyle === 'italic') value='*'+value+'*';
     if(tag==='br')return '\n';
     if(/^h[1-6]$/.test(tag))return '\n\n'+'#'.repeat(Math.min(3,Number(tag[1])))+' '+value.trim()+'\n\n';
     if(['strong','b'].includes(tag))return '**'+value+'**';

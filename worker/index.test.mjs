@@ -70,6 +70,25 @@ test('ảnh quản trị yêu cầu token đúng quyền và không được cac
   }
 });
 
+test('từ chối bản chờ đã hết hạn không báo xóa thành công', async t => {
+  let exists = false;
+  const env = {SUPABASE_URL: 'https://database.example.test', SUPABASE_PUBLISHABLE_KEY: 'test', ADMIN_EMAIL: 'owner@example.test'};
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    const parsed = new URL(url);
+    if (parsed.pathname === '/auth/v1/user') return Response.json({email: env.ADMIN_EMAIL});
+    assert.equal(parsed.pathname, '/rest/v1/frame_submissions');
+    assert.equal(options.method, 'DELETE');
+    assert.equal(options.headers.Prefer, 'return=representation');
+    assert.equal(parsed.searchParams.get('select'), 'id');
+    assert.ok(parsed.searchParams.get('expires_at').startsWith('gt.'));
+    return Response.json(exists ? [{id: 'queued'}] : []);
+  });
+  const reject = () => worker.fetch(new Request('https://admin.hunghienhoa.com/api/admin/submissions/queued/reject', {method: 'POST', headers: {'Content-Type': 'application/json', Authorization: 'Bearer test'}, body: '{}'}), env);
+  assert.equal((await reject()).status, 404);
+  exists = true;
+  assert.equal((await reject()).status, 200);
+});
+
 test('ảnh khung PNG và JPEG trả đúng Content-Type và dữ liệu',async t=>{
  let format='png';
  t.mock.method(globalThis,'fetch',async()=>Response.json([{image_base64:fs.readFileSync(`server/fixtures/frame-${format}.base64`,'utf8')}]));

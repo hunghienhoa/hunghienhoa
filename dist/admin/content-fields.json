@@ -1550,8 +1550,8 @@
   {
     "key": "photobooth-081",
     "page": "photobooth",
-    "label": "Chọn màu, thêm chữ và một nhãn dán. Đây là khung trống; ảnh chụp của bạn không được đưa vào bản đóng",
-    "default": "Chọn màu, thêm chữ và một nhãn dán. Đây là khung trống; ảnh chụp của bạn không được đưa vào bản đóng góp."
+    "label": "Tải khung trong suốt của bạn hoặc tự thiết kế ngay tại đây. Chỉ gửi khung trống, không kèm ảnh chụp ",
+    "default": "Tải khung trong suốt của bạn hoặc tự thiết kế ngay tại đây. Chỉ gửi khung trống, không kèm ảnh chụp cá nhân."
   },
   {
     "key": "photobooth-082",

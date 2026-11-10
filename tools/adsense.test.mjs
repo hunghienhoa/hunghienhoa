@@ -11,6 +11,7 @@ for(const page of ['dist','dist/blog','dist/photobooth']) {
   assert.ok(result.csp.includes("'nonce-synthetic-test-nonce' 'strict-dynamic'"));
   assert.equal((result.body.match(/<script\b/g)||[]).length,(result.body.match(/<script nonce="synthetic-test-nonce"/g)||[]).length);
   assert.notEqual(adsenseHtml(html,'another-nonce').csp,result.csp);
+  assert.ok(result.csp.includes("base-uri 'self'"));
 }
 const admin=readFileSync('dist/admin/index.html','utf8');
 assert.ok(!admin.includes('adsbygoogle')&&!admin.includes(ADSENSE_CLIENT));

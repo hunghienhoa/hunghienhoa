@@ -250,7 +250,8 @@ async function adminApi(request, env, route) {
     const id = decodeURIComponent(match[1]);
     await readJson(request);
     if (match[2] === 'reject') {
-      await rest(env, 'frame_submissions', { method: 'DELETE', token, query: { id: `eq.${id}`, expires_at: `gt.${new Date().toISOString()}` }, prefer: 'return=minimal' });
+      const rows = await rest(env, 'frame_submissions', { method: 'DELETE', token, query: { select: 'id', id: `eq.${id}`, expires_at: `gt.${new Date().toISOString()}` }, prefer: 'return=representation' });
+      if (!rows?.length) fail(404, 'Bản đóng góp đã hết hạn hoặc không còn tồn tại.');
       return json({ ok: true });
     }
     await rest(env, 'rpc/approve_frame_submission', { method: 'POST', token, body: { p_id: id } });

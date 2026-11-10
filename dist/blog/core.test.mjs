@@ -51,3 +51,16 @@ vm.runInContext('renderBody("```js\\nconst x = 1;\\n```")',renderContext);
 const codeBox=body.children[0],bar=codeBox.children[0],button=bar.children[1],status=bar.children[2];
 assert.equal(status.textContent,'');await button.click();assert.equal(copied,'const x = 1;');assert.equal(status.textContent,'Đã sao chép');
 denied=true;await button.click();assert.match(status.textContent,/Chưa sao chép/);
+
+// The footer brand was removed; loading settings must still update the intro and notify text overrides.
+const settingsNodes={ '#blog-title':{}, '#blog-intro':{}, '#reader':{hidden:true} }, settingsEvents=[];
+const settingsContext=vm.createContext({
+  getJSON:async()=>({blogTitle:'Tên góc mới',blogIntro:'Lời giới thiệu mới'}),
+  $:selector=>settingsNodes[selector]||null,blogName:'Tên cũ',document:{title:''},
+  window:{dispatchEvent:event=>settingsEvents.push(event.type)},Event:class{constructor(type){this.type=type;}}
+});
+vm.runInContext(source.slice(source.indexOf("getJSON('/api/site').then"),source.indexOf('await loadPosts();')),settingsContext);
+await new Promise(resolve=>setImmediate(resolve));
+assert.equal(settingsNodes['#blog-title'].textContent,'Tên góc mới');
+assert.equal(settingsNodes['#blog-intro'].textContent,'Lời giới thiệu mới');
+assert.equal(settingsEvents[0],'hung-content-ready');

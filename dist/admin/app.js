@@ -6,6 +6,7 @@ const SESSION_KEY = 'hung_admin_session';
 const LOCAL = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
 let session = LOCAL ? null : readSession(), csrfToken = '', needsSetup = false, posts = [], frames = [], submissions = [], coverData;
 let currentSettings = {}, contentFields = [];
+let refreshPromise, submissionExpiryTimer, authVersion = 0;
 const privateImageUrls = new Set();
 if (LOCAL) { $('#email').hidden = true; $('#email').required = false; $('label[for="email"]').hidden = true; }
 const message = (element, text = '', error = false) => { element.textContent = text; element.classList.toggle('error', error); };
@@ -31,27 +32,40 @@ async function authRequest(path, body, token = '') {
   return data;
 }
 async function refreshSession() {
-  if (!session?.refresh_token) return false;
-  try {
-    const data = await authRequest('token?grant_type=refresh_token', { refresh_token: session.refresh_token });
-    saveSession({ access_token: data.access_token, refresh_token: data.refresh_token, expires_at: Date.now() + data.expires_in * 1000 });
-    return true;
-  } catch { saveSession(null); return false; }
+  if (refreshPromise) return refreshPromise;
+  const refreshToken = session?.refresh_token;
+  if (!refreshToken) return false;
+  refreshPromise = (async () => {
+    try {
+      const data = await authRequest('token?grant_type=refresh_token', { refresh_token: refreshToken });
+      if (session?.refresh_token !== refreshToken) return false;
+      saveSession({ access_token: data.access_token, refresh_token: data.refresh_token, expires_at: Date.now() + data.expires_in * 1000 });
+      return true;
+    } catch { if (session?.refresh_token === refreshToken) saveSession(null); return false; }
+    finally { refreshPromise = null; }
+  })();
+  return refreshPromise;
 }
 function assetUrl(path) { const url = new URL(path, API || location.origin); if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Địa chỉ ảnh không hợp lệ.'); return url.href; }
-function clearPrivateImages() { for (const url of privateImageUrls) URL.revokeObjectURL(url); privateImageUrls.clear(); }
-async function setImage(element, path) {
+function clearPrivateImages(keepCover = false) {
+  const cover = keepCover && !$('#cover-preview').hidden ? $('#cover-preview').src : '';
+  for (const url of privateImageUrls) if (url !== cover) { URL.revokeObjectURL(url); privateImageUrls.delete(url); }
+}
+async function setImage(element, path, expiresAt = Infinity) {
   element.removeAttribute('src');
+  if (Date.now() >= expiresAt) return;
   if (LOCAL || !new URL(assetUrl(path)).pathname.startsWith('/api/admin/')) { element.src = assetUrl(path); return; }
   if (session?.expires_at <= Date.now() + 30000) await refreshSession();
   const activeToken = session?.access_token;
   try {
     const blob = await api(path, {}, true);
-    if (!session || session.access_token !== activeToken) return;
+    if (!session || session.access_token !== activeToken || Date.now() >= expiresAt) return;
     const url = URL.createObjectURL(blob); privateImageUrls.add(url); element.src = url;
   } catch (error) { message($('#page-status'), error.message, true); }
 }
 function showAuth() {
+  authVersion++;
+  clearTimeout(submissionExpiryTimer);
   clearPrivateImages();
   csrfToken = '';
   posts = []; frames = []; submissions = [];
@@ -80,7 +94,7 @@ function renderFrames(pending) {
   if (!list.length) { empty(target, pending ? 'Chưa có khung nào đang chờ duyệt.' : 'Chưa có khung đã duyệt. Khung được chọn sẽ hiện ở đây và trong Hộp Ảnh.'); return; }
   target.replaceChildren(...list.map(item => {
     const card = make('article', undefined, 'item'), image = make('img'), copy = make('div');
-    setImage(image, item.imageUrl); image.alt = `Thiết kế khung ${item.name}`; image.loading = 'lazy';
+    setImage(image, item.imageUrl, pending ? item.expiresAt : Infinity); image.alt = `Thiết kế khung ${item.name}`; image.loading = 'lazy';
     copy.append(make('h3', item.name), make('p', `Tác giả: ${item.authorName}`));
     const link = item.authorLink && creditLink(item.authorLink); if (link) copy.append(link);
     if (pending) {
@@ -112,15 +126,29 @@ function renderPosts() {
   }));
 }
 async function loadAll() {
+  const version = authVersion;
   const [postData, pendingData, frameData, site] = await Promise.all([api('/api/admin/posts'), api('/api/admin/submissions'), api('/api/admin/frames'), api('/api/admin/site')]);
+  if (version !== authVersion) return;
   posts = postData.posts; submissions = pendingData.submissions; frames = frameData.frames;
-  clearPrivateImages();
+  clearPrivateImages(true);
   renderStats(); renderPosts(); renderFrames(true); renderFrames(false);
+  scheduleSubmissionExpiry();
   const settings = site.site || site;
   currentSettings = settings;
   await loadCustomization(settings);
   await loadAnalytics();
   for (const key of ['displayName', 'shortName', 'intro', 'about', 'email', 'phone', 'blogTitle', 'blogIntro']) $('#site-form').elements.namedItem(key).value = settings[key] || '';
+}
+function scheduleSubmissionExpiry() {
+  clearTimeout(submissionExpiryTimer);
+  if (!submissions.length) return;
+  const next = Math.min(...submissions.map(item => item.expiresAt));
+  submissionExpiryTimer = setTimeout(() => {
+    submissions = submissions.filter(item => item.expiresAt > Date.now());
+    clearPrivateImages(true);
+    renderStats(); renderFrames(true); renderFrames(false);
+    scheduleSubmissionExpiry();
+  }, Math.min(2147483647, Math.max(0, next - Date.now())));
 }
 async function enter() { $('#auth-form').reset(); $('#auth-box').hidden = true; $('#workspace').hidden = false; $('#logout').hidden = false; message($('#auth-status')); await loadAll(); }
 async function initialize() {
@@ -213,7 +241,8 @@ async function loadCustomization(settings) {
     const label=make('label',({cream:'Màu nền',blue:'Màu chữ / chủ đạo',yellow:'Màu nhấn'})[key]),input=make('input');input.type='color';input.dataset.theme=key;input.value=settings.theme?.[key] || fallback;label.append(input);global.append(label);
   }
   const defaults={facebook:'https://www.facebook.com/quanghungdethuong',instagram:'https://www.instagram.com/im.bqhung/',threads:'https://www.threads.com/@im.bqhung',tiktok:'https://www.tiktok.com/@im.bqhung',zalo:'https://zalo.me/0898298886',youtube:'https://www.youtube.com/@hunghienhoa98886',wechat:'bqhtit'};
-  for(const [key,value] of Object.entries(defaults)) {const label=make('label',key==='wechat'?'WeChat ID':key),input=make('input');input.type=key==='wechat'?'text':'url';input.required=true;input.maxLength=key==='wechat'?80:500;input.dataset.social=key;input.value=settings.socials?.[key] || value;label.append(input);global.append(label);}
+  const socialNames={facebook:'Facebook',instagram:'Instagram',threads:'Threads',tiktok:'TikTok',zalo:'Zalo',youtube:'YouTube',wechat:'Mã WeChat'};
+  for(const [key,value] of Object.entries(defaults)) {const label=make('label',socialNames[key]),input=make('input');input.type=key==='wechat'?'text':'url';input.required=true;input.maxLength=key==='wechat'?80:500;input.dataset.social=key;input.value=settings.socials?.[key] || value;label.append(input);global.append(label);}
   container.append(global);
   for(const [page,name] of Object.entries({main:'Trang chính',blog:'Blog',photobooth:'Photobooth',admin:'Quản trị'})) {
     const group=make('details');group.append(make('summary',name));

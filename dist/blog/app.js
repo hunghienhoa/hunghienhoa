@@ -245,7 +245,6 @@ getJSON('/api/site').then(site => {
   if (typeof site.blogTitle === 'string' && site.blogTitle.trim()) {
     blogName = site.blogTitle.trim().slice(0, 120);
     $('#blog-title').textContent = blogName;
-    $('.footer-brand').textContent = blogName;
     if ($('#reader').hidden) document.title = `${blogName} — Những điều thú vị`;
   }
   if (typeof site.blogIntro === 'string' && site.blogIntro.trim()) $('#blog-intro').textContent = site.blogIntro.trim().slice(0, 800);

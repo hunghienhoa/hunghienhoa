@@ -67,6 +67,7 @@ let importToken = 0;
 let submitting = false;
 let submissionRequest;
 const apiBase = String(window.HUNG_API_BASE || '').replace(/\/+$/, '');
+const sharedCommunityFrame = new URLSearchParams(window.location?.search || '').get('khung');
 let filter = 'original';
 let photoZoom = 1;
 let stream = null;
@@ -357,17 +358,22 @@ $('#upload').addEventListener('change', async event => {
   busy = true;
   updateUI();
   tell('Đang đọc ảnh ngay trên máy bạn…');
+  const incoming = [];
   try {
-    const incoming = [];
-    for (const file of files) incoming.push(await loadPhoto(file));
-    if (token !== importToken) { incoming.forEach(disposePhoto); return; }
+    for (const file of files) {
+      incoming.push(await loadPhoto(file));
+      if (token !== importToken) { incoming.forEach(disposePhoto); return; }
+    }
     const start = selectedSlot >= 0 ? selectedSlot : 0;
     incoming.forEach((photo, index) => { const slot = (start + index) % 4; disposePhoto(photos[slot]); photos[slot] = photo; });
     beginPhotoSession();
     selectedSlot = photos.findIndex(photo => !photo);
     downloaded = false;
     tell(photos.every(Boolean) ? '' : `Đã thêm ${incoming.length} ảnh. Chọn thêm hoặc bật máy ảnh để chụp tiếp.`);
-  } catch (error) { tell(error.message || 'Không đọc được ảnh. Hãy thử ảnh khác.', true); }
+  } catch (error) {
+    incoming.forEach(disposePhoto);
+    if (token === importToken) tell(error.message || 'Không đọc được ảnh. Hãy thử ảnh khác.', true);
+  }
   finally { if (token === importToken) { busy = false; updateUI(); } }
 });
 
@@ -513,7 +519,8 @@ function selectDesign(design, label, image = null, id = 'custom') {
   importedFrame = null;
   if (document.body?.classList.contains('booth-landing')) {
     const next = new URL('shoot', window.location.href);
-    next.searchParams.set('thietke', JSON.stringify(normalizeDesign(design)));
+    if (image) next.searchParams.set('khung', id);
+    else next.searchParams.set('thietke', JSON.stringify(normalizeDesign(design)));
     window.location.assign(next.href);
     return;
   }
@@ -621,17 +628,30 @@ $('#download-frame-guide')?.addEventListener('click',async()=>{
 });
 $('#apply-design').addEventListener('click', () => {
   try {
-    selectDesign(readDesignForm(), 'Khung tự tạo');
+    if (uploadedFrameCanvas && document.body?.classList.contains('booth-landing')) {
+      $('#design-status').textContent = 'File khung riêng chỉ ở bộ nhớ trang này. Để chụp với file này, vào phòng chụp rồi chọn lại file trong mục “Tự tạo khung của mình”.';
+      return;
+    }
+    const design = readDesignForm();
+    selectDesign(design, 'Khung tự tạo', uploadedFrameCanvas ? frameOnlyCanvas(design) : null);
     $('#frame-creator').close();
     tell('Đã dùng khung bạn vừa tạo. Ảnh vẫn chỉ ở bộ nhớ tạm trên máy bạn.');
   } catch (error) { $('#design-status').textContent = error.message; }
 });
 $('#download-template').addEventListener('click', async () => {
+  let canvas;
   try {
     await frameFontsReady;
-    downloadBlob(await jpegBlob(frameOnlyCanvas(readDesignForm())), 'khung-hop-anh-cua-minh.jpg');
+    const design = readDesignForm();
+    canvas = frameOnlyCanvas(design);
+    const context = canvas.getContext('2d');
+    context.globalCompositeOperation = 'destination-over';
+    context.fillStyle = design.background;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    downloadBlob(await jpegBlob(canvas), 'khung-hop-anh-cua-minh.jpg');
     $('#design-status').textContent = 'Đã tải khung JPEG trống, không có ảnh chụp của bạn.';
   } catch { $('#design-status').textContent = 'Chưa tải được khung JPEG. Hãy thử lại trên trình duyệt mới hơn.'; }
+  finally { if (canvas) canvas.width = canvas.height = 1; }
 });
 
 function publicImageURL(value) {
@@ -665,6 +685,14 @@ async function loadCommunityFrames() {
         image.crossOrigin = 'anonymous';
         image.alt = `Khung ${String(item.name)}`;
         image.loading = 'lazy';
+        if (sharedCommunityFrame === String(item.id) && frameSelection === 0 && !document.body?.classList.contains('booth-landing')) {
+          image.loading = 'eager';
+          image.onload = () => {
+            if (frameSelection !== 0) return;
+            try { selectDesign(design, String(item.name), image, String(item.id)); }
+            catch { tell('Chưa dùng được khung trong liên kết. Hãy chọn một khung khác.', true); }
+          };
+        }
         image.src = imageURL;
         const title = document.createElement('b');
         title.textContent = String(item.name);
@@ -700,7 +728,9 @@ async function loadCommunityFrames() {
           choice.append(thumb,label,credit);
           choice.addEventListener('click',async()=>{
             try{
-              const selected=new Image();await new Promise((resolve,reject)=>{selected.onload=resolve;selected.onerror=reject;selected.src=imageURL;});
+              const selection=++frameSelection;
+              const selected=new Image();selected.crossOrigin='anonymous';await new Promise((resolve,reject)=>{selected.onload=resolve;selected.onerror=reject;selected.src=imageURL;});
+              if(selection!==frameSelection)return;
               selectDesign(design,String(item.name),selected,String(item.id));choice.setAttribute('aria-pressed','true');document.dispatchEvent(new Event('frame-selected'));
             }catch{tell('Chưa tải được khung. Hãy thử lại.',true);}
           });
