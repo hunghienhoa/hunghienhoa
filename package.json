@@ -15,8 +15,5 @@
     "esbuild@0.28.2": true,
     "workerd@1.20261104.1": true,
     "workerd@1.20261109.1": true
-  },
-  "dependencies": {
-    "@mediapipe/tasks-vision": "0.10.32"
   }
 }
