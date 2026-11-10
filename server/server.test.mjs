@@ -39,6 +39,7 @@ async function request(route, options = {}) {
     headers['Content-Type'] = 'application/json';
     if (!options.noCsrf && csrf) headers['X-CSRF-Token'] = options.csrf || csrf;
   } else if (options.origin) headers.Origin = options.origin;
+  if(route==='/api/frame-submissions' && options.body?.consent===true) app.db.prepare('DELETE FROM contribution_limits').run();
   const response = await fetch(base + route, { method, headers, ...(options.body !== undefined ? { body: JSON.stringify(options.body) } : {}) });
   const data = response.headers.get('content-type')?.includes('application/json') ? await response.json() : Buffer.from(await response.arrayBuffer());
   return { response, data };

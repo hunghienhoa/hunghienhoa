@@ -1,3 +1,4 @@
+import {initContributionLimit,claimContribution,contributionDay} from './contribution-limit.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -51,6 +52,8 @@ export function createApp(options = {}) {
     CREATE TABLE IF NOT EXISTS submissions(id TEXT PRIMARY KEY,name TEXT NOT NULL,author_name TEXT NOT NULL,author_contact TEXT NOT NULL,author_link TEXT NOT NULL,design TEXT NOT NULL,image BLOB NOT NULL,created_at INTEGER NOT NULL,expires_at INTEGER NOT NULL);
     CREATE INDEX IF NOT EXISTS submissions_expiry ON submissions(expires_at);
     CREATE TABLE IF NOT EXISTS frames(id TEXT PRIMARY KEY,name TEXT NOT NULL,author_name TEXT NOT NULL,author_link TEXT NOT NULL,design TEXT NOT NULL,image BLOB NOT NULL,created_at INTEGER NOT NULL);`);
+  const quotaSql=(query,...params)=>db.prepare(query).all(...params);
+  initContributionLimit(quotaSql);
   db.prepare('INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)').run('site', JSON.stringify(defaultSite));
   if (!db.prepare('SELECT value FROM settings WHERE key=?').get('seeded')) {
     for (const seed of seedPosts) db.prepare('INSERT INTO posts VALUES(?,?,?,?,?,?,?,?,?,?,?,?)').run(randomUUID(), seed.slug, seed.title, seed.excerpt, seed.content, seed.category, JSON.stringify(seed.tags), 'published', 1, null, now(), now());
@@ -182,7 +185,11 @@ export function createApp(options = {}) {
         rateLimit(req, 'submit', 5, HOUR);
         const value = submission(await body(req));
         const id = randomUUID(), createdAt = now(), expiresAt = createdAt + HOUR;
+        const client=createHash('sha256').update(contributionDay(createdAt)+':'+req.socket.remoteAddress).digest('hex');
+        if(claimContribution(quotaSql,client,createdAt)===null) fail(429,'Bạn đã gửi đủ 3 khung hôm nay. Hãy quay lại vào ngày mai (giờ Việt Nam).');
+        try {
         db.prepare('INSERT INTO submissions VALUES(?,?,?,?,?,?,?,?,?)').run(id, value.name, value.authorName, value.authorContact, value.authorLink, JSON.stringify(value.design), value.image, createdAt, expiresAt);
+        }catch(error){claimContribution(quotaSql,client,createdAt,true);throw error;}
         schedule();
         return json(res, { id, status: 'pending', expiresAt }, 201);
       }

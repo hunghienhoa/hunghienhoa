@@ -1,3 +1,4 @@
+import {contributionDay} from '../server/contribution-limit.mjs';
 import { fail, post, siteSettings, submission, defaultSite, imageMime } from '../server/validation.mjs';
 import { pageForVisit } from '../server/visits.mjs';
 import { adsenseHtml } from '../server/adsense.mjs';
@@ -156,7 +157,15 @@ async function publicApi(request, env, route, ctx) {
   }
   if (request.method === 'POST' && route === '/api/frame-submissions') {
     const value = submission(await readJson(request)), id = crypto.randomUUID(), created = new Date(), expires = new Date(created.getTime() + 3600000);
+    if(!env.VISITS) fail(503,'Chưa kiểm tra được lượt đóng góp. Hãy thử lại sau.');
+    const key=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contributionDay(created.getTime())+':'+(request.headers.get('CF-Connecting-IP')||'unknown')))),byte=>byte.toString(16).padStart(2,'0')).join('');
+    const limiter=env.VISITS.get(env.VISITS.idFromName('site'));
+    const quota=await limiter.fetch(`https://counter/contribution?key=${key}`,{method:'POST'});
+    if(quota.status===429) fail(429,'Bạn đã gửi đủ 3 khung hôm nay. Hãy quay lại vào ngày mai (giờ Việt Nam).');
+    if(!quota.ok) fail(503,'Chưa kiểm tra được lượt đóng góp.');
+    try {
     await rest(env, 'frame_submissions', { method: 'POST', body: { id, name: value.name, author_name: value.authorName, author_contact: value.authorContact, author_link: value.authorLink, consent: true, design: value.design, image_base64: value.image.toString('base64'), created_at: created.toISOString(), expires_at: expires.toISOString() }, prefer: 'return=minimal' });
+    }catch(error){await limiter.fetch(`https://counter/contribution-release?key=${key}`,{method:'POST'});throw error;}
     const notice = notifyFrameSubmission(env, id, expires).catch(() => console.error('frame_notification_failed'));
     if (ctx?.waitUntil) ctx.waitUntil(notice); else await notice;
     return json({ id, status: 'pending', expiresAt: expires.getTime() }, 201);

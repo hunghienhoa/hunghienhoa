@@ -6,16 +6,17 @@ import {DEFAULT_DESIGN} from '../dist/photobooth/design.mjs';
 
 test('gửi email sau khi lưu bản chờ; lỗi email không làm mất đóng góp', async t => {
   const messages=[];
-  let saved=0, failInsert=false, failEmail=false;
+  let saved=0, failInsert=false, failEmail=false, blocked=false;
   t.mock.method(globalThis,'fetch',async()=>{
     if(failInsert) return Response.json({message:'save failed'},{status:503});
     saved++; return new Response(null,{status:201});
   });
   t.mock.method(console,'error',()=>{});
-  const env={SUPABASE_URL:'https://database.example.test',SUPABASE_PUBLISHABLE_KEY:'test',FRAME_EMAIL:{send:async message=>{assert.ok(saved>0); if(failEmail) throw new Error('provider failed'); messages.push(message);}}};
+  const env={VISITS:{idFromName:()=>'',get:()=>({fetch:async()=>Response.json({remaining:blocked?null:2},{status:blocked?429:200})})},SUPABASE_URL:'https://database.example.test',SUPABASE_PUBLISHABLE_KEY:'test',FRAME_EMAIL:{send:async message=>{assert.ok(saved>0); if(failEmail) throw new Error('provider failed'); messages.push(message);}}};
   const body={name:'Khung thử',authorName:'Tác giả thử',authorContact:'private@example.invalid',authorLink:'',consent:true,design:DEFAULT_DESIGN,imageDataUrl:'data:image/webp;base64,'+fs.readFileSync('server/fixtures/frame.webp').toString('base64')};
   const submit=()=>worker.fetch(new Request('https://photobooth.hunghienhoa.com/api/frame-submissions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}),env);
   assert.equal((await submit()).status,201);
+  blocked=true;assert.equal((await submit()).status,429);assert.equal(saved,1);blocked=false;
   assert.equal(messages.length,1);
   assert.equal(messages[0].to,'hunghienhoa2110@gmail.com');
   assert.match(messages[0].text,/https:\/\/admin.hunghienhoa.com/);

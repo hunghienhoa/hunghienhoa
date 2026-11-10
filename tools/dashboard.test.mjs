@@ -41,3 +41,17 @@ console.log('PASS: aggregate-only analytics, time windows, retention, safe text 
 assert.equal(pageForVisit('/photobooth/shoot'),'photobooth');
 assert.equal(pageForVisit('/photobooth/shoot.html'),'photobooth');
 assert.equal(pageForVisit('/photobooth/shootxhtml'),null);
+
+const {initContributionLimit,claimContribution,contributionDay}=await import('../server/contribution-limit.mjs');
+const quotaDb=new DatabaseSync(':memory:');
+const limitSql=(query,...args)=>quotaDb.prepare(query).all(...args);
+initContributionLimit(limitSql);
+assert.deepEqual([claimContribution(limitSql,'qa',now),claimContribution(limitSql,'qa',now),claimContribution(limitSql,'qa',now)],[2,1,0]);
+assert.equal(claimContribution(limitSql,'qa',now),null);
+claimContribution(limitSql,'qa',now,true);
+assert.equal(claimContribution(limitSql,'qa',now),0);
+assert.equal(claimContribution(limitSql,'other',now),2);
+assert.equal(claimContribution(limitSql,'qa',now+86400000),2);
+assert.equal(contributionDay(Date.UTC(2026,10,10,17)),'2026-11-11');
+
+quotaDb.close();
