@@ -79,6 +79,12 @@ new vm.Script(script).runInContext(context);
 await new Promise(resolve => setImmediate(resolve));
 assert.equal(requestedCamera, 0);
 assert.equal(requests.length, 0);
+const originalEncode = Canvas.prototype.toDataURL;
+Canvas.prototype.toDataURL = function(type) { return type === 'image/webp' ? 'data:image/png;base64,fallback' : 'data:image/jpeg;base64,synthetic'; };
+assert.equal(vm.runInContext('photoFromImage({width:640,height:480}).url',context),'data:image/jpeg;base64,synthetic');
+Canvas.prototype.toDataURL = () => 'data:,';
+assert.throws(()=>vm.runInContext('photoFromImage({width:640,height:480})',context),/Chưa xử lý được ảnh/);
+Canvas.prototype.toDataURL = originalEncode;
 assert.equal(frameButtons.length, 16);
 for (const button of frameButtons) {
   button.listeners.click();

@@ -187,8 +187,10 @@ function photoFromImage(image, mirrored = false) {
   const context = canvas.getContext('2d');
   if (mirrored) { context.translate(canvas.width, 0); context.scale(-1, 1); }
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
-  const url = canvas.toDataURL('image/webp', .92);
-  if (!url.startsWith('data:image/webp;')) throw new Error('Trình duyệt chưa hỗ trợ xuất WebP. Hãy thử trình duyệt mới hơn.');
+  let url = canvas.toDataURL('image/webp', .92);
+  // Safari can decode WebP without encoding it; this fallback stays in session memory only.
+  if (!url.startsWith('data:image/webp;')) url = canvas.toDataURL('image/jpeg', .92);
+  if (!url.startsWith('data:image/webp;') && !url.startsWith('data:image/jpeg;')) throw new Error('Chưa xử lý được ảnh. Hãy thử chụp lại hoặc chọn ảnh khác.');
   return { image: canvas, url };
 }
 
