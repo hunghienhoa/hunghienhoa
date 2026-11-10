@@ -111,6 +111,10 @@ Canvas.prototype.toDataURL = function(type) { return type === 'image/webp' ? 'da
 assert.equal(vm.runInContext('photoFromImage({width:640,height:480}).url',context),'data:image/jpeg;base64,synthetic');
 Canvas.prototype.toDataURL = () => 'data:,';
 assert.throws(()=>vm.runInContext('photoFromImage({width:640,height:480})',context),/Chưa xử lý được ảnh/);
+Canvas.prototype.toDataURL = () => 'data:image/png;base64,synthetic';
+assert.equal(vm.runInContext('frameImageDataUrl(frameOnlyCanvas(DEFAULT_DESIGN))',context),'data:image/png;base64,synthetic');
+Canvas.prototype.toDataURL = () => 'data:image/jpeg;base64,synthetic';
+assert.equal(vm.runInContext('frameImageDataUrl(frameOnlyCanvas(DEFAULT_DESIGN))',context),'data:image/jpeg;base64,synthetic');
 Canvas.prototype.toDataURL = originalEncode;
 assert.equal(frameButtons.length, 32);
 assert.equal(vm.runInContext('new Set(Object.values(frames).map(frame => frame.title)).size', context), 32);

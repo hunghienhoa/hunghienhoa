@@ -1,4 +1,4 @@
-import { fail, post, siteSettings, submission, defaultSite } from '../server/validation.mjs';
+import { fail, post, siteSettings, submission, defaultSite, imageMime } from '../server/validation.mjs';
 import { pageForVisit } from '../server/visits.mjs';
 import { adsenseHtml } from '../server/adsense.mjs';
 import {agentRoute,pageContext,representation,markdown404,decorateHtml} from '../server/agent-content.mjs';
@@ -103,18 +103,18 @@ function postData(row, admin = false) {
 }
 
 function frameData(row) {
-  return { id: row.id, name: row.name, authorName: row.author_name, authorLink: row.author_link || '', design: row.design, imageUrl: `/api/frames/${row.id}/image.webp`, createdAt: Date.parse(row.created_at) };
+  return { id: row.id, name: row.name, authorName: row.author_name, authorLink: row.author_link || '', design: row.design, imageUrl: `/api/frames/${row.id}/image`, createdAt: Date.parse(row.created_at) };
 }
 
 function pendingData(row) {
-  return { id: row.id, name: row.name, authorName: row.author_name, authorContact: row.author_contact || '', authorLink: row.author_link || '', design: row.design, imageUrl: `/api/admin/submissions/${row.id}/image.webp`, createdAt: Date.parse(row.created_at), expiresAt: Date.parse(row.expires_at) };
+  return { id: row.id, name: row.name, authorName: row.author_name, authorContact: row.author_contact || '', authorLink: row.author_link || '', design: row.design, imageUrl: `/api/admin/submissions/${row.id}/image`, createdAt: Date.parse(row.created_at), expiresAt: Date.parse(row.expires_at) };
 }
 
 function image(base64, privateImage = false) {
   if (!base64) fail(404, 'Không tìm thấy ảnh.');
   const binary = atob(base64), bytes = new Uint8Array(binary.length);
   for (let index = 0; index < binary.length; index++) bytes[index] = binary.charCodeAt(index);
-  return new Response(bytes, { headers: { 'Content-Type': 'image/webp', 'Cache-Control': privateImage ? 'no-store' : 'public, max-age=300', 'X-Content-Type-Options': 'nosniff' } });
+  return new Response(bytes, { headers: { 'Content-Type': imageMime(Buffer.from(bytes)), 'Cache-Control': privateImage ? 'no-store' : 'public, max-age=300', 'X-Content-Type-Options': 'nosniff' } });
 }
 
 function originAllowed(request) {
@@ -149,7 +149,7 @@ async function publicApi(request, env, route, ctx) {
     const rows = await rest(env, 'frames', { query: { select: FRAME_SELECT, order: 'created_at.desc,id.asc' } });
     return json({ frames: rows.map(frameData) });
   }
-  match = route.match(/^\/api\/frames\/([^/]+)\/image\.webp$/);
+  match = route.match(/^\/api\/frames\/([^/]+)\/image(?:\.webp)?$/);
   if (request.method === 'GET' && match) {
     const rows = await rest(env, 'frames', { query: { select: 'image_base64', id: `eq.${decodeURIComponent(match[1])}`, limit: 1 } });
     return image(rows?.[0]?.image_base64);
@@ -231,7 +231,7 @@ async function adminApi(request, env, route) {
     const rows = await rest(env, 'frame_submissions', { token, query: { select: SUBMISSION_SELECT, expires_at: `gt.${new Date().toISOString()}`, order: 'created_at.desc,id.asc' } });
     return json({ submissions: rows.map(pendingData) });
   }
-  match = route.match(/^\/api\/admin\/submissions\/([^/]+)\/image\.webp$/);
+  match = route.match(/^\/api\/admin\/submissions\/([^/]+)\/image(?:\.webp)?$/);
   if (request.method === 'GET' && match) {
     const rows = await rest(env, 'frame_submissions', { token, query: { select: 'image_base64', id: `eq.${decodeURIComponent(match[1])}`, expires_at: `gt.${new Date().toISOString()}`, limit: 1 } });
     return image(rows?.[0]?.image_base64, true);

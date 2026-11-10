@@ -4,11 +4,18 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createApp } from './server.mjs';
-import { decodeWebP, submission, HOUR, defaultSite } from './validation.mjs';
+import { decodeWebP, decodeFrameImage, imageMime, submission, HOUR, defaultSite } from './validation.mjs';
 
 const folder = path.dirname(fileURLToPath(import.meta.url));
 const frame = fs.readFileSync(path.join(folder, 'fixtures', 'frame.webp'));
 const frameDataUrl = `data:image/webp;base64,${frame.toString('base64')}`;
+for (const format of ['png','jpeg']) {
+  const raw=fs.readFileSync(path.join(folder,`fixtures/frame-${format}.base64`),'utf8');
+  const bytes=decodeFrameImage(`data:image/${format};base64,${raw}`);
+  assert.equal(imageMime(bytes),`image/${format}`);
+  assert.throws(()=>decodeFrameImage(`data:image/webp;base64,${raw}`),{status:400});
+  assert.throws(()=>decodeFrameImage(`data:image/${format};base64,${bytes.subarray(0,-8).toString('base64')}`),{status:400});
+}
 assert.deepEqual(decodeWebP(frameDataUrl, true), frame);
 for (const value of ['data:image/png;base64,AAAA', 'data:image/webp;base64,AAAA', `${frameDataUrl}!`]) assert.throws(() => decodeWebP(value), { status: 400 });
 const design = { background: '#fbf2e3', ink: '#303487', accent: '#ffdc38', title: 'Khung thử', footer: 'Chỉ thiết kế', pattern: 'grid', sticker: 'star' };
@@ -129,6 +136,14 @@ try {
   assert.equal(JSON.stringify(kept.data).includes(pending.authorContact), false);
   assert.equal((await request(kept.data.frames[0].imageUrl, { anonymous: true })).response.status, 200);
   console.log('PASS: pending posters are private; approval retains only public credit and clears private contact.');
+  for(const format of ['png','jpeg']) {
+    const raw=Buffer.from(fs.readFileSync(path.join(folder,`fixtures/frame-${format}.base64`),'utf8'),'base64');
+    app.db.prepare('INSERT INTO frames VALUES(?,?,?,?,?,?,?)').run(`format-${format}`,'Khung thử','QA','',JSON.stringify(design),raw,clock);
+    const result=await request(`/api/frames/format-${format}/image`,{anonymous:true});
+    assert.equal(result.response.headers.get('content-type'),`image/${format}`);
+    assert.deepEqual(result.data,raw);
+    app.db.prepare('DELETE FROM frames WHERE id=?').run(`format-${format}`);
+  }
 
   const expires = await request('/api/frame-submissions', { method: 'POST', body: { ...pending, authorContact: 'expires-soon@example.test' }, anonymous: true });
   const expiresId = expires.data.id;

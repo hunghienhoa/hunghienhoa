@@ -60,6 +60,53 @@ export function decodeWebP(dataUrl, exactFrame = false) {
   return bytes;
 }
 
+export function imageMime(bytes) {
+  bytes = Buffer.from(bytes);
+  if (bytes.length >= 12 && bytes.toString('ascii',0,4)==='RIFF' && bytes.toString('ascii',8,12)==='WEBP') return 'image/webp';
+  if (bytes.length >= 33 && bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))) return 'image/png';
+  if (bytes.length >= 4 && bytes[0]===255 && bytes[1]===216 && bytes[2]===255) return 'image/jpeg';
+  fail(400,'Định dạng ảnh không hợp lệ.');
+}
+
+export function decodeFrameImage(dataUrl) {
+  if (typeof dataUrl !== 'string') fail(400,'Ảnh khung chưa hợp lệ.');
+  if (dataUrl.startsWith('data:image/webp;base64,')) return decodeWebP(dataUrl,true);
+  const match=dataUrl.match(/^data:(image\/(?:png|jpeg));base64,([A-Za-z0-9+/]+={0,2})$/);
+  if (!match || match[2].length>Math.ceil(MAX_IMAGE_BYTES/3)*4 || match[2].length%4) fail(400,'Chỉ nhận WebP, PNG hoặc JPEG dưới 1 MB.');
+  const bytes=Buffer.from(match[2],'base64');
+  if(bytes.length>MAX_IMAGE_BYTES || bytes.toString('base64')!==match[2] || imageMime(bytes)!==match[1]) fail(400,'Nội dung ảnh không khớp định dạng.');
+  let width,height;
+  if(match[1]==='image/png') {
+    if(bytes.readUInt32BE(8)!==13 || bytes.toString('ascii',12,16)!=='IHDR') fail(400,'Đầu ảnh PNG không hợp lệ.');
+    width=bytes.readUInt32BE(16); height=bytes.readUInt32BE(20);
+    let offset=8, data=false, ended=false;
+    while(offset+12<=bytes.length) {
+      const length=bytes.readUInt32BE(offset),type=bytes.toString('ascii',offset+4,offset+8);
+      if(offset+12+length>bytes.length || type==='acTL') fail(400,'Chỉ nhận khung PNG tĩnh hợp lệ.');
+      if(type==='IDAT') data=true;
+      offset+=12+length;
+      if(type==='IEND') {ended=length===0 && offset===bytes.length; break;}
+    }
+    if(!data || !ended) fail(400,'Ảnh PNG chưa đầy đủ.');
+  } else {
+    if(bytes[bytes.length-2]!==255 || bytes[bytes.length-1]!==217) fail(400,'Ảnh JPEG chưa đầy đủ.');
+    let offset=2;
+    while(offset+4<=bytes.length) {
+      if(bytes[offset++]!==255) fail(400,'Cấu trúc JPEG không hợp lệ.');
+      while(bytes[offset]===255) offset++;
+      if(offset+3>bytes.length) fail(400,'Đoạn ảnh JPEG bị cắt ngắn.');
+      const marker=bytes[offset++];
+      if(marker===218 || marker===217) break;
+      const length=bytes.readUInt16BE(offset);
+      if(length<2 || offset+length>bytes.length) fail(400,'Đoạn ảnh JPEG không hợp lệ.');
+      if([192,193,194].includes(marker) && length>=8) {height=bytes.readUInt16BE(offset+3);width=bytes.readUInt16BE(offset+5);}
+      offset+=length;
+    }
+  }
+  if(width!==720 || height!==2180) fail(400,'Khung đóng góp cần đúng kích thước 720×2180.');
+  return bytes;
+}
+
 export const defaultSite = {
   displayName: 'Hùng Hiền Hòa', shortName: 'Hùng',
   intro: 'Một chút tò mò. Một chút khác biệt.\nVà rất nhiều điều muốn kể bằng thiết kế.',
@@ -105,7 +152,7 @@ export function design(value) {
 export function submission(value) {
   keys(value, ['name', 'authorName', 'authorContact', 'authorLink', 'consent', 'design', 'imageDataUrl']);
   if (value.consent !== true) fail(400, 'Cần đồng ý gửi thiết kế khung để xét duyệt.');
-  return { name: text(value.name, 100, true), authorName: text(value.authorName, 80, true), authorContact: text(value.authorContact, 200), authorLink: publicLink(value.authorLink), design: design(value.design), image: decodeWebP(value.imageDataUrl, true) };
+  return { name: text(value.name, 100, true), authorName: text(value.authorName, 80, true), authorContact: text(value.authorContact, 200), authorLink: publicLink(value.authorLink), design: design(value.design), image: decodeFrameImage(value.imageDataUrl) };
 }
 export function post(value) {
   keys(value, ['title', 'slug', 'excerpt', 'content', 'category', 'tags', 'status', 'isSample', 'coverDataUrl']);

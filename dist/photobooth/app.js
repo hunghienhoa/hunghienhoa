@@ -400,10 +400,11 @@ $('#reset').addEventListener('click', () => {
   if (!busy) clearPhotoSession('Đã làm trống dải ảnh. Một bộ kỷ niệm mới đang chờ bạn.');
 });
 
-async function webpBlob(canvas) {
-  const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', .94));
-  if (!blob || blob.type !== 'image/webp') throw new Error('Chưa xuất được WebP. Hãy thử trình duyệt mới hơn.');
-  return blob;
+function frameImageDataUrl(canvas) {
+  let url = canvas.toDataURL('image/webp', .92);
+  if (!/^data:image\/(webp|png|jpeg);base64,/.test(url) || url.length > 1350000) url = canvas.toDataURL('image/jpeg', .92);
+  if (!/^data:image\/(webp|png|jpeg);base64,/.test(url) || url.length > 1350000) throw new Error('Chưa tạo được ảnh khung dưới 1 MB. Hãy giảm bớt chi tiết rồi thử lại.');
+  return url;
 }
 
 async function jpegBlob(canvas) {
@@ -597,8 +598,7 @@ $('#contribution-form').addEventListener('submit', async event => {
     const design = readDesignForm();
     await frameFontsReady;
     // The submitted canvas is created from design only, never from the photo strip.
-    const imageDataUrl = frameOnlyCanvas(design).toDataURL('image/webp', .92);
-    if (!imageDataUrl.startsWith('data:image/webp;')) throw new Error('Trình duyệt chưa xuất được WebP. Hãy thử trình duyệt mới hơn.');
+    const imageDataUrl = frameImageDataUrl(frameOnlyCanvas(design));
     if (imageDataUrl.length > 1398150) throw new Error('Thiết kế khung quá nặng. Hãy giảm họa tiết rồi gửi lại.');
     feedback.textContent = 'Đang gửi riêng thiết kế khung để xét duyệt…';
     const response = await fetch(`${apiBase}/api/frame-submissions`, {

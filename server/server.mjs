@@ -8,7 +8,7 @@ import { promisify } from 'node:util';
 import { initVisits, recordVisit, visitSummary, pageForVisit } from './visits.mjs';
 import { adsenseHtml } from './adsense.mjs';
 import {agentRoute,pageContext,representation,markdown404,decorateHtml} from './agent-content.mjs';
-import { HOUR, fail, keys, text, password, defaultSite, siteSettings, submission, post } from './validation.mjs';
+import { HOUR, fail, keys, text, password, defaultSite, siteSettings, submission, post, imageMime } from './validation.mjs';
 
 const derive = promisify(scrypt);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -120,11 +120,11 @@ export function createApp(options = {}) {
   function postData(row, admin = false) {
     return { id: row.id, slug: row.slug, title: row.title, excerpt: row.excerpt, content: row.content, category: row.category, tags: JSON.parse(row.tags), publishedAt: row.published_at, isSample: !!row.is_sample, coverUrl: row.cover ? `${admin ? '/api/admin' : '/api'}/posts/${row.id}/cover.webp` : null, ...(admin ? { status: row.status, createdAt: row.created_at } : {}) };
   }
-  function frameData(row) { return { id: row.id, name: row.name, authorName: row.author_name, authorLink: row.author_link, design: JSON.parse(row.design), imageUrl: `/api/frames/${row.id}/image.webp`, createdAt: row.created_at }; }
-  function pendingData(row) { return { id: row.id, name: row.name, authorName: row.author_name, authorContact: row.author_contact, authorLink: row.author_link, design: JSON.parse(row.design), imageUrl: `/api/admin/submissions/${row.id}/image.webp`, createdAt: row.created_at, expiresAt: row.expires_at }; }
+  function frameData(row) { return { id: row.id, name: row.name, authorName: row.author_name, authorLink: row.author_link, design: JSON.parse(row.design), imageUrl: `/api/frames/${row.id}/image`, createdAt: row.created_at }; }
+  function pendingData(row) { return { id: row.id, name: row.name, authorName: row.author_name, authorContact: row.author_contact, authorLink: row.author_link, design: JSON.parse(row.design), imageUrl: `/api/admin/submissions/${row.id}/image`, createdAt: row.created_at, expiresAt: row.expires_at }; }
   function json(res, value, code = 200) { res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(value)); }
   function image(res, value, privateImage = false) {
-    res.writeHead(200, { 'Content-Type': 'image/webp', 'Content-Length': value.length, 'Cache-Control': privateImage ? 'no-store' : 'public, max-age=3600', 'Cross-Origin-Resource-Policy': privateImage ? 'same-origin' : 'cross-origin' });
+    res.writeHead(200, { 'Content-Type': imageMime(value), 'Content-Length': value.length, 'Cache-Control': privateImage ? 'no-store' : 'public, max-age=3600', 'Cross-Origin-Resource-Policy': privateImage ? 'same-origin' : 'cross-origin' });
     res.end(Buffer.from(value));
   }
   function origins() {
@@ -172,7 +172,7 @@ export function createApp(options = {}) {
         return json(res, { post: postData(row) });
       }
       if (req.method === 'GET' && route === '/api/frames') return json(res, { frames: db.prepare('SELECT * FROM frames ORDER BY created_at DESC,id').all().map(frameData) });
-      match = route.match(/^\/api\/frames\/([^/]+)\/image\.webp$/);
+      match = route.match(/^\/api\/frames\/([^/]+)\/image(?:\.webp)?$/);
       if (req.method === 'GET' && match) {
         const row = db.prepare('SELECT image FROM frames WHERE id=?').get(match[1]);
         if (!row) fail(404, 'Không tìm thấy khung.');
@@ -249,7 +249,7 @@ export function createApp(options = {}) {
           return image(res, row.cover, true);
         }
         if (route === '/api/admin/submissions' && req.method === 'GET') return json(res, { submissions: db.prepare('SELECT * FROM submissions WHERE expires_at>? ORDER BY created_at DESC,id').all(now()).map(pendingData) });
-        match = route.match(/^\/api\/admin\/submissions\/([^/]+)\/image\.webp$/);
+        match = route.match(/^\/api\/admin\/submissions\/([^/]+)\/image(?:\.webp)?$/);
         if (req.method === 'GET' && match) {
           const row = db.prepare('SELECT image FROM submissions WHERE id=? AND expires_at>?').get(match[1], now());
           if (!row) fail(404, 'Bản chờ không còn hoặc đã hết hạn.');

@@ -52,7 +52,7 @@ test('ảnh quản trị yêu cầu token đúng quyền và không được cac
     calls.push({ url: String(url), options });
     if (new URL(url).pathname === '/auth/v1/user') return Response.json({ email });
     assert.equal(options.headers.Authorization, 'Bearer example-test-token');
-    return Response.json([{ image_base64: 'dGVzdA==', cover_base64: 'dGVzdA==' }]);
+    return Response.json([{ image_base64: fs.readFileSync('server/fixtures/frame.webp').toString('base64'), cover_base64: fs.readFileSync('server/fixtures/frame.webp').toString('base64') }]);
   });
   const url = 'https://admin.hunghienhoa.com/api/admin/submissions/test/image.webp';
   assert.equal((await worker.fetch(new Request(url), env)).status, 401);
@@ -67,4 +67,14 @@ test('ảnh quản trị yêu cầu token đúng quyền và không được cac
     assert.equal(response.headers.get('cache-control'), 'no-store');
     assert.equal(response.headers.get('content-type'), 'image/webp');
   }
+});
+
+test('ảnh khung PNG và JPEG trả đúng Content-Type và dữ liệu',async t=>{
+ let format='png';
+ t.mock.method(globalThis,'fetch',async()=>Response.json([{image_base64:fs.readFileSync(`server/fixtures/frame-${format}.base64`,'utf8')}]));
+ for(format of ['png','jpeg']) {
+  const response=await worker.fetch(new Request('https://photobooth.hunghienhoa.com/api/frames/qa/image'),{SUPABASE_URL:'https://database.example.test',SUPABASE_PUBLISHABLE_KEY:'test'});
+  assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),`image/${format}`);
+  assert.deepEqual(Buffer.from(await response.arrayBuffer()),Buffer.from(fs.readFileSync(`server/fixtures/frame-${format}.base64`,'utf8'),'base64'));
+ }
 });
