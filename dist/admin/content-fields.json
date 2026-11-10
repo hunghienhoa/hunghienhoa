@@ -1670,8 +1670,8 @@
   {
     "key": "photobooth-101",
     "page": "photobooth",
-    "label": "Tôi đồng ý gửi thiết kế khung và thông tin trên để xét duyệt. Nếu được duyệt, khung, tên hiển thị và",
-    "default": "Tôi đồng ý gửi thiết kế khung và thông tin trên để xét duyệt. Nếu được duyệt, khung, tên hiển thị và liên kết công khai sẽ xuất hiện trong thư viện."
+    "label": "Tôi xác nhận có quyền sử dụng thiết kế và đồng ý gửi khung cùng thông tin trên để xét duyệt, công kh",
+    "default": "Tôi xác nhận có quyền sử dụng thiết kế và đồng ý gửi khung cùng thông tin trên để xét duyệt, công khai khung và tên hiển thị khi được duyệt theo điều khoản đóng góp."
   },
   {
     "key": "photobooth-102",
