@@ -62,7 +62,7 @@ function updateUI() {
   $('#upload').disabled = busy;
   $('.upload-button').classList.toggle('disabled', busy);
   $('#download').disabled = count !== 4 || busy;
-  $('#download').firstChild.textContent = downloaded ? 'Tải lại dải ảnh WebP ' : 'Tải dải ảnh WebP ';
+  $('#download').firstChild.textContent = downloaded ? 'Tải lại dải ảnh JPEG ' : 'Tải dải ảnh JPEG ';
   $('#reset').disabled = count === 0 || busy;
   $('#step-capture').classList.toggle('current', count < 4);
   $('#step-frame').classList.toggle('current', count === 4 && !downloaded);
@@ -372,7 +372,7 @@ $('#download').addEventListener('click', async () => {
     downloadBlob(await jpegBlob(strip), `hop-anh-hung-${new Date().toLocaleDateString('sv-SE')}.jpg`);
     downloaded = true;
     tell('Đã tạo dải ảnh JPEG. Hãy xem tệp tải về của trình duyệt nhé!');
-  } catch { tell('Chưa tải được WebP. Kiểm tra trình duyệt và kết nối thư viện khung rồi thử lại.', true); }
+  } catch { tell('Chưa tải được JPEG. Kiểm tra trình duyệt và kết nối thư viện khung rồi thử lại.', true); }
   finally { updateUI(); }
 });
 
@@ -441,7 +441,7 @@ $('#download-template').addEventListener('click', async () => {
     await frameFontsReady;
     downloadBlob(await jpegBlob(frameOnlyCanvas(readDesignForm())), 'khung-hop-anh-cua-minh.jpg');
     $('#design-status').textContent = 'Đã tải khung JPEG trống, không có ảnh chụp của bạn.';
-  } catch { $('#design-status').textContent = 'Chưa tải được khung WebP. Hãy thử lại trên trình duyệt mới hơn.'; }
+  } catch { $('#design-status').textContent = 'Chưa tải được khung JPEG. Hãy thử lại trên trình duyệt mới hơn.'; }
 });
 
 function publicImageURL(value) {
