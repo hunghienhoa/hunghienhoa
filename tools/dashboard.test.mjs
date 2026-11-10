@@ -6,7 +6,7 @@ import {initVisits,recordVisit,visitSummary,pageForVisit} from '../server/visits
 import {VisitCounter} from '../worker/visits.mjs';
 import {defaultSite,siteSettings} from '../server/validation.mjs';
 const db=new DatabaseSync(':memory:');
-const sql=(query,...args)=>/^SELECT/i.test(query)?db.prepare(query).all(...args):(db.prepare(query).run(...args),[]);
+const sql=(query,...args)=>db.prepare(query).all(...args);
 initVisits(sql);
 const now=Date.UTC(2026,10,10,3);
 recordVisit(sql,'main',now);recordVisit(sql,'blog',now);recordVisit(sql,'photobooth',now-7*86400000);
@@ -17,7 +17,7 @@ stats=visitSummary(sql,now+100*86400000);assert.equal(stats.total,4);assert.equa
 assert.throws(()=>recordVisit(sql,'admin',now));assert.equal(pageForVisit('/admin/'),null);assert.equal(pageForVisit('/photobooth/app.js'),null);
 const counter=new VisitCounter({storage:{sql:{exec:sql}}});
 assert.equal((await counter.fetch(new Request('https://counter/summary'))).status,200);
-assert.equal((await counter.fetch(new Request('https://counter/record?page=blog',{method:'POST'}))).status,200);
+assert.equal((await counter.fetch(new Request('https://counter/record?page=blog&key=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',{method:'POST'}))).status,200);
 assert.equal((await counter.fetch(new Request('https://counter/unknown'))).status,404);
 const fields=JSON.parse(readFileSync('dist/content-fields.json','utf8'));
 assert.ok(fields.length>200);
@@ -35,6 +35,14 @@ await vm.runInNewContext(readFileSync('dist/page-customization.js','utf8'),{
 assert.equal(node.textContent,'<img src=x onerror=alert(1)>');assert.equal(colors['--blue'],'#303487');
 node.textContent='Changed by older content loader';events['hung-content-ready']();assert.equal(node.textContent,edited.pageTexts[key]);
 for(const folder of ['blog','photobooth','admin'])assert.equal(readFileSync(`dist/${folder}/page-customization.js`,'utf8'),readFileSync('dist/page-customization.js','utf8'));
+const before=visitSummary(sql,now).total;
+recordVisit(sql,'main',now,'visitor-a');recordVisit(sql,'main',now,'visitor-a');
+assert.equal(visitSummary(sql,now).total,before+1);
+recordVisit(sql,'blog',now,'visitor-a');recordVisit(sql,'main',now,'visitor-b');
+assert.equal(visitSummary(sql,now).total,before+3);
+recordVisit(sql,'main',now+86400000,'visitor-a');
+assert.equal(visitSummary(sql,now+86400000).total,before+4);
+assert.equal((await counter.fetch(new Request('https://counter/record?page=main',{method:'POST'}))).status,400);
 db.close();
 console.log('PASS: aggregate-only analytics, time windows, retention, safe text customization and strict settings validation.');
 

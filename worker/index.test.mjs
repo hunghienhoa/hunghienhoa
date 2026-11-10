@@ -79,3 +79,21 @@ test('ảnh khung PNG và JPEG trả đúng Content-Type và dữ liệu',async 
   assert.deepEqual(Buffer.from(await response.arrayBuffer()),Buffer.from(fs.readFileSync(`server/fixtures/frame-${format}.base64`,'utf8'),'base64'));
  }
 });
+
+test('lượt truy cập chỉ gửi mã băm, tải lại cùng trang không tăng lượt trong ngày', async () => {
+  const {DatabaseSync}=await import('node:sqlite');
+  const {VisitCounter}=await import('./visits.mjs');
+  const db=new DatabaseSync(':memory:');
+  const counter=new VisitCounter({storage:{sql:{exec:(q,...args)=>db.prepare(q).all(...args)}}});
+  const calls=[];
+  const env={ASSETS:{fetch:async()=>new Response('<html></html>',{headers:{'Content-Type':'text/html'}})},VISITS:{idFromName:()=>'',get:()=>({fetch:async(url,options)=>{calls.push(url);return counter.fetch(new Request(url,options));}})}};
+  try {
+    for(const ip of ['192.0.2.1','192.0.2.1','192.0.2.2']) {
+      const response=await worker.fetch(new Request('https://hunghienhoa.com/',{headers:{'CF-Connecting-IP':ip,'User-Agent':'Browser'}}),env);
+      assert.equal(response.status,200);
+    }
+    const summary=await (await counter.fetch(new Request('https://counter/summary'))).json();
+    assert.equal(summary.total,2);
+    assert.ok(calls.every(url=>/[?&]key=[a-f0-9]{64}$/.test(url)&&!url.includes('192.0.2.')));
+  } finally {db.close();}
+});

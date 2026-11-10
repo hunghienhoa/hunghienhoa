@@ -1466,8 +1466,8 @@
   {
     "key": "photobooth-067",
     "page": "photobooth",
-    "label": "Ảnh chụp và ảnh chọn để ghép chỉ ở bộ nhớ trình duyệt, không gửi lên máy chủ và không lưu vào databa",
-    "default": "Ảnh chụp và ảnh chọn để ghép chỉ ở bộ nhớ trình duyệt, không gửi lên máy chủ và không lưu vào database. Phiên ảnh tự xóa sau 1 giờ hoặc khi rời trang. Chỉ thiết kế khung bạn chủ động đóng góp mới được gửi để duyệt."
+    "label": "Ảnh chụp và ảnh chọn để ghép chỉ ở bộ nhớ trình duyệt, không gửi lên máy chủ và không được lưu lại. ",
+    "default": "Ảnh chụp và ảnh chọn để ghép chỉ ở bộ nhớ trình duyệt, không gửi lên máy chủ và không được lưu lại. Phiên ảnh tự xóa sau 1 giờ hoặc khi rời trang. Chỉ thiết kế khung bạn chủ động đóng góp mới được gửi để duyệt."
   },
   {
     "key": "photobooth-068",
@@ -1856,14 +1856,14 @@
   {
     "key": "admin-018",
     "page": "admin",
-    "label": "Lượt xem các trang",
-    "default": "Lượt xem các trang"
+    "label": "Lượt truy cập các trang",
+    "default": "Lượt truy cập các trang"
   },
   {
     "key": "admin-019",
     "page": "admin",
-    "label": "Số liệu bắt đầu từ khi bật bộ đếm. Đây là lượt tải trang, không phải số người duy nhất; không lưu IP",
-    "default": "Số liệu bắt đầu từ khi bật bộ đếm. Đây là lượt tải trang, không phải số người duy nhất; không lưu IP, cookie hay ảnh cá nhân. Không đếm trang quản trị và các bot nhận diện được. Múi giờ Việt Nam."
+    "label": "Mỗi địa chỉ mạng được tính một lượt cho mỗi trang trong ngày, theo giờ Việt Nam. Tải lại trang không",
+    "default": "Mỗi địa chỉ mạng được tính một lượt cho mỗi trang trong ngày, theo giờ Việt Nam. Tải lại trang không tăng lượt. Chỉ giữ mã chống đếm trùng trong ngày, không lưu địa chỉ mạng gốc hay ảnh cá nhân. Không đếm trang quản trị và các bot nhận diện được. Số liệu cũ được giữ nguyên."
   },
   {
     "key": "admin-020",
@@ -2068,11 +2068,5 @@
     "page": "admin",
     "label": "Lời dẫn trang chia sẻ",
     "default": "Lời dẫn trang chia sẻ"
-  },
-  {
-    "key": "admin-054",
-    "page": "admin",
-    "label": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!",
-    "default": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!"
   }
 ]

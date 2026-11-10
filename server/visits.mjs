@@ -2,10 +2,13 @@ export const VISIT_PAGES = ['main', 'blog', 'photobooth'];
 export const visitDay = now => new Date(now + 7 * 3600000).toISOString().slice(0, 10);
 export function initVisits(sql) {
   sql('CREATE TABLE IF NOT EXISTS visit_days(day TEXT,page TEXT,count INTEGER NOT NULL,PRIMARY KEY(day,page))');
+  sql('CREATE TABLE IF NOT EXISTS visit_seen(day TEXT,page TEXT,client TEXT,PRIMARY KEY(day,page,client))');
   sql('CREATE TABLE IF NOT EXISTS visit_totals(page TEXT PRIMARY KEY,count INTEGER NOT NULL)');
 }
-export function recordVisit(sql, page, now = Date.now()) {
+export function recordVisit(sql, page, now = Date.now(), client) {
   if (!VISIT_PAGES.includes(page)) throw new Error('Trang thống kê không hợp lệ.');
+  sql('DELETE FROM visit_seen WHERE day<?', visitDay(now));
+  if (client && !sql('INSERT OR IGNORE INTO visit_seen VALUES(?,?,?) RETURNING client', visitDay(now), page, client).length) return;
   sql('INSERT INTO visit_days VALUES(?,?,1) ON CONFLICT(day,page) DO UPDATE SET count=count+1', visitDay(now), page);
   sql('INSERT INTO visit_totals VALUES(?,1) ON CONFLICT(page) DO UPDATE SET count=count+1', page);
   sql('DELETE FROM visit_days WHERE day<?', visitDay(now - 90 * 86400000));

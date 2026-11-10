@@ -315,7 +315,8 @@ export default {
       if(response.status===404&&representation(request.headers.get('accept'))==='text/markdown')return withSecurity(markdown404(ctxPage,request.method==='HEAD'),env);
       const page = pageForVisit(new URL(mapped.url).pathname);
       if (env.VISITS && page && request.method === 'GET' && response.ok && response.headers.get('content-type')?.includes('text/html') && !/bot|crawler|spider|headless/i.test(request.headers.get('user-agent') || '')) {
-        const count = env.VISITS.get(env.VISITS.idFromName('site')).fetch(`https://counter/record?page=${page}`, {method:'POST'}).catch(() => console.error('visit_count_failed'));
+        const key=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contributionDay(Date.now())+':'+(request.headers.get('CF-Connecting-IP')||'unknown')))),byte=>byte.toString(16).padStart(2,'0')).join('');
+        const count = env.VISITS.get(env.VISITS.idFromName('site')).fetch(`https://counter/record?page=${page}&key=${key}`, {method:'POST'}).catch(() => console.error('visit_count_failed'));
         if (ctx?.waitUntil) ctx.waitUntil(count); else await count;
       }
       const metadata=ctxPage&&['/','/index.html'].includes(ctxPage.path)&&response.ok&&response.headers.get('content-type')?.includes('text/html')?{ctx:ctxPage,url,site:await data.site().catch(()=>defaultSite)}:null;

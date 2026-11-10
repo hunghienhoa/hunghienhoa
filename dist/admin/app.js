@@ -19,11 +19,11 @@ async function authRequest(path, body, token = '') {
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
     const messages = {
-      invalid_credentials: 'Email hoặc mật khẩu chưa đúng. Hãy dùng tài khoản trong Authentication → Users của dự án hunghienhoa, không phải tài khoản Supabase Dashboard.',
-      email_not_confirmed: 'Email này chưa được xác nhận. Kiểm tra thư xác nhận hoặc trạng thái user trong Supabase Authentication → Users.',
-      user_banned: 'Tài khoản này đang bị khóa. Kiểm tra trạng thái user trong Supabase Authentication → Users.',
+      invalid_credentials: 'Email hoặc mật khẩu chưa đúng. Hãy dùng tài khoản quản trị của Hùng.',
+      email_not_confirmed: 'Email này chưa được xác nhận. Hãy kiểm tra thư xác nhận trong hộp thư.',
+      user_banned: 'Tài khoản này đang bị khóa. Hãy liên hệ người quản lý trang.',
       over_request_rate_limit: 'Bạn đã thử đăng nhập quá nhiều lần. Chờ vài phút rồi thử lại.',
-      captcha_failed: 'Dịch vụ đăng nhập đang yêu cầu xác minh CAPTCHA. Cần kiểm tra cấu hình Supabase Auth.'
+      captcha_failed: 'Đăng nhập đang yêu cầu xác minh bảo mật. Hãy thử lại sau.'
     };
     const code = data.error_code || data.code;
     throw new Error(messages[code] || `Dịch vụ đăng nhập chưa xử lý được yêu cầu (HTTP ${response.status}${code ? `, ${code}` : ''}).`);
@@ -136,7 +136,7 @@ async function initialize() {
       $('#auth-note').textContent = needsSetup ? 'Tạo mật khẩu riêng để quản trị bản trên máy này.' : 'Đăng nhập bằng mật khẩu quản trị trên máy này.';
       return;
     }
-    if (!session && !(await refreshSession())) { showAuth(); $('#auth-form').hidden = false; $('#auth-note').textContent = 'Đăng nhập bằng tài khoản Supabase của Hùng để quản lý nội dung và duyệt khung.'; return; }
+    if (!session && !(await refreshSession())) { showAuth(); $('#auth-form').hidden = false; $('#auth-note').textContent = 'Đăng nhập bằng tài khoản quản trị của Hùng để quản lý nội dung và duyệt khung.'; return; }
     const data = await api('/api/admin/session');
     if (data.authenticated) { await enter(); return; }
     saveSession(null); showAuth(); $('#auth-form').hidden = false;
@@ -194,7 +194,7 @@ $('#site-form').addEventListener('submit', async event => {
 async function loadAnalytics() {
   try {
     const data = await api('/api/admin/analytics');
-    $('#traffic-stats').replaceChildren(...[[data.total,'Tổng lượt xem'],[data.today,'Hôm nay'],[data.last7,'7 ngày gần nhất'],[data.last30,'30 ngày gần nhất']].map(([count,label]) => {const card=make('div',undefined,'stat');card.append(make('b',Number(count).toLocaleString('vi-VN')),make('span',label));return card;}));
+    $('#traffic-stats').replaceChildren(...[[data.total,'Tổng lượt truy cập'],[data.today,'Hôm nay'],[data.last7,'7 ngày gần nhất'],[data.last30,'30 ngày gần nhất']].map(([count,label]) => {const card=make('div',undefined,'stat');card.append(make('b',Number(count).toLocaleString('vi-VN')),make('span',label));return card;}));
     const names={main:'Trang chính',blog:'Blog',photobooth:'Photobooth'};
     $('#traffic-pages').replaceChildren(...Object.entries(names).map(([page,label]) => make('p',label+': '+(data.pages.find(row=>row.page===page)?.count || 0).toLocaleString('vi-VN'))));
     const max=Math.max(1,...data.daily.map(row=>row.count));

@@ -60,7 +60,7 @@ test('đăng nhập online không áp dụng quy tắc tạo mật khẩu và b�
   const html = readFileSync('dist/admin/index.html', 'utf8');
   const input = html.match(/<input\b[^>]*id="password"[^>]*>/)?.[0];
   assert.ok(input); assert.doesNotMatch(input, /minlength|maxlength/);
-  for (const [code, expected] of [['email_not_confirmed', /chưa được xác nhận/], ['invalid_credentials', /Authentication → Users/]]) {
+  for (const [code, expected] of [['email_not_confirmed', /chưa được xác nhận/], ['invalid_credentials', /tài khoản quản trị của Hùng/]]) {
     const app = admin('admin.hunghienhoa.com', () => Response.json({ error_code: code, msg: 'English server error' }, { status: 400 }));
     await new Promise(resolve => setImmediate(resolve));
     app.node('#email').value = 'owner@example.test'; app.node('#password').value = 'short';

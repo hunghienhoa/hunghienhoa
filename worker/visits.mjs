@@ -15,7 +15,9 @@ export class VisitCounter {
       return Response.json({remaining},{status:remaining===null?429:200});
     }
     if (request.method === 'POST' && url.pathname === '/record') {
-      recordVisit(this.sql, url.searchParams.get('page'));
+      const key=url.searchParams.get('key');
+      if(!/^[a-f0-9]{64}$/.test(key||'')) return new Response(null,{status:400});
+      recordVisit(this.sql, url.searchParams.get('page'), Date.now(), key);
       return Response.json({ok:true});
     }
     if (request.method === 'GET' && url.pathname === '/summary') return Response.json(visitSummary(this.sql), {headers:{'Cache-Control':'no-store'}});

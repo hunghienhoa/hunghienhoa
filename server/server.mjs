@@ -43,7 +43,7 @@ export function createApp(options = {}) {
   if (!dataRelativeToDist.startsWith('..') && !path.isAbsolute(dataRelativeToDist)) throw new Error('Thư mục dữ liệu riêng phải nằm ngoài dist.');
   fs.mkdirSync(dataDir, { recursive: true, mode: 0o700 });
   const db = new DatabaseSync(path.join(dataDir, 'content.sqlite'));
-  const visitSQL = (query, ...params) => /^SELECT/i.test(query) ? db.prepare(query).all(...params) : (db.prepare(query).run(...params), []);
+  const visitSQL = (query, ...params) => db.prepare(query).all(...params);
   initVisits(visitSQL);
   db.exec(`PRAGMA journal_mode=DELETE; PRAGMA secure_delete=ON; PRAGMA busy_timeout=5000;
     CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT NOT NULL);
@@ -311,7 +311,7 @@ export function createApp(options = {}) {
     if (!stat.isFile() || !contentType) fail(404, 'Không tìm thấy trang.');
     const content = fs.readFileSync(file);
     const visitPage = pageForVisit(route);
-    if (visitPage && req.method === 'GET' && contentType.includes('text/html') && !/bot|crawler|spider|headless/i.test(req.headers['user-agent'] || '')) recordVisit(visitSQL, visitPage, now());
+    if (visitPage && req.method === 'GET' && contentType.includes('text/html') && !/bot|crawler|spider|headless/i.test(req.headers['user-agent'] || '')) recordVisit(visitSQL, visitPage, now(), hash(contributionDay(now()) + ':' + req.socket.remoteAddress));
     const metadata=contentType.includes('text/html')&&ctxPage&&['/','/index.html'].includes(ctxPage.path);
     const html=metadata?decorateHtml(content.toString('utf8'),JSON.parse(getSetting('site')),ctxPage,pageURL):contentType.includes('text/html')?content.toString('utf8'):'';
     if(metadata)res.setHeader('Vary','Accept');
