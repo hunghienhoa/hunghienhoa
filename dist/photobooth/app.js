@@ -187,6 +187,7 @@ function photoFromImage(image, mirrored = false) {
   const context = canvas.getContext('2d');
   if (mirrored) { context.translate(canvas.width, 0); context.scale(-1, 1); }
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  if (image === video) window.hungFaceEffects?.paint(context, canvas.width, canvas.height);
   let url = canvas.toDataURL('image/webp', .92);
   // Safari can decode WebP without encoding it; this fallback stays in session memory only.
   if (!url.startsWith('data:image/webp;')) url = canvas.toDataURL('image/jpeg', .92);
