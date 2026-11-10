@@ -1,4 +1,4 @@
-import { readingMinutes, filterPosts, articleBlocks, safeCoverURL } from './core.mjs?v=1';
+import { readingMinutes, filterPosts, articleBlocks, inlineTokens, safeCoverURL } from './core.mjs?v=2';
 
 const $ = selector => document.querySelector(selector);
 const API = String(window.HUNG_API_BASE || '').replace(/\/$/, '');
@@ -149,16 +149,31 @@ async function loadPosts() {
   }
 }
 
+function appendInline(node,text) {
+  for(const token of inlineTokens(text)) {
+    if(token.type==='text')node.append(document.createTextNode(token.text));
+    else {const child=element(token.type,'',token.text);if(token.type==='a'){child.href=token.href;child.target='_blank';child.rel='noopener noreferrer';}node.append(child);}
+  }
+}
 function renderBody(content) {
   const nodes = [];
   let list;
   for (const block of articleBlocks(content)) {
-    if (block.type === 'li') {
-      if (!list) { list = element('ul'); nodes.push(list); }
-      list.append(element('li', '', block.text));
+    if (block.type === 'code') {
+      list=null;
+      const box=element('section','article-code'),bar=element('div','code-bar'),button=element('button','', 'Sao chép'),status=element('span','code-status');
+      button.type='button';status.setAttribute('role','status');
+      bar.append(element('span','',block.language||'Đoạn mã'),button,status);
+      const pre=element('pre'),code=element('code','',block.text);pre.append(code);
+      button.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(block.text);status.textContent='Đã sao chép';}catch{status.textContent='Chưa sao chép được. Hãy chọn đoạn mã để sao chép.';}setTimeout(()=>{status.textContent='';},3000);});
+      box.append(bar,pre);nodes.push(box);continue;
+    }
+    if (block.type === 'li' || block.type === 'oli') {
+      if (!list || list.tagName.toLowerCase() !== (block.type==='oli'?'ol':'ul')) { list = element(block.type==='oli'?'ol':'ul'); nodes.push(list); }
+      const item=element('li');appendInline(item,block.text);list.append(item);
     } else {
       list = null;
-      nodes.push(element(block.type === 'quote' ? 'blockquote' : block.type, '', block.text));
+      const node=element(block.type === 'quote' ? 'blockquote' : block.type);appendInline(node,block.text);nodes.push(node);
     }
   }
   if (!nodes.length) nodes.push(element('p', '', 'Trang viết này chưa có nội dung.'));
