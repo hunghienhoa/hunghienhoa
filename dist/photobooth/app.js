@@ -1,5 +1,5 @@
 import { coverCrop, applyFilterPixels } from './core.mjs?v=3';
-import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter } from './design.mjs?v=3';
+import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow } from './design.mjs?v=4';
 
 const $ = selector => document.querySelector(selector);
 const video = $('#camera');
@@ -18,28 +18,28 @@ const photos = Array(4).fill(null);
 const completeMessage = 'Đã đủ 4 tấm ảnh! Kéo xuống bên dưới để chọn khung, thêm lời nhắn và chỉnh sửa trước khi tải về nhé.';
 const filters = { original: 'none', mono: 'grayscale(1) contrast(1.08)', warm: 'sepia(.24) saturate(1.2) contrast(1.04)', nostalgia: 'sepia(.4) saturate(.72) contrast(.94) brightness(1.05)', clear:'saturate(1.04) contrast(.96) brightness(1.08)', peach:'sepia(.08) saturate(1.06) contrast(.94) brightness(1.06)', soft:'saturate(.98) contrast(.9) brightness(1.06)' };
 const frames = {
-  cream: normalizeDesign({}),
-  blue: normalizeDesign({ background: '#303487', ink: '#fbf2e3', accent: '#ffdc38' }),
-  pink: normalizeDesign({ background: '#efb9c4', pattern: 'dots', sticker: 'heart' }),
-  yellow: normalizeDesign({ background: '#ffdc38', accent: '#e67f8f', pattern: 'grid', sticker: 'star' }),
-  film: normalizeDesign({ background: '#242338', ink: '#fbf2e3', accent: '#ffdc38', pattern: 'film', sticker: 'none', title: 'THƯỚC PHIM CỦA CHÚNG MÌNH', footer: 'Khoảnh khắc này, chỉ một lần.' }),
-  polaroid: normalizeDesign({ background: '#fffaf1', ink: '#303487', accent: '#efb9c4', sticker: 'none', title: 'MỘT NGÀY THẬT ĐẸP', footer: 'Có bạn trong những ngày vui.' }),
-  checker: normalizeDesign({ background: '#fbf2e3', accent: '#303487', pattern: 'checker', sticker: 'heart', title: 'CỨ LÀ CHÍNH MÌNH', footer: 'Một chút tinh nghịch, rất nhiều niềm vui.' }),
-  scrapbook: normalizeDesign({ background: '#e7d3b6', ink: '#57402f', accent: '#977658', pattern: 'grid', sticker: 'flower', title: 'TRANG NHẬT KÝ HÔM NAY', footer: 'Nhặt một ngày vui, cất vào đây.' }),
-  birthday: normalizeDesign({ background: '#efb9c4', ink: '#303487', accent: '#a34d65', pattern: 'confetti', sticker: 'star', title: 'THÊM MỘT TUỔI, THÊM NIỀM VUI', footer: 'Ước gì cũng thành, cười gì cũng xinh.' }),
-  together: normalizeDesign({ background: '#e6e1f2', ink: '#303487', accent: '#8871b3', pattern: 'stripes', sticker: 'heart', title: 'CHÚNG MÌNH Ở ĐÂY', footer: 'Đi cùng nhau, ngày nào cũng đáng nhớ.' }),
-  coquette: normalizeDesign({ background: '#ffe0ef', ink: '#82385e', accent: '#ffffff', pattern: 'lace', sticker: 'bow', title: 'MỘT CHÚT ĐIỆU ĐÀ', footer: 'Hôm nay xinh theo cách của mình.' }),
-  neon: normalizeDesign({ background: '#241042', ink: '#ffffff', accent: '#b5ff3d', pattern: 'sparkles', sticker: 'smile', title: 'BẬT CHẾ ĐỘ LẤP LÁNH', footer: 'Đêm còn trẻ, mình còn vui!' }),
-  cherry: normalizeDesign({ background: '#fff3e9', ink: '#b32950', accent: '#ed8aab', pattern: 'hearts', sticker: 'cherry', title: 'NGỌT HƠN MỘT CHÚT', footer: 'Một ngày ngọt lành, một người đáng yêu.' }),
-  cats: normalizeDesign({ background: '#d8f3db', ink: '#285749', accent: '#82b795', pattern: 'doodles', sticker: 'cat', title: 'HỘI MÊ MÈO ĐIỂM DANH', footer: 'Meo một tiếng, vui cả ngày.' }),
-  sky: normalizeDesign({ background: '#bceaff', ink: '#245486', accent: '#ffffff', pattern: 'waves', sticker: 'cloud', title: 'MANG CẢ BẦU TRỜI VỀ', footer: 'Nhẹ tênh như một ngày không deadline.' }),
-  dream: normalizeDesign({ background: '#ddd0fa', ink: '#63408e', accent: '#fff4ad', pattern: 'sparkles', sticker: 'butterfly', title: 'LẠC VÀO MỘT GIẤC MƠ', footer: 'Giữ lại những điều lung linh.' })
+  cream: normalizeDesign({"background": "#d5efcf", "ink": "#24574e", "accent": "#8dbb8d", "pattern": "grid", "sticker": "cat", "title": "NHẬT KÝ BẠC HÀ", "footer": "Nhặt một ngày vui, ép vào trang nhỏ."}),
+  blue: normalizeDesign({"background": "#16214d", "ink": "#fff4cb", "accent": "#e3baff", "pattern": "sparkles", "sticker": "star", "title": "ĐÊM THIÊN HÀ", "footer": "Mình là một vì sao, theo cách riêng."}),
+  pink: normalizeDesign({"background": "#ffe5eb", "ink": "#92274d", "accent": "#ed9bb4", "pattern": "hearts", "sticker": "heart", "title": "TIỆM THƯ TÌNH", "footer": "Một chút thương, gửi vào đây nhé."}),
+  yellow: normalizeDesign({"background": "#fff1a8", "ink": "#704029", "accent": "#f4a0aa", "pattern": "confetti", "sticker": "bow", "title": "TIỆC SINH NHẬT", "footer": "Thêm tuổi mới, thêm những nụ cười."}),
+  film: normalizeDesign({"background": "#22222c", "ink": "#f7f4e8", "accent": "#aaa3c5", "pattern": "film", "sticker": "smile", "title": "BĂNG GHI HÌNH", "footer": "Bốn cảnh quay, một ngày đáng nhớ."}),
+  polaroid: normalizeDesign({"background": "#f8f5e9", "ink": "#243e66", "accent": "#bad1e8", "pattern": "stripes", "sticker": "cloud", "title": "BÁO TƯỜNG TUỔI TRẺ", "footer": "Tin mới: hôm nay mình rất vui!"}),
+  checker: normalizeDesign({"background": "#ff713d", "ink": "#281b35", "accent": "#ffdc38", "pattern": "checker", "sticker": "smile", "title": "TRUYỆN TRANH NỔI LOẠN", "footer": "Chuyện mình, mình vẽ tiếp."}),
+  scrapbook: normalizeDesign({"background": "#e4d1ae", "ink": "#574033", "accent": "#fff3d9", "pattern": "grid", "sticker": "butterfly", "title": "VÉ TÀU THANH XUÂN", "footer": "Vé một chiều về miền kỷ niệm."}),
+  birthday: normalizeDesign({"background": "#f7b6cc", "ink": "#8c294e", "accent": "#fff3c8", "pattern": "confetti", "sticker": "cherry", "title": "BÁNH KEM DÂU", "footer": "Ước một điều rồi cười thật tươi."}),
+  together: normalizeDesign({"background": "#d3e9ef", "ink": "#31547a", "accent": "#faf1c2", "pattern": "doodles", "sticker": "bow", "title": "BẢN NHẠC CỦA MÌNH", "footer": "Bật bài mình thích, giữ người mình thương."}),
+  coquette: normalizeDesign({"background": "#f9cfe1", "ink": "#833c65", "accent": "#fff6ec", "pattern": "lace", "sticker": "bow", "title": "NƠ HỒNG CÔNG CHÚA", "footer": "Điệu một chút, yêu đời một chút."}),
+  neon: normalizeDesign({"background": "#261340", "ink": "#f5eeff", "accent": "#baff66", "pattern": "sparkles", "sticker": "star", "title": "SÂN KHẤU ÁNH SAO", "footer": "Đêm nay, cứ sáng theo cách mình."}),
+  cherry: normalizeDesign({"background": "#ad173d", "ink": "#fff0ce", "accent": "#efaeae", "pattern": "hearts", "sticker": "heart", "title": "TIM ĐỎ ĐIỆN ẢNH", "footer": "Thước phim này có bạn ở trong."}),
+  cats: normalizeDesign({"background": "#d1ead6", "ink": "#285e46", "accent": "#87ba89", "pattern": "doodles", "sticker": "cat", "title": "CÂU LẠC BỘ MÈO", "footer": "Meo một tiếng, vui cả ngày."}),
+  sky: normalizeDesign({"background": "#a0e0f1", "ink": "#135b87", "accent": "#fff5b9", "pattern": "waves", "sticker": "cloud", "title": "BIỂN XANH GỌI TÊN", "footer": "Bỏ túi một mùa hè lấp lánh."}),
+  dream: normalizeDesign({"background": "#d7c5f3", "ink": "#63418d", "accent": "#fff3ad", "pattern": "sparkles", "sticker": "butterfly", "title": "VƯỜN MƠ TÍM", "footer": "Hẹn gặp nhau ở một giấc mơ đẹp."})
 };
 const stickers = {};
 let selectedSlot = 0;
 let frame = 'cream';
 let activeDesign = frames.cream;
-let selectedFrameLabel = 'Giấy kem';
+let selectedFrameLabel = 'Nhật ký bạc hà';
 let communityFrameImage = null;
 let photoExpiresAt = 0;
 let photoExpiryTimer;
@@ -137,7 +137,12 @@ function renderStrip(target = ctx, resolution = 1) {
     target.drawImage(communityFrameImage, 0, 0, 720, 2180);
   } else drawFrameTemplate(target, activeDesign, frameAssets());
   photos.forEach((photo, index) => {
-    if (photo) drawPhoto(photo, 40, 100 + index * 470, 640, 450, target, resolution);
+    if (photo) {
+      target.save();
+      if (!communityFrameImage) { photoWindow(target, activeDesign, index); target.clip(); }
+      drawPhoto(photo, 40, 100 + index * 470, 640, 450, target, resolution);
+      target.restore();
+    }
   });
   drawFrameFooter(target, activeDesign, frameAssets(), $('#caption').value.trim() || activeDesign.footer, new Date().toLocaleDateString('vi-VN'));
 }

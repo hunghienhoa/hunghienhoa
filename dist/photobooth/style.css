@@ -19,3 +19,7 @@
 
 
 .edit-reminder{background:var(--yellow);border:1px solid var(--blue);padding:16px;margin:16px 0;line-height:1.6;font-size:14px}.edit-reminder p{margin:8px 0}.edit-reminder a{font-weight:800;text-underline-offset:4px}
+
+.frame-option>i{width:76px;height:230px}.frame-option{min-height:280px;padding:12px 8px;gap:12px}.frame-options{grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:12px}@media(max-width:480px){.frame-options{grid-template-columns:repeat(2,minmax(0,1fr))}.frame-option{font-size:11px}}
+
+.editor-grid{grid-template-columns:1fr}.editor-details{max-width:650px;width:100%}.frame-option>i{width:90px;height:273px}.frame-option{min-height:325px}

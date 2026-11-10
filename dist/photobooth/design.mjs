@@ -25,6 +25,56 @@ export function photoSessionExpired(expiresAt, now) {
   return Number.isFinite(expiresAt) && expiresAt > 0 && now >= expiresAt;
 }
 
+// One path for the preview, personal photo clipping and blank contribution poster.
+export function photoWindow(ctx, design, index) {
+  const y = 100 + index * 470;
+  ctx.beginPath();
+  if (design.pattern === 'hearts' && index % 2 === 0) {
+    ctx.moveTo(360, y + 445);
+    ctx.bezierCurveTo(-170, y + 150, 110, y - 120, 360, y + 75);
+    ctx.bezierCurveTo(610, y - 120, 890, y + 150, 360, y + 445);
+  } else if (design.pattern === 'waves' || design.pattern === 'sparkles') {
+    ctx.ellipse(360, y + 225, 315, 220, 0, 0, Math.PI * 2);
+  } else if (design.pattern === 'doodles' || design.pattern === 'lace') {
+    ctx.roundRect(40, y, 640, 450, [80, 25, 80, 25]);
+  } else {
+    ctx.rect(40, y, 640, 450);
+  }
+  ctx.closePath();
+}
+
+function frameCollage(ctx, design, assets) {
+  ctx.save();
+  const labels = design.pattern === 'film' ? ['REC · 01', 'CHUYỆN MÌNH', 'MỘT THƯỚC PHIM', 'CẤT GIỮ HÔM NAY']
+    : design.pattern === 'waves' ? ['BIỂN GỌI', 'NẮNG VÀ GIÓ', 'MÌNH ĐI CHƠI', 'MÙA HÈ TRONG TÚI']
+    : design.pattern === 'hearts' || design.pattern === 'lace' ? ['XINH THEO CÁCH MÌNH', 'MỘT CHÚT THƯƠNG', 'GỬI BẠN MỘT TIM', 'HÔM NAY ĐÁNG YÊU']
+    : ['MỘT NGÀY RẤT MÌNH', 'GIỮ LẠI NỤ CƯỜI', 'CHUYỆN NHỎ · VUI TO', 'KỶ NIỆM ĐANG LỚN'];
+  for (let i = 0; i < 4; i++) {
+    const y = 100 + i * 470;
+    ctx.save();
+    ctx.translate(i % 2 ? 455 : 180, y + 438);
+    ctx.rotate((i % 2 ? 1 : -1) * .06);
+    ctx.fillStyle = design.accent;
+    ctx.fillRect(-145, -23, 290, 42);
+    ctx.strokeStyle = design.ink; ctx.lineWidth = 2;
+    ctx.strokeRect(-145, -23, 290, 42);
+    ctx.fillStyle = '#242338'; ctx.font = '800 15px "Be Vietnam Pro", sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(labels[i], 0, 3, 270);
+    ctx.restore();
+    const sticker = assets[design.sticker];
+    if (sticker) {
+      ctx.save(); ctx.translate(i % 2 ? 60 : 660, y + 35); ctx.rotate(i % 2 ? -.22 : .22);
+      ctx.drawImage(sticker, -44, -44, 88, 88); ctx.restore();
+    }
+    ctx.strokeStyle = design.accent; ctx.lineWidth = 4;
+    for (const [x, dy] of [[20, 170], [700, 320]]) {
+      ctx.beginPath(); ctx.moveTo(x - 12, y + dy); ctx.lineTo(x + 12, y + dy);
+      ctx.moveTo(x, y + dy - 16); ctx.lineTo(x, y + dy + 16); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
 export function drawFrameFooter(ctx, rawDesign, assets = {}, caption, date = '') {
   const design = normalizeDesign(rawDesign);
   ctx.fillStyle = design.background;
@@ -47,6 +97,7 @@ export function drawFrameFooter(ctx, rawDesign, assets = {}, caption, date = '')
       ctx.drawImage(sticker, 682, y - 30, 36, 36);
     }
   }
+  frameCollage(ctx, design, assets);
 }
 
 // This renderer receives design and static stickers only; it cannot read session photos.
@@ -102,7 +153,8 @@ export function drawFrameTemplate(ctx, rawDesign, assets = {}) {
   for (let index = 0; index < 4; index++) {
     const y = 100 + index * 470;
     ctx.fillStyle = '#eee7df';
-    ctx.fillRect(40, y, 640, 450);
+    photoWindow(ctx, design, index);
+    ctx.fill();
     ctx.fillStyle = design.ink;
     ctx.globalAlpha = .4;
     ctx.font = '800 74px "Be Vietnam Pro", sans-serif';
@@ -110,7 +162,8 @@ export function drawFrameTemplate(ctx, rawDesign, assets = {}) {
     ctx.globalAlpha = 1;
     ctx.strokeStyle = design.ink;
     ctx.lineWidth = 2;
-    ctx.strokeRect(40, y, 640, 450);
+    photoWindow(ctx, design, index);
+    ctx.stroke();
   }
   drawFrameFooter(ctx, design, assets);
 }

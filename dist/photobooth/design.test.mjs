@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate } from './design.mjs';
+import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, photoWindow } from './design.mjs';
 import { design as validateSubmissionDesign } from '../../server/validation.mjs';
 
 assert.deepEqual(normalizeDesign({}), DEFAULT_DESIGN);
@@ -16,7 +16,7 @@ const fonts = [];
 const ctx = new Proxy({}, { get: (_, method) => method === 'measureText' ? () => ({ width: 100 }) : (...args) => calls.push([method, ...args]), set: (_, name, value) => { if (name === 'font') fonts.push(value); return true; } });
 drawFrameTemplate(ctx, DEFAULT_DESIGN);
 assert.equal(calls.filter(call => call[0] === 'drawImage').length, 0);
-assert.deepEqual(calls.filter(call => call[0] === 'fillRect' && call[3] === 640 && call[4] === 450).map(call => call[2]), [100, 570, 1040, 1510]);
+assert.deepEqual(calls.filter(call => call[0] === 'rect' && call[3] === 640 && call[4] === 450).map(call => call[2]), [100,100,570,570,1040,1040,1510,1510]);
 assert.ok(calls.some(call => call[0] === 'fillText' && call[1] === '04'));
 assert.ok(calls.every(call => !call.includes('private')));
 assert.ok(fonts.some(font => font.includes('"Be Vietnam Pro"')));
@@ -35,5 +35,11 @@ for (const sticker of ['bow','cat','cherry','cloud','butterfly','smile']) {
   const sample = normalizeDesign({sticker});
   assert.equal(validateSubmissionDesign(sample).sticker,sticker);
   calls.length = 0; drawFrameTemplate(ctx, sample, {[sticker]: {id:sticker}});
-  assert.equal(calls.filter(call => call[0] === 'drawImage').length,8);
+  assert.equal(calls.filter(call => call[0] === 'drawImage').length,12);
+}
+for (const [pattern, method] of [['hearts','bezierCurveTo'],['waves','ellipse'],['sparkles','ellipse'],['doodles','roundRect'],['grid','rect']]) {
+  calls.length=0; photoWindow(ctx, normalizeDesign({pattern}),0);
+  assert.ok(calls.some(call=>call[0]===method));
+  assert.equal(calls[0][0],'beginPath');
+  assert.equal(calls.at(-1)[0],'closePath');
 }

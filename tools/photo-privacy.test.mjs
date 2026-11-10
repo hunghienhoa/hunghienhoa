@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import { coverCrop, applyFilterPixels } from '../dist/photobooth/core.mjs';
-import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter } from '../dist/photobooth/design.mjs';
+import { DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow } from '../dist/photobooth/design.mjs';
 
 // Exercise the real handlers with synthetic photos; no browser, camera or user data.
 const events = {}, requests = [], elements = new Map(), timers = new Map();
@@ -72,7 +72,7 @@ const context = vm.createContext({
     if (options.method === 'POST') { requests.push(JSON.parse(options.body)); return { ok: true, json: async () => ({ id: 'qa', status: 'pending', expiresAt: clock + PHOTO_SESSION_MS }) }; }
     return { ok: true, json: async () => ({ frames: [] }) };
   },
-  coverCrop, applyFilterPixels, DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter
+  coverCrop, applyFilterPixels, DEFAULT_DESIGN, PHOTO_SESSION_MS, normalizeDesign, photoSessionExpired, drawFrameTemplate, drawFrameFooter, photoWindow
 });
 const script = fs.readFileSync(new URL('../dist/photobooth/app.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '');
 new vm.Script(script).runInContext(context);
@@ -96,6 +96,8 @@ Canvas.prototype.toDataURL = () => 'data:,';
 assert.throws(()=>vm.runInContext('photoFromImage({width:640,height:480})',context),/Chưa xử lý được ảnh/);
 Canvas.prototype.toDataURL = originalEncode;
 assert.equal(frameButtons.length, 16);
+assert.equal(vm.runInContext('new Set(Object.values(frames).map(frame => frame.title)).size', context), 16);
+assert.ok(html.includes('Nhật ký bạc hà') && html.includes('Biển xanh gọi tên'));
 for (const button of frameButtons) {
   button.listeners.click();
   assert.equal(button.attributes['aria-pressed'], 'true');
