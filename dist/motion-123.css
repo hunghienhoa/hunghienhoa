@@ -40,7 +40,7 @@
 .motion-event .event-hand-ok{width:92px;left:max(0px,calc(50% - 242px));top:59%;rotate:-14deg;transform-origin:70% 90%;animation:event-ok-wave 1.8s ease-in-out infinite}
 .motion-event .event-hand-peace{width:94px;right:max(0px,calc(50% - 242px));top:57%;rotate:15deg;transform-origin:35% 90%;animation:event-peace-wave 1.8s ease-in-out infinite}
 .motion-event .event-music{width:144px;left:calc(50% - 72px);top:79%;height:74px;color:#e2e7df;text-align:center;text-shadow:1px 2px var(--blue),-1px -1px #fff;transform-origin:50% -25px;animation:event-music-drop 3.6s ease-in-out infinite}
-.motion-event .event-music::after{content:'';position:absolute;left:calc(50% - 1px);top:-31px;width:2px;height:29px;background:repeating-linear-gradient(#adb4a5 0 3px,#fff9 3px 5px)}
+.motion-event .event-music::before{content:'';position:absolute;left:calc(50% - 1px);top:-31px;width:2px;height:29px;background:repeating-linear-gradient(#adb4a5 0 3px,#fff9 3px 5px)}
 .motion-event .event-music>span{font-size:66px;line-height:1;display:inline-block;rotate:-20deg}
 .motion-event .event-music>b{font-size:60px;line-height:1;display:inline-block;rotate:12deg;margin-left:7px}
 .motion-event .event-music>small{font-size:7px;display:block;letter-spacing:1px;color:var(--blue);text-shadow:none}

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
 const folders=['dist','dist/blog','dist/photobooth'];
 for(const name of ['sticker-atlas','sticker-atlas-2','sticker-atlas-3']){
 const reference=fs.readFileSync(`dist/assets/${name}.webp`);
@@ -17,12 +18,12 @@ for(const folder of folders){
 const owners=new Map();
 const pages=['dist/index.html','dist/blog/index.html','dist/photobooth/index.html','dist/photobooth/shoot.html',...['chinh-sach-rieng-tu','dieu-khoan-su-dung','bao-cao-ban-quyen','cookie-va-quang-cao'].map(name=>`dist/${name}.html`)];
 for(const page of pages){
- const html=fs.readFileSync(page,'utf8');assert.ok(html.includes('decorative-stickers.css?v=3'));
+ const html=fs.readFileSync(page,'utf8');assert.ok(html.includes('decorative-stickers.css?v=4'));
  for(const id of new Set([...html.matchAll(/\bsticker-(\d{2})\b/g)].map(m=>m[1]))){assert.ok(!owners.has(id),`Motif ${id} is repeated across ${page} and ${owners.get(id)}`);owners.set(id,page);}
  for(const tag of html.matchAll(/<span\b[^>]*class="[^"]*art-sticker[^>]*>/g))assert.ok(tag[0].includes('aria-hidden="true"'));
  for(const match of html.matchAll(/\bsticker-(\d{2})\b/g))used.add(match[1]);
 }
-assert.deepEqual([...used].sort(),Array.from({length:48},(_,i)=>String(i+1).padStart(2,'0')),'All 48 motifs appear across public artwork');
+for(let i=1;i<=48;i++)assert.ok(css.includes(`.sticker-${String(i).padStart(2,'0')}{`),'Keep all48 motifs available without forcing them into original cards');
 for(const id of used)assert.ok(css.includes(`.sticker-${id}{`),`Sprite ${id} has a cell mapping`);
 assert.ok(css.includes('pointer-events:none')&&css.includes('prefers-reduced-motion:reduce'));
 for(const file of ['dist/admin/index.html'])assert.ok(!fs.readFileSync(file,'utf8').includes('decorative-stickers.css'));
@@ -36,3 +37,7 @@ for(const marker of ['sticker-09 about-star','sticker-33 contact-art','sticker-3
 assert.ok(fs.readFileSync('dist/blog/index.html','utf8').includes('sticker-43 contact-card-art'));
 assert.ok(fs.readFileSync('dist/photobooth/index.html','utf8').includes('sticker-36 contact-card-art'));
 assert.ok(fs.readFileSync('dist/photobooth/shoot.html','utf8').includes('sticker-07 camera-empty-art'));
+
+const originalWork=main.slice(main.indexOf('<section class="work section"'),main.indexOf('<section class="about section"')).replace(/\r\n/g,'\n');
+assert.equal(createHash('sha256').update(originalWork).digest('hex'),'78874d4c421e884932d4bac7612835496ec65a32c90bf75e6b717e7497cdd12a','Six-card section stays identical to the original before sticker changes');
+assert.ok(!originalWork.includes('art-sticker'));

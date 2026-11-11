@@ -83,7 +83,7 @@
 @media(max-width:760px){.motion-event .event-music.art-sticker{width:60px;height:60px}.motion-pack .pack-ribbon .art-sticker{width:21px;height:21px;flex-basis:21px}.marquee .art-sticker,.ribbon-group>.art-sticker,.ticker-group>.art-sticker{width:34px;height:34px;flex-basis:34px}.marquee .sticker-pair{gap:8px}}
 @media(prefers-reduced-motion:reduce){.art-sticker,.art-sticker::before{animation:none!important}}
 
-.project-art .art-number{white-space:nowrap}
+
 
 .header-art{width:38px;height:38px;margin-left:12px}.policy-art{width:36px;height:36px;margin:8px auto 0}
 
