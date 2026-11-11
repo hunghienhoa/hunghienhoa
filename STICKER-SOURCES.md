@@ -114,3 +114,5 @@ Phân bố xuyên suốt: hoa hồng ở giới thiệu chủ trang; hộp nhỏ
 Yêu cầu cuối cùng: sáu thẻ 01–06 được khôi phục nguyên phần HTML và CSS chuyển động trước bộ sticker (bb93421). Không đặt bất kỳ art-sticker mới nào vào sáu thẻ, kể cả bản sao trong cửa sổ chi tiết. Bộ 48 hình vẫn giữ như tài sản sẵn có; chỉ dùng các hình phù hợp ở những phần khác, không ép mọi hình phải xuất hiện. Các mô tả phân bố trong sáu thẻ ở trên là lịch sử đã được thay thế bởi quy tắc này.
 
 Theo yêu cầu tiếp theo, chỉ keyframe chuyển động của 6 thẻ được chỉnh theo GIF gốc: 01 vòng 4,96 giây; 02–06 vòng 3,60 giây, riêng các chuyển động đối xứng lặp hai nhịp 1,80 giây. Toàn bộ HTML/hình/chữ của 6 thẻ vẫn khớp bản gốc. Đã quan sát frame đầu,15%,30%,50%,70%,90%; CSS là bản dựng lại quỹ đạo và nhịp, không phát nguyên GIF và không cam kết trùng từng pixel.
+
+Bản thử nhịp GIF fc85091 bị chủ trang từ chối vì chuyển động chưa đúng. Đã gỡ keyframe thử nghiệm (xoay dải quá mức, kéo giãn cờ và nhịp đĩa); trả về chuyển động ổn định c926cc7. Không coi bản này là tái hiện giống GIF. Cần chốt giữ hình thẻ hay dùng animation nguyên bản trước khi sửa tiếp.
