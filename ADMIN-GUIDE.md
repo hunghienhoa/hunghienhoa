@@ -17,18 +17,22 @@ Số liệu chỉ gồm ngày theo giờ Việt Nam, tên nhóm trang và số l
 Các gói GitHub Releases là backup mã nguồn/giao diện, không bao gồm số liệu thống kê, database hay nội dung động Supabase. Releases có tên “Portfolio Hùng Hiền Hòa V.xxx”; số thứ tự tự tăng theo lần chạy workflow lưu bản web.
 
 
-## Dung lượng & hạn mức
+## Dung lượng & hạn mức — chỉ dữ liệu tự động
 
-Tab 06 theo dõi Supabase, GitHub và Cloudflare Free; cảnh báo 80% và 100%, hiển thị lượng còn lại. Số liệu chưa nhập là chưa biết, không được coi là 0. Quota tham khảo tài liệu chính thức ngày 11/11/2026, dùng chung tài khoản/tổ chức trừ database Supabase tính theo dự án. Tab không tự xóa dữ liệu, nâng gói hay chặn dịch vụ.
+Tab 06 chỉ đọc số liệu từ API, không có biểu mẫu nhập tay và không nhận PUT. Dữ liệu nhập tay của phiên bản cũ không được đọc lại. Không tự xóa dữ liệu, nâng gói hoặc chặn dịch vụ.
 
-- Nhấn **Mở dashboard**, xem mức dùng, mở **Cập nhật từ dashboard** ở chỉ số tương ứng rồi lưu. Hạn mức ngày của Cloudflare dùng UTC, reset lúc 07:00 Việt Nam. Số liệu của ngày cũ không dùng cho ngày mới.
-- Với chỉ số tháng, nhập đúng ngày đầu/cuối kỳ theo dashboard từng dịch vụ (ngày cuối tính cả ngày). Không mặc định mọi tài khoản reset ngày 1. Qua kỳ, số liệu cũ được đánh dấu hết kỳ và cần nhập lại; dung lượng đang lưu không tự reset.
-- Nút **Làm mới** tải snapshot đã lưu, không biến số nhập tay thành đo tự động. Snapshot hơn 24 giờ có nhắc cập nhật. Database Supabase, dung lượng repo/artifact GitHub và request Worker theo ngày tự lấy từ API khi mở/làm mới tab. Quota billing còn lại vẫn nhập từ dashboard; số nhập tay không tự tăng theo lưu lượng. Hạn mức GitHub compute là 12 USD/tháng được bao gồm, không phải 2.000 phút cố định. GitHub artifact storage hiển thị dung lượng tại thời điểm nhập; cách tính billing có thể dùng mức trung bình theo giờ.
-- Database Supabase đo tự động qua RPC admin_database_usage, SECURITY INVOKER, chỉ cho tài khoản admin có phiên hợp lệ; không cần Management token. Chỉ đo pg_database_size, không đọc bản ghi cá nhân. GitHub đọc hai API công khai của repo hunghienhoa/hunghienhoa, không dùng token GitHub cá nhân. Dung lượng repo/artifact hiển thị riêng, không trừ vào quota tổng toàn tài khoản. Nếu hơn 100 artifacts thì không tổng hợp danh sách thiếu mà báo API chưa trả đủ dữ liệu.
-- Cloud lưu tối đa một snapshot mỗi chỉ số trong Durable Object SQLite hiện có, migration Supabase admin_database_usage chỉ tạo hàm đo database, không thay đổi bảng hay dữ liệu. Bản cục bộ lưu trong database SQLite riêng. Đây không phải lịch sử billing. API GET/PUT /api/admin/usage yêu cầu admin; PUT cục bộ còn kiểm tra CSRF/Origin. Snapshot không nằm trong nội dung web công khai hay browser storage.
+- **Supabase**: database và Storage của dự án qua RPC bảo vệ quyền admin. Database so với quota riêng dự án; Storage của dự án hiển thị riêng, không coi là tổng Storage tổ chức. Quota Storage tổ chức, egress, MAU cần quyền Management Usage API; khi chưa kết nối thì báo chưa lấy được, không dùng số ước đoán hay 0.
+- **GitHub**: dung lượng mã nguồn, cache và artifact của repo công khai qua REST API, không dùng token cá nhân. Artifacts được phân trang; không hiển thị tổng thiếu trang. Quota compute, artifact, LFS toàn tài khoản cần quyền Billing API; thiếu quyền thì chỉ báo chưa lấy được tự động. Không coi số repo là số toàn tài khoản.
+- **Cloudflare**: requests Worker ngày/tháng, requests Durable Objects, dòng đọc/ghi SQLite và dung lượng SQLite lấy từ GraphQL Analytics toàn tài khoản. Ngày và tháng dương lịch theo UTC; ngày mới lúc 07:00 Việt Nam. Dung lượng SQLite là tổng đỉnh từng namespace trong ngày, không phải billing chính xác từng thời điểm; không có mẫu thì không ghi 0.
 
-Nguồn: [Supabase](https://supabase.com/docs/guides/platform/billing-on-supabase), [GitHub](https://docs.github.com/en/billing/reference/product-usage-included), [Workers](https://developers.cloudflare.com/workers/platform/pricing/), [Durable Objects](https://developers.cloudflare.com/durable-objects/platform/pricing/).
+Tab tự làm mới mỗi 5 phút khi đang mở và trình duyệt đang hiển thị. Nút Làm mới cũng chỉ tải API. Lỗi API hoặc thiếu quyền không được biến thành 0, và số nhập tay cũ không được dùng để lấp chỗ trống. Chỉ số chưa có API nằm trong nhóm thu gọn riêng. Cảnh báo từ 80% và 100% chỉ tính khi có số liệu.
 
-Kiểm tra: npm run check; node tools/browser-usage-audit.mjs (Chrome/Playwright đã cài, chỉ dùng database thử tạm thời).
+Trên điện thoại, chọn Supabase/GitHub/Cloudflare bằng ba nút cố định phía trên để xem từng dịch vụ; phần giải thích và chỉ số chưa có quyền API mặc định thu gọn. Trên máy tính vẫn thấy đủ ba dịch vụ, các số liệu xếp hai cột.
 
-Kết nối Cloudflare: secret CLOUDFLARE_USAGE_TOKEN chỉ có Account Analytics Read trên đúng tài khoản, hết hạn 11/11/2027. Giữ bindings.secret() trong cloudflare.config.ts khi deploy. Số request Worker hôm nay lấy từ GraphQL Analytics toàn tài khoản theo UTC, có thể trễ/lấy mẫu; không giả lập tổng tháng từ số ngày. Không lưu secret vào mã nguồn.
+Database RPC dùng SECURITY INVOKER. Tổng Storage cần đọc độc lập với RLS bucket nên helper SECURITY DEFINER nằm trong schema usage_private không được expose Data API, chỉ trả một số tổng, kiểm tra auth.uid và email admin, không cấp execute cho PUBLIC/anon. RPC public chỉ là wrapper SECURITY INVOKER. Cả hai RPC được kiểm tra quyền admin/non-admin.
+
+Cloudflare dùng secret CLOUDFLARE_USAGE_TOKEN, chỉ Account Analytics Read của đúng tài khoản, hết hạn 11/11/2027. Giữ bindings.secret() trong cloudflare.config.ts khi deploy. Không ghi secret ra mã nguồn hoặc log. Hạn mức gói Free tham khảo tài liệu ngày 11/11/2026; dashboard nhà cung cấp là nguồn đối chiếu chính thức.
+
+Nguồn: [Supabase](https://supabase.com/docs/guides/platform/billing-on-supabase), [GitHub](https://docs.github.com/en/billing/reference/product-usage-included), [Workers](https://developers.cloudflare.com/workers/platform/pricing/), [Durable Objects](https://developers.cloudflare.com/durable-objects/observability/metrics-and-analytics/).
+
+Kiểm tra: npm run check; node tools/browser-usage-audit.mjs. Bộ kiểm tra browser dùng tài khoản cục bộ và API fixture tự động, không cần mật khẩu production.

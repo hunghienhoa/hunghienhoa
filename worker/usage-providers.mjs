@@ -6,45 +6,72 @@ async function readJson(url,options={}) {
   return response.json();
 }
 function nonnegative(value) {
-  if((typeof value!=='number' && typeof value!=='string') || value==='') throw new Error('Số liệu chưa hợp lệ');
+  if((typeof value!=='number' && typeof value!=='string') || (typeof value==='string' && !value.trim())) throw new Error('Số liệu chưa hợp lệ');
   const number=Number(value);
   if(!Number.isFinite(number) || number<0) throw new Error('Số liệu chưa hợp lệ');
   return number;
 }
+export const dailyQuery='query($account:string!,$start:Time!,$end:Time!){viewer{accounts(filter:{accountTag:$account}){workersInvocationsAdaptive(limit:1,filter:{datetime_geq:$start,datetime_leq:$end}){sum{requests}} durableObjectsInvocationsAdaptiveGroups(limit:1,filter:{datetime_geq:$start,datetime_leq:$end}){sum{requests}} durableObjectsPeriodicGroups(limit:1,filter:{datetime_geq:$start,datetime_leq:$end}){sum{rowsRead rowsWritten}} durableObjectsSqlStorageGroups(limit:1000,filter:{datetime_geq:$start,datetime_leq:$end}){dimensions{namespaceId} max{storedBytes}}}}}';
+const monthQuery='query($account:string!,$start:Time!,$end:Time!){viewer{accounts(filter:{accountTag:$account}){workersInvocationsAdaptive(limit:1,filter:{datetime_geq:$start,datetime_leq:$end}){sum{requests}}}}}';
 export async function providerUsage(env,token,now=Date.now()) {
   const entries=[],connections={};
-  const entry=(id,used)=>entries.push({...usageEntry({id,used},now),source:'api'});
+  const entry=(id,used)=>entries.push(usageEntry({id,used},now));
   await Promise.all([
     (async()=>{
-      try {
-        const bytes=await readJson(new URL('/rest/v1/rpc/admin_database_usage',env.SUPABASE_URL),{method:'POST',headers:{apikey:env.SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:'{}'});
-        entry('sb_database',nonnegative(bytes)/1024/1024);
-        connections.supabase='Đã kết nối: database dự án đo tự động. Storage, băng thông và MAU cấp tổ chức đối chiếu dashboard. MB database = 1.024² byte.';
-      } catch {connections.supabase='Chưa đọc được database tự động; kiểm tra phiên admin và migration. Các số nhập từ dashboard vẫn được giữ.';}
+      const results=await Promise.allSettled([
+        ['admin_database_usage','sb_database',1024**2],['admin_storage_usage','sb_project_storage',1024**3]
+      ].map(async([rpc,id,divisor])=>{
+        const bytes=await readJson(new URL('/rest/v1/rpc/'+rpc,env.SUPABASE_URL),{method:'POST',headers:{apikey:env.SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:'{}'});
+        entry(id,nonnegative(bytes)/divisor);
+      }));
+      connections.supabase=`${results.filter(row=>row.status==='fulfilled').length}/2 chỉ số dự án đã kết nối. Quota chung tổ chức cần API usage riêng. MB = 1.024² byte; GB = 1.024³ byte. Không thay số thiếu bằng 0.`;
     })(),
     (async()=>{
       const headers={'User-Agent':'hunghienhoa-admin-usage',Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
-      let count=0;
       const results=await Promise.allSettled([
-        readJson('https://api.github.com/repos/hunghienhoa/hunghienhoa',{headers}).then(data=>{entry('gh_repo',nonnegative(data.size)/1024);count++;}),
-        readJson('https://api.github.com/repos/hunghienhoa/hunghienhoa/actions/artifacts?per_page=100',{headers}).then(data=>{
-          // shortcut: aggregate at most 100 artifacts; use dashboard when the repository grows beyond one page.
-          if(!Array.isArray(data.artifacts) || !Number.isSafeInteger(data.total_count) || data.total_count!==data.artifacts.length) throw new Error('Danh sách artifacts chưa đầy đủ');
-          entry('gh_repo_artifacts',data.artifacts.filter(row=>!row.expired).reduce((sum,row)=>sum+nonnegative(row.size_in_bytes),0)/1024/1024);count++;
-        })
+        readJson('https://api.github.com/repos/hunghienhoa/hunghienhoa',{headers}).then(data=>entry('gh_repo',nonnegative(data.size)/1024)),
+        readJson('https://api.github.com/repos/hunghienhoa/hunghienhoa/actions/cache/usage',{headers}).then(data=>entry('gh_cache',nonnegative(data.active_caches_size_in_bytes)/1024**2)),
+        (async()=>{
+          let total=0,expectedCount;
+          // shortcut: bound pagination to 10 pages; report unavailable rather than a partial total beyond 1,000 artifacts.
+          for(let page=1;page<=10;page++) {
+            const data=await readJson(`https://api.github.com/repos/hunghienhoa/hunghienhoa/actions/artifacts?per_page=100&page=${page}`,{headers});
+            if(!Array.isArray(data.artifacts) || !Number.isSafeInteger(data.total_count) || data.total_count>1000) throw new Error('Danh sách artifacts chưa đầy đủ');
+            if(expectedCount===undefined) expectedCount=data.total_count;
+            if(expectedCount!==data.total_count || data.artifacts.length!==Math.min(100,Math.max(0,expectedCount-(page-1)*100))) throw new Error('Danh sách artifacts thay đổi hoặc thiếu trang');
+            total+=data.artifacts.filter(row=>!row.expired).reduce((sum,row)=>sum+nonnegative(row.size_in_bytes),0);
+            if(page*100>=data.total_count) {entry('gh_repo_artifacts',total/1024**2);return;}
+          }
+          throw new Error('Danh sách artifacts chưa đầy đủ');
+        })()
       ]);
-      connections.github=`Tự động ${count}/2 chỉ số của repo công khai. ${results.some(result=>result.status==='rejected')?'API chưa trả đủ dữ liệu hoặc đã giới hạn truy cập. ':''}Quota billing toàn tài khoản nhập từ dashboard; số liệu riêng repo không được coi là tổng toàn tài khoản.`;
+      connections.github=`${results.filter(row=>row.status==='fulfilled').length}/3 chỉ số repo đã kết nối. Quota billing dùng chung tài khoản cần quyền API billing riêng; không quy số liệu repo thành tổng tài khoản.`;
     })(),
     (async()=>{
-      if(!env.CLOUDFLARE_USAGE_TOKEN) {connections.cloudflare='Chưa cấu hình token analytics; có thể cập nhật từ dashboard.';return;}
-      try {
-        const query='query($account: string!, $start: Time!, $end: Time!){viewer{accounts(filter:{accountTag:$account}){workersInvocationsAdaptive(limit:1,filter:{datetime_geq:$start,datetime_leq:$end}){sum{requests}}}}}';
-        const data=await readJson('https://api.cloudflare.com/client/v4/graphql',{method:'POST',headers:{Authorization:`Bearer ${env.CLOUDFLARE_USAGE_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify({query,variables:{account:'78e6131404ce4500b92bc2362e8ebbe5',start:utcDay(now)+'T00:00:00Z',end:new Date(now).toISOString()}})});
+      if(!env.CLOUDFLARE_USAGE_TOKEN) {connections.cloudflare='Chưa kết nối token analytics chỉ đọc.';return;}
+      const query=async(text,start)=>{
+        const data=await readJson('https://api.cloudflare.com/client/v4/graphql',{method:'POST',headers:{Authorization:`Bearer ${env.CLOUDFLARE_USAGE_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify({query:text,variables:{account:'78e6131404ce4500b92bc2362e8ebbe5',start,end:new Date(now).toISOString()}})});
         const account=data?.data?.viewer?.accounts?.[0];
-        if(data.errors?.length || !Array.isArray(account?.workersInvocationsAdaptive)) throw new Error('Analytics chưa đầy đủ');
-        entry('cf_requests',account.workersInvocationsAdaptive.reduce((total,row)=>total+nonnegative(row?.sum?.requests),0));
-        connections.cloudflare='Đã kết nối: request Worker toàn tài khoản hôm nay (UTC), theo GraphQL Analytics; có thể trễ hoặc lấy mẫu. Tổng tháng và Durable Objects đối chiếu dashboard.';
-      } catch {connections.cloudflare='Chưa đọc được analytics; kiểm tra token chỉ đọc, thời hạn hoặc giới hạn API. Số nhập từ dashboard vẫn được giữ.';}
+        if(data.errors?.length || !account) throw new Error('Analytics chưa đầy đủ');
+        return account;
+      };
+      const sum=(account,dataset,key)=>{
+        if(!Array.isArray(account[dataset])) throw new Error('Thiếu dataset');
+        return account[dataset].reduce((total,row)=>total+nonnegative(row?.sum?.[key]),0);
+      };
+      const results=await Promise.allSettled([
+        (async()=>{
+          const account=await query(dailyQuery,utcDay(now)+'T00:00:00Z');
+          entry('cf_requests',sum(account,'workersInvocationsAdaptive','requests'));
+          entry('cf_do_requests',sum(account,'durableObjectsInvocationsAdaptiveGroups','requests'));
+          entry('cf_do_reads',sum(account,'durableObjectsPeriodicGroups','rowsRead'));
+          entry('cf_do_writes',sum(account,'durableObjectsPeriodicGroups','rowsWritten'));
+          const storage=account.durableObjectsSqlStorageGroups;
+          if(Array.isArray(storage) && storage.length>0 && storage.length<1000) entry('cf_do_storage',storage.reduce((total,row)=>total+nonnegative(row?.max?.storedBytes),0)/1024**3);
+        })(),
+        (async()=>{const account=await query(monthQuery,utcDay(now).slice(0,7)+'-01T00:00:00Z');entry('cf_month',sum(account,'workersInvocationsAdaptive','requests'));})()
+      ]);
+      connections.cloudflare=`${results.filter(row=>row.status==='fulfilled').length}/2 nhóm analytics đã kết nối. Toàn tài khoản, theo UTC; tháng dương lịch. SQLite là tổng đỉnh từng namespace trong ngày, không phải billing chính xác từng thời điểm. Analytics có thể trễ/lấy mẫu.`;
     })()
   ]);
   return {entries,connections};

@@ -7,7 +7,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { randomBytes, randomUUID, createHash, scrypt, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import { initVisits, recordVisit, visitSummary, pageForVisit } from './visits.mjs';
-import {initUsage,readUsage,saveUsage,usageReport} from './usage.mjs';
+import {usageReport} from './usage.mjs';
 import { adsenseHtml } from './adsense.mjs';
 import {agentRoute,pageContext,representation,markdown404,decorateHtml} from './agent-content.mjs';
 import { HOUR, fail, keys, text, password, defaultSite, siteSettings, submission, post, imageMime } from './validation.mjs';
@@ -46,7 +46,6 @@ export function createApp(options = {}) {
   const db = new DatabaseSync(path.join(dataDir, 'content.sqlite'));
   const visitSQL = (query, ...params) => db.prepare(query).all(...params);
   initVisits(visitSQL);
-  initUsage(visitSQL);
   db.exec(`PRAGMA journal_mode=DELETE; PRAGMA secure_delete=ON; PRAGMA busy_timeout=5000;
     CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS sessions(token_hash TEXT PRIMARY KEY,csrf TEXT NOT NULL,expires_at INTEGER NOT NULL);
@@ -226,8 +225,8 @@ export function createApp(options = {}) {
       if (route.startsWith('/api/admin/')) {
         const session = auth(req, req.method !== 'GET' && req.method !== 'HEAD');
         if (route === '/api/admin/analytics' && req.method === 'GET') return json(res, visitSummary(visitSQL, now()));
-        if (route === '/api/admin/usage' && req.method === 'GET') return json(res,{...usageReport(readUsage(visitSQL),now()),databaseNote:'Bản cục bộ dùng số liệu nhập từ dashboard, không đo database cloud.'});
-        if (route === '/api/admin/usage' && req.method === 'PUT') return json(res,saveUsage(visitSQL,await body(req),now()));
+        if (route === '/api/admin/usage' && req.method === 'GET') return json(res,{...usageReport([],now()),connections:{supabase:'Số liệu cloud tự động hiển thị trên admin.hunghienhoa.com.',github:'Số liệu cloud tự động hiển thị trên admin.hunghienhoa.com.',cloudflare:'Số liệu cloud tự động hiển thị trên admin.hunghienhoa.com.'}});
+        if (route === '/api/admin/usage' && req.method === 'PUT') return json(res,{error:'Số liệu chỉ cập nhật tự động từ API.'},405);
         if (req.method === 'POST' && route === '/api/admin/logout') {
           db.prepare('DELETE FROM sessions WHERE token_hash=?').run(session.token_hash);
           sessionCookie(res, '', 0);

@@ -1,5 +1,5 @@
 import {contributionDay} from '../server/contribution-limit.mjs';
-import {usageEntry,usageReport} from '../server/usage.mjs';
+import {usageReport} from '../server/usage.mjs';
 import {providerUsage} from './usage-providers.mjs';
 import { fail, post, siteSettings, submission, defaultSite, imageMime } from '../server/validation.mjs';
 import { pageForVisit } from '../server/visits.mjs';
@@ -206,20 +206,9 @@ async function adminApi(request, env, route) {
   if (!originAllowed(request)) fail(403, 'Nguồn gửi yêu cầu không được phép.');
   if (route === '/api/admin/logout' && request.method === 'POST') return json({ ok: true });
   if (route === '/api/admin/usage') {
-    const counter=env.VISITS.get(env.VISITS.idFromName('site'));
-    if (request.method==='GET') {
-      const response=await counter.fetch('https://counter/usage');
-      if (!response.ok) fail(503,'Chưa tải được số liệu dung lượng.');
-      const entries=await response.json(), live=await providerUsage(env,token);
-      for(const entry of live.entries) {const index=entries.findIndex(row=>row.id===entry.id);if(index>=0) entries.splice(index,1);entries.push(entry);}
-      return json({...usageReport(entries),connections:live.connections,databaseNote:'Số đo tự động được ghi rõ nguồn. Các quota billing chưa có API cần đối chiếu dashboard.'});
-    }
-    if (request.method==='PUT') {
-      const entry=usageEntry(await readJson(request));
-      const response=await counter.fetch(new Request('https://counter/usage',{method:'PUT',body:JSON.stringify({id:entry.id,used:entry.used,start:entry.start,end:entry.end})}));
-      if (!response.ok) fail(503,'Chưa lưu được số liệu dung lượng.');
-      return json(await response.json());
-    }
+    if (request.method!=='GET') return new Response(JSON.stringify({error:'Số liệu chỉ cập nhật tự động từ API.'}),{status:405,headers:{Allow:'GET','Content-Type':'application/json','Cache-Control':'no-store'}});
+    const live=await providerUsage(env,token);
+    return json({...usageReport(live.entries),connections:live.connections});
   }
   if (route === '/api/admin/site') {
     if (request.method === 'GET') {
