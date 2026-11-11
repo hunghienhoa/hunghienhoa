@@ -88,3 +88,6 @@
 .header-art{width:38px;height:38px;margin-left:12px}.policy-art{width:36px;height:36px;margin:8px auto 0}
 
 .guide-art{width:65px;height:65px}
+
+.contact-art{width:72px;height:72px;margin-left:auto}.contact-card-art{width:42px;height:42px;margin-bottom:12px}.feed-art{width:55px;height:55px;margin:0 auto 22px}.camera-empty-art{width:65px;height:65px;margin:0 auto 18px}
+@media(max-width:760px){.contact-art{width:52px;height:52px}.contact-card-art{width:34px;height:34px}.camera-empty-art{width:52px;height:52px}}

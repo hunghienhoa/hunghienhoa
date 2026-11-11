@@ -17,7 +17,7 @@ for(const folder of folders){
 const owners=new Map();
 const pages=['dist/index.html','dist/blog/index.html','dist/photobooth/index.html','dist/photobooth/shoot.html',...['chinh-sach-rieng-tu','dieu-khoan-su-dung','bao-cao-ban-quyen','cookie-va-quang-cao'].map(name=>`dist/${name}.html`)];
 for(const page of pages){
- const html=fs.readFileSync(page,'utf8');assert.ok(html.includes('decorative-stickers.css?v=2'));
+ const html=fs.readFileSync(page,'utf8');assert.ok(html.includes('decorative-stickers.css?v=3'));
  for(const id of new Set([...html.matchAll(/\bsticker-(\d{2})\b/g)].map(m=>m[1]))){assert.ok(!owners.has(id),`Motif ${id} is repeated across ${page} and ${owners.get(id)}`);owners.set(id,page);}
  for(const tag of html.matchAll(/<span\b[^>]*class="[^"]*art-sticker[^>]*>/g))assert.ok(tag[0].includes('aria-hidden="true"'));
  for(const match of html.matchAll(/\bsticker-(\d{2})\b/g))used.add(match[1]);
@@ -31,3 +31,8 @@ console.log('PASS: 48 transparent atlas cells, bounded payload, synced assets, d
 const main=fs.readFileSync('dist/index.html','utf8');
 for(const side of ['left','right'])assert.ok(main.includes(`class="illustration-wing illustration-wing-${side}" src="assets/illustration-wing.svg"`));
 assert.ok(!css.includes('.motion-illustration .illustration-wing'),'Do not override the original unfurl animation');
+
+for(const marker of ['sticker-09 about-star','sticker-33 contact-art','sticker-38 completed-star'])assert.ok(main.includes(marker));
+assert.ok(fs.readFileSync('dist/blog/index.html','utf8').includes('sticker-43 contact-card-art'));
+assert.ok(fs.readFileSync('dist/photobooth/index.html','utf8').includes('sticker-36 contact-card-art'));
+assert.ok(fs.readFileSync('dist/photobooth/shoot.html','utf8').includes('sticker-07 camera-empty-art'));

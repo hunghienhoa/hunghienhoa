@@ -108,3 +108,5 @@ Atlas dùng CSS sprite, không tải lại ảnh khi chuyển động. Bàn tay 
 ## Phân bố và giữ hiệu ứng gốc
 
 Nhóm sticker được phân riêng theo trang, không dùng một ô atlas trên nhiều trang: trang chính ưu tiên hộp, bàn tay, đồ vật âm nhạc và hoa văn; Blog dùng giấy, thẻ và đồ vật ghi chép; Hộp Ảnh dùng các nhân vật; phòng chụp chỉ có một dấu tim nhỏ ở đầu trang; mỗi trang chính sách có một nét hình học nhỏ ở chân trang. Những bản lặp trong dải chạy là hai nửa giống nhau để nối vòng liên tục. Bỏ rack ba đồ vật dưới ghi chú Blog và hai nhãn dân gian ở bộ khung Photobooth. Thẻ 06 dùng lại hai SVG cờ `illustration-wing.svg` với hiệu ứng bung cờ gốc; sticker tò he chuyển vào minh họa khung ảnh, không thay thế cờ. Trang quản trị không thêm trang trí.
+
+Phân bố xuyên suốt: hoa hồng ở giới thiệu chủ trang; hộp nhỏ ở lời mời liên hệ trang chính; CD ở thẻ dự án; bưu thiếp ở trạng thái danh sách bài viết; danh thiếp và phong bì ở phần liên hệ Blog/Hộp Ảnh; tim ở trạng thái máy ảnh đang tắt. Di chuyển các hình từ dải chạy và thẻ dự án, không nhân thêm chúng vào nhiều vùng. Các cảnh gốc, đặc biệt hai cờ thẻ 06, giữ nguyên.
