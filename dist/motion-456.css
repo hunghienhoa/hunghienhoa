@@ -3,17 +3,10 @@
 .motion-layout{--disc-drop:140px}
 .motion-layout .disc,.project-open:hover .motion-layout .disc{left:calc(50% - 110px);top:calc(50% - 110px);translate:0 var(--disc-drop);scale:.64;rotate:200deg;animation:layout-disc 3.6s linear infinite}
 .motion-layout .layout-strip{left:calc(50% - 45px);top:43%;width:90px;height:230px;background:var(--yellow);transform-origin:50% 0;animation:layout-strip 3.6s ease-in-out infinite}
-@keyframes layout-disc{
-  0%{translate:calc(50cqw + 80px) -25px;rotate:0deg;opacity:0}
-  5%{opacity:1}
-  25%,42%{translate:0 -25px;rotate:90deg;opacity:1}
-  64%{translate:0 var(--disc-drop);rotate:200deg;opacity:1}
-  79%{translate:0 var(--disc-drop);rotate:235deg;opacity:1}
-  100%{translate:0 -25px;rotate:320deg;opacity:1}
-}
-@keyframes layout-strip{0%,27%,100%{scale:1 0}45%,82%{scale:1 1}}
+@keyframes layout-disc{0%,100%{translate:calc(50cqw + 80px) -25px;rotate:0deg;opacity:0}8%{translate:calc(50cqw - 60px) -25px;rotate:30deg;opacity:1}16%{translate:calc(38cqw) -25px;rotate:65deg;opacity:1}32%{translate:0 -25px;rotate:110deg;opacity:1}47%{translate:0 25px;rotate:155deg;opacity:1}69%{translate:0 var(--disc-drop);rotate:240deg;opacity:1}82%{translate:0 var(--disc-drop);rotate:285deg;opacity:1}96%{translate:0 -25px;rotate:350deg;opacity:1}}
+@keyframes layout-strip{0%,35%,100%{scale:1 0}50%,82%{scale:1 1}96%{scale:1 0}}
 
-/* 05: patterned bands fold toward the middle; diamond rows shuttle behind the pouch. */
+/* 05: the 1.8s fold repeats twice per 3.6s reference cycle; labels follow the full cycle. */
 .motion-pack .pack-ribbon{left:-25%;width:150%;white-space:nowrap;font-size:25px;line-height:1;letter-spacing:11px;color:#88ab3e;text-shadow:26px 0 #df7884;opacity:.8}
 .motion-pack .pack-ribbon-top{top:24%;animation:pack-ribbon-top 1.8s ease-in-out infinite}
 .motion-pack .pack-ribbon-middle{top:48%}
@@ -25,11 +18,11 @@
 .motion-pack .pack-diamonds-right{left:calc(50% + 90px);animation:pack-diamonds-right 1.8s ease-in-out infinite}
 .motion-pack .pack-tag{left:calc(50% - 85px);top:84%;width:170px;min-height:62px;padding:5px 15px;text-align:center;background:var(--cream);color:#3a633c;border-top:4px solid #9ac356;border-bottom:4px solid #df7884;animation:pack-label-drop 3.6s ease-in-out infinite}
 .motion-pack .pack-tag b{display:block;font-size:24px;font-weight:800;line-height:1}.motion-pack .pack-tag small{font-size:9px;letter-spacing:1.3px}
-@keyframes pack-ribbon-top{0%,100%{top:24%}50%{top:48%}}
-@keyframes pack-ribbon-bottom{0%,100%{top:72%}50%{top:48%}}
+@keyframes pack-ribbon-top{0%,100%{translate:0 0;rotate:0deg}25%{translate:-30cqw 12cqw;rotate:90deg}50%{translate:0 22cqw;rotate:0deg}}
+@keyframes pack-ribbon-bottom{0%,100%{translate:0 0;rotate:0deg}25%{translate:30cqw -12cqw;rotate:-90deg}50%{translate:0 -22cqw;rotate:0deg}}
 @keyframes pack-diamonds-left{0%,100%{translate:0 0}50%{translate:22cqw 0}}
 @keyframes pack-diamonds-right{0%,100%{translate:0 0}50%{translate:-22cqw 0}}
-@keyframes pack-label-drop{0%,12%,100%{translate:0 -105px;opacity:0}35%,72%{translate:0 0;opacity:1}}
+@keyframes pack-label-drop{0%,9%,100%{translate:0 -105px;opacity:0}30%{translate:0 -10px;opacity:1}49%,65%{translate:0 10px;opacity:1}88%{translate:0 -70px;opacity:1}}
 
 /* 06: two paper wings unfurl sideways; the book-shaped plaque drops separately. */
 .motion-illustration .illustration-book,.project-open:hover .motion-illustration .illustration-book{scale:.8}
@@ -39,9 +32,9 @@
 .motion-illustration .illustration-tag{left:calc(50% - 80px);top:82%;width:160px;height:63px;padding:12px 7px 6px;text-align:center;color:var(--cream);background:#d76573;border:3px double var(--cream);outline:2px solid var(--blue);clip-path:polygon(7% 0,93% 0,93% 10%,100% 18%,100% 82%,93% 90%,93% 100%,7% 100%,7% 90%,0 82%,0 18%,7% 10%);animation:illustration-book-tag 3.6s ease-in-out infinite}
 .motion-illustration .illustration-tag::before{content:'';position:absolute;left:38%;right:38%;top:-8px;height:14px;border:2px solid var(--blue);background:var(--yellow);transform:rotate(-4deg)}
 .motion-illustration .illustration-tag b{display:block;font-size:12px;letter-spacing:.6px}.motion-illustration .illustration-tag small{font-size:19px;font-weight:800;line-height:1}
-@keyframes illustration-wing-left{0%,100%{translate:130px 0;opacity:0}28%,70%{translate:-45px 0;opacity:1}}
-@keyframes illustration-wing-right{0%,100%{translate:-130px 0;opacity:0}28%,70%{translate:45px 0;opacity:1}}
-@keyframes illustration-book-tag{0%,12%,100%{translate:0 -100px;opacity:0}36%,69%{translate:0 0;opacity:1}}
+@keyframes illustration-wing-left{0%,100%{translate:130px 0;scale:0 1;opacity:0}16%{translate:40px 0;scale:-.45 1;opacity:1}31%,70%{translate:-45px 0;scale:-1 1;opacity:1}88%{translate:0 0;scale:-.7 1;opacity:1}}
+@keyframes illustration-wing-right{0%,100%{translate:-130px 0;scale:0 1;opacity:0}16%{translate:-40px 0;scale:.45 1;opacity:1}31%,70%{translate:45px 0;scale:1 1;opacity:1}88%{translate:0 0;scale:.7 1;opacity:1}}
+@keyframes illustration-book-tag{0%,11%,100%{translate:0 -100px;opacity:0}24%{translate:0 -40px;opacity:1}39%,62%{translate:0 10px;opacity:1}78%{translate:0 -18px;opacity:1}91%{translate:0 -75px;opacity:1}}
 
 @media(max-width:760px){
   .motion-layout{--disc-drop:125px}

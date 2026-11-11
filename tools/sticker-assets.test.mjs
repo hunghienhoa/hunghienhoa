@@ -41,3 +41,9 @@ assert.ok(fs.readFileSync('dist/photobooth/shoot.html','utf8').includes('sticker
 const originalWork=main.slice(main.indexOf('<section class="work section"'),main.indexOf('<section class="about section"')).replace(/\r\n/g,'\n');
 assert.equal(createHash('sha256').update(originalWork).digest('hex'),'78874d4c421e884932d4bac7612835496ec65a32c90bf75e6b717e7497cdd12a','Six-card section stays identical to the original before sticker changes');
 assert.ok(!originalWork.includes('art-sticker'));
+
+const firstMotion=fs.readFileSync('dist/motion-123.css','utf8'),lastMotion=fs.readFileSync('dist/motion-456.css','utf8');
+assert.match(firstMotion,/brand-left-emerge 4\.96s/);
+for(const name of ['media-badge-drop','event-star-cross'])assert.ok(firstMotion.includes(name+' 3.6s'));
+for(const name of ['layout-disc','illustration-wing-left','illustration-book-tag'])assert.ok(lastMotion.includes(name+' 3.6s'));
+assert.ok(lastMotion.includes('pack-ribbon-top 1.8s')&&lastMotion.includes('rotate:90deg')&&lastMotion.includes('scale:-.45 1'));
