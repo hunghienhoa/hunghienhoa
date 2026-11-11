@@ -20,7 +20,7 @@ console.log('PASS: zoom shortcuts blocked; normal scroll, typing, copy preserved
 for(const folder of ['dist','dist/blog','dist/photobooth','dist/admin']) {
  const html=fs.readFileSync(`${folder}/index.html`,'utf8');
  assert.equal((html.match(/<footer\b/g)||[]).length,1);
- if(folder!=='dist/admin') assert.match(html,/<p class="footer-wish"[^>]*>[^<]+<\/p><\/footer><\/body>/);
+ if(folder!=='dist/admin') assert.match(html,/<p class="footer-wish"[^>]*>[^<]+<\/p><nav class="policy-links"[^>]*>.*?<\/nav><\/footer><\/body>/);
  if(folder!=='dist/admin') assert.ok(!html.includes('footer-meta'));
  else {assert.ok(html.indexOf('footer-meta')>html.indexOf('<footer'));assert.ok(!html.includes('class="footer-wish"'));}
  assert.equal(fs.readFileSync(`${folder}/footer.css`,'utf8'),fs.readFileSync('dist/footer.css','utf8'));

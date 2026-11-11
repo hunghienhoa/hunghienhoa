@@ -25,10 +25,10 @@ assert.ok(!main.includes('project-window.js'));
 console.log('PASS: AdSense publisher/code on three public heads only; nonce CSP covers scripts; admin untouched; native new-tab links retained.');
 
 const policies=['chinh-sach-rieng-tu','dieu-khoan-su-dung','bao-cao-ban-quyen','cookie-va-quang-cao'];
-for(const page of ['dist','dist/blog','dist/photobooth']) {
-  const html=readFileSync(page+'/index.html','utf8');
+for(const page of ['dist/index.html','dist/blog/index.html','dist/photobooth/index.html','dist/photobooth/shoot.html',...policies.map(name=>`dist/${name}.html`)]) {
+  const html=readFileSync(page,'utf8');
   for(const name of policies) assert.ok(html.includes(`https://hunghienhoa.com/${name}.html`));
-  assert.ok(html.indexOf('aria-label="Chính sách website"')<html.indexOf('<p class="footer-wish"'));
+  assert.ok(html.indexOf('aria-label="Chính sách website"')>html.indexOf('<p class="footer-wish"'));
   assert.ok(!html.includes('pagead2.googlesyndication.com'));
 }
 for(const name of policies) {
@@ -40,4 +40,4 @@ for(const name of policies) {
 const booth=readFileSync('dist/photobooth/index.html','utf8');
 assert.match(booth,/<input id="contribution-consent" type="checkbox" required>/);
 assert.ok(booth.includes('Tôi xác nhận có quyền sử dụng thiết kế'));
-console.log('PASS: privacy/terms/copyright/cookie pages linked before final wish; ads disabled; submission consent retained.');
+console.log('PASS: privacy/terms/copyright/cookie pages linked below footer wish on all eight public pages; ads disabled; submission consent retained.');
