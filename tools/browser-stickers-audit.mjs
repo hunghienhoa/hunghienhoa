@@ -17,7 +17,7 @@ const browser=await playwright.chromium.launch({channel:'chrome',headless:true})
 const page=await browser.newPage();
 const errors=[],failures=[],report=[];
 page.on('pageerror',e=>errors.push(e.message));
-page.on('response',r=>{if(/sticker-atlas|decorative-stickers/.test(r.url())&&r.status()!==200)failures.push([r.url(),r.status()]);});
+page.on('response',r=>{if(/sticker-atlas|decorative-stickers/.test(r.url())&&![200,304].includes(r.status()))failures.push([r.url(),r.status()]);});
 const pages=process.env.STICKER_AUDIT_ORIGIN?['https://hunghienhoa.com/','https://blog.hunghienhoa.com/','https://photobooth.hunghienhoa.com/']:['/','/blog/','/photobooth/'];
 try{
  for(let i=0;i<pages.length;i++)for(const width of [320,390,768,1440,1920]){
@@ -40,6 +40,6 @@ try{
  await page.emulateMedia({reducedMotion:'reduce'});
  for(const url of pages){await page.goto(new URL(url,origin).href);assert.equal(await page.locator('.art-sticker').evaluateAll(els=>els.every(e=>getComputedStyle(e,'::before').animationName==='none')),true);}
  assert.deepEqual(errors,[]);assert.deepEqual(failures,[]);
- console.log(JSON.stringify({result:'PASS',layouts:report.length,report,errors,failures},null,2));
+ console.log(JSON.stringify({result:'PASS',layouts:report.length,motions:[...new Set(report.flatMap(r=>r.motions))],errors,failures},null,2));
  fs.writeFileSync('tmp/sticker-browser-results.json',JSON.stringify({report,errors,failures},null,2));
 }finally{await browser.close();await app.close();}
