@@ -10,12 +10,12 @@ for(let i=1;i<=6;i++){
  assert.equal((html.match(new RegExp(`class="project-art material-scene scene-${id}"`,'g'))||[]).length,1);
  assert.ok(html.includes(`scene-${id}" data-duration="${i===1?4960:3600}" role="img" aria-label=`));
 }
-assert.ok(html.includes('material-cards.css?v=1'));
+assert.ok(html.includes('material-cards.css?v=2'));
 assert.ok(!html.includes('reference-cards/card-'),'Do not load the large source animations on the homepage');
 assert.ok(!html.includes('reference-cards.css'));
 for(const name of ['material-left-hand','material-label-drop','m-mail-left','m-mail-label','m-run-left','m-run-right','m-record','m-band-top','m-wing-left','m-wing-right'])assert.ok(css.includes(`@keyframes ${name}{`));
 assert.ok(css.includes('prefers-reduced-motion:reduce')&&css.includes('animation:none!important'));
 assert.ok(css.includes('.wing-left>img{transform:scaleX(-1)}'),'Mirror only the illustration inside the left flag');
-assert.ok(css.includes('#dialog-art .project-art.material-scene{height:auto;aspect-ratio:1400/826}'));
+assert.ok(css.includes('#dialog-art .project-art.material-scene{height:auto;aspect-ratio:4/3}'));
 assert.ok(css.includes('.project-open:hover .material-scene>div{translate:none}'));
 console.log('PASS: six distinct material scenes, approved card01 artwork, source-free homepage, responsive dialogs and reduced-motion flags.');

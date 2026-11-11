@@ -21,7 +21,16 @@ try{
   assert.equal(await page.locator('#work .material-scene').count(),6);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`No overflow at ${width}`);
   const geometry=await page.locator('#work .material-scene').evaluateAll(nodes=>nodes.map(e=>({w:e.clientWidth,h:e.clientHeight,broken:[...e.querySelectorAll('img')].filter(i=>!i.complete||!i.naturalWidth).length})));
-  for(const g of geometry){assert.ok(g.w>200);assert.ok(Math.abs(g.w/g.h-1400/826)<.04);assert.equal(g.broken,0);}
+  for(const g of geometry){assert.ok(g.w>200);assert.ok(Math.abs(g.w/g.h-4/3)<.04);assert.equal(g.broken,0);}
+  const bodies=['.carton','.silver-mail','.tape-cassette','.record-cover','.paper-pouch','.illustrated-pouch'];
+  for(let i=0;i<6;i++){
+   const size=await page.locator('#work '+bodies[i]).evaluate(e=>{
+    const r=e.getBoundingClientRect(),s=e.closest('.material-scene').getBoundingClientRect();
+    return {fill:r.width/s.width,inside:r.left>=s.left&&r.right<=s.right&&r.top>=s.top&&r.bottom<=s.bottom};
+   });
+   assert.ok(size.fill>=[.78,.48,.64,.41,.49,.49][i],`Card ${i+1} artwork fills the card at ${width}px`);
+   assert.ok(size.inside,`Card ${i+1} package stays fully visible at ${width}px`);
+  }
   if(width===390||width===1440)await page.locator('#work').screenshot({path:`outputs/material-cards/layout-${width}.png`});
   for(let i=0;i<6;i++){
    await page.locator(`[data-project="${i}"]`).click();
