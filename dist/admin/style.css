@@ -19,3 +19,24 @@
 @media(max-width:1100px){#customize-fields .field-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){#customize-fields .field-grid{grid-template-columns:minmax(0,1fr);padding-inline:10px;gap:10px}}
 .editor-tools{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.editor-tools button{padding:8px 10px;font-size:12px;min-height:36px}textarea[name="content"]{tab-size:2;line-height:1.7}
+
+
+/* Keep quota cards at the same reading scale as the rest of the admin. */
+[data-view="usage"]>.view-note{font-size:16px;line-height:1.8;max-width:none}
+#usage-list{display:grid;gap:28px;margin-top:28px}
+.usage-provider{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:0;padding:28px;background:var(--cream)}
+.usage-provider>.view-head,.usage-provider>.view-note,.usage-provider>a{grid-column:1/-1}
+.usage-provider>.view-head{flex-wrap:wrap;gap:16px}.usage-provider h2{font-size:30px}.usage-provider .view-head>a{padding:12px 16px;border:1px solid;font-size:15px;min-height:46px}
+.usage-provider>.view-note{margin:0;font-size:16px;line-height:1.8;max-width:none}
+.usage-provider>a{font-size:14px;text-decoration:underline;line-height:1.7;justify-self:start}
+.usage-metric{min-width:0;border:1px solid #30348744;padding:24px;background:#fff7}
+.usage-title{display:flex;flex-direction:column;gap:10px}.usage-title h3{font-size:21px;line-height:1.4;letter-spacing:-.3px}
+.usage-period{font-size:13px;font-weight:600}.usage-metric small{display:block;font-size:13px;margin-top:12px;line-height:1.7}
+.usage-metric p{font-size:16px;line-height:1.7;margin:12px 0}.usage-metric .usage-value{font-size:24px;font-weight:800;line-height:1.4;letter-spacing:-.5px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.usage-state{font-weight:700}.usage-state.warning{background:var(--yellow);padding:6px 10px;display:inline-block}.usage-state.exceeded{color:#8b332c}.usage-state.unknown{color:var(--blue)}
+.usage-metric progress{display:block;width:100%;height:20px;accent-color:var(--blue)}.usage-metric details{margin-top:20px}.usage-metric summary{cursor:pointer;font-size:15px;min-height:44px;line-height:1.7;padding-block:8px}
+.usage-form{display:flex;flex-wrap:wrap;gap:16px;align-items:end;margin-top:12px}.usage-form label{flex:1 1 170px;font-size:15px;min-width:0;line-height:1.6}.usage-form input{display:block;margin-top:8px;min-width:0;font-size:16px}.usage-form .status{flex-basis:100%}.usage-form button{min-height:48px;font-size:15px}
+#usage-status{font-size:14px;line-height:1.8;margin-block:20px}
+@media(max-width:760px){.menu>button:last-of-type{grid-column:auto}.usage-provider{grid-template-columns:minmax(0,1fr);padding:20px;gap:16px}.usage-provider h2{font-size:26px}.usage-metric{padding:20px}.usage-title h3{font-size:20px}.usage-metric .usage-value{font-size:23px}.usage-form{display:block}.usage-form label{display:block;margin:12px 0}.usage-form button{width:100%}}
+
+.usage-provider>.usage-connection{padding:14px 16px;background:#ffdc383f;border-left:3px solid var(--blue);font-size:14px;line-height:1.8}

@@ -72,6 +72,7 @@ function showAuth() {
   $('#workspace').hidden = true; $('#auth-box').hidden = false; $('#logout').hidden = true;
   for (const id of ['submissions-list', 'frames-list', 'posts-list', 'stats']) $('#' + id).replaceChildren();
   for (const id of ['traffic-stats','traffic-pages','traffic-chart','customize-fields']) $('#' + id).replaceChildren();
+  $('#usage-list').replaceChildren(); $('#usage-status').textContent='';
   $('#post-form').reset(); $('#site-form').reset(); $('#auth-form').reset();
   $('#cover-preview').hidden = true; $('#cover-preview').removeAttribute('src'); coverData = undefined;
 }

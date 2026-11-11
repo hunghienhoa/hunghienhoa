@@ -65,6 +65,11 @@ try {
   cookie = setup.response.headers.get('set-cookie').split(';')[0];
   csrf = setup.data.csrfToken;
   assert.equal((await request('/api/admin/session')).data.authenticated, true);
+  assert.equal((await request('/api/admin/usage',{anonymous:true})).response.status,401);
+  assert.equal((await request('/api/admin/usage',{method:'PUT',noCsrf:true,body:{id:'sb_storage',used:1}})).response.status,403);
+  assert.equal((await request('/api/admin/usage',{method:'PUT',body:{id:'sb_storage',used:.8}})).response.status,200);
+  assert.equal((await request('/api/admin/usage')).data.metrics.find(row=>row.id==='sb_storage').percent,80);
+  assert.ok(!JSON.stringify((await request('/api/site')).data).includes('sb_storage'));
   assert.equal((await request('/api/admin/setup', { method: 'POST', body: { password: 'Another-test-password' } })).response.status, 409);
   assert.equal((await request('/api/admin/site', { method: 'PUT', noCsrf: true, body: defaultSite })).response.status, 403);
   assert.equal((await request('/api/admin/site', { method: 'PUT', csrf: 'wrong', body: defaultSite })).response.status, 403);
