@@ -25,14 +25,6 @@ for(const [i,row] of manifest.entries()){
  assert.equal(durations.length,row.encodedFrames);assert.deepEqual(durations,row.encodedDurations);
  assert.equal(durations.reduce((a,b)=>a+b,0),row.durations.reduce((a,b)=>a+b,0),'Merging duplicate frames preserves the complete timeline');
  assert.ok(row.timelineMaxMeanPixelError<8,'Every source frame visually matches its encoded timeline position');
- assert.ok(html.includes(`src="assets/reference-cards/${row.file}"`));
- assert.ok(html.includes(`srcset="assets/reference-cards/${row.poster}"`));
  assert.ok(fs.readFileSync(root+row.poster).length>0);
 }
-assert.equal((html.match(/class="project-art reference-animation"/g)||[]).length,6);
-assert.equal((html.match(/media="\(prefers-reduced-motion: reduce\)"/g)||[]).length,6);
-assert.ok(!/href="(?:bubble-wrap|motion-123|motion-456)\.css/.test(html));
-assert.ok(!html.includes('class="scene-props"'));
-assert.ok(fs.readFileSync('dist/reference-cards.css','utf8').includes('object-fit:contain'));
-assert.ok(fs.readFileSync('dist/app.js','utf8').includes("image.loading = 'eager'"));
-console.log('PASS: actual 6 WebP animations, every frame duration, loop, provenance hash, original dimensions, reduced-motion posters and native card/modal rendering.');
+console.log('PASS: archived six reference WebP animations preserve dimensions, loops, frame timeline and provenance.');

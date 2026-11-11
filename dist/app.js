@@ -19,12 +19,12 @@ document.querySelectorAll('[data-filter]').forEach(button => button.addEventList
   document.querySelector('#filter-status').textContent = `Hiển thị ${projects.filter(project => !project.hidden).length} thiết kế mẫu.`;
 }));
 const descriptions = [
-  ['Ảnh động gốc về nhận diện thương hiệu: sticker xuất hiện quanh hộp và nhãn treo chuyển động.', 'Ảnh tham khảo 01 · Từ GIF Hùng cung cấp'],
-  ['Ảnh động gốc về truyền thông: các nhân vật chuyển động quanh phong bì.', 'Ảnh tham khảo 02 · Từ GIF Hùng cung cấp'],
-  ['Ảnh động gốc về sự kiện: sticker chạy qua hai phía của cassette và cụm nhạc xuất hiện bên dưới.', 'Ảnh tham khảo 03 · Từ GIF Hùng cung cấp'],
-  ['Ảnh động gốc về trình bày ấn phẩm: đĩa di chuyển và xoay quanh bìa.', 'Ảnh tham khảo 04 · Từ GIF Hùng cung cấp'],
-  ['Ảnh động gốc về bao bì: các dải họa tiết và nhãn chuyển động quanh gói sản phẩm.', 'Ảnh tham khảo 05 · Từ GIF Hùng cung cấp'],
-  ['Ảnh động gốc về minh họa: hai cờ mở ra hai phía và bảng treo chuyển động phía dưới.', 'Ảnh tham khảo 06 · Từ GIF Hùng cung cấp']
+ ['Hộp carton, nhãn giấy và sticker theo chất liệu mẫu đã chốt. Các hình ló ra phía sau hộp, nhãn hạ xuống rồi thu lại.', 'Nhận diện · Carton và nhãn giấy'],
+ ['Phong bì bạc gói những ý tưởng nhỏ. Nhân vật hai bên vẫy nhẹ, nhãn giấy chuyển động phía dưới.', 'Truyền thông · Phong bì và sticker'],
+ ['Cassette ghi lại tần số sáng tạo. Hai nhân vật chạy qua hai phía, cụm nhạc hạ xuống bên dưới.', 'Sự kiện · Cassette và dấu nhạc'],
+ ['Bìa đĩa lưu giữ một chút cảm xúc. Đĩa chạy từ cạnh phải, lẩn sau bìa rồi xuất hiện phía dưới.', 'Ấn phẩm · Giấy, bìa và đĩa'],
+ ['Túi trà giấy với họa tiết gập vào giữa. Các hàng trang trí chuyển động phía sau, nhãn hạ xuống sau đó.', 'Bao bì · Túi giấy và họa tiết'],
+ ['Túi minh họa đựng những chuyện bé xíu. Hai lá cờ mở ra hai bên, bảng nhỏ xuất hiện phía dưới.', 'Minh họa · Túi giấy và cờ']
 ];
 const dialog = document.querySelector('#project-dialog');
 let currentProject = 0;

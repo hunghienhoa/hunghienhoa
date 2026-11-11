@@ -38,4 +38,4 @@ assert.ok(fs.readFileSync('dist/photobooth/shoot.html','utf8').includes('sticker
 
 const originalWork=main.slice(main.indexOf('<section class="work section"'),main.indexOf('<section class="about section"'));
 assert.ok(!originalWork.includes('art-sticker')&&!originalWork.includes('scene-props'));
-assert.equal((originalWork.match(/class="project-art reference-animation"/g)||[]).length,6);
+assert.equal((originalWork.match(/class="project-art material-scene scene-\d{2}"/g)||[]).length,6);
