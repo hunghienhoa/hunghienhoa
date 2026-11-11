@@ -53,9 +53,9 @@
 
 .sticker-01::before{animation-name:sticker-wave;animation-duration:3.9s;transform-origin:50% 85%}.sticker-02::before{animation-name:sticker-wave;animation-direction:reverse;animation-duration:4.7s;transform-origin:50% 85%}.sticker-03::before{animation-name:sticker-spin;animation-duration:18s;animation-timing-function:linear}.sticker-04::before{animation-name:sticker-orbit;animation-duration:5.4s}.sticker-05::before{animation-name:sticker-orbit;animation-direction:reverse;animation-duration:6.2s}.sticker-06::before{animation-name:sticker-float;animation-duration:5.7s}.sticker-07::before{animation-name:sticker-beat;animation-duration:3.2s}.sticker-08::before{animation-name:sticker-bloom;animation-duration:6.4s}.sticker-09::before{animation-name:sticker-bloom;animation-direction:reverse;animation-duration:5.1s}.sticker-10::before{animation-name:sticker-spin;animation-duration:24s;animation-direction:reverse;animation-timing-function:linear}.sticker-11::before{animation-name:sticker-tohe;animation-duration:4.1s;transform-origin:50% 90%}.sticker-12::before{animation-name:sticker-tohe;animation-direction:reverse;animation-duration:4.8s;transform-origin:50% 90%}.sticker-13::before,.sticker-14::before,.sticker-15::before,.sticker-16::before{animation-name:sticker-label;animation-duration:7s}.sticker-14::before{animation-delay:-2s}.sticker-15::before{animation-delay:-4s}.sticker-16::before{animation-delay:-6s}
 .scene-label{position:absolute;width:64px;bottom:20px;z-index:3}.scene-label.label-left{left:20px}.scene-label.label-right{right:68px}
-.completed-star.art-sticker{height:auto}.motion-illustration .illustration-wing.art-sticker{width:125px;top:33%;scale:1;translate:0}.motion-illustration .illustration-wing-left.art-sticker{left:6%;right:auto;animation:none}.motion-illustration .illustration-wing-right.art-sticker{right:6%;left:auto;animation:none}
-.blog-page .art-flower.art-sticker{height:auto}.blog-page .art-heart.art-sticker{height:auto}.blog-page .note-character{width:80px;margin:0 auto}.sticker-rack{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:24px}.sticker-rack>.art-sticker{width:56px}
-.booth-landing .sample-strip .strip-character{width:58px;height:58px}.booth-landing .showcase-float.art-sticker{width:85px;height:auto}.booth-landing .float-heart.art-sticker{width:65px}
+.completed-star.art-sticker{height:auto}
+.blog-page .art-flower.art-sticker{height:auto}.blog-page .art-heart.art-sticker{height:auto}.blog-page .note-character{width:80px;margin:0 auto}
+.booth-landing .sample-strip .strip-character{width:58px;height:58px}
 @keyframes sticker-wave{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(10deg) translateY(-3px)}}
 @keyframes sticker-rock{50%{transform:rotate(8deg)}}@keyframes sticker-spin{to{transform:rotate(360deg)}}
 @keyframes sticker-orbit{0%,100%{transform:translate(0,0) rotate(-5deg)}50%{transform:translate(4px,-4px) rotate(8deg)}}
@@ -64,7 +64,7 @@
 @keyframes sticker-bloom{0%,100%{transform:scale(.95) rotate(-8deg)}50%{transform:scale(1.03) rotate(12deg)}}
 @keyframes sticker-tohe{0%,100%{transform:rotate(-5deg)}35%{transform:rotate(5deg) translateY(-4px)}70%{transform:rotate(-2deg)}}
 @keyframes sticker-label{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(5deg) translateY(-3px)}}
-@media(max-width:760px){.scene-label{width:42px;bottom:13px}.scene-label.label-left{left:13px}.scene-label.label-right{right:56px}.motion-illustration .illustration-wing.art-sticker{width:80px;top:37%}.motion-illustration .illustration-wing-left.art-sticker{left:3%}.motion-illustration .illustration-wing-right.art-sticker{right:3%}.blog-page .note-character{width:66px}.sticker-rack{gap:16px;margin-top:18px}.sticker-rack>.art-sticker{width:42px}.booth-landing .showcase-float.art-sticker{width:55px}.booth-landing .float-heart.art-sticker{width:42px}.booth-landing .sample-strip .strip-character{width:48px;height:48px}}
+@media(max-width:760px){.scene-label{width:42px;bottom:13px}.scene-label.label-left{left:13px}.scene-label.label-right{right:56px}.blog-page .note-character{width:66px}.booth-landing .sample-strip .strip-character{width:48px;height:48px}}
 @media(prefers-reduced-motion:reduce){.art-sticker,.art-sticker::before{animation:none!important}}
 
 .parcel-sticker.art-sticker{height:auto}.hero-hand{position:absolute;width:64px;top:31%;z-index:4}.hero-hand-left{left:5%;rotate:-12deg}.hero-hand-right{right:4%;rotate:10deg}
@@ -77,10 +77,14 @@
 .sticker-26::before,.sticker-27::before,.sticker-28::before,.sticker-41::before,.sticker-42::before,.sticker-43::before{animation-name:sticker-bloom;animation-duration:6.8s}
 .sticker-32::before,.sticker-33::before,.sticker-34::before,.sticker-35::before,.sticker-36::before,.sticker-37::before,.sticker-38::before,.sticker-40::before,.sticker-44::before{animation-name:sticker-float;animation-duration:7.2s}.sticker-34::before,.sticker-36::before,.sticker-38::before,.sticker-44::before{animation-delay:-3.6s}
 .sticker-45::before,.sticker-46::before{animation-name:sticker-tohe;animation-duration:5.5s}.sticker-46::before{animation-direction:reverse}.sticker-47::before{animation-name:sticker-beat;animation-duration:4.8s}.sticker-48::before{animation-name:sticker-label;animation-duration:6.8s}
-.hero-mascot{position:absolute;width:52px;left:1%;bottom:18%;z-index:4}.motion-event .event-music.art-sticker{width:90px;height:90px}.motion-pack .pack-ribbon .art-sticker{width:25px;height:25px;flex:0 0 25px}
+.motion-event .event-music.art-sticker{width:90px;height:90px}.motion-pack .pack-ribbon .art-sticker{width:25px;height:25px;flex:0 0 25px}
 .marquee .sticker-pair{display:flex;align-items:center;gap:14px}.marquee .art-sticker{width:48px;height:48px;font-size:0;letter-spacing:0}.ribbon-group>.art-sticker,.ticker-group>.art-sticker{width:44px;height:44px;flex:0 0 44px}
 @keyframes sticker-glide{0%,100%{transform:translateX(-5px) rotate(-3deg)}50%{transform:translateX(6px) translateY(-3px) rotate(3deg)}}
-@media(max-width:760px){.hero-mascot{width:38px;bottom:18%}.motion-event .event-music.art-sticker{width:60px;height:60px}.motion-pack .pack-ribbon .art-sticker{width:21px;height:21px;flex-basis:21px}.marquee .art-sticker,.ribbon-group>.art-sticker,.ticker-group>.art-sticker{width:34px;height:34px;flex-basis:34px}.marquee .sticker-pair{gap:8px}}
+@media(max-width:760px){.motion-event .event-music.art-sticker{width:60px;height:60px}.motion-pack .pack-ribbon .art-sticker{width:21px;height:21px;flex-basis:21px}.marquee .art-sticker,.ribbon-group>.art-sticker,.ticker-group>.art-sticker{width:34px;height:34px;flex-basis:34px}.marquee .sticker-pair{gap:8px}}
 @media(prefers-reduced-motion:reduce){.art-sticker,.art-sticker::before{animation:none!important}}
 
 .project-art .art-number{white-space:nowrap}
+
+.header-art{width:38px;height:38px;margin-left:12px}.policy-art{width:36px;height:36px;margin:8px auto 0}
+
+.guide-art{width:65px;height:65px}

@@ -30,7 +30,7 @@ try{
     bad:stickers.filter(e=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e),p=getComputedStyle(e,'::before');return r.width<15||r.height<15||parseFloat(p.width)<parseFloat(s.width)*.9||parseFloat(p.height)<parseFloat(s.height)*.9||s.pointerEvents!=='none'||e.getAttribute('aria-hidden')!=='true';}).map(e=>e.className),
     motions:[...new Set(stickers.map(e=>getComputedStyle(e,'::before').animationName))]};
   });
-  assert.ok(state.scroll<=width+2,JSON.stringify(state));assert.deepEqual(state.bad,[]);assert.ok(state.motions.length>=3,JSON.stringify(state));report.push({page:i,...state});
+  assert.ok(state.scroll<=width+2,JSON.stringify(state));assert.deepEqual(state.bad,[]);assert.ok(state.motions.length>=2,JSON.stringify(state));report.push({page:i,...state});
   if(width===390||width===1440){
    const targets=i===0?['.hero','.project-grid']:i===1?['.about']:['.frame-showcase'];
    await page.evaluate(()=>document.querySelectorAll('.reveal').forEach(e=>e.classList.add('visible')));

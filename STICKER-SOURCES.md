@@ -102,4 +102,9 @@ Các nền xốp, nhựa, giấy ô ly, chữ dự án và biến thể màu v�
 
 ## Chuyển động
 
-Atlas dùng CSS sprite, không tải lại ảnh khi chuyển động. Bàn tay vẫy cổ tay; chong chóng và hoa nhỏ xoay ngược chiều; hoa thị đi quỹ đạo ngắn; sao trôi/lắc; tim đập nhẹ; hoa cánh tròn nở/lắc; tò he đung đưa; nhãn vận chuyển nghiêng luân phiên. Các sticker trang trí nằm trong vùng minh họa sẵn có, không nhận click và không tham gia thông tin trợ năng. Giảm chuyển động theo cài đặt hệ thống; không thêm bộ trang trí vào Admin hoặc phòng chụp. Các cảnh mở hộp/bao bì trước đó vẫn giữ chuyển động riêng.
+Atlas dùng CSS sprite, không tải lại ảnh khi chuyển động. Bàn tay vẫy cổ tay; chong chóng và hoa nhỏ xoay ngược chiều; hoa thị đi quỹ đạo ngắn; sao trôi/lắc; tim đập nhẹ; hoa cánh tròn nở/lắc; tò he đung đưa; nhãn vận chuyển nghiêng luân phiên. Các sticker trang trí nằm trong vùng minh họa sẵn có, không nhận click và không tham gia thông tin trợ năng. Giảm chuyển động theo cài đặt hệ thống; không thêm bộ trang trí vào Admin; phòng chụp chỉ dùng dấu tim nhỏ ở đầu trang. Các cảnh mở hộp/bao bì trước đó vẫn giữ chuyển động riêng.
+
+
+## Phân bố và giữ hiệu ứng gốc
+
+Nhóm sticker được phân riêng theo trang, không dùng một ô atlas trên nhiều trang: trang chính ưu tiên hộp, bàn tay, đồ vật âm nhạc và hoa văn; Blog dùng giấy, thẻ và đồ vật ghi chép; Hộp Ảnh dùng các nhân vật; phòng chụp chỉ có một dấu tim nhỏ ở đầu trang; mỗi trang chính sách có một nét hình học nhỏ ở chân trang. Những bản lặp trong dải chạy là hai nửa giống nhau để nối vòng liên tục. Bỏ rack ba đồ vật dưới ghi chú Blog và hai nhãn dân gian ở bộ khung Photobooth. Thẻ 06 dùng lại hai SVG cờ `illustration-wing.svg` với hiệu ứng bung cờ gốc; sticker tò he chuyển vào minh họa khung ảnh, không thay thế cờ. Trang quản trị không thêm trang trí.

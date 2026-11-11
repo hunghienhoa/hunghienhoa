@@ -35,7 +35,7 @@ for(const name of policies) {
  const html=readFileSync(`dist/${name}.html`,'utf8');
  assert.ok(html.includes('<html lang="vi">')&&html.includes('hunghienhoa2110@gmail.com'));
  assert.ok(!/<script\b/.test(html));
- for(const href of [...html.matchAll(/href="([^"#]+)"/g)].map(m=>m[1]).filter(h=>!/^https?:|^mailto:|^\//.test(h)))assert.doesNotThrow(()=>readFileSync('dist/'+href));
+ for(const href of [...html.matchAll(/href="([^"#]+)"/g)].map(m=>m[1]).filter(h=>!/^https?:|^mailto:|^\//.test(h)))assert.doesNotThrow(()=>readFileSync('dist/'+href.split(/[?#]/)[0]));
 }
 const booth=readFileSync('dist/photobooth/index.html','utf8');
 assert.match(booth,/<input id="contribution-consent" type="checkbox" required>/);
