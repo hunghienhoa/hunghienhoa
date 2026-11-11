@@ -19,19 +19,21 @@ document.querySelectorAll('[data-filter]').forEach(button => button.addEventList
   document.querySelector('#filter-status').textContent = `Hiển thị ${projects.filter(project => !project.hidden).length} thiết kế mẫu.`;
 }));
 const descriptions = [
-  ['Một xưởng sáng tạo tưởng tượng lấy cảm hứng từ nắng sớm. Chữ mềm, sắc cam ấm và một ngôi sao tinh nghịch tạo nên cảm giác gần gũi, lạc quan.', 'Biểu trưng · Màu sắc · Ứng dụng nhận diện'],
-  ['Một ý tưởng truyền thông khuyến khích thể hiện bản thân. Chữ cỡ lớn và các mảng màu tương phản biến thông điệp thành một tuyên ngôn vui nhộn.', 'Hình ảnh chủ đạo · Áp phích · Thông điệp sáng tạo'],
-  ['Biến tinh thần gặp gỡ và chia sẻ ý tưởng thành một cuộn băng cassette. Hai bánh băng chuyển động như một lời mời bật lên tần số sáng tạo của riêng mình.', 'Nhận diện sự kiện · Đồ họa chuyển động'],
-  ['Một ấn phẩm mẫu về những cảm xúc nhỏ trong cuộc sống. Hình ảnh đĩa CD gợi liên tưởng đến ký ức, âm nhạc và những câu chuyện có thể chạm tới nhau.', 'Bìa ấn phẩm · Chữ và trình bày · Bố cục'],
-  ['Mẫu bao bì trà mang tinh thần chậm rãi. Màu xanh thảo mộc, giấy kem và một đóa hoa nhỏ đưa sự thư thái vào từng chi tiết.', 'Bao bì · Nhãn hiệu · Minh họa'],
-  ['Một cuốn sổ nhỏ thu thập niềm vui thường ngày. Những nhân vật nhãn dán nhiều màu kể chuyện bằng nét vẽ đơn giản, hồn nhiên và dễ mến.', 'Bìa sách · Nhân vật · Minh họa cá nhân']
+  ['Ảnh động gốc về nhận diện thương hiệu: sticker xuất hiện quanh hộp và nhãn treo chuyển động.', 'Ảnh tham khảo 01 · Từ GIF Hùng cung cấp'],
+  ['Ảnh động gốc về truyền thông: các nhân vật chuyển động quanh phong bì.', 'Ảnh tham khảo 02 · Từ GIF Hùng cung cấp'],
+  ['Ảnh động gốc về sự kiện: sticker chạy qua hai phía của cassette và cụm nhạc xuất hiện bên dưới.', 'Ảnh tham khảo 03 · Từ GIF Hùng cung cấp'],
+  ['Ảnh động gốc về trình bày ấn phẩm: đĩa di chuyển và xoay quanh bìa.', 'Ảnh tham khảo 04 · Từ GIF Hùng cung cấp'],
+  ['Ảnh động gốc về bao bì: các dải họa tiết và nhãn chuyển động quanh gói sản phẩm.', 'Ảnh tham khảo 05 · Từ GIF Hùng cung cấp'],
+  ['Ảnh động gốc về minh họa: hai cờ mở ra hai phía và bảng treo chuyển động phía dưới.', 'Ảnh tham khảo 06 · Từ GIF Hùng cung cấp']
 ];
 const dialog = document.querySelector('#project-dialog');
 let currentProject = 0;
 function showProject(index) {
   currentProject = index;
   document.querySelector('#dialog-title').textContent = projects[index].querySelector('h3').textContent;
-  document.querySelector('#dialog-art').replaceChildren(projects[index].querySelector('.project-art').cloneNode(true));
+  const artwork = projects[index].querySelector('.project-art').cloneNode(true);
+  artwork.querySelectorAll('img').forEach(image => { image.loading = 'eager'; });
+  document.querySelector('#dialog-art').replaceChildren(artwork);
   document.querySelector('#dialog-description').textContent = descriptions[index][0];
   document.querySelector('#dialog-scope').textContent = descriptions[index][1];
   if (!dialog.open) dialog.showModal();

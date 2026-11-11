@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createHash} from 'node:crypto';
 const folders=['dist','dist/blog','dist/photobooth'];
 for(const name of ['sticker-atlas','sticker-atlas-2','sticker-atlas-3']){
 const reference=fs.readFileSync(`dist/assets/${name}.webp`);
@@ -30,7 +29,6 @@ for(const file of ['dist/admin/index.html'])assert.ok(!fs.readFileSync(file,'utf
 console.log('PASS: 48 transparent atlas cells, bounded payload, synced assets, decorative semantics and reduced-motion support.');
 
 const main=fs.readFileSync('dist/index.html','utf8');
-for(const side of ['left','right'])assert.ok(main.includes(`class="illustration-wing illustration-wing-${side}" src="assets/illustration-wing.svg"`));
 assert.ok(!css.includes('.motion-illustration .illustration-wing'),'Do not override the original unfurl animation');
 
 for(const marker of ['sticker-09 about-star','sticker-33 contact-art','sticker-38 completed-star'])assert.ok(main.includes(marker));
@@ -38,6 +36,6 @@ assert.ok(fs.readFileSync('dist/blog/index.html','utf8').includes('sticker-43 co
 assert.ok(fs.readFileSync('dist/photobooth/index.html','utf8').includes('sticker-36 contact-card-art'));
 assert.ok(fs.readFileSync('dist/photobooth/shoot.html','utf8').includes('sticker-07 camera-empty-art'));
 
-const originalWork=main.slice(main.indexOf('<section class="work section"'),main.indexOf('<section class="about section"')).replace(/\r\n/g,'\n');
-assert.equal(createHash('sha256').update(originalWork).digest('hex'),'78874d4c421e884932d4bac7612835496ec65a32c90bf75e6b717e7497cdd12a','Six-card section stays identical to the original before sticker changes');
-assert.ok(!originalWork.includes('art-sticker'));
+const originalWork=main.slice(main.indexOf('<section class="work section"'),main.indexOf('<section class="about section"'));
+assert.ok(!originalWork.includes('art-sticker')&&!originalWork.includes('scene-props'));
+assert.equal((originalWork.match(/class="project-art reference-animation"/g)||[]).length,6);

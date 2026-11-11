@@ -1,0 +1,6 @@
+.project-art.reference-animation{height:clamp(230px,32vw,440px);padding:0;background:var(--cream);display:block;overflow:hidden}
+.reference-animation::before,.reference-animation::after{content:none!important}
+.reference-animation picture{display:block;width:100%;height:100%}
+.reference-animation img{display:block;width:100%;height:100%;object-fit:contain;animation:none;transform:none}
+#dialog-art .project-art.reference-animation{height:65vh;max-height:760px;padding:0}
+.project-caption{flex-wrap:wrap}.project-caption h3{font-size:clamp(16px,1.5vw,20px)}
