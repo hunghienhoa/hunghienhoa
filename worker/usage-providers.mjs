@@ -27,7 +27,8 @@ export async function providerUsage(env,token,now=Date.now()) {
       connections.supabase=`${results.filter(row=>row.status==='fulfilled').length}/2 chỉ số dự án đã kết nối. Quota chung tổ chức cần API usage riêng. MB = 1.024² byte; GB = 1.024³ byte. Không thay số thiếu bằng 0.`;
     })(),
     (async()=>{
-      const headers={'User-Agent':'hunghienhoa-admin-usage',Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+      const headers={'User-Agent':'hunghienhoa-admin-usage',Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2026-03-10'};
+      if(env.GITHUB_USAGE_TOKEN) headers.Authorization=`Bearer ${env.GITHUB_USAGE_TOKEN}`;
       const results=await Promise.allSettled([
         readJson('https://api.github.com/repos/hunghienhoa/hunghienhoa',{headers}).then(data=>entry('gh_repo',nonnegative(data.size)/1024)),
         readJson('https://api.github.com/repos/hunghienhoa/hunghienhoa/actions/cache/usage',{headers}).then(data=>entry('gh_cache',nonnegative(data.active_caches_size_in_bytes)/1024**2)),
@@ -45,7 +46,21 @@ export async function providerUsage(env,token,now=Date.now()) {
           throw new Error('Danh sách artifacts chưa đầy đủ');
         })()
       ]);
-      connections.github=`${results.filter(row=>row.status==='fulfilled').length}/3 chỉ số repo đã kết nối. Quota billing dùng chung tài khoản cần quyền API billing riêng; không quy số liệu repo thành tổng tài khoản.`;
+      let billing='Chưa kết nối quyền đọc billing tài khoản.';
+      if(env.GITHUB_USAGE_TOKEN) {
+        try {
+          const date=new Date(now),year=date.getUTCFullYear(),month=date.getUTCMonth()+1;
+          const data=await readJson(`https://api.github.com/users/hunghienhoa/settings/billing/usage/summary?year=${year}&month=${month}`,{headers});
+          if(data?.timePeriod?.year!==year || data?.timePeriod?.month!==month || !Array.isArray(data.usageItems)) throw new Error('Kỳ billing chưa hợp lệ');
+          const rows=data.usageItems.filter(row=>typeof row.product==='string' && row.product.toLowerCase()==='actions');
+          const total=key=>rows.reduce((sum,row)=>sum+nonnegative(row[key]),0);
+          const net=total('netAmount'),gross=total('grossAmount'),discount=total('discountAmount');
+          const minutes=rows.filter(row=>typeof row.unitType==='string' && row.unitType.toLowerCase()==='minutes').reduce((sum,row)=>sum+nonnegative(row.grossQuantity),0);
+          entry('gh_compute',net);entry('gh_actions_gross',gross);entry('gh_actions_discount',discount);entry('gh_actions_minutes',minutes);
+          billing='Billing Actions toàn tài khoản đã kết nối. Phút gồm cả lượt chạy được miễn phí; số trước miễn giảm không phải quota đã tiêu hao. Billing có thể cập nhật trễ.';
+        } catch {billing='API billing chưa trả báo cáo tháng hợp lệ; hệ thống sẽ tự thử lại.';}
+      }
+      connections.github=`${results.filter(row=>row.status==='fulfilled').length}/3 chỉ số repo đã kết nối. ${billing} Lưu trữ toàn tài khoản và LFS hiện chưa có số liệu dung lượng hợp lệ; không quy tổng billing theo giờ thành dung lượng hiện tại.`;
     })(),
     (async()=>{
       if(!env.CLOUDFLARE_USAGE_TOKEN) {connections.cloudflare='Chưa kết nối token analytics chỉ đọc.';return;}

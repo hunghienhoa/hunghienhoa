@@ -12,7 +12,10 @@ export const usageMetrics = [
   {id:'sb_storage',provider:'supabase',label:'Storage',unit:'GB',limit:1,period:'storage'},
   {id:'sb_egress',provider:'supabase',label:'Băng thông ra',unit:'GB',limit:5,period:'month'},
   {id:'sb_mau',provider:'supabase',label:'Người dùng hoạt động',unit:'người',limit:50000,period:'month'},
-  {id:'gh_compute',provider:'github',label:'Compute được bao gồm',unit:'USD',limit:12,period:'month'},
+  {id:'gh_compute',provider:'github',label:'Actions phải trả tháng này',unit:'USD',limit:null,period:'month'},
+  {id:'gh_actions_gross',provider:'github',label:'Actions trước miễn giảm',unit:'USD',limit:null,period:'month'},
+  {id:'gh_actions_discount',provider:'github',label:'Actions được miễn giảm',unit:'USD',limit:null,period:'month'},
+  {id:'gh_actions_minutes',provider:'github',label:'Actions đã chạy tháng này',unit:'phút',limit:null,period:'month'},
   {id:'gh_repo',provider:'github',label:'Mã nguồn repo này',unit:'MB',limit:null,period:'storage'},
   {id:'gh_cache',provider:'github',label:'Cache repo này',unit:'MB',limit:null,period:'storage'},
   {id:'gh_repo_artifacts',provider:'github',label:'Artifacts repo này',unit:'MB',limit:null,period:'storage'},
@@ -50,6 +53,6 @@ export function usageReport(entries, now = Date.now()) {
     const expired=!!entry && metric.period!=='storage' && (today<entry.start || today>entry.end);
     const used=entry && !expired ? entry.used : null;
     const percent=used!==null && metric.limit!==null ? used/metric.limit*100 : null;
-    return {...metric,used,percent,remaining:percent===null?null:Math.max(0,metric.limit-used),status:used===null?'unknown':percent>=100?'exceeded':percent>=80?'warning':'ok',reason:used===null?(['gh_repo','gh_repo_artifacts','gh_cache','sb_database','sb_project_storage'].includes(metric.id)?'API chưa trả số liệu hợp lệ; hệ thống sẽ tự thử lại.':metric.provider==='github'?'API billing tài khoản chưa có quyền đọc; không dùng số ước đoán.':metric.provider==='supabase'?'API usage cấp tổ chức chưa được kết nối; không dùng số ước đoán.':'API chưa trả số liệu hợp lệ; hệ thống sẽ tự thử lại.' ):null,expired,stale:!!entry && now-Date.parse(entry.updatedAt)>86400000,entry:entry||null};
+    return {...metric,used,percent,remaining:percent===null?null:Math.max(0,metric.limit-used),status:used===null?'unknown':percent>=100?'exceeded':percent>=80?'warning':'ok',reason:used===null?(['gh_repo','gh_repo_artifacts','gh_cache','sb_database','sb_project_storage'].includes(metric.id)?'API chưa trả số liệu hợp lệ; hệ thống sẽ tự thử lại.':metric.provider==='github'?(['gh_artifacts','gh_lfs','gh_bandwidth'].includes(metric.id)?'API chưa cung cấp số liệu dung lượng đúng phạm vi toàn tài khoản; không dùng số ước đoán.':'API billing chưa trả báo cáo tháng hợp lệ; hệ thống sẽ tự thử lại.'):metric.provider==='supabase'?'API usage cấp tổ chức chưa được kết nối; không dùng số ước đoán.':'API chưa trả số liệu hợp lệ; hệ thống sẽ tự thử lại.' ):null,expired,stale:!!entry && now-Date.parse(entry.updatedAt)>86400000,entry:entry||null};
   })};
 }

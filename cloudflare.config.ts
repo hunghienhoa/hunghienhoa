@@ -12,6 +12,7 @@ export default defineConfig({
       VISITS: bindings.durableObject({ worker: "hunghienhoa", exportName: "VisitCounter" }),
       ASSETS: bindings.assets(),
       CLOUDFLARE_USAGE_TOKEN: bindings.secret(),
+      GITHUB_USAGE_TOKEN: bindings.secret(),
       FRAME_EMAIL: bindings.sendEmail({ destinationAddress: "hunghienhoa2110@gmail.com", allowedSenderAddresses: ["thongbao@hunghienhoa.com"] }),
       SUPABASE_URL: bindings.text("https://sybdjztpsaffwcvjuimd.supabase.co"),
       SUPABASE_PUBLISHABLE_KEY: bindings.text("sb_publishable_77IrLLmapoiJaotnK8BAvw_WUtoOnp4"),

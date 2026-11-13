@@ -48,7 +48,7 @@ function usageMetric(metric) {
     row.append(make('p',state,'usage-state '+metric.status));
     const progress=make('progress');progress.max=100;progress.value=Math.min(100,metric.percent);progress.setAttribute('aria-label',metric.label+': '+usageNumber(metric.percent)+'%');row.append(progress);
     row.append(make('p',usageNumber(metric.percent)+'% / '+usageNumber(metric.limit)+' '+metric.unit+' · Còn '+usageNumber(metric.remaining)+' '+metric.unit,'usage-balance'));
-  } else row.append(make('p','Phạm vi: '+(metric.provider==='cloudflare'?'toàn tài khoản':metric.provider==='github'?'repo này':'dự án này'),'usage-balance'));
+  } else row.append(make('p','Phạm vi: '+(metric.provider==='cloudflare' || metric.id==='gh_compute' || metric.id.startsWith('gh_actions_')?'toàn tài khoản':metric.provider==='github'?'repo này':'dự án này'),'usage-balance'));
   const updated=make('small','API · '+new Date(metric.entry.updatedAt).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh',hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'}));updated.title=new Date(metric.entry.updatedAt).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'});row.append(updated);
   return row;
 }

@@ -53,6 +53,39 @@ test('artifact pagination includes every page and rejects partial totals',async 
   assert.equal(result.entries.find(row=>row.id==='gh_repo_artifacts').used,101);
   tooMany=true;result=await providerUsage({SUPABASE_URL:'https://db.example.test'},'admin',now);assert.ok(!result.entries.some(row=>row.id==='gh_repo_artifacts'));
 });
+test('GitHub read-only token is sent only to GitHub and never returned',async t=>{
+  let githubCalls=0;
+  t.mock.method(globalThis,'fetch',async(url,options)=>{
+    if(new URL(url).hostname==='api.github.com') {
+      githubCalls++;
+      assert.equal(options.headers.Authorization,'Bearer github-read-test');
+      if(String(url).includes('/actions/artifacts')) return Response.json({total_count:0,artifacts:[]});
+      if(String(url).includes('/actions/cache/usage')) return Response.json({active_caches_size_in_bytes:0});
+      return Response.json({size:1024});
+    }
+    assert.notEqual(options.headers.Authorization,'Bearer github-read-test');
+    return Response.json({}, {status:403});
+  });
+  const result=await providerUsage({SUPABASE_URL:'https://db.example.test',GITHUB_USAGE_TOKEN:'github-read-test'},'admin',now);
+  assert.equal(githubCalls,4);
+  assert.equal(result.entries.length,3);
+  assert.ok(!JSON.stringify(result).includes('github-read-test'));
+});
+test('billing reports actual monthly Actions charges and discounts, not free allowance consumed',async t=>{
+  let invalid=false;
+  t.mock.method(globalThis,'fetch',async(url,options)=>{
+    if(!String(url).includes('/billing/usage/summary')) return Response.json({}, {status:403});
+    assert.equal(options.headers.Authorization,'Bearer billing-read');
+    assert.equal(new URL(url).searchParams.get('month'),'11');
+    return Response.json({timePeriod:{year:2026,month:invalid?10:11},usageItems:[{product:'Actions',unitType:'minutes',grossQuantity:155,grossAmount:.93,discountAmount:.93,netAmount:0}]});
+  });
+  const env={SUPABASE_URL:'https://db.example.test',GITHUB_USAGE_TOKEN:'billing-read'};
+  let result=await providerUsage(env,'admin',now),report=usageReport(result.entries,now),find=id=>report.metrics.find(row=>row.id===id);
+  assert.equal(find('gh_compute').used,0);assert.equal(find('gh_compute').limit,null);
+  assert.equal(find('gh_actions_gross').used,.93);assert.equal(find('gh_actions_discount').used,.93);assert.equal(find('gh_actions_minutes').used,155);
+  assert.equal(find('gh_lfs').used,null);assert.equal(find('gh_artifacts').used,null);
+  invalid=true;result=await providerUsage(env,'admin',now);assert.equal(result.entries.length,0);
+});
 test('usage endpoint is admin-only and read-only; old counter storage is never accessed',async t=>{
   const env={SUPABASE_URL:'https://db.example.test',SUPABASE_PUBLISHABLE_KEY:'public',ADMIN_EMAIL:'owner@example.test',VISITS:{get:()=>{throw new Error('Manual snapshot storage must not be read');}}};
   let email=env.ADMIN_EMAIL;
