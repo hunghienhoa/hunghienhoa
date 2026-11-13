@@ -149,7 +149,7 @@ export function markdownPage(raw,ctx,posts=[],post=null) {
   let text=`# ${md(pageTitle(site,ctx.page))}\n\n`;
   if(ctx.page==='main') {
     text+='## '+md(value(site,'main','Một hộp')+' '+value(site,'main','đầy ý tưởng.'))+'\n\n'+md(value(site,'main',defaultSite.intro,site.intro))+'\n\n## Về Hùng\n\n'+md(value(site,'main',defaultSite.about,site.about));
-    text+=`\n\n## Dự án đã làm\n\n- ${link(value(site,'main','Hộp Ảnh'),ORIGINS.photobooth+'/')}: Photobooth trực tuyến, chụp hoặc chọn bốn ảnh, chỉnh khung, nhãn dán và tải JPEG.\n- ${link(value(site,'main','Góc tò mò'),ORIGINS.blog+'/')}: ${md(site.blogIntro)}\n\nCác thiết kế mẫu trong portfolio chưa đại diện cho dự án hoặc khách hàng thực tế.\n\n## Liên hệ\n\n- Email: ${md(site.email)}\n- Điện thoại: ${md(site.phone)}\n`;
+    text+=`\n\n## Dự án đã làm\n\n- ${link(value(site,'main','Hộp Ảnh'),ORIGINS.photobooth+'/')}: Photobooth trực tuyến, chụp hoặc chọn bốn ảnh, chỉnh khung, nhãn dán và tải JPEG.\n- ${link(value(site,'main','Góc tò mò'),ORIGINS.blog+'/')}: ${md(site.blogIntro)}\n\nBộ sưu tập gồm năm thiết kế cá nhân của Hùng và một thẻ minh họa chuyển động.\n\n## Liên hệ\n\n- Email: ${md(site.email)}\n- Điện thoại: ${md(site.phone)}\n`;
     for(const [name,url]of Object.entries(site.socials))if(/^https:\/\//.test(url))text+=`- ${link(name,url)}\n`;
   } else if(ctx.page==='blog') {
     text+=md(site.blogIntro)+'\n\n## Bài đã xuất bản\n\n';

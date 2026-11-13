@@ -266,8 +266,8 @@
   {
     "key": "main-045",
     "page": "main",
-    "label": "BỘ SƯU TẬP THIẾT KẾ MẪU",
-    "default": "BỘ SƯU TẬP THIẾT KẾ MẪU"
+    "label": "BỘ SƯU TẬP THIẾT KẾ",
+    "default": "BỘ SƯU TẬP THIẾT KẾ"
   },
   {
     "key": "main-046",
@@ -2068,5 +2068,71 @@
     "page": "admin",
     "label": "Lời dẫn trang chia sẻ",
     "default": "Lời dẫn trang chia sẻ"
+  },
+  {
+    "key": "main-149",
+    "page": "main",
+    "label": "Năm thiết kế cá nhân của Hùng và một thẻ minh họa chuyển động.",
+    "default": "Năm thiết kế cá nhân của Hùng và một thẻ minh họa chuyển động."
+  },
+  {
+    "key": "main-137",
+    "page": "main",
+    "label": "Săn sale chào hè",
+    "default": "Săn sale chào hè"
+  },
+  {
+    "key": "main-138",
+    "page": "main",
+    "label": "Poster quảng bá",
+    "default": "Poster quảng bá"
+  },
+  {
+    "key": "main-139",
+    "page": "main",
+    "label": "Children’s World",
+    "default": "Children’s World"
+  },
+  {
+    "key": "main-140",
+    "page": "main",
+    "label": "Ảnh ghép sáng tạo",
+    "default": "Ảnh ghép sáng tạo"
+  },
+  {
+    "key": "main-141",
+    "page": "main",
+    "label": "Móc khóa Hùng Hiền Hòa",
+    "default": "Móc khóa Hùng Hiền Hòa"
+  },
+  {
+    "key": "main-142",
+    "page": "main",
+    "label": "Mockup móc khóa",
+    "default": "Mockup móc khóa"
+  },
+  {
+    "key": "main-143",
+    "page": "main",
+    "label": "Hunghienhoa — IAMBQHUNG",
+    "default": "Hunghienhoa — IAMBQHUNG"
+  },
+  {
+    "key": "main-144",
+    "page": "main",
+    "label": "Thiết kế chữ",
+    "default": "Thiết kế chữ"
+  },
+  {
+    "key": "main-145",
+    "page": "main",
+    "label": "Hùng Hiền Hòa — #BQHTIT",
+    "default": "Hùng Hiền Hòa — #BQHTIT"
+  },
+  {
+    "key": "main-146",
+    "page": "main",
+    "label": "Chữ nổi 3D",
+    "default": "Chữ nổi 3D"
   }
 ]

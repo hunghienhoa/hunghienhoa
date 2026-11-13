@@ -16,14 +16,14 @@ const projects = Array.from(document.querySelectorAll('.project'));
 document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
   document.querySelectorAll('[data-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
   projects.forEach(project => { project.hidden = button.dataset.filter !== 'all' && project.dataset.category !== button.dataset.filter; });
-  document.querySelector('#filter-status').textContent = `Hiển thị ${projects.filter(project => !project.hidden).length} thiết kế mẫu.`;
+  document.querySelector('#filter-status').textContent = `Hiển thị ${projects.filter(project => !project.hidden).length} thiết kế.`;
 }));
 const descriptions = [
- ['Hộp carton, nhãn giấy và sticker theo chất liệu mẫu đã chốt. Các hình ló ra phía sau hộp, nhãn hạ xuống rồi thu lại.', 'Nhận diện · Carton và nhãn giấy'],
- ['Phong bì bạc gói những ý tưởng nhỏ. Nhân vật hai bên vẫy nhẹ, nhãn giấy chuyển động phía dưới.', 'Truyền thông · Phong bì và sticker'],
- ['Cassette ghi lại tần số sáng tạo. Hai nhân vật chạy qua hai phía, cụm nhạc hạ xuống bên dưới.', 'Sự kiện · Cassette và dấu nhạc'],
- ['Bìa đĩa lưu giữ một chút cảm xúc. Đĩa chạy từ cạnh phải, lẩn sau bìa rồi xuất hiện phía dưới.', 'Ấn phẩm · Giấy, bìa và đĩa'],
- ['Túi trà giấy với họa tiết gập vào giữa. Các hàng trang trí chuyển động phía sau, nhãn hạ xuống sau đó.', 'Bao bì · Túi giấy và họa tiết'],
+ ['Poster chủ đề mua sắm mùa hè với tông xanh mát, chữ vàng nổi bật và bố cục phối cảnh. Nhân vật, quà tặng cùng chi tiết giảm giá tạo cảm giác sôi động cho thiết kế.', 'Poster · Ghép ảnh · Chữ nổi'],
+ ['Một thế giới đồ chơi rực rỡ với máy gắp, máy chơi game và các chi tiết âm nhạc. Tông xanh ngọc, hồng và vàng cùng những lớp mây tạo chiều sâu và cảm giác vui nhộn.', 'Ảnh ghép sáng tạo · Bố cục · Màu sắc'],
+ ['Mockup móc khóa tên riêng trên nền đỏ, kết hợp chữ viết tay, viền ánh kim và charm nhân vật. Ánh sáng phản chiếu làm nổi bật bề mặt và chi tiết của thiết kế.', 'Mockup · Chữ trang trí · Trình bày sản phẩm'],
+ ['Thiết kế chữ kết hợp nét viết tay và chữ in hoa, điểm xuyết cầu vồng cùng các ngôi sao. Viền trắng và bóng đổ tạo cảm giác như một nhãn dán mang dấu ấn cá nhân.', 'Thiết kế chữ · Nhãn dán · Màu sắc'],
+ ['Thiết kế chữ in hoa uốn cong với các lớp nổi khối. Xanh đậm, đỏ cam và phần đổ khối màu vàng tạo chiều sâu, giúp tên và dấu nhận diện cá nhân nổi bật.', 'Chữ nổi 3D · Bố cục chữ · Phối màu'],
  ['Túi minh họa đựng những chuyện bé xíu. Hai lá cờ mở ra hai bên, bảng nhỏ xuất hiện phía dưới.', 'Minh họa · Túi giấy và cờ']
 ];
 const dialog = document.querySelector('#project-dialog');
@@ -36,6 +36,8 @@ function showProject(index) {
   document.querySelector('#dialog-art').replaceChildren(artwork);
   document.querySelector('#dialog-description').textContent = descriptions[index][0];
   document.querySelector('#dialog-scope').textContent = descriptions[index][1];
+  dialog.querySelector('.eyebrow').textContent = index < 5 ? 'THIẾT KẾ CÁ NHÂN' : 'BẢN DỰNG CHUYỂN ĐỘNG';
+  dialog.querySelector('.draft-label').style.display = index < 5 ? 'none' : '';
   if (!dialog.open) dialog.showModal();
   dialog.scrollTop = 0;
 }

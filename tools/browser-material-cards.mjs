@@ -7,6 +7,8 @@ const base=process.env.SITE_URL||'http://127.0.0.1:4180';
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage();
 const errors=[],sources=[];
+const titles=['Săn sale chào hè','Children’s World','Móc khóa Hùng Hiền Hòa','Hunghienhoa — IAMBQHUNG','Hùng Hiền Hòa — #BQHTIT','Minh họa'];
+const scopes=['Poster · Ghép ảnh · Chữ nổi','Ảnh ghép sáng tạo · Bố cục · Màu sắc','Mockup · Chữ trang trí · Trình bày sản phẩm','Thiết kế chữ · Nhãn dán · Màu sắc','Chữ nổi 3D · Bố cục chữ · Phối màu','Minh họa · Túi giấy và cờ'];
 page.on('pageerror',e=>errors.push(e.message));
 page.on('request',r=>{if(r.url().includes('/reference-cards/card-'))sources.push(r.url());});
 fs.mkdirSync('outputs/material-cards',{recursive:true});
@@ -35,6 +37,11 @@ try{
   for(let i=0;i<6;i++){
    await page.locator(`[data-project="${i}"]`).click();
    assert.ok(await page.locator('#project-dialog').evaluate(e=>e.open));
+   assert.equal(await page.locator('#dialog-title').innerText(),titles[i]);
+   assert.equal(await page.locator('#dialog-scope').innerText(),scopes[i]);
+   assert.equal(await page.locator('#project-dialog>.eyebrow').innerText(),i<5?'THIẾT KẾ CÁ NHÂN':'BẢN DỰNG CHUYỂN ĐỘNG');
+   assert.equal(await page.locator('#project-dialog>.draft-label').isVisible(),i===5);
+   if(i===5)assert.equal(await page.locator('#dialog-description').innerText(),'Túi minh họa đựng những chuyện bé xíu. Hai lá cờ mở ra hai bên, bảng nhỏ xuất hiện phía dưới.');
    const g=await page.locator('#dialog-art .material-scene').boundingBox();assert.ok(g.width>150&&g.height>90);
    assert.ok(await page.locator('#project-dialog').evaluate(e=>e.scrollWidth<=e.clientWidth+1));
    await page.keyboard.press('Escape');
@@ -62,7 +69,7 @@ try{
  }
  await page.locator('[data-project="0"]').click();await page.locator('.next-project').click();
  assert.ok(await page.locator('#dialog-art .scene-02').count());await page.keyboard.press('Escape');
- await page.locator('[data-filter="illustration"]').click();assert.equal(await page.locator('#work .project:not([hidden])').count(),1);
+ await page.locator('[data-filter="illustration"]').click();assert.equal(await page.locator('#work .project:not([hidden])').count(),2);
  await page.locator('[data-filter="all"]').click();assert.equal(await page.locator('#work .project:not([hidden])').count(),6);
  await page.emulateMedia({reducedMotion:'reduce'});await page.reload();await freeze(.5);
  const reduced=await page.locator('#work .material-scene').evaluateAll(nodes=>nodes.map(e=>({animations:e.getAnimations({subtree:true}).length,props:[...e.querySelectorAll('.prop')].map(p=>({opacity:getComputedStyle(p).opacity,clip:getComputedStyle(p).clipPath}))})));
