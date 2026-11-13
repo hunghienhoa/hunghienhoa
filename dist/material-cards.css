@@ -90,4 +90,6 @@
 @keyframes m-wing-right{0%,100%{transform:translateX(-8cqw);clip-path:inset(0 100% 0 0);opacity:0}16%{transform:translateX(-3cqw);clip-path:inset(0 55% 0 0);opacity:1}32%,70%{transform:translateX(3cqw);clip-path:inset(0);opacity:1}90%{transform:translateX(-2cqw);clip-path:inset(0 45% 0 0);opacity:1}}
 @keyframes m-book-plaque{0%,11%,100%{transform:translateY(-100%);opacity:0}25%{transform:translateY(-45%);opacity:1}42%,64%{transform:translateY(5%);opacity:1}88%{transform:translateY(-65%);opacity:1}}
 .project-art.material-scene{background-size:7.5% 10%}
+.project-art.material-scene.has-custom-image,#dialog-art .project-art.material-scene.has-custom-image{height:auto;aspect-ratio:auto;container-type:normal}
+.project-art.material-scene.has-custom-image>.custom-page-image{height:auto}
 @media(prefers-reduced-motion:reduce){.material-scene .prop,.material-scene .tape-window>i{animation:none!important;transform:none!important;opacity:1!important;clip-path:none!important}.material-scene .record-disc{transform:translateY(12cqw) rotate(240deg)!important}.material-scene .record-tail{transform:scaleY(1)!important}}
