@@ -11,6 +11,13 @@
       const node = [...element.childNodes].find(node => node.nodeType===3 && node.textContent.trim());
       if (node) node.textContent=value;
     }
+    for(const [key,path] of Object.entries(site.pageImages||{})) {
+      if(!/^\/api\/media\/[a-f0-9-]{36}\.webp$/.test(path))continue;
+      const target=key==='about'?document.querySelector('.about-art .portrait'):/^project-[0-5]$/.test(key)?document.querySelector('[data-project="'+key.slice(8)+'"] .project-art'):null;
+      if(!target || target.dataset.customImage===path)continue;
+      const image=document.createElement('img');image.src=path;image.alt=key==='about'?'Ảnh giới thiệu Hùng':target.closest('.project')?.querySelector('h3')?.textContent||'Ảnh dự án';image.className='custom-page-image';image.loading='lazy';image.decoding='async';
+      target.replaceChildren(image);target.classList.add('has-custom-image');target.dataset.customImage=path;
+    }
     const socials=site.socials || {};
     for (const link of document.querySelectorAll('.social-link[href]')) {
       const name=link.getAttribute('aria-label')?.split(' ')[0]?.toLowerCase();

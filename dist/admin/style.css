@@ -43,3 +43,7 @@
  .usage-provider[data-active=false]{display:none}.usage-provider{grid-template-columns:minmax(0,1fr);padding:16px;gap:12px}.usage-provider h2{font-size:24px}.usage-metric{padding:16px}.usage-title h3{font-size:18px}.usage-metric .usage-value{font-size:28px}.usage-provider>.view-head{gap:10px}.usage-provider .view-head>a{font-size:13px;padding:10px}
  #usage-list{margin-top:16px;gap:16px}.menu>button:last-of-type{grid-column:auto}
 }
+
+/* Headers retain their own layout on narrow screens. */
+@media(max-width:760px){.desk .view-head{display:flex;flex-direction:column;align-items:flex-start;gap:16px}.desk .view-head>button{margin:0}.desk .view-head h1,.desk .view-head h2{margin:0;line-height:1.25}.usage-provider>.view-head{margin-bottom:4px}.usage-provider .view-head>a{display:inline-flex;align-items:center;min-height:44px}.desk [data-view="usage"] h1{font-size:32px;line-height:1.25}}
+.media-field img{max-height:160px;object-fit:contain;margin:12px auto}.media-field input{font-size:12px}.media-field p{font-size:12px}.inline-image-preview{display:grid;gap:12px;margin-block:16px}.inline-image-preview img{max-height:180px;margin:auto}.inline-image-preview figure{margin:0;padding:12px;border:1px solid #30348733}

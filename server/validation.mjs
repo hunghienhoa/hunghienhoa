@@ -2,6 +2,12 @@ import contentFields from '../dist/content-fields.json' with { type: 'json' };
 import {FRAME_CATEGORIES} from '../dist/photobooth/design.mjs';
 export const HOUR = 60 * 60 * 1000;
 export const MAX_IMAGE_BYTES = 1024 * 1024;
+export const siteImageKeys=['about','project-0','project-1','project-2','project-3','project-4','project-5'];
+export function mediaAsset(value) {
+  keys(value,['scope','imageDataUrl']);
+  if(!['site','post'].includes(value.scope)) fail(400,'Nhóm ảnh chưa hợp lệ.');
+  return {scope:value.scope,image:decodeWebP(value.imageDataUrl)};
+}
 export function fail(status, message) { throw Object.assign(new Error(message), { status }); }
 export function object(value) { return value && typeof value === 'object' && !Array.isArray(value); }
 export function keys(value, allowed) {
@@ -114,7 +120,7 @@ export const defaultSite = {
   about: 'Đây là góc nhỏ dành cho những điều mình sáng tạo: từ một nét vẽ, một câu chuyện đến một thế giới hình ảnh hoàn chỉnh. Mình tin sự tò mò luôn là điểm bắt đầu thú vị.',
   email: 'hunghienhoa2110@gmail.com', phone: '0898.29.8886',
   blogTitle: 'Góc tò mò của Hùng', blogIntro: 'Những điều nhỏ mà thú vị, những ý tưởng muốn giữ lại và những câu chuyện muốn chia sẻ.',
-  pageTexts: {}, theme: { cream:'#fbf2e3',blue:'#303487',yellow:'#ffdc38' },
+  pageTexts: {}, pageImages: {}, theme: { cream:'#fbf2e3',blue:'#303487',yellow:'#ffdc38' },
   socials: {facebook:'https://www.facebook.com/quanghungdethuong',instagram:'https://www.instagram.com/im.bqhung/',threads:'https://www.threads.com/@im.bqhung',tiktok:'https://www.tiktok.com/@im.bqhung',zalo:'https://zalo.me/0898298886',youtube:'https://www.youtube.com/@hunghienhoa98886',wechat:'bqhtit'}
 };
 export function siteSettings(value) {
@@ -129,6 +135,9 @@ export function siteSettings(value) {
   const pageTexts = value.pageTexts ?? {};
   keys(pageTexts, contentFields.map(field => field.key));
   result.pageTexts = Object.fromEntries(Object.entries(pageTexts).map(([key,value]) => [key,text(value,3000,false,true)]));
+  keys(value.pageImages ?? {},siteImageKeys);
+  result.pageImages={...value.pageImages};
+  for(const url of Object.values(result.pageImages)) if(typeof url!=='string' || !/^\/api\/media\/[a-f0-9-]{36}\.webp$/.test(url)) fail(400,'Đường dẫn ảnh trang web chưa hợp lệ.');
   if (value.theme!==undefined) keys(value.theme,Object.keys(defaultSite.theme));
   result.theme = {...defaultSite.theme,...value.theme};
   keys(result.theme,Object.keys(defaultSite.theme));

@@ -115,6 +115,7 @@ function editPost(post) {
   for (const key of ['id', 'title', 'slug', 'excerpt', 'content', 'category', 'status']) form.elements.namedItem(key).value = post?.[key] || (key === 'status' ? 'draft' : '');
   form.elements.tags.value = (post?.tags || []).join(', '); form.elements.isSample.checked = !!post?.isSample;
   coverData = undefined; $('#post-cover').value = ''; $('#cover-preview').hidden = !post?.coverUrl;
+  $('#post-form textarea[name="content"]').dispatchEvent(new Event('input'));
   if (post?.coverUrl) setImage($('#cover-preview'), post.coverUrl); else $('#cover-preview').removeAttribute('src');
   message($('#post-status'));
 }
@@ -245,6 +246,18 @@ async function loadCustomization(settings) {
   const socialNames={facebook:'Facebook',instagram:'Instagram',threads:'Threads',tiktok:'TikTok',zalo:'Zalo',youtube:'YouTube',wechat:'Mã WeChat'};
   for(const [key,value] of Object.entries(defaults)) {const label=make('label',socialNames[key]),input=make('input');input.type=key==='wechat'?'text':'url';input.required=true;input.maxLength=key==='wechat'?80:500;input.dataset.social=key;input.value=settings.socials?.[key] || value;label.append(input);global.append(label);}
   container.append(global);
+  const images=make('details');images.append(make('summary','Ảnh trang chính — giới thiệu và dự án'));
+  const imageGrid=make('div',undefined,'field-grid');images.append(imageGrid);
+  for(const [key,name] of Object.entries({about:'Ảnh giới thiệu về Hùng','project-0':'01 — Nhận diện thương hiệu','project-1':'02 — Chiến dịch truyền thông','project-2':'03 — Thiết kế sự kiện','project-3':'04 — Thiết kế ấn phẩm','project-4':'05 — Thiết kế bao bì','project-5':'06 — Minh họa'})) {
+    const label=make('label',name,'custom-field media-field'),input=make('input'),preview=make('img'),note=make('p');
+    input.type='file';input.accept='image/png,image/jpeg,image/webp';input.dataset.imageKey=key;input.dataset.imageUrl=settings.pageImages?.[key]||'';
+    preview.alt=name;preview.hidden=!input.dataset.imageUrl;if(input.dataset.imageUrl)preview.src=input.dataset.imageUrl;
+    const version=authVersion;
+    input.addEventListener('change',async()=>{const file=input.files[0];if(!file)return;input.disabled=true;$('#save-customization').disabled=true;try{const asset=await uploadAdminImage(file,'site');if(version!==authVersion || !input.isConnected)return;input.dataset.imageUrl=asset.url;preview.hidden=false;setImage(preview,asset.previewUrl);note.textContent='Ảnh đã chọn. Bấm Lưu tùy chỉnh toàn trang để áp dụng.';}catch(error){if(version===authVersion)note.textContent=error.message;}finally{input.disabled=false;$('#save-customization').disabled=!!document.querySelector('[data-image-key]:disabled');input.value='';}});
+    const reset=action('Khôi phục hình gốc',async()=>{input.dataset.imageUrl='';preview.hidden=true;preview.removeAttribute('src');note.textContent='Bấm Lưu tùy chỉnh toàn trang để khôi phục.';});
+    label.append(input,preview,note,reset);imageGrid.append(label);
+  }
+  container.append(images);
   for(const [page,name] of Object.entries({main:'Trang chính',blog:'Blog',photobooth:'Photobooth',admin:'Quản trị'})) {
     const group=make('details');group.append(make('summary',name));
     const grid=make('div',undefined,'field-grid');group.append(grid);
@@ -264,7 +277,7 @@ $('#editor-columns').addEventListener('change',event=>{
 });
 $('#customize-search').addEventListener('input',event=>{
   const query=event.target.value.toLocaleLowerCase('vi-VN').trim();
-  for(const label of document.querySelectorAll('.custom-field'))label.hidden=!!query && !(label.textContent+' '+label.querySelector('textarea').value).toLocaleLowerCase('vi-VN').includes(query);
+  for(const label of document.querySelectorAll('.custom-field'))label.hidden=!!query && !(label.textContent+' '+(label.querySelector('textarea')?.value||'')).toLocaleLowerCase('vi-VN').includes(query);
   let first;
   for(const group of document.querySelectorAll('#customize-fields details')) {
     const fields=[...group.querySelectorAll('.custom-field')];
@@ -276,11 +289,12 @@ $('#customize-search').addEventListener('input',event=>{
 $('#customize-form').addEventListener('submit',async event=>{
   event.preventDefault();const button=$('#save-customization');button.disabled=true;
   try {
-    const pageTexts={},socials={},theme={};
+    const pageTexts={},socials={},theme={},pageImages={};
+    for(const input of document.querySelectorAll('[data-image-key]'))if(input.dataset.imageUrl)pageImages[input.dataset.imageKey]=input.dataset.imageUrl;
     for(const input of document.querySelectorAll('[data-text-key]'))if(input.value!==contentFields.find(field=>field.key===input.dataset.textKey).default)pageTexts[input.dataset.textKey]=input.value;
     for(const input of document.querySelectorAll('[data-social]'))socials[input.dataset.social]=input.value.trim();
     for(const input of document.querySelectorAll('[data-theme]'))theme[input.dataset.theme]=input.value;
-    currentSettings=await api('/api/admin/site',{method:'PUT',body:JSON.stringify({...currentSettings,pageTexts,socials,theme})});
+    currentSettings=await api('/api/admin/site',{method:'PUT',body:JSON.stringify({...currentSettings,pageTexts,pageImages,socials,theme})});
     message($('#customize-status'),'Đã lưu tùy chỉnh. Tải lại trang tương ứng để xem thay đổi.');
   }catch(error){message($('#customize-status'),error.message,true);}finally{button.disabled=false;}
 });

@@ -32,12 +32,41 @@ function pastedMarkdown(root) {
   return Array.from(root.childNodes,walk).join('').trim();
 }
 if(contentEditor) {
+  contentEditor.id='post-content';contentEditor.parentElement.htmlFor=contentEditor.id;
   const toolbar=document.createElement('div');toolbar.className='editor-tools';toolbar.setAttribute('role','group');toolbar.setAttribute('aria-label','Định dạng nội dung');
   for(const [label,before,after] of [['Tiêu đề','\n## ','\n'],['Đậm','**','**'],['Danh sách','\n- ','\n'],['Trích dẫn','\n> ','\n'],['Đoạn mã','\n```\n','\n```\n']]) {
     const button=document.createElement('button');button.type='button';button.className='outline';button.textContent=label;
     button.addEventListener('click',()=>{const start=contentEditor.selectionStart,end=contentEditor.selectionEnd;const selected=contentEditor.value.slice(start,end);const value=before+selected+after;if(contentEditor.value.length-(end-start)+value.length>contentEditor.maxLength)return;contentEditor.setRangeText(value,start,end,'end');contentEditor.focus();contentEditor.dispatchEvent(new Event('input',{bubbles:true}));});toolbar.append(button);
   }
-  contentEditor.before(toolbar);
+  const imageButton=document.createElement('button'),picker=document.createElement('input');
+  imageButton.type='button';imageButton.className='outline';imageButton.textContent='Chèn ảnh';
+  picker.type='file';picker.accept='image/png,image/jpeg,image/webp';picker.hidden=true;picker.id='post-inline-image';
+  imageButton.addEventListener('click',()=>picker.click());
+  picker.addEventListener('change',async()=>{
+    const file=picker.files[0];if(!file)return;
+    const form=document.querySelector('#post-form'),postId=form.elements.namedItem('id').value,before=contentEditor.value,start=contentEditor.selectionStart,end=contentEditor.selectionEnd,version=authVersion;
+    imageButton.disabled=true;
+    try {
+      const asset=await uploadAdminImage(file,'post');
+      if(version!==authVersion || form.elements.namedItem('id').value!==postId || contentEditor.value!==before) throw new Error('Nội dung đã thay đổi trong lúc tải ảnh. Hãy chèn lại ảnh.');
+      const value='\n\n![Mô tả ảnh]('+asset.url+')\n\n';
+      if(contentEditor.value.length-(end-start)+value.length>contentEditor.maxLength)throw new Error('Nội dung vượt giới hạn 80.000 ký tự.');
+      contentEditor.setRangeText(value,start,end,'end');contentEditor.dispatchEvent(new Event('input',{bubbles:true}));contentEditor.focus();
+      message(document.querySelector('#post-status'),'Đã chèn ảnh căn giữa. Có thể sửa chữ Mô tả ảnh; lưu bài viết để áp dụng.');
+    } catch(error){if(version===authVersion)message(document.querySelector('#post-status'),error.message,true);}
+    finally{imageButton.disabled=false;picker.value='';}
+  });
+  toolbar.append(imageButton,picker);contentEditor.before(toolbar);
+  const previews=document.createElement('div');previews.className='inline-image-preview';contentEditor.after(previews);
+  let previewSignature='';
+  const refreshImages=()=>{
+    const urls=[...contentEditor.value.matchAll(/^!\[([^\]\r\n]{0,200})\]\((\/api\/media\/[a-f0-9-]{36}\.webp)\)$/gm)].slice(0,30);
+    const signature=JSON.stringify(urls.map(match=>[match[1],match[2]]));if(signature===previewSignature)return;previewSignature=signature;
+    previews.replaceChildren();
+    for(const match of urls){const figure=document.createElement('figure'),img=document.createElement('img'),caption=document.createElement('figcaption');img.alt=match[1];caption.textContent=match[1];setImage(img,match[2].replace('/api/media/','/api/admin/media/'));figure.append(img,caption);previews.append(figure);}
+  };
+  contentEditor.addEventListener('input',refreshImages);
+  document.querySelector('#post-form').addEventListener('reset',()=>{previewSignature='';previews.replaceChildren();});
   contentEditor.addEventListener('paste',event=>{
     const data=event.clipboardData;if(!data)return;
     const html=data.getData('text/html'),plain=data.getData('text/plain');

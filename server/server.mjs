@@ -10,7 +10,7 @@ import { initVisits, recordVisit, visitSummary, pageForVisit } from './visits.mj
 import {usageReport} from './usage.mjs';
 import { adsenseHtml } from './adsense.mjs';
 import {agentRoute,pageContext,representation,markdown404,decorateHtml} from './agent-content.mjs';
-import { HOUR, fail, keys, text, password, defaultSite, siteSettings, submission, post, imageMime } from './validation.mjs';
+import { HOUR, fail, keys, text, password, defaultSite, siteSettings, submission, post, imageMime, mediaAsset } from './validation.mjs';
 
 const derive = promisify(scrypt);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -54,6 +54,7 @@ export function createApp(options = {}) {
     CREATE INDEX IF NOT EXISTS submissions_expiry ON submissions(expires_at);
     CREATE TABLE IF NOT EXISTS frames(id TEXT PRIMARY KEY,name TEXT NOT NULL,author_name TEXT NOT NULL,author_link TEXT NOT NULL,design TEXT NOT NULL,image BLOB NOT NULL,created_at INTEGER NOT NULL);`);
   const quotaSql=(query,...params)=>db.prepare(query).all(...params);
+  db.exec('CREATE TABLE IF NOT EXISTS media_assets(id TEXT PRIMARY KEY,scope TEXT NOT NULL,image BLOB NOT NULL)');
   initContributionLimit(quotaSql);
   db.prepare('INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)').run('site', JSON.stringify(defaultSite));
   if (!db.prepare('SELECT value FROM settings WHERE key=?').get('seeded')) {
@@ -163,7 +164,14 @@ export function createApp(options = {}) {
       if (req.method === 'GET' && route === '/api/health') return json(res, { ok: true });
       if (req.method === 'GET' && route === '/api/site') return json(res, JSON.parse(getSetting('site')));
       if (req.method === 'GET' && route === '/api/posts') return json(res, { posts: db.prepare("SELECT * FROM posts WHERE status='published' ORDER BY published_at DESC,id").all().map(row => postData(row)) });
-      let match = route.match(/^\/api\/posts\/([^/]+)\/cover\.webp$/);
+      let match=route.match(/^\/api\/media\/([a-f0-9-]{36})\.webp$/);
+      if(req.method==='GET' && match) {
+        const row=db.prepare('SELECT * FROM media_assets WHERE id=?').get(match[1]),url='/api/media/'+match[1]+'.webp';
+        const visible=row && (row.scope==='site'?Object.values(JSON.parse(getSetting('site')).pageImages||{}).includes(url):!!db.prepare("SELECT id FROM posts WHERE status='published' AND instr(content,?)>0 LIMIT 1").get(url));
+        if(!visible) fail(404,'Không tìm thấy ảnh.');
+        return image(res,row.image,true);
+      }
+      match = route.match(/^\/api\/posts\/([^/]+)\/cover\.webp$/);
       if (req.method === 'GET' && match) {
         const row = db.prepare("SELECT cover FROM posts WHERE id=? AND status='published'").get(match[1]);
         if (!row?.cover) fail(404, 'Không tìm thấy ảnh.');
@@ -236,6 +244,13 @@ export function createApp(options = {}) {
           if (req.method === 'GET') return json(res, JSON.parse(getSetting('site')));
           if (req.method === 'PUT') { const value = siteSettings(await body(req)); setSetting('site', JSON.stringify(value)); return json(res, value); }
         }
+        if(route==='/api/admin/media' && req.method==='POST') {
+          const value=mediaAsset(await body(req)),id=randomUUID();
+          db.prepare('INSERT INTO media_assets VALUES(?,?,?)').run(id,value.scope,value.image);
+          return json(res,{url:'/api/media/'+id+'.webp',previewUrl:'/api/admin/media/'+id+'.webp'},201);
+        }
+        const media=route.match(/^\/api\/admin\/media\/([a-f0-9-]{36})\.webp$/);
+        if(req.method==='GET' && media) {const row=db.prepare('SELECT image FROM media_assets WHERE id=?').get(media[1]);if(!row)fail(404,'Không tìm thấy ảnh.');return image(res,row.image,true);}
         if (route === '/api/admin/posts' && req.method === 'GET') return json(res, { posts: db.prepare('SELECT * FROM posts ORDER BY created_at DESC,id').all().map(row => postData(row, true)) });
         match = route.match(/^\/api\/admin\/posts(?:\/([^/]+))?$/);
         if (match && ['POST', 'PUT', 'DELETE'].includes(req.method)) {

@@ -1,4 +1,4 @@
-import { readingMinutes, filterPosts, articleBlocks, inlineTokens, safeCoverURL } from './core.mjs?v=2';
+import { readingMinutes, filterPosts, articleBlocks, inlineTokens, safeCoverURL } from './core.mjs?v=media-3';
 
 const $ = selector => document.querySelector(selector);
 const API = String(window.HUNG_API_BASE || '').replace(/\/$/, '');
@@ -159,6 +159,12 @@ function renderBody(content) {
   const nodes = [];
   let list;
   for (const block of articleBlocks(content)) {
+    if(block.type==='image') {
+      list=null;
+      const figure=element('figure','article-image'),image=element('img');
+      image.src=safeCoverURL(block.src,API,location.origin);image.alt=block.text;image.loading='lazy';image.decoding='async';
+      figure.append(image);if(block.text)figure.append(element('figcaption','',block.text));nodes.push(figure);continue;
+    }
     if (block.type === 'code') {
       list=null;
       const box=element('section','article-code'),bar=element('div','code-bar'),button=element('button','', 'Sao chép'),status=element('span','code-status');

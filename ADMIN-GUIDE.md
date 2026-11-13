@@ -36,3 +36,9 @@ Cloudflare dùng secret CLOUDFLARE_USAGE_TOKEN, chỉ Account Analytics Read c�
 Nguồn: [Supabase](https://supabase.com/docs/guides/platform/billing-on-supabase), [GitHub](https://docs.github.com/en/billing/reference/product-usage-included), [Workers](https://developers.cloudflare.com/workers/platform/pricing/), [Durable Objects](https://developers.cloudflare.com/durable-objects/observability/metrics-and-analytics/).
 
 Kiểm tra: npm run check; node tools/browser-usage-audit.mjs. Bộ kiểm tra browser dùng tài khoản cục bộ và API fixture tự động, không cần mật khẩu production.
+
+## Chèn và thay ảnh
+
+- Bài viết: bấm **Chèn ảnh**, chọn PNG/JPEG/WebP. Ảnh được chuyển thành WebP dưới 1 MB; mã ảnh được chèn tại vị trí con trỏ, có xem trước. Sửa chữ trong `![Mô tả ảnh](...)` để đổi chú thích. Ảnh bài viết luôn căn giữa và chỉ công khai khi được dùng trong bài đã xuất bản.
+- Nội dung web → **Ảnh trang chính — giới thiệu và dự án**: đổi ảnh trong khung giới thiệu và sáu thẻ dự án. Bấm **Lưu tùy chỉnh toàn trang** để áp dụng; **Khôi phục hình gốc** rồi lưu để trả lại minh họa gốc. Ảnh dự án cũng được dùng khi mở xem lớn.
+- Ảnh tải lên tính vào dung lượng database Supabase. Ảnh chưa dùng hoặc bị thay thế vẫn nằm trong database; bản này chưa có công cụ dọn thư viện ảnh.

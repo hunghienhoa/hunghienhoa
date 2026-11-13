@@ -1,7 +1,7 @@
 import {contributionDay} from '../server/contribution-limit.mjs';
 import {usageReport} from '../server/usage.mjs';
 import {providerUsage} from './usage-providers.mjs';
-import { fail, post, siteSettings, submission, defaultSite, imageMime } from '../server/validation.mjs';
+import { fail, post, siteSettings, submission, defaultSite, imageMime, mediaAsset } from '../server/validation.mjs';
 import { pageForVisit } from '../server/visits.mjs';
 import { adsenseHtml } from '../server/adsense.mjs';
 import {agentRoute,pageContext,representation,markdown404,decorateHtml} from '../server/agent-content.mjs';
@@ -133,6 +133,11 @@ async function publicApi(request, env, route, ctx) {
   if (request.method === 'GET' && route === '/api/health') return json({ ok: true, service: 'hunghienhoa' });
   if (request.method === 'GET' && route === '/api/site') {
     const rows = await rest(env, 'site_settings', { query: { select: 'data', id: 'eq.1', limit: 1 } });
+  const media=route.match(/^\/api\/media\/([a-f0-9-]{36})\.webp$/);
+  if(request.method==='GET' && media) {
+    const rows=await rest(env,'media_assets',{query:{select:'image_base64',id:`eq.${media[1]}`,limit:1}});
+    return image(rows?.[0]?.image_base64,true);
+  }
     if (!rows?.[0]) fail(503, 'Nội dung trang chưa được khởi tạo.');
     return json(rows[0].data);
   }
@@ -206,6 +211,16 @@ async function adminApi(request, env, route) {
   if (!originAllowed(request)) fail(403, 'Nguồn gửi yêu cầu không được phép.');
   if (route === '/api/admin/logout' && request.method === 'POST') return json({ ok: true });
   if (route === '/api/admin/usage') {
+  if(route==='/api/admin/media' && request.method==='POST') {
+    const value=mediaAsset(await readJson(request)),id=crypto.randomUUID();
+    await rest(env,'media_assets',{method:'POST',token,body:{id,scope:value.scope,image_base64:value.image.toString('base64')},prefer:'return=minimal'});
+    return json({url:`/api/media/${id}.webp`,previewUrl:`/api/admin/media/${id}.webp`},201);
+  }
+  const media=route.match(/^\/api\/admin\/media\/([a-f0-9-]{36})\.webp$/);
+  if(request.method==='GET' && media) {
+    const rows=await rest(env,'media_assets',{token,query:{select:'image_base64',id:`eq.${media[1]}`,limit:1}});
+    return image(rows?.[0]?.image_base64,true);
+  }
     if (request.method!=='GET') return new Response(JSON.stringify({error:'Số liệu chỉ cập nhật tự động từ API.'}),{status:405,headers:{Allow:'GET','Content-Type':'application/json','Cache-Control':'no-store'}});
     const live=await providerUsage(env,token);
     return json({...usageReport(live.entries),connections:live.connections});

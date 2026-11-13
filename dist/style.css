@@ -18,3 +18,5 @@ html{overflow-x:clip}.project-grid{grid-template-columns:repeat(2,minmax(0,1fr))
 .ideas,h2 em{letter-spacing:-.045em;line-height:1.08}
 .scribble{letter-spacing:-.02em}
 .about-lead{font-size:25px;line-height:1.4}
+
+.portrait.has-custom-image{overflow:hidden;background:none}.portrait.has-custom-image::before,.portrait.has-custom-image::after,.project-art.has-custom-image::before,.project-art.has-custom-image::after{display:none}.has-custom-image>.custom-page-image{display:block;position:static;width:100%;height:100%;max-width:100%;object-fit:contain;transform:none;animation:none}.portrait.has-custom-image>.custom-page-image{object-fit:cover}.project-art.has-custom-image{padding:0;overflow:hidden;background:var(--cream)}
