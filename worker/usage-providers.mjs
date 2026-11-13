@@ -24,7 +24,7 @@ export async function providerUsage(env,token,now=Date.now()) {
         const bytes=await readJson(new URL('/rest/v1/rpc/'+rpc,env.SUPABASE_URL),{method:'POST',headers:{apikey:env.SUPABASE_PUBLISHABLE_KEY,Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:'{}'});
         entry(id,nonnegative(bytes)/divisor);
       }));
-      connections.supabase=`${results.filter(row=>row.status==='fulfilled').length}/2 chỉ số dự án đã kết nối. Quota chung tổ chức cần API usage riêng. MB = 1.024² byte; GB = 1.024³ byte. Không thay số thiếu bằng 0.`;
+      connections.supabase=`${results.filter(row=>row.status==='fulfilled').length}/2 chỉ số dự án đã kết nối. API usage tổ chức hiện từ chối token chỉ đọc (Unsupported access token); API công khai không có Storage tổ chức, egress và MAU. Ba chỉ số này cần xem tại Dashboard Supabase. MB = 1.024² byte; GB = 1.024³ byte. Không thay số thiếu bằng 0.`;
     })(),
     (async()=>{
       const headers={'User-Agent':'hunghienhoa-admin-usage',Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2026-03-10'};

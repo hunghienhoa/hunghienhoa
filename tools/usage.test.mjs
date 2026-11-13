@@ -12,6 +12,8 @@ test('only API measurements appear; manual history and missing data never become
   assert.equal(metric('sb_database').status,'exceeded');assert.equal(metric('sb_database').remaining,0);
   assert.equal(metric('cf_month').used,0);assert.equal(metric('cf_month').percent,null);
   assert.equal(metric('sb_storage').used,null);assert.equal(metric('sb_storage').entry,null);
+  assert.match(metric('sb_storage').reason,/không hỗ trợ token chỉ đọc/);
+  assert.equal(report.providers.supabase.dashboard,'https://supabase.com/dashboard/org/iklcupebqkuxlcsfxypc/usage');
   report=usageReport(entries,Date.UTC(2026,10,12));assert.equal(metric('cf_requests').used,null);
   report=usageReport(entries,Date.UTC(2026,11,1));assert.equal(metric('cf_month').used,null);
 });
