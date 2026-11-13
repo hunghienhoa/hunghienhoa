@@ -27,7 +27,7 @@ console.log('PASS: AdSense publisher/code on three public heads only; nonce CSP 
 const policies=['chinh-sach-rieng-tu','dieu-khoan-su-dung','bao-cao-ban-quyen','cookie-va-quang-cao'];
 for(const page of ['dist/index.html','dist/blog/index.html','dist/photobooth/index.html','dist/photobooth/shoot.html',...policies.map(name=>`dist/${name}.html`)]) {
   const html=readFileSync(page,'utf8');
-  for(const name of policies) assert.ok(html.includes(`https://hunghienhoa.com/${name}.html`));
+  for(const name of policies) assert.ok(html.includes(`https://hunghienhoa.com/${name}`));
   assert.ok(html.indexOf('aria-label="Chính sách website"')>html.indexOf('<p class="footer-wish"'));
   assert.ok(!html.includes('pagead2.googlesyndication.com'));
 }

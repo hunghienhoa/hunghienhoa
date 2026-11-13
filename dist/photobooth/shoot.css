@@ -20,3 +20,5 @@
 .shoot-page>.policy-links{width:min(1280px,90%);margin:24px auto 0;border-top:1px solid #30348744;padding:16px 0;gap:8px 20px;font-size:11px}
 
 .shoot-page>.footer-wish{width:min(1280px,90%);margin:32px auto 0;text-align:center;font:italic clamp(15px,1.7vw,20px)/1.6 'Playfair Display',Georgia,serif}
+
+.shoot-page #studio-title{font-size:clamp(28px,4.5vw,52px);line-height:1.15;letter-spacing:-.04em}

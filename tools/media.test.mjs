@@ -6,7 +6,15 @@ import path from 'node:path';
 import {createApp} from '../server/server.mjs';
 import {articleBlocks} from '../dist/blog/core.mjs';
 import {defaultSite,siteSettings,mediaAsset} from '../server/validation.mjs';
+import worker from '../worker/index.mjs';
 const bytes=fs.readFileSync('server/fixtures/frame.webp'),imageDataUrl='data:image/webp;base64,'+bytes.toString('base64');
+
+test('public cloud image route reaches its own permission-filtered query',async()=>{
+ const originalFetch=globalThis.fetch;
+ globalThis.fetch=async input=>{const url=new URL(input);assert.equal(url.pathname,'/rest/v1/media_assets');assert.equal(url.searchParams.get('id'),'eq.12345678-1234-1234-1234-123456789abc');return Response.json([{image_base64:bytes.toString('base64')}]);};
+ try{const response=await worker.fetch(new Request('https://blog.hunghienhoa.com/api/media/12345678-1234-1234-1234-123456789abc.webp'),{SUPABASE_URL:'https://test.example',SUPABASE_PUBLISHABLE_KEY:'test'});assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'image/webp');assert.deepEqual(Buffer.from(await response.arrayBuffer()),bytes);}
+ finally{globalThis.fetch=originalFetch;}
+});
 test('only uploaded local images become article blocks and validated site settings',()=>{
  const url='/api/media/12345678-1234-1234-1234-123456789abc.webp';
  assert.deepEqual(articleBlocks('Trước\n\n![Chú thích]('+url+')\n\nSau').map(b=>b.type),['p','image','p']);

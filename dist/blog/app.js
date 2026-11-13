@@ -62,12 +62,6 @@ function postLink(post, className) {
   const link = element('a', className);
   link.href = `?bai=${encodeURIComponent(post.slug)}`;
   link.setAttribute('aria-label', `Đọc bài viết ${post.title}`);
-  link.addEventListener('click', event => {
-    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button > 0) return;
-    event.preventDefault();
-    history.pushState(null, '', link.href);
-    openArticle(post.slug);
-  });
   return link;
 }
 
@@ -141,6 +135,11 @@ async function loadPosts() {
     state.loaded = true;
     renderFeed();
   } catch {
+    if($('#featured').childElementCount||$('#post-grid').childElementCount){
+      $('#post-grid').setAttribute('aria-busy','false');
+      $('#feed-message').hidden=true;
+      return;
+    }
     $('#featured').hidden = true;
     $('#post-grid').replaceChildren();
     $('#post-grid').setAttribute('aria-busy', 'false');
@@ -188,12 +187,13 @@ function renderBody(content) {
 
 async function openArticle(slug) {
   const request = ++articleRequest;
+  const rendered=$('#article').dataset.renderedSlug===slug;
   $('#intro').hidden = true;
   $('#bai-viet').hidden = true;
   $('.ribbon-shell').hidden = true;
   $('#reader').hidden = false;
-  $('#article').hidden = true;
-  $('#reader-message').textContent = 'Đang mở câu chuyện…';
+  if(!rendered)$('#article').hidden = true;
+  $('#reader-message').textContent = rendered?'':'Đang mở câu chuyện…';
   $('#reader').scrollIntoView({ behavior: 'instant', block: 'start' });
   try {
     let post = state.posts.find(item => item.slug === slug);
@@ -222,30 +222,17 @@ async function openArticle(slug) {
     $('#reader-title').focus({ preventScroll: true });
   } catch {
     if (request !== articleRequest) return;
+    if(rendered){$('#reader-message').textContent='';return;}
     $('#reader-message').textContent = 'Chưa mở được bài viết này. Bài có thể chưa được đăng, địa chỉ đã đổi hoặc kết nối đang gián đoạn. Bạn có thể trở về danh sách để chọn trang khác.';
     document.title = `Chưa mở được bài viết — ${blogName}`;
   }
-}
-
-function goList(updateURL = true) {
-  articleRequest++;
-  $('#intro').hidden = false;
-  $('#bai-viet').hidden = false;
-  $('.ribbon-shell').hidden = false;
-  $('#reader').hidden = true;
-  document.title = `${blogName} — Những điều thú vị`;
-  if (updateURL) history.pushState(null, '', `${location.pathname}#bai-viet`);
-  $('#bai-viet').scrollIntoView({ behavior: 'instant', block: 'start' });
 }
 
 $('#search-form').addEventListener('submit', event => { event.preventDefault(); state.query = $('#search').value; renderFeed(); });
 $('#search').addEventListener('input', () => { state.query = $('#search').value; if (state.loaded) renderFeed(); });
 $('#clear-filters').addEventListener('click', () => { state.query = ''; state.category = ''; $('#search').value = ''; renderFeed(); });
 $('#retry').addEventListener('click', loadPosts);
-$('#back-list').addEventListener('click', event => { event.preventDefault(); goList(); });
-$('.reader-end').addEventListener('click', event => { event.preventDefault(); goList(); });
-$('#list-nav').addEventListener('click', event => { if (!$('#reader').hidden) { event.preventDefault(); goList(); } });
-window.addEventListener('popstate', () => { const slug = new URLSearchParams(location.search).get('bai'); if (slug) openArticle(slug); else goList(false); });
+$('#list-nav').href='./#bai-viet';
 
 getJSON('/api/site').then(site => {
   if (typeof site.blogTitle === 'string' && site.blogTitle.trim()) {

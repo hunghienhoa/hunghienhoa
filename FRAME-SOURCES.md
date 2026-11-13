@@ -27,3 +27,7 @@ Thiết kế tự dựng bằng canvas và SVG sẵn có: ô ảnh hình tim xen
 ## Hai gói khung do Hùng cung cấp
 
 Nhập photobooth_70_frames_v3.zip và photobooth_100_frames_v2.zip (170 mẫu). Bản PNG gốc ở source-assets/original-png/frame-packs, ngoài webroot. Web dùng WebP có alpha 720×2180 và thumbnail WebP 144×436. Vùng ghép suy ra từ các vùng trong suốt, giữ nguyên artwork; không dùng ảnh người làm preview. Chia nhóm Tối giản, Sinh nhật & lễ hội, Việt Nam, Nhạc pop & Y2K, Nhật ký & vintage, Dễ thương & thiên nhiên. Bộ 32 mẫu tự dựng nằm riêng trong Bộ Hộp Ảnh. Mẫu ít hơn bốn ô dùng các ảnh đầu; mẫu sáu ô lặp lại hai ảnh đầu.
+
+## Xác nhận của chủ trang ngày 13/11/2026
+
+Hùng xác nhận bốn file thiết kế PSD/PSB/AI đang chia sẻ trên blog và toàn bộ 170 khung trong hai bộ đã nhập là do Hùng tự tạo. Giữ các tài nguyên và ghi công Hùng Hiền Hòa; không coi bộ này là tài nguyên chưa rõ tác giả. Đây là thông tin do chủ trang xác nhận, không phải chứng nhận độc lập về mọi thành phần bên thứ ba. Việc sử dụng lại của người tải theo phạm vi công bố hoặc trao đổi với Hùng; không tự suy ra quyền bán lại hay phân phối lại file gốc.

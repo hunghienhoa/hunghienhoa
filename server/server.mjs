@@ -9,7 +9,7 @@ import { promisify } from 'node:util';
 import { initVisits, recordVisit, visitSummary, pageForVisit } from './visits.mjs';
 import {usageReport} from './usage.mjs';
 import { adsenseHtml } from './adsense.mjs';
-import {agentRoute,pageContext,representation,markdown404,decorateHtml} from './agent-content.mjs';
+import {agentRoute,pageContext,representation,markdown404,publicHtml,publicRedirect,POLICY_PATHS} from './agent-content.mjs';
 import { HOUR, fail, keys, text, password, defaultSite, siteSettings, submission, post, imageMime, mediaAsset } from './validation.mjs';
 
 const derive = promisify(scrypt);
@@ -308,11 +308,15 @@ export function createApp(options = {}) {
     }
     if (!['GET', 'HEAD'].includes(req.method)) fail(405, 'Chỉ hỗ trợ đọc trang.');
     const pageURL=new URL(req.url,`http://${req.headers.host}`),ctxPage=pageContext(pageURL);
-    const agent=await agentRoute(new Request(pageURL,{method:req.method,headers:{Accept:req.headers.accept||'*/*'}}),{
+    const redirect=publicRedirect(pageURL);
+    if(redirect){res.writeHead(308,{Location:redirect.href});return res.end();}
+    const data={
       site:async()=>JSON.parse(getSetting('site')),
       posts:async()=>db.prepare("SELECT slug,title,excerpt,is_sample FROM posts WHERE status='published' ORDER BY published_at DESC,id").all().map(row=>({...row,isSample:!!row.is_sample})),
-      post:async slug=>{const row=db.prepare("SELECT * FROM posts WHERE slug=? AND status='published'").get(slug);return row?postData(row):null;}
-    });
+      post:async slug=>{const row=db.prepare("SELECT * FROM posts WHERE slug=? AND status='published'").get(slug);return row?postData(row):null;},
+      listing:async()=>db.prepare("SELECT id,slug,title,excerpt,category,tags,published_at,is_sample,cover IS NOT NULL AS has_cover FROM posts WHERE status='published' ORDER BY published_at DESC,id LIMIT 50").all().map(row=>({...postData(row),coverUrl:row.has_cover?`/api/posts/${row.id}/cover.webp`:null}))
+    };
+    const agent=await agentRoute(new Request(pageURL,{method:req.method,headers:{Accept:req.headers.accept||'*/*'}}),data);
     if(agent){res.writeHead(agent.status,Object.fromEntries(agent.headers));return res.end(req.method==='HEAD'?undefined:Buffer.from(await agent.arrayBuffer()));}
     if (route.includes('\0') || route.split(/[\\/]/).some(part => part.startsWith('.'))) fail(404, 'Không tìm thấy trang.');
     const adminHost = options.adminHost ?? process.env.ADMIN_HOST ?? 'admin.hunghienhoa.com';
@@ -320,6 +324,7 @@ export function createApp(options = {}) {
     if (requestHost === adminHost) route = `/admin${route}`;
     if (route === '/photobooth/shoot/') { res.writeHead(308, {Location:'/photobooth/shoot'}); return res.end(); }
     if (route === '/photobooth/shoot') route = '/photobooth/shoot.html';
+    if(POLICY_PATHS.includes(route))route+='.html';
     let file = path.resolve(dist, `.${route}`);
     const relative = path.relative(dist, file);
     if (relative.startsWith('..') || path.isAbsolute(relative)) fail(404, 'Không tìm thấy trang.');
@@ -330,13 +335,15 @@ export function createApp(options = {}) {
     const content = fs.readFileSync(file);
     const visitPage = pageForVisit(route);
     if (visitPage && req.method === 'GET' && contentType.includes('text/html') && !/bot|crawler|spider|headless/i.test(req.headers['user-agent'] || '')) recordVisit(visitSQL, visitPage, now(), hash(contributionDay(now()) + ':' + req.socket.remoteAddress));
-    const metadata=contentType.includes('text/html')&&ctxPage&&['/','/index.html'].includes(ctxPage.path);
-    const html=metadata?decorateHtml(content.toString('utf8'),JSON.parse(getSetting('site')),ctxPage,pageURL):contentType.includes('text/html')?content.toString('utf8'):'';
+    const metadata=contentType.includes('text/html')&&ctxPage&&['/','/index.html',...(ctxPage.page==='photobooth'?['/shoot','/shoot.html']:[])].includes(ctxPage.path);
+    const page=metadata?await publicHtml(content.toString('utf8'),JSON.parse(getSetting('site')),ctxPage,pageURL,data):null;
+    const html=page?page.body:contentType.includes('text/html')?content.toString('utf8'):'';
     if(metadata)res.setHeader('Vary','Accept');
     const ads = contentType.includes('text/html') ? adsenseHtml(html,randomBytes(16).toString('base64')) : null;
     const output = ads ? Buffer.from(ads.body) : metadata?Buffer.from(html):content;
     if (ads) res.setHeader('Content-Security-Policy',ads.csp);
-    res.writeHead(200, { 'Content-Type': contentType, 'Content-Length': output.length, 'Cache-Control': ads ? 'no-store' : 'no-cache' });
+    if(page?.status===404)res.setHeader('X-Robots-Tag','noindex');
+    res.writeHead(page?.status||200, { 'Content-Type': contentType, 'Content-Length': output.length, 'Cache-Control': metadata||ads ? 'no-store' : 'no-cache' });
     res.end(req.method === 'HEAD' ? undefined : output);
   }
   const server = http.createServer((req, res) => { handle(req, res).catch(error => {

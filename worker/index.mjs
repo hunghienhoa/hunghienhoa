@@ -4,7 +4,7 @@ import {providerUsage} from './usage-providers.mjs';
 import { fail, post, siteSettings, submission, defaultSite, imageMime, mediaAsset } from '../server/validation.mjs';
 import { pageForVisit } from '../server/visits.mjs';
 import { adsenseHtml } from '../server/adsense.mjs';
-import {agentRoute,pageContext,representation,markdown404,decorateHtml} from '../server/agent-content.mjs';
+import {agentRoute,pageContext,representation,markdown404,publicHtml,publicRedirect} from '../server/agent-content.mjs';
 export { VisitCounter } from './visits.mjs';
 
 const API_LIMIT = 1600000;
@@ -16,9 +16,9 @@ function json(value, status = 200) {
   return new Response(JSON.stringify(value), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
 }
 
-async function withSecurity(response, env, metadata) {
+async function withSecurity(response, env, metadata, head=false) {
   const headers = new Headers(response.headers);
-  let body = response.body;
+  let body = response.body,status=response.status;
   headers.set('Content-Security-Policy', `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' ${env.SUPABASE_URL}; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'`);
   headers.set('Permissions-Policy', 'camera=(self), microphone=(), geolocation=()');
   headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -27,7 +27,9 @@ async function withSecurity(response, env, metadata) {
   if (headers.get('content-type')?.includes('text/html')) {
     let html = await response.text();
     if(metadata) {
-      html=decorateHtml(html,metadata.site,metadata.ctx,metadata.url);
+      const page=await publicHtml(html,metadata.site,metadata.ctx,metadata.url,metadata.data);
+      html=page.body;status=page.status;
+      if(status===404)headers.set('X-Robots-Tag','noindex');
       headers.append('Vary','Accept');headers.set('Cache-Control','no-store');headers.delete('ETag');headers.delete('Content-Length');
     }
     const ads = adsenseHtml(html, crypto.randomUUID().replaceAll('-',''));
@@ -37,7 +39,7 @@ async function withSecurity(response, env, metadata) {
     const cacheControl = headers.get('Cache-Control') || 'no-store';
     headers.set('Cache-Control', /(?:^|,)\s*no-transform(?:,|$)/i.test(cacheControl) ? cacheControl : cacheControl + ', no-transform');
   }
-  return new Response(body, { status: response.status, statusText: response.statusText, headers });
+  return new Response(head?null:body, { status, headers });
 }
 
 async function readJson(request) {
@@ -131,13 +133,13 @@ function originAllowed(request) {
 async function publicApi(request, env, route, ctx) {
   if (!originAllowed(request)) fail(403, 'Nguồn gửi yêu cầu không được phép.');
   if (request.method === 'GET' && route === '/api/health') return json({ ok: true, service: 'hunghienhoa' });
-  if (request.method === 'GET' && route === '/api/site') {
-    const rows = await rest(env, 'site_settings', { query: { select: 'data', id: 'eq.1', limit: 1 } });
   const media=route.match(/^\/api\/media\/([a-f0-9-]{36})\.webp$/);
   if(request.method==='GET' && media) {
     const rows=await rest(env,'media_assets',{query:{select:'image_base64',id:`eq.${media[1]}`,limit:1}});
     return image(rows?.[0]?.image_base64,true);
   }
+  if (request.method === 'GET' && route === '/api/site') {
+    const rows = await rest(env, 'site_settings', { query: { select: 'data', id: 'eq.1', limit: 1 } });
     if (!rows?.[0]) fail(503, 'Nội dung trang chưa được khởi tạo.');
     return json(rows[0].data);
   }
@@ -209,8 +211,6 @@ async function adminApi(request, env, route) {
   const token = await requireAdmin(request, env);
   if (route === '/api/admin/analytics' && request.method === 'GET') return env.VISITS.get(env.VISITS.idFromName('site')).fetch('https://counter/summary');
   if (!originAllowed(request)) fail(403, 'Nguồn gửi yêu cầu không được phép.');
-  if (route === '/api/admin/logout' && request.method === 'POST') return json({ ok: true });
-  if (route === '/api/admin/usage') {
   if(route==='/api/admin/media' && request.method==='POST') {
     const value=mediaAsset(await readJson(request)),id=crypto.randomUUID();
     await rest(env,'media_assets',{method:'POST',token,body:{id,scope:value.scope,image_base64:value.image.toString('base64')},prefer:'return=minimal'});
@@ -221,6 +221,8 @@ async function adminApi(request, env, route) {
     const rows=await rest(env,'media_assets',{token,query:{select:'image_base64',id:`eq.${media[1]}`,limit:1}});
     return image(rows?.[0]?.image_base64,true);
   }
+  if (route === '/api/admin/logout' && request.method === 'POST') return json({ ok: true });
+  if (route === '/api/admin/usage') {
     if (request.method!=='GET') return new Response(JSON.stringify({error:'Số liệu chỉ cập nhật tự động từ API.'}),{status:405,headers:{Allow:'GET','Content-Type':'application/json','Cache-Control':'no-store'}});
     const live=await providerUsage(env,token);
     return json({...usageReport(live.entries),connections:live.connections});
@@ -298,24 +300,17 @@ async function adminApi(request, env, route) {
 
 function assetRequest(request) {
   const url = new URL(request.url), host = url.hostname.toLowerCase();
-  if (host === 'www.hunghienhoa.com') {
-    url.hostname = 'hunghienhoa.com';
-    return new Response(null, { status: 308, headers: { Location: url.href } });
-  }
-  const projectPath = url.pathname.match(/^\/(admin|blog|photobooth)(?:\/|$)/);
-  if (host === 'hunghienhoa.com' && projectPath) {
-    url.hostname = `${projectPath[1]}.hunghienhoa.com`;
-    url.pathname = url.pathname.slice(projectPath[1].length + 1) || '/';
-    return new Response(null, { status: 308, headers: { Location: url.href } });
-  }
+  const redirect=publicRedirect(url);
+  if(redirect)return Response.redirect(redirect.href,308);
   const section = host === 'admin.hunghienhoa.com' ? 'admin' : host === 'blog.hunghienhoa.com' ? 'blog' : host === 'photobooth.hunghienhoa.com' ? 'photobooth' : '';
-  if (section === 'photobooth' && url.pathname === '/shoot/') return new Response(null, {status:308,headers:{Location:new URL('/shoot',url).href}});
   if (section && !url.pathname.startsWith(`/${section}/`)) url.pathname = `/${section}${url.pathname === '/' ? '/' : url.pathname}`;
   return new Request(url, request);
 }
 
 export default {
   async fetch(request, env, ctx) {
+    const redirect=publicRedirect(new URL(request.url));
+    if(redirect)return Response.redirect(redirect.href,308);
     const route = new URL(request.url).pathname;
     try {
       if (route.startsWith('/api/')) {
@@ -333,7 +328,8 @@ export default {
           for(let offset=0;offset<50000;offset+=1000){const rows=await rest(env,'posts',{query:{select:'slug,title,excerpt,is_sample',status:'eq.published',order:'published_at.desc,id.asc',limit:1000,offset}});posts.push(...rows.map(row=>({...row,isSample:!!row.is_sample})));if(rows.length<1000)return posts;}
           fail(503,'Danh sách cần được chia thành nhiều sitemap.');
         },
-        post:async slug=>{const rows=await rest(env,'posts',{query:{select:POSTS_SELECT,status:'eq.published',slug:'eq.'+slug,limit:1}});return rows[0]?postData(rows[0]):null;}
+        post:async slug=>{const rows=await rest(env,'posts',{query:{select:POSTS_SELECT,status:'eq.published',slug:'eq.'+slug,limit:1}});return rows[0]?postData(rows[0]):null;},
+        listing:async()=>{const rows=await rest(env,'posts',{query:{select:'id,slug,title,excerpt,category,published_at,is_sample,has_cover',status:'eq.published',order:'published_at.desc,id.asc',limit:50}});return rows.map(row=>postData(row));}
       };
       const agent=await agentRoute(request,data);
       if(agent)return withSecurity(agent,env);
@@ -345,8 +341,8 @@ export default {
         const count = env.VISITS.get(env.VISITS.idFromName('site')).fetch(`https://counter/record?page=${page}&key=${key}`, {method:'POST'}).catch(() => console.error('visit_count_failed'));
         if (ctx?.waitUntil) ctx.waitUntil(count); else await count;
       }
-      const metadata=ctxPage&&['/','/index.html'].includes(ctxPage.path)&&response.ok&&response.headers.get('content-type')?.includes('text/html')?{ctx:ctxPage,url,site:await data.site().catch(()=>defaultSite)}:null;
-      return withSecurity(response, env, metadata);
+      const metadata=ctxPage&&['/','/index.html',...(ctxPage.page==='photobooth'?['/shoot','/shoot.html']:[])].includes(ctxPage.path)&&response.ok&&response.headers.get('content-type')?.includes('text/html')?{ctx:ctxPage,url,site:await data.site().catch(()=>defaultSite),data}:null;
+      return withSecurity(response, env, metadata, request.method==='HEAD');
     } catch (error) {
       const status = Number(error?.status) || 500;
       if (status >= 500) console.error(JSON.stringify({ message: 'request_failed', status, path: route, error: error instanceof Error ? error.message : String(error) }));
