@@ -25,6 +25,19 @@ const html=decorateHtml(fs.readFileSync('dist/index.html','utf8'),site,ctx,new U
 const json=html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1];
 const graph=JSON.parse(json)['@graph'];
 assert.equal(graph.find(item=>item['@type']==='Person').name,site.displayName);
+const website=graph.find(item=>item['@type']==='WebSite');
+assert.equal(website.name,site.displayName);assert.equal(website.url,ORIGINS.main+'/');
+assert.equal(website.publisher['@id'],graph.find(item=>item['@type']==='Person')['@id']);
+assert.equal(graph.find(item=>item['@type']==='ProfilePage').isPartOf['@id'],website['@id']);
+assert.deepEqual(website.hasPart.map(ref=>graph.find(item=>item['@id']===ref['@id']).url),[ORIGINS.photobooth+'/',ORIGINS.blog+'/',ORIGINS.snaptik+'/']);
+for(const [page,origin]of Object.entries(ORIGINS)){
+ const context={page,path:'/',origin},template=fs.readFileSync(page==='main'?'dist/index.html':`dist/${page}/index.html`,'utf8');
+ const rendered=decorateHtml(template,defaultSite,context,new URL(origin+'/'));
+ assert.equal((rendered.match(/rel="canonical"/g)||[]).length,1,page);
+ assert.equal((rendered.match(/property="og:site_name"/g)||[]).length,1,page);
+ const nodes=JSON.parse(rendered.match(/type="application\/ld\+json">([\s\S]*?)<\/script>/)[1])['@graph'].filter(item=>item['@type']==='WebSite');
+ assert.equal(nodes.length,1);assert.equal(nodes[0].url,origin+'/');assert.ok(nodes[0].name&&nodes[0].inLanguage==='vi');
+}
 assert.ok(!json.includes('</script>')&&!json.includes('PRIVATE-ADMIN-MARKER'));
 assert.ok(graph.find(item=>item['@type']==='Person').sameAs.every(value=>value.startsWith('https://')));
 assert.ok(html.includes('rel="canonical"')&&html.includes('type="text/markdown"'));
