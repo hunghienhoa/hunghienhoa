@@ -17,12 +17,17 @@ async function limitedJSON(response) {
 }
 export async function resolveVideo(value,fetcher=fetch) {
  let url;try{url=tiktokURL(value);}catch(e){throw error(400,e.message);}
- let response;
+ let response,result;
+ for(let attempt=0;attempt<2;attempt++){
  try{response=await fetcher('https://www.tikwm.com/api/',{method:'POST',headers:{Accept:'application/json'},body:new URLSearchParams({url,hd:'1'}),signal:AbortSignal.timeout(25000),redirect:'manual'});}
  catch{throw error(504,'Nguồn video phản hồi chậm. Hãy thử lại sau một chút.');}
- if(response.status===429)throw error(429,'Nguồn video đang bận. Bạn chờ một chút rồi thử lại nhé.');
- if(!response.ok)throw error(502,'Chưa kết nối được nguồn video. Hãy thử lại sau.');
- const result=await limitedJSON(response),d=result?.data;
+ if(response.status===429){await response.body?.cancel();if(!attempt){await new Promise(resolve=>setTimeout(resolve,1100));continue;}throw error(429,'Nguồn video đang bận. Bạn chờ một chút rồi thử lại nhé.');}
+ if(!response.ok){await response.body?.cancel();throw error(502,'Chưa kết nối được nguồn video. Hãy thử lại sau.');}
+ result=await limitedJSON(response);
+ if(result.code!==0&&/limit|frequen|too many|busy/i.test(result.msg||'')){if(!attempt){await new Promise(resolve=>setTimeout(resolve,1100));continue;}throw error(429,'Nguồn video đang bận. Bạn chờ một chút rồi thử lại nhé.');}
+ break;
+ }
+ const d=result?.data;
  if(result.code!==0||!d||!/^\d{15,22}$/.test(String(d.id)))throw error(404,'Chưa lấy được nội dung. Kiểm tra bài còn công khai và liên kết đã đầy đủ nhé.');
  const formats=[];
  for(const [kind,key,label,size]of [['video','play','Video MP4','size'],['hd','hdplay','Video chất lượng cao','hd_size'],['audio','music','Âm thanh','']]){

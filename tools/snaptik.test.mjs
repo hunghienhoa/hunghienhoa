@@ -47,6 +47,11 @@ test('short network chunks still yield a valid file',async()=>{
  const chunked=async(i,o)=>String(i).includes('/api/')?provider(i,o):new Response(new ReadableStream({start(c){for(const byte of mp4)c.enqueue(Uint8Array.of(byte));c.close();}}));
  const r=await snaptikRoute(file(),{fetcher:chunked});assert.deepEqual(Buffer.from(await r.arrayBuffer()),mp4);
 });
+test('the source rate limit retries once and stays a 429 if still busy',async()=>{
+ let calls=0;const once=async()=>Response.json(++calls===1?{code:-1,msg:'Free Api Limit: 1 request/second.'}:payload);
+ assert.equal((await resolveVideo(url,once)).id,payload.data.id);assert.equal(calls,2);
+ calls=0;await assert.rejects(()=>resolveVideo(url,async()=>{calls++;return Response.json({code:-1,msg:'Free Api Limit: 1 request/second.'});}),{status:429});assert.equal(calls,2);
+});
 test('Node and Worker share routes, no-store responses and rate protection',async()=>{
  const folder=fs.mkdtempSync(path.join(os.tmpdir(),'hung-snaptik-')),app=createApp({port:0,dataDir:folder,videoFetch:provider});await app.listen();
  try{const local='http://127.0.0.1:'+app.server.address().port;let r=await fetch(local+'/api/snaptik/resolve',{method:'POST',headers:{Origin:local,'Content-Type':'application/json'},body:JSON.stringify({url})});assert.equal(r.status,200);assert.equal((await r.json()).id,payload.data.id);r=await fetch(local+'/snaptik/');assert.equal(r.status,200);assert.ok((await r.text()).includes('id="download-form"'));}
