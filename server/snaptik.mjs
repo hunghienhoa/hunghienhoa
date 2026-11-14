@@ -1,5 +1,6 @@
 import {tiktokURL} from '../dist/snaptik/core.mjs';
 const MAX_FILE=200*1024*1024;
+const results=new WeakMap();
 const roots=['tiktokcdn.com','tiktokcdn-us.com','tiktokcdn-eu.com','tiktok.com','muscdn.com','byteoversea.com','ibytedtos.com','tikwm.com'];
 const error=(status,message)=>Object.assign(new Error(message),{status});
 export function mediaURL(value) {
@@ -17,6 +18,8 @@ async function limitedJSON(response) {
 }
 export async function resolveVideo(value,fetcher=fetch) {
  let url;try{url=tiktokURL(value);}catch(e){throw error(400,e.message);}
+ let cache=results.get(fetcher);if(!cache){cache=new Map();results.set(fetcher,cache);}
+ const saved=cache.get(url);if(saved&&saved.until>Date.now())return saved.data;
  let response,result;
  for(let attempt=0;attempt<2;attempt++){
  try{response=await fetcher('https://www.tikwm.com/api/',{method:'POST',headers:{Accept:'application/json'},body:new URLSearchParams({url,hd:'1'}),signal:AbortSignal.timeout(25000),redirect:'manual'});}
@@ -35,7 +38,10 @@ export async function resolveVideo(value,fetcher=fetch) {
  }
  const images=Array.isArray(d.images)?d.images.slice(0,50).map(mediaURL).filter(Boolean):[];
  if(!formats.length&&!images.length)throw error(404,'Bài này chưa có file phù hợp để tải.');
- return {id:String(d.id),url,title:typeof d.title==='string'?d.title.slice(0,2000):'Một video từ TikTok',author:typeof d.author?.nickname==='string'?d.author.nickname.slice(0,150):'',cover:mediaURL(d.cover),duration:Number(d.duration)||0,formats,images};
+ const data={id:String(d.id),url,title:typeof d.title==='string'?d.title.slice(0,2000):'Một video từ TikTok',author:typeof d.author?.nickname==='string'?d.author.nickname.slice(0,150):'',cover:mediaURL(d.cover),duration:Number(d.duration)||0,formats,images};
+ // Dùng lại kết quả một phút để nút tải không gọi nguồn giới hạn mỗi giây thêm lần nữa.
+ cache.set(url,{until:Date.now()+60000,data});if(cache.size>32)cache.delete(cache.keys().next().value);
+ return data;
 }
 export function publicVideo(data) {return {...data,formats:data.formats.map(({source,...format})=>format),images:undefined,imageCount:data.images.length};}
 async function openFile(source,kind,id,fetcher) {

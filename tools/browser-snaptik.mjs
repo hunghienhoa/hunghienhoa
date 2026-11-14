@@ -21,6 +21,8 @@ try{
   await page.locator('#video-url').fill('https://evil.test/private');await page.locator('#resolve').click();assert.ok(await page.locator('#status[data-error=true]').isVisible());
   await page.locator('#video-url').fill(url);await page.locator('#resolve').click();await page.locator('#tai-video').waitFor({state:'visible',timeout:35000}).catch(async()=>{throw Error(`SnapTik ${width}px: ${await page.locator('#status').textContent()}`)});
   assert.ok((await page.locator('#formats a').count())>=1);assert.equal(await page.evaluate(()=>window.bad),undefined);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+  if(await page.locator('#cover').isVisible())await page.waitForFunction(()=>document.querySelector('#cover').naturalWidth>0);
+  if([390,1440].includes(width))await page.locator('.result-paper').screenshot({path:`outputs/snaptik/result-${width}.png`});
   if(width===390){await page.screenshot({path:'outputs/snaptik/mobile-result.png',fullPage:true});if(!live){const event=page.waitForEvent('download');await page.locator('#image-downloads button').first().click();const download=await event,where=await download.path();assert.match(download.suggestedFilename(),/\.jpg$/);assert.equal(fs.readFileSync(where).subarray(0,2).toString('hex'),'ffd8');}}
   if(width===1440)await page.screenshot({path:'outputs/snaptik/desktop-result.png',fullPage:true});
   await page.locator('#clear').click();assert.equal(await page.locator('#tai-video').isVisible(),false);assert.equal(await page.locator('#video-url').inputValue(),'');

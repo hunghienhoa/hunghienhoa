@@ -52,6 +52,12 @@ test('the source rate limit retries once and stays a 429 if still busy',async()=
  assert.equal((await resolveVideo(url,once)).id,payload.data.id);assert.equal(calls,2);
  calls=0;await assert.rejects(()=>resolveVideo(url,async()=>{calls++;return Response.json({code:-1,msg:'Free Api Limit: 1 request/second.'});}),{status:429});assert.equal(calls,2);
 });
+test('metadata is reused briefly for download clicks, then refreshed',async t=>{
+ let calls=0;const fetcher=async()=>{calls++;return Response.json(payload)};
+ await resolveVideo(url,fetcher);await resolveVideo(url,fetcher);assert.equal(calls,1);
+ const later=Date.now()+61000;t.mock.method(Date,'now',()=>later);
+ await resolveVideo(url,fetcher);assert.equal(calls,2);
+});
 test('Node and Worker share routes, no-store responses and rate protection',async()=>{
  const folder=fs.mkdtempSync(path.join(os.tmpdir(),'hung-snaptik-')),app=createApp({port:0,dataDir:folder,videoFetch:provider});await app.listen();
  try{const local='http://127.0.0.1:'+app.server.address().port;let r=await fetch(local+'/api/snaptik/resolve',{method:'POST',headers:{Origin:local,'Content-Type':'application/json'},body:JSON.stringify({url})});assert.equal(r.status,200);assert.equal((await r.json()).id,payload.data.id);r=await fetch(local+'/snaptik/');assert.equal(r.status,200);assert.ok((await r.text()).includes('id="download-form"'));}
