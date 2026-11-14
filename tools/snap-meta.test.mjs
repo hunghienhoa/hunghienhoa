@@ -24,9 +24,25 @@ test('Instagram matches the requested shortcode and supports mixed public albums
  const d=await resolveVideo(ig,fetcher);assert.equal(d.id,video.id);assert.equal(d.platform,'instagram');assert.equal(d.title,'<script>bad()</script>');assert.equal(d.formats[0].source,video.video_url);assert.equal(d.duration,12.119);assert.deepEqual(calls,['https://www.instagram.com/p/DfrnJTpSzky/embed/']);
  const album={...video,__typename:'GraphSidecar',edge_sidecar_to_children:{edges:[{node:video},{node:{is_video:false,display_url:'https://photo.fbcdn.net/1.jpg'}},{node:{...video,video_url:'https://video.fbcdn.net/2.mp4'}}]}};
  const data=await resolveVideo(ig,async()=>new Response(body({post:album})));assert.equal(data.formats.length,2);assert.equal(data.formats[1].kind,'video-1');assert.equal(data.images.length,1);
- for(const bad of [{...video,shortcode:'other'},{...video,owner:{is_private:true}},{...video,video_url:'https://127.0.0.1/x.mp4'}])await assert.rejects(()=>resolveVideo(ig,async()=>new Response(body({post:bad}))),{status:404});
+ for(const [bad,status]of [[{...video,shortcode:'other'},503],[{...video,owner:{is_private:true}},404],[{...video,video_url:'https://127.0.0.1/x.mp4'},404]])await assert.rejects(()=>resolveVideo(ig,async()=>new Response(body({post:bad}))),{status});
  let redirected=false;const canonical=async()=>{if(!redirected){redirected=true;return new Response(null,{status:302,headers:{Location:'https://www.instagram.com/reel/DfrnJTpSzky/embed/'}});}return new Response(body({post:video}));};assert.equal((await resolveVideo(ig,canonical)).id,video.id);
  await assert.rejects(()=>resolveVideo(ig,async()=>new Response(null,{status:302,headers:{Location:'https://www.instagram.com/accounts/login/'}})),{status:404});
+});
+test('Instagram retries a missing public payload through the captioned embed without caching failures',async()=>{
+ const calls=[],fetcher=async u=>{calls.push(String(u));return new Response(calls.length===1?'<html>Temporary empty embed</html>':body({post:video}));};
+ const d=await resolveVideo(ig,fetcher);assert.equal(d.formats[0].source,video.video_url);assert.deepEqual(calls,[ig.replace('/reel/','/p/')+'embed/',ig.replace('/reel/','/p/')+'embed/captioned/']);
+ let ready=false,count=0;const retry=async()=>{count++;return new Response(ready?body({post:video}):'<html>No media</html>');};
+ await assert.rejects(()=>resolveVideo(ig,retry),{status:503});assert.equal(count,2);ready=true;assert.equal((await resolveVideo(ig,retry)).id,video.id);assert.equal(count,3);
+ let privateCalls=0;await assert.rejects(()=>resolveVideo(ig,async()=>{privateCalls++;return new Response(body({post:{...video,owner:{is_private:true}}}));}),{status:404});assert.equal(privateCalls,1);
+});
+test('Facebook falls back to exact-ID native media and only labels confirmed live videos as live',async()=>{
+ const calls=[],native={id:'1651147979258484',browser_native_sd_url:'https://video.fbcdn.net/native.mp4',browser_native_hd_url:'https://video.fbcdn.net/native-hd.mp4'};
+ const fetcher=async u=>{calls.push(String(u));return new Response(String(u).includes('/plugins/')?'<html>No player data</html>':body({videos:[{...native,id:'9999999999',is_live_streaming:true},native]}));};
+ const d=await resolveVideo(fb,fetcher);assert.equal(d.formats[0].source,native.browser_native_sd_url);assert.equal(d.formats[1].source,native.browser_native_hd_url);assert.equal(calls.length,2);assert.equal(calls[1],fb);
+ for(const flag of ['is_live_stream','is_live_streaming'])await assert.rejects(()=>resolveVideo(fb,async()=>new Response(body({video:{video_id:native.id,sd_src:native.browser_native_sd_url,[flag]:true}}))),{status:422});
+ await assert.rejects(()=>resolveVideo(fb,async()=>new Response(body({videos:[{...native,id:'9999999999'}]}))),e=>e.status===503&&!e.message.includes('trực tiếp'));
+ let reads=0;const shareFetch=async u=>{reads++;if(String(u)===share)return new Response(null,{status:302,headers:{Location:fb}});return new Response(String(u)===fb?body({video:native}):'<html>No player data</html>');};
+ assert.equal((await resolveVideo(share,shareFetch)).formats[0].source,native.browser_native_sd_url);assert.equal(reads,3);
 });
 test('Facebook resolves share redirects, matches the exact video and preserves public metadata',async()=>{
  const calls=[],fetcher=async u=>{u=String(u);calls.push(u);if(u===share)return new Response(null,{status:302,headers:{Location:fb}});if(u===fb)return new Response('<meta property="og:description" content="Hùng &amp; bạn"><meta property="og:image" content="https://photo.fbcdn.net/a.jpg">');

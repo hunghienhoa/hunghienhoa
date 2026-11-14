@@ -72,9 +72,16 @@ function facebookId(value){const u=new URL(value);return u.pathname.match(/\/(?:
 async function resolveMeta({platform,url},fetcher){
  let page,id,root,details;const formats=[],images=[];
  if(platform==='instagram'){
-  const code=new URL(url).pathname.split('/')[2];page=await metaPage('https://www.instagram.com/p/'+code+'/embed/',fetcher);
-  root=embeddedData(page.html).find(v=>v.shortcode===code&&/^(GraphVideo|GraphImage|GraphSidecar)$/.test(v.__typename||''));
-  if(!root||root.owner?.is_private)throw error(404,'Bài Instagram chưa có file nhúng công khai để tải.');
+  const code=new URL(url).pathname.split('/')[2];
+  // Hai trang nhúng công khai có thể trả dữ liệu khác nhau trong cùng thời điểm.
+  for(const suffix of ['embed/','embed/captioned/']){
+   page=await metaPage('https://www.instagram.com/p/'+code+'/'+suffix,fetcher);
+   root=embeddedData(page.html).find(v=>v.shortcode===code&&/^(GraphVideo|GraphImage|GraphSidecar)$/.test(v.__typename||''));
+   if(root?.owner?.is_private)throw error(404,'Bài Instagram này không công khai.');
+   const nodes=root?.edge_sidecar_to_children?.edges?.map(e=>e?.node)||[root];
+   if(nodes.some(v=>v&&(v.is_video===true?mediaURL(v.video_url):mediaURL(v.display_url))))break;
+  }
+  if(!root)throw error(503,'Instagram tạm thời chưa cung cấp dữ liệu tải cho liên kết này. Bạn thử lại sau một chút nhé.');
   id=String(root.id||code);const nodes=root.edge_sidecar_to_children?.edges?.map(e=>e?.node)||[root];
   for(const node of nodes.slice(0,50)){if(!node)continue;const source=mediaURL(node.video_url);if(node.is_video===true){if(source)formats.push({kind:formats.length?'video-'+formats.length:'video',label:'Video MP4'+(nodes.length>1?' · '+(formats.length+1):''),size:0,source});}else{const image=mediaURL(node.display_url);if(image)images.push(image);}}
  }else{
@@ -82,8 +89,18 @@ async function resolveMeta({platform,url},fetcher){
   if(!id){details=await metaPage(url,fetcher);id=facebookId(details.url)||facebookId(metaTag(details.html,'og:url')||url);}
   if(!/^\d{5,25}$/.test(id||''))throw error(404,'Chưa nhận diện được video Facebook. Hãy sao chép liên kết trực tiếp của video hoặc Reels.');
   page=await metaPage('https://www.facebook.com/plugins/video.php?'+new URLSearchParams({href:'https://www.facebook.com/reel/'+id}),fetcher);
-  root=embeddedData(page.html).find(v=>String(v.video_id)===id&&(v.sd_src||v.hd_src));
-  if(!root||root.is_live_stream)throw error(404,'Video Facebook chưa có file nhúng công khai để tải. Video đang trực tiếp chưa được hỗ trợ.');
+  const videoFrom=html=>{
+   const matches=embeddedData(html).filter(v=>String(v.video_id||v.id)===id);
+   if(matches.some(v=>v.is_live_stream===true||v.is_live_streaming===true))throw error(422,'Video đang trực tiếp chưa được hỗ trợ. Hãy thử lại sau khi buổi phát kết thúc.');
+   const v=matches.find(v=>mediaURL(v.sd_src||v.browser_native_sd_url)||mediaURL(v.hd_src||v.browser_native_hd_url));
+   return v?{...v,sd_src:v.sd_src||v.browser_native_sd_url,hd_src:v.hd_src||v.browser_native_hd_url}:null;
+  };
+  root=videoFrom(page.html);
+  if(!root){
+   details||=await metaPage('https://www.facebook.com/reel/'+id,fetcher);
+   root=videoFrom(details.html);
+  }
+  if(!root)throw error(503,'Facebook tạm thời chưa cung cấp dữ liệu tải cho liên kết này. Bạn thử lại sau một chút nhé.');
   details||=await metaPage(url,fetcher).catch(()=>null);
   for(const [kind,key,label]of [['video','sd_src','Video MP4'],['hd','hd_src','Video chất lượng cao']]){const source=mediaURL(root[key]);if(source&&(kind!=='hd'||source!==mediaURL(root.sd_src)))formats.push({kind,label,size:0,source});}
  }
