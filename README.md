@@ -6,7 +6,7 @@
   <a href="https://hunghienhoa.com"><b>Ghé portfolio ↗</b></a> &nbsp;·&nbsp;
   <a href="https://photobooth.hunghienhoa.com">Chụp một chút vui</a> &nbsp;·&nbsp;
   <a href="https://blog.hunghienhoa.com">Đọc một chút hay</a> &nbsp;·&nbsp;
-  <a href="https://snaptik.hunghienhoa.com">SnapTik</a>
+  <a href="https://snap.hunghienhoa.com">Snap</a>
 </p>
 
 ## Một chút về mình
@@ -83,10 +83,10 @@ Kho này đồng thời chứa mã nguồn cho website của mình. Tài liệu 
 
 Khi máy đã có Playwright hoặc `@playwright/cli` và Chrome, chạy `node tools/browser-audit.mjs`. Bộ kiểm tra tự tạo máy chủ loopback ở cổng ngẫu nhiên và dữ liệu giả trong thư mục cục bộ riêng; không dùng tài khoản hoặc dữ liệu trên website thật. Nó kiểm tra 9 trang ở 7 kích thước (320–1920 px), các bảng Admin sau đăng nhập, đọc/sao chép bài viết, gửi–duyệt khung và chụp bằng luồng video giả lập. Báo cáo JSON và ảnh kiểm tra nằm trong `tmp/`. Đây là kiểm tra Chrome với viewport mobile, không thay thế thử camera/quyền tải file trên iPhone hoặc Android thật. Bộ này tùy chọn, không nằm trong `npm run check` vì cần trình duyệt được cài trên máy.
 
-### SnapTik của Hùng
+### Snap của Hùng
 
-Trang `https://snaptik.hunghienhoa.com/` (cục bộ: `/snaptik/`) nhận liên kết TikTok công khai và dùng TikWM để tìm file video, âm thanh hoặc bài ảnh. API Node và Worker dùng chung `server/snaptik.mjs`; chỉ truyền file từ các miền nguồn được cho phép, kiểm tra chữ ký định dạng và giới hạn mỗi file 200 MB. Không tạo kho video; ảnh tải qua giao diện chuyển thành JPEG trong bộ nhớ trình duyệt. Chỉ tải và sử dụng nội dung khi có quyền.
+Trang `https://snap.hunghienhoa.com/` (cục bộ: `/snaptik/`) tự nhận diện link TikTok, Instagram và Facebook. TikTok dùng TikWM; Instagram/Facebook đọc dữ liệu nhúng công khai trực tiếp từ nền tảng, không dùng tài khoản hoặc cookie. API Node và Worker dùng chung `server/snaptik.mjs`; chỉ truyền file từ các miền nguồn được cho phép, kiểm tra chữ ký định dạng và giới hạn mỗi file 200 MB. Không tạo kho video; ảnh tải qua giao diện chuyển thành JPEG trong bộ nhớ trình duyệt. Chỉ tải và sử dụng nội dung khi có quyền.
 
 Không cần khóa API riêng. Nguồn TikWM có thể thay đổi, gián đoạn hoặc giới hạn truy cập; không cam kết mọi bài đều tải được. Worker giới hạn tần suất bằng binding `SNAPTIK_LIMIT`, máy chủ cục bộ dùng bộ giới hạn hiện có.
 
-Chạy `node --test tools/snaptik.test.mjs` để kiểm tra luồng và đầu vào; `node tools/browser-snaptik.mjs` kiểm tra Chrome ở 320/390/768/1440 px bằng nguồn giả lập. Đặt `SITE_URL=https://snaptik.hunghienhoa.com` để kiểm tra trang thật bằng liên kết mẫu. Bộ trình duyệt không tải toàn bộ video lớn; thử việc lưu file trên thiết bị thật riêng.
+Chạy `node --test tools/snaptik.test.mjs` để kiểm tra luồng và đầu vào; `node tools/browser-snaptik.mjs` kiểm tra Chrome ở 320/390/768/1440 px bằng nguồn giả lập. Đặt `SITE_URL=https://snap.hunghienhoa.com` để kiểm tra trang thật bằng liên kết mẫu. Bộ trình duyệt không tải toàn bộ video lớn; thử việc lưu file trên thiết bị thật riêng.

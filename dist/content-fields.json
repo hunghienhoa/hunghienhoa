@@ -2138,26 +2138,26 @@
   {
     "key": "main-150",
     "page": "main",
-    "label": "TẢI VIDEO TIKTOK",
-    "default": "TẢI VIDEO TIKTOK"
+    "label": "TẢI VIDEO & ẢNH",
+    "default": "TẢI VIDEO & ẢNH"
   },
   {
     "key": "main-151",
     "page": "main",
-    "label": "SnapTik",
-    "default": "SnapTik"
+    "label": "Snap",
+    "default": "Snap"
   },
   {
     "key": "main-152",
     "page": "main",
-    "label": "Dán link, chọn file và lưu một chút hay về máy.",
-    "default": "Dán link, chọn file và lưu một chút hay về máy."
+    "label": "TikTok, Instagram, Facebook — dán link và tải ngay.",
+    "default": "TikTok, Instagram, Facebook — dán link và tải ngay."
   },
   {
     "key": "main-153",
     "page": "main",
-    "label": "Mở SnapTik ",
-    "default": "Mở SnapTik"
+    "label": "Mở Snap ",
+    "default": "Mở Snap"
   },
   {
     "key": "snaptik-001",
@@ -2186,14 +2186,14 @@
   {
     "key": "snaptik-005",
     "page": "snaptik",
-    "label": "Dán link TikTok công khai. Chọn file bạn cần, rồi mang một chút thú vị về máy.",
-    "default": "Dán link TikTok công khai. Chọn file bạn cần, rồi mang một chút thú vị về máy."
+    "label": "TikTok, Instagram hay Facebook. Dán link, chọn file và giữ lại điều hay.",
+    "default": "TikTok, Instagram hay Facebook. Dán link, chọn file và giữ lại điều hay."
   },
   {
     "key": "snaptik-006",
     "page": "snaptik",
-    "label": "Liên kết TikTok của bạn",
-    "default": "Liên kết TikTok của bạn"
+    "label": "Dán liên kết của bạn",
+    "default": "Dán liên kết của bạn"
   },
   {
     "key": "snaptik-007",

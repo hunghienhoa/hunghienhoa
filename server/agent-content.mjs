@@ -2,19 +2,20 @@ import fields from '../dist/content-fields.json' with {type:'json'};
 import {defaultSite} from './validation.mjs';
 import {articleBlocks,inlineTokens,safeCoverURL,readingMinutes} from '../dist/blog/core.mjs';
 
-export const ORIGINS={main:'https://hunghienhoa.com',blog:'https://blog.hunghienhoa.com',photobooth:'https://photobooth.hunghienhoa.com',snaptik:'https://snaptik.hunghienhoa.com'};
+export const ORIGINS={main:'https://hunghienhoa.com',blog:'https://blog.hunghienhoa.com',photobooth:'https://photobooth.hunghienhoa.com',snaptik:'https://snap.hunghienhoa.com'};
 export const POLICY_PATHS=['/chinh-sach-rieng-tu','/dieu-khoan-su-dung','/bao-cao-ban-quyen','/cookie-va-quang-cao'];
 export function publicRedirect(input) {
   const url=new URL(input);
-  if(!['hunghienhoa.com','www.hunghienhoa.com','blog.hunghienhoa.com','photobooth.hunghienhoa.com','admin.hunghienhoa.com','snaptik.hunghienhoa.com'].includes(url.hostname))return null;
+  if(!['hunghienhoa.com','www.hunghienhoa.com','blog.hunghienhoa.com','photobooth.hunghienhoa.com','admin.hunghienhoa.com','snap.hunghienhoa.com','snaptik.hunghienhoa.com'].includes(url.hostname))return null;
   url.protocol='https:';
+  if(url.hostname==='snaptik.hunghienhoa.com')url.hostname='snap.hunghienhoa.com';
   if(url.hostname==='www.hunghienhoa.com')url.hostname='hunghienhoa.com';
-  const legacy=url.pathname.match(/^\/(admin|blog|photobooth|snaptik)(?:\/|$)/);
-  if(url.hostname==='hunghienhoa.com'&&legacy){url.hostname=legacy[1]+'.hunghienhoa.com';url.pathname=url.pathname.slice(legacy[1].length+1)||'/';}
+  const legacy=url.pathname.match(/^\/(admin|blog|photobooth|snaptik|snap)(?:\/|$)/);
+  if(url.hostname==='hunghienhoa.com'&&legacy){url.hostname=(['snaptik','snap'].includes(legacy[1])?'snap':legacy[1])+'.hunghienhoa.com';url.pathname=url.pathname.slice(legacy[1].length+1)||'/';}
   if(url.hostname!=='admin.hunghienhoa.com'&&url.pathname==='/index.html')url.pathname='/';
   if(url.hostname==='photobooth.hunghienhoa.com'&&['/shoot/','/shoot.html'].includes(url.pathname))url.pathname='/shoot';
   if(url.hostname==='hunghienhoa.com'&&POLICY_PATHS.some(p=>url.pathname===p+'.html'))url.pathname=url.pathname.slice(0,-5);
-  if(['blog.hunghienhoa.com','photobooth.hunghienhoa.com','snaptik.hunghienhoa.com'].includes(url.hostname)&&url.pathname==='/ads.txt')url.hostname='hunghienhoa.com';
+  if(['blog.hunghienhoa.com','photobooth.hunghienhoa.com','snap.hunghienhoa.com'].includes(url.hostname)&&url.pathname==='/ads.txt')url.hostname='hunghienhoa.com';
   return url.href===new URL(input).href?null:url;
 }
 export function pageContext(url) {
@@ -60,18 +61,18 @@ export function canonical(ctx,url) {
 }
 export function structuredData(raw,ctx,url,post=null) {
   const site=model(raw),personId=ORIGINS.main+'/#hung';
-  const person={'@type':'Person','@id':personId,name:site.displayName,url:ORIGINS.main+'/',description:value(site,'main',defaultSite.about,site.about),knowsAbout:['Hộp Ảnh','Photobooth','Blog','SnapTik','Portfolio cá nhân'],sameAs:Object.values(site.socials).filter(link=>typeof link==='string'&&/^https:\/\//.test(link))};
+  const person={'@type':'Person','@id':personId,name:site.displayName,url:ORIGINS.main+'/',description:value(site,'main',defaultSite.about,site.about),knowsAbout:['Hộp Ảnh','Photobooth','Blog','Snap','Portfolio cá nhân'],sameAs:Object.values(site.socials).filter(link=>typeof link==='string'&&/^https:\/\//.test(link))};
   const photo={'@type':'SoftwareApplication','@id':ORIGINS.photobooth+'/#app',name:value(site,'main','Hộp Ảnh'),description:'Photobooth trực tuyến: chụp hoặc chọn bốn ảnh, tự tạo khung và tải dải ảnh JPEG.',url:ORIGINS.photobooth+'/',applicationCategory:'MultimediaApplication',operatingSystem:'Web browser',isAccessibleForFree:true,creator:{'@id':personId}};
   const blog={'@type':'Blog','@id':ORIGINS.blog+'/#blog',name:site.blogTitle,description:site.blogIntro,url:ORIGINS.blog+'/',author:{'@id':personId}};
-  const snap={'@type':'SoftwareApplication','@id':ORIGINS.snaptik+'/#app',name:'SnapTik của Hùng',description:'Tải video, âm thanh và ảnh từ liên kết TikTok công khai qua nguồn phân tích TikWM.',url:ORIGINS.snaptik+'/',applicationCategory:'MultimediaApplication',operatingSystem:'Web browser',creator:{'@id':personId}};
+  const snap={'@type':'SoftwareApplication','@id':ORIGINS.snaptik+'/#app',name:'Snap của Hùng',description:'Tải video, âm thanh và ảnh từ liên kết TikTok, Instagram và Facebook công khai.',url:ORIGINS.snaptik+'/',applicationCategory:'MultimediaApplication',operatingSystem:'Web browser',creator:{'@id':personId}};
   const graph=[person,photo,blog,snap,{'@type':ctx.page==='main'?'ProfilePage':'WebPage','@id':canonical(ctx,url)+'#page',name:post?post.title:pageTitle(site,ctx.page),description:post?post.excerpt:ctx.page==='main'?site.intro:ctx.page==='blog'?site.blogIntro:ctx.page==='snaptik'?snap.description:photo.description,url:canonical(ctx,url),mainEntity:{'@id':post?canonical(ctx,url)+'#article':ctx.page==='main'?personId:ctx.page==='blog'?blog['@id']:ctx.page==='snaptik'?snap['@id']:photo['@id']}}];
   if(post){const image=safeCoverURL(post.coverUrl,'',ctx.origin);const published=new Date(post.publishedAt);graph.push({'@type':'Article','@id':canonical(ctx,url)+'#article',headline:post.title,description:post.excerpt||'',url:canonical(ctx,url),mainEntityOfPage:{'@id':canonical(ctx,url)+'#page'},author:{'@id':personId},publisher:{'@id':personId},isPartOf:{'@id':blog['@id']},inLanguage:'vi',...(post.publishedAt!=null&&Number.isFinite(published.getTime())?{datePublished:published.toISOString()}:{}),...(image?{image:[image]}:{})});}
   return {'@context':'https://schema.org','@graph':graph};
 }
-export function pageTitle(site,page) {return page==='snaptik'?`SnapTik của ${site.shortName} — Tải video TikTok`:page==='main'?`${site.displayName} — Portfolio, Photobooth Hộp Ảnh và Blog`:page==='blog'?`${site.blogTitle} — Blog của ${site.shortName}`:`Hộp Ảnh — Photobooth trực tuyến của ${site.shortName}`;}
+export function pageTitle(site,page) {return page==='snaptik'?`Snap của ${site.shortName} — Tải video TikTok, Instagram và Facebook`:page==='main'?`${site.displayName} — Portfolio, Photobooth Hộp Ảnh và Blog`:page==='blog'?`${site.blogTitle} — Blog của ${site.shortName}`:`Hộp Ảnh — Photobooth trực tuyến của ${site.shortName}`;}
 export function decorateHtml(html,raw,ctx,url,post=null) {
   const site=model(raw),title=post?`${post.title} — ${site.blogTitle}`:ctx.page==='photobooth'&&ctx.path.startsWith('/shoot')?`Phòng chụp — Hộp Ảnh của ${site.shortName}`:pageTitle(site,ctx.page);
-  const description=post?(post.excerpt||String(post.content).replace(/[#*`]/g,'').slice(0,160)):ctx.page==='main'?`${site.displayName}: portfolio cá nhân, Photobooth Hộp Ảnh và Blog. ${site.intro}`:ctx.page==='blog'?site.blogIntro:ctx.page==='snaptik'?'SnapTik của Hùng: dán liên kết TikTok công khai, chọn video, âm thanh hoặc ảnh để tải về thiết bị.':'Photobooth trực tuyến: chụp bốn ảnh, tự tạo khung và tải JPEG ngay trên thiết bị.';
+  const description=post?(post.excerpt||String(post.content).replace(/[#*`]/g,'').slice(0,160)):ctx.page==='main'?`${site.displayName}: portfolio cá nhân, Photobooth Hộp Ảnh và Blog. ${site.intro}`:ctx.page==='blog'?site.blogIntro:ctx.page==='snaptik'?'Snap của Hùng: tự nhận diện liên kết TikTok, Instagram hoặc Facebook công khai, chọn video, âm thanh hoặc ảnh để tải về thiết bị.':'Photobooth trực tuyến: chụp bốn ảnh, tự tạo khung và tải JPEG ngay trên thiết bị.';
   const mdUrl=new URL('/index.md',ctx.origin);if(url.searchParams.has('bai'))mdUrl.searchParams.set('bai',url.searchParams.get('bai'));
   if(ctx.page==='photobooth'&&ctx.path.startsWith('/shoot'))mdUrl.pathname='/shoot';
   const data=JSON.stringify(structuredData(site,ctx,url,post)).replace(/</g,'\\u003c');
@@ -141,7 +142,7 @@ export async function publicHtml(html,raw,ctx,url,data) {
       html=setContent(html,'result-count',`${posts.length} bài viết`);
     }
   }
-  if(!['localhost','127.0.0.1','[::1]'].includes(url.hostname)){html=html.replace(/href="photobooth\/"/g,'href="https://photobooth.hunghienhoa.com/"').replace(/href="blog\/"/g,'href="https://blog.hunghienhoa.com/"').replace(/href="snaptik\/"/g,'href="https://snaptik.hunghienhoa.com/"');}
+  if(!['localhost','127.0.0.1','[::1]'].includes(url.hostname)){html=html.replace(/href="photobooth\/"/g,'href="https://photobooth.hunghienhoa.com/"').replace(/href="blog\/"/g,'href="https://blog.hunghienhoa.com/"').replace(/href="snaptik\/"/g,'href="https://snap.hunghienhoa.com/"');}
   return {body:decorateHtml(html,raw,ctx,url,post),status:200};
 }
 export function markdownPage(raw,ctx,posts=[],post=null) {
@@ -150,13 +151,13 @@ export function markdownPage(raw,ctx,posts=[],post=null) {
   let text=`# ${md(pageTitle(site,ctx.page))}\n\n`;
   if(ctx.page==='main') {
     text+='## '+md(value(site,'main','Một hộp')+' '+value(site,'main','đầy ý tưởng.'))+'\n\n'+md(value(site,'main',defaultSite.intro,site.intro))+'\n\n## Về Hùng\n\n'+md(value(site,'main',defaultSite.about,site.about));
-    text+=`\n\n## Dự án đã làm\n\n- ${link(value(site,'main','Hộp Ảnh'),ORIGINS.photobooth+'/')}: Photobooth trực tuyến, chụp hoặc chọn bốn ảnh, chỉnh khung, nhãn dán và tải JPEG.\n- ${link(value(site,'main','Góc tò mò'),ORIGINS.blog+'/')}: ${md(site.blogIntro)}\n\nSnapTik: https://snaptik.hunghienhoa.com/ — tải video, âm thanh và ảnh từ bài TikTok công khai.\n\nBộ sưu tập gồm năm thiết kế cá nhân của Hùng và một thẻ minh họa chuyển động.\n\n## Liên hệ\n\n- Email: ${md(site.email)}\n- Điện thoại: ${md(site.phone)}\n`;
+    text+=`\n\n## Dự án đã làm\n\n- ${link(value(site,'main','Hộp Ảnh'),ORIGINS.photobooth+'/')}: Photobooth trực tuyến, chụp hoặc chọn bốn ảnh, chỉnh khung, nhãn dán và tải JPEG.\n- ${link(value(site,'main','Góc tò mò'),ORIGINS.blog+'/')}: ${md(site.blogIntro)}\n\nSnap: https://snap.hunghienhoa.com/ — tự nhận diện link TikTok, Instagram và Facebook công khai để tải file.\n\nBộ sưu tập gồm năm thiết kế cá nhân của Hùng và một thẻ minh họa chuyển động.\n\n## Liên hệ\n\n- Email: ${md(site.email)}\n- Điện thoại: ${md(site.phone)}\n`;
     for(const [name,url]of Object.entries(site.socials))if(/^https:\/\//.test(url))text+=`- ${link(name,url)}\n`;
   } else if(ctx.page==='blog') {
     text+=md(site.blogIntro)+'\n\n## Bài đã xuất bản\n\n';
     text+=posts.length?posts.map(post=>`- ${link(post.title,ORIGINS.blog+'/?bai='+encodeURIComponent(post.slug))}${post.isSample?' (bài mẫu)':''}: ${md(post.excerpt)}`).join('\n'):'Chưa có bài viết công khai.';
   } else if(ctx.page==='snaptik') {
-    text+='Dán một liên kết video hoặc bài ảnh TikTok công khai. Chọn file nguồn có sẵn để tải về thiết bị. Không yêu cầu tài khoản hoặc mật khẩu TikTok.\n\n## Cách sử dụng\n\n1. Sao chép liên kết từ TikTok.\n2. Dán vào ô nhập và bấm Lấy liên kết tải.\n3. Chọn video, âm thanh hoặc từng ảnh JPEG. Chất lượng tùy thuộc nguồn; không cam kết 4K hoặc mọi bài đều tải được.\n\n## Riêng tư và quyền sử dụng\n\nLiên kết được gửi tới TikWM để phân tích; ảnh bìa có thể tải từ TikTok. File được truyền về thiết bị, không lưu thành thư viện trên website. Chỉ dùng nội dung bạn có quyền sử dụng. Dự án của Hùng không liên kết với TikTok hoặc snaptik.vn. Không cần và không cung cấp cookie hay mật khẩu TikTok. Giới hạn mỗi file 200 MB.\n';
+    text+="Dán một liên kết công khai từ TikTok, Instagram hoặc Facebook. Snap tự nhận diện nền tảng và hiện lựa chọn tải ngay trên cùng trang. Không yêu cầu tài khoản, mật khẩu hoặc cookie đăng nhập.\n\n## Cách sử dụng\n\n1. Sao chép liên kết video, Reels hoặc bài ảnh được hỗ trợ.\n2. Dán vào ô nhập và bấm Lấy liên kết tải.\n3. Chọn video, âm thanh có sẵn hoặc từng ảnh JPEG. Chất lượng tùy thuộc nguồn; không cam kết 4K hoặc mọi bài đều tải được. Story, nội dung riêng tư và video đang trực tiếp chưa được hỗ trợ.\n\n## Riêng tư và quyền sử dụng\n\nLink TikTok được gửi tới TikWM để phân tích; Instagram và Facebook được đọc từ dữ liệu nhúng công khai của chính nền tảng. File truyền về thiết bị, không lưu thành thư viện trên website. Chỉ dùng nội dung bạn có quyền sử dụng. Dự án của Hùng không liên kết với các nền tảng hoặc SnapInsta/SnapSave/snaptik.vn. Không cần cung cấp cookie hay mật khẩu. Giới hạn mỗi file 200 MB.\n";
   } else {
     text+=`${md(value(site,'photobooth','Bốn khoảnh khắc.'))} ${md(value(site,'photobooth','dải kỷ niệm.'))}\n\nPhotobooth trực tuyến của ${md(site.shortName)}.\n\n## Cách sử dụng\n\n1. Mở ${link('phòng chụp',ORIGINS.photobooth+'/shoot')} trong trình duyệt.\n2. Người dùng tự cho phép camera hoặc chọn ảnh từ thiết bị.\n3. Chụp/chọn bốn ảnh, chọn khung, họa tiết và nhãn dán; có thể tự tạo khung.\n4. Tải dải ảnh JPEG về thiết bị. Không cần đăng nhập để chụp.\n\n## Riêng tư\n\nMã photobooth của dự án chỉ xử lý ảnh chụp/chọn trong bộ nhớ trình duyệt, không gửi ảnh vào API hoặc database; phiên ảnh xóa sau một giờ hoặc khi rời trang. Chỉ khung trống người dùng chủ động gửi mới vào hàng chờ duyệt. Bản chờ và thông tin riêng hết hạn sau một giờ; khung đã duyệt giữ thiết kế và ghi công công khai. Quảng cáo hiện chưa bật; ảnh cá nhân không gửi tới dịch vụ quảng cáo.\n`;
   }
@@ -168,7 +169,7 @@ export function instructions(raw) {
 }
 export function llms(raw,ctx) {
   const site=model(raw);
-  return `# ${md(site.displayName)}\n\n> Portfolio cá nhân của ${md(site.displayName)}, dự án Photobooth Hộp Ảnh và Blog chia sẻ điều thú vị.\n\nNội dung công khai bằng tiếng Việt. Hỗ trợ HTTP GET với Accept: text/markdown tại URL trang; có bản /index.md. Không bao gồm dữ liệu quản trị, ảnh cá nhân hoặc bản đóng góp chờ duyệt.\n\n## When to use this — Khi nên sử dụng\n\n- [Portfolio](https://hunghienhoa.com/index.md): tìm danh tính, dự án và thông tin liên hệ chính thức của Hùng.\n- [Photobooth](https://photobooth.hunghienhoa.com/index.md): khi người dùng muốn chụp/ghép bốn ảnh, tạo frame và tải JPEG; cần thao tác bằng trình duyệt.\n- [SnapTik](https://snaptik.hunghienhoa.com/index.md): tham khảo cách tải nội dung TikTok công khai, cần người dùng chọn link và tải file; không tự gửi tải hàng loạt.\n- [Blog](https://blog.hunghienhoa.com/index.md): tìm và đọc các bài đã xuất bản về hình ảnh, sáng tạo và chuyện thú vị.\n\n## Hướng dẫn truy cập\n\n- [Hướng dẫn cho agent](${ctx.origin}/agent-instructions.md): cách gọi HTTP, trường hợp phù hợp và giới hạn hành động.\n- [Sitemap](${ctx.origin}/sitemap.xml): URL công khai trên tên miền này.\n`;
+  return `# ${md(site.displayName)}\n\n> Portfolio cá nhân của ${md(site.displayName)}, dự án Photobooth Hộp Ảnh và Blog chia sẻ điều thú vị.\n\nNội dung công khai bằng tiếng Việt. Hỗ trợ HTTP GET với Accept: text/markdown tại URL trang; có bản /index.md. Không bao gồm dữ liệu quản trị, ảnh cá nhân hoặc bản đóng góp chờ duyệt.\n\n## When to use this — Khi nên sử dụng\n\n- [Portfolio](https://hunghienhoa.com/index.md): tìm danh tính, dự án và thông tin liên hệ chính thức của Hùng.\n- [Photobooth](https://photobooth.hunghienhoa.com/index.md): khi người dùng muốn chụp/ghép bốn ảnh, tạo frame và tải JPEG; cần thao tác bằng trình duyệt.\n- [Snap](https://snap.hunghienhoa.com/index.md): tham khảo cách tải nội dung TikTok, Instagram và Facebook công khai, cần người dùng chọn link và tải file; không tự gửi tải hàng loạt.\n- [Blog](https://blog.hunghienhoa.com/index.md): tìm và đọc các bài đã xuất bản về hình ảnh, sáng tạo và chuyện thú vị.\n\n## Hướng dẫn truy cập\n\n- [Hướng dẫn cho agent](${ctx.origin}/agent-instructions.md): cách gọi HTTP, trường hợp phù hợp và giới hạn hành động.\n- [Sitemap](${ctx.origin}/sitemap.xml): URL công khai trên tên miền này.\n`;
 }
 export function sitemap(ctx,posts=[]) {
   const urls=[ctx.origin+'/'];

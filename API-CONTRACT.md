@@ -23,11 +23,11 @@ API trả JSON, lỗi `{error: 'Tiếng Việt'}`. Frontend dùng fetch cùng or
 - `GET /api/frames/:id/image.webp` → WebP approved.
 - `POST /api/frame-submissions` → body `{name,authorName,authorContact,authorLink,consent:true,design,imageDataUrl}`. `design` gồm các khóa cho phép `{background,ink,accent,title,footer,pattern,sticker}`; không chứa ảnh cá nhân hoặc dataURL. `imageDataUrl` là poster khung-only WebP tối đa 1MB. Trả `{id,status:'pending',expiresAt}`. Tên tác giả bắt buộc, liên hệ riêng tùy chọn; public link chỉ https/http.
 
-### SnapTik (công khai, không cần tài khoản)
+### Snap (công khai, không cần tài khoản)
 
-- `POST /api/snaptik/resolve` nhận JSON `{url}`: liên kết bài TikTok công khai, hỗ trợ link đầy đủ và link rút gọn. Trả `{id,url,title,author,cover,duration,formats:[{kind,label,size}],imageCount}`. Không nhận URL file tùy ý từ người dùng.
-- `GET /api/snaptik/file?url=...&kind=video|hd|audio|image&index=0`: lấy lại nguồn và truyền file, tối đa 200 MB; `index` chỉ dành cho ảnh. Kiểm tra miền và mọi chuyển hướng, nhận diện chữ ký để trả đúng MIME/đuôi MP4, MP3, M4A hoặc ảnh gốc. Giao diện chuyển ảnh tải xuống thành JPEG trong bộ nhớ. Không lưu file thành thư viện.
-- Nguồn phân tích: TikWM, có thể gián đoạn hoặc thay đổi. API trả `no-store`; giới hạn 30 yêu cầu/60 giây theo mã địa chỉ mạng (Worker áp dụng gần đúng theo từng điểm hiện diện). Lỗi JSON `{error}` với 400/403/404/413/415/429/502/504; yêu cầu tải bằng trình duyệt có thể nhận trang lỗi tiếng Việt.
+- `POST /api/snap/resolve` nhận JSON `{url}`: liên kết công khai TikTok, Instagram hoặc Facebook; tự nhận diện nền tảng, chuẩn hóa link và hỗ trợ các link rút gọn video Facebook/TikTok. Trả `{platform,id,url,title,author,cover,duration,formats:[{kind,label,size}],imageCount}`. Không nhận URL file tùy ý từ người dùng.
+- `GET /api/snap/file?url=...&kind=video|video-N|hd|audio|image&index=0`: lấy lại nguồn và truyền file, tối đa 200 MB; `index` chỉ dành cho ảnh. Kiểm tra miền và mọi chuyển hướng, nhận diện chữ ký để trả đúng MIME/đuôi MP4, MP3, M4A hoặc ảnh gốc. Giao diện chuyển ảnh tải xuống thành JPEG trong bộ nhớ. Không lưu file thành thư viện.
+- Nguồn: TikWM cho TikTok; dữ liệu nhúng công khai chính thức cho Instagram/Facebook, có thể thay đổi hoặc bị giới hạn. Giữ alias `/api/snaptik/` để tương thích. API trả `no-store`; giới hạn 30 yêu cầu/60 giây theo mã địa chỉ mạng (Worker áp dụng gần đúng theo từng điểm hiện diện). Lỗi JSON `{error}` với 400/403/404/413/415/429/502/504; yêu cầu tải bằng trình duyệt có thể nhận trang lỗi tiếng Việt.
 
 ## API admin
 

@@ -35,5 +35,15 @@ try{
   await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.ribbon>div').evaluate(el=>getComputedStyle(el).animationName),'none');
   if(!live)await page.close();
  }
- assert.deepEqual(errors,[]);console.log('PASS: SnapTik at 320/390/768/1440, invalid URLs, real/mocked resolve, safe text, result/reset, seven social links, reduced motion, no overflow or JS errors; local image export is genuine JPEG.');
+ if(live){
+  for(const [name,url]of [['Instagram','https://www.instagram.com/reel/DfrnJTpSzky/'],['Facebook','https://www.facebook.com/share/v/1EkfLRepYC/']]){
+   await livePage.locator('#video-url').fill(url);assert.ok((await livePage.locator('#platform').textContent()).includes(name));await livePage.locator('#resolve').click();
+   await livePage.locator('#tai-video').waitFor({state:'visible',timeout:45000}).catch(async()=>{throw Error(name+': '+await livePage.locator('#status').textContent())});
+   assert.equal(await livePage.locator('#original-name').textContent(),name);
+   if(await livePage.locator('#cover').isVisible())await livePage.waitForFunction(()=>document.querySelector('#cover').naturalWidth>0);
+   for(const width of [390,1440]){await livePage.setViewportSize({width,height:1000});assert.ok(await livePage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await livePage.locator('.result-paper').screenshot({path:`outputs/snaptik/${name.toLowerCase()}-${width}.png`});}
+   const here=livePage.url(),event=livePage.waitForEvent('download',{timeout:60000});await livePage.locator('#formats a').first().click();const download=await event,where=await download.path();assert.match(download.suggestedFilename(),/^snap-.*\.mp4$/);const file=fs.openSync(where,'r'),header=Buffer.alloc(12);try{fs.readSync(file,header,0,12,0);}finally{fs.closeSync(file);}assert.equal(header.subarray(4,8).toString(),'ftyp');assert.equal(livePage.url(),here);console.log(`PASS: ${name} detects, resolves, renders at 390/1440 and downloads MP4 (${fs.statSync(where).size} bytes) without navigating away.`);
+  }
+ }
+ assert.deepEqual(errors,[]);console.log('PASS: Snap at 320/390/768/1440, invalid URLs, real/mocked resolve, safe text, result/reset, seven social links, reduced motion, no overflow or JS errors; local image export is genuine JPEG.');
 }finally{await browser.close();if(app){await app.close();assert.ok(folder.startsWith(path.join(os.tmpdir(),'hung-snaptik-ui-')));fs.rmSync(folder,{recursive:true,force:true});}}

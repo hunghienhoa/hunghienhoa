@@ -9,7 +9,7 @@ import {createApp} from '../server/server.mjs';
 import worker from '../worker/index.mjs';
 import {pageContext,publicRedirect,markdownPage} from '../server/agent-content.mjs';
 import {defaultSite} from '../server/validation.mjs';
-const url='https://www.tiktok.com/@hungvlog1992/video/7697962664923778325',base='https://snaptik.hunghienhoa.com';
+const url='https://www.tiktok.com/@hungvlog1992/video/7697962664923778325',base='https://snap.hunghienhoa.com';
 const payload={code:0,data:{id:'7697962664923778325',title:'<script>unsafe()</script>',author:{nickname:'Hùng'},cover:'https://p19.tiktokcdn-us.com/cover.jpg',duration:61,play:'https://v16.tiktokcdn-us.com/video.mp4',hdplay:'https://v16.tiktokcdn-us.com/hd.mp4',music:'https://v16.tiktokcdn-us.com/audio.mp3',images:['https://p19.tiktokcdn-us.com/one.jpg'],size:1000}};
 const mp4=Buffer.concat([Buffer.from('000000206674797069736f6d','hex'),Buffer.alloc(30)]),jpeg=Buffer.from('ffd8ffe000104a46494600010100000100010000ffd9','hex');
 const request=(body={url},extra={})=>new Request(base+'/api/snaptik/resolve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),...extra});
@@ -41,7 +41,7 @@ test('downloads stream real signatures; redirects cannot reach private or unknow
  await assert.rejects(()=>snaptikRoute(file(),{fetcher:redirect}),{status:502});assert.equal(calls.length,2);
  const malformed=async(i,o)=>String(i).includes('/api/')?provider(i,o):new Response(null,{status:302,headers:{Location:'https://['}});
  await assert.rejects(()=>snaptikRoute(file(),{fetcher:malformed}),{status:502});
- r=await snaptikRoute(new Request(file().url,{headers:{Accept:'text/html'}}),{fetcher:bad});assert.equal(r.status,502);assert.match(r.headers.get('content-type'),/text\/html/);assert.ok((await r.text()).includes('Trở về SnapTik'));
+ r=await snaptikRoute(new Request(file().url,{headers:{Accept:'text/html'}}),{fetcher:bad});assert.equal(r.status,502);assert.match(r.headers.get('content-type'),/text\/html/);assert.ok((await r.text()).includes('Trở về Snap'));
 });
 test('short network chunks still yield a valid file',async()=>{
  const chunked=async(i,o)=>String(i).includes('/api/')?provider(i,o):new Response(new ReadableStream({start(c){for(const byte of mp4)c.enqueue(Uint8Array.of(byte));c.close();}}));

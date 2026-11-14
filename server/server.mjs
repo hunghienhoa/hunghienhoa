@@ -164,7 +164,7 @@ export function createApp(options = {}) {
       }
       if (!['GET', 'HEAD'].includes(req.method) && (!origin || !origins().has(origin))) fail(403, 'Nguồn thao tác chưa được cho phép.');
       cleanup();
-      if(route.startsWith('/api/snaptik/')) {
+      if(/^\/api\/snap(?:tik)?\//.test(route)) {
         rateLimit(req,'snaptik',30,60000);
         const request=new Request(new URL(req.url,`http://${req.headers.host}`),{method:req.method,headers:req.headers,...(req.method==='POST'?{body:JSON.stringify(await body(req))}:{})});
         const response=await snaptikRoute(request,{fetcher:options.videoFetch||fetch});

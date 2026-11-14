@@ -36,10 +36,10 @@ test('miền phụ được ánh xạ vào đúng thư mục giao diện', () =>
   assert.equal(assetRequest(new Request('https://hunghienhoa.com/blog/?bai=vui')).headers.get('location'), 'https://blog.hunghienhoa.com/?bai=vui');
   assert.equal(assetRequest(new Request('https://hunghienhoa.com/photobooth')).headers.get('location'), 'https://photobooth.hunghienhoa.com/');
   assert.equal(new URL(assetRequest(new Request('http://127.0.0.1:4180/blog/')).url).pathname, '/blog/');
-  assert.equal(new URL(assetRequest(new Request('https://snaptik.hunghienhoa.com/')).url).pathname, '/snaptik/');
-  assert.equal(new URL(assetRequest(new Request('https://snaptik.hunghienhoa.com/app.js?v=1')).url).pathname, '/snaptik/app.js');
-  assert.equal(new URL(assetRequest(new Request('https://snaptik.hunghienhoa.com/fonts/BeVietnamPro-Bold.woff2')).url).pathname, '/fonts/BeVietnamPro-Bold.woff2');
-  assert.equal(new URL(assetRequest(new Request('https://snaptik.hunghienhoa.com/assets/star.svg')).url).pathname, '/assets/star.svg');
+  assert.equal(new URL(assetRequest(new Request('https://snap.hunghienhoa.com/')).url).pathname, '/snaptik/');
+  assert.equal(new URL(assetRequest(new Request('https://snap.hunghienhoa.com/app.js?v=1')).url).pathname, '/snaptik/app.js');
+  assert.equal(new URL(assetRequest(new Request('https://snap.hunghienhoa.com/fonts/BeVietnamPro-Bold.woff2')).url).pathname, '/fonts/BeVietnamPro-Bold.woff2');
+  assert.equal(new URL(assetRequest(new Request('https://snap.hunghienhoa.com/assets/star.svg')).url).pathname, '/assets/star.svg');
   assert.equal(assetRequest(new Request('https://www.hunghienhoa.com/hello')).headers.get('location'), 'https://hunghienhoa.com/hello');
 });
 

@@ -133,7 +133,7 @@ function originAllowed(request) {
 
 async function publicApi(request, env, route, ctx) {
   if (!originAllowed(request)) fail(403, 'Nguồn gửi yêu cầu không được phép.');
-  if(route.startsWith('/api/snaptik/')) {
+  if(/^\/api\/snap(?:tik)?\//.test(route)) {
     if(!env.SNAPTIK_LIMIT)fail(503,'Dịch vụ tải video đang được chuẩn bị.');
     const key=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contributionDay(Date.now())+':'+(request.headers.get('CF-Connecting-IP')||'unknown')))),byte=>byte.toString(16).padStart(2,'0')).join('');
     if(!(await env.SNAPTIK_LIMIT.limit({key})).success)fail(429,'Bạn thao tác hơi nhanh. Hãy chờ một phút rồi thử lại nhé.');
@@ -309,7 +309,7 @@ function assetRequest(request) {
   const url = new URL(request.url), host = url.hostname.toLowerCase();
   const redirect=publicRedirect(url);
   if(redirect)return Response.redirect(redirect.href,308);
-  const section = host === 'admin.hunghienhoa.com' ? 'admin' : host === 'blog.hunghienhoa.com' ? 'blog' : host === 'photobooth.hunghienhoa.com' ? 'photobooth' : host === 'snaptik.hunghienhoa.com' ? 'snaptik' : '';
+  const section = host === 'admin.hunghienhoa.com' ? 'admin' : host === 'blog.hunghienhoa.com' ? 'blog' : host === 'photobooth.hunghienhoa.com' ? 'photobooth' : host === 'snap.hunghienhoa.com' ? 'snaptik' : '';
   if(section==='snaptik'&&!['/','/index.html','/style.css','/app.js','/core.mjs'].includes(url.pathname))return new Request(url,request);
   if (section && !url.pathname.startsWith(`/${section}/`)) url.pathname = `/${section}${url.pathname === '/' ? '/' : url.pathname}`;
   return new Request(url, request);
