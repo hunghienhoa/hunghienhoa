@@ -38,5 +38,6 @@ test('Facebook resolves share redirects, matches the exact video and preserves p
 test('new API streams Meta video formats and old domains permanently redirect without losing query parameters',async()=>{
  const fetcher=async u=>new URL(u).hostname==='www.instagram.com'?new Response(body({post:video})):new Response(mp4,{headers:{'Content-Type':'video/mp4'}});
  const r=await snaptikRoute(new Request('https://snap.hunghienhoa.com/api/snap/file?'+new URLSearchParams({url:ig,kind:'video'})),{fetcher});assert.equal(r.status,200);assert.equal(r.headers.get('content-type'),'video/mp4');assert.match(r.headers.get('content-disposition'),/snap-4029486454996154674\.mp4/);assert.deepEqual(Buffer.from(await r.arrayBuffer()),mp4);
- for(const old of ['https://snaptik.hunghienhoa.com/?x=1','http://hunghienhoa.com/snaptik/?x=1','https://hunghienhoa.com/snap/?x=1'])assert.equal(publicRedirect(old).href,'https://snap.hunghienhoa.com/?x=1');
+ for(const old of ['http://hunghienhoa.com/snaptik/?x=1','https://hunghienhoa.com/snap/?x=1'])assert.equal(publicRedirect(old).href,'https://snap.hunghienhoa.com/?x=1');
+ assert.equal(publicRedirect('https://snaptik.hunghienhoa.com/'),null);
 });

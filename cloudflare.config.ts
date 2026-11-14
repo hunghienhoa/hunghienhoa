@@ -7,7 +7,7 @@ export default defineConfig({
     entrypoint: "./worker/index.mjs",
     compatibilityDate: "2026-11-09",
     compatibilityFlags: ["nodejs_compat"],
-    domains: ["hunghienhoa.com", "www.hunghienhoa.com", "admin.hunghienhoa.com", "blog.hunghienhoa.com", "photobooth.hunghienhoa.com", "snap.hunghienhoa.com", "snaptik.hunghienhoa.com"],
+    domains: ["hunghienhoa.com", "www.hunghienhoa.com", "admin.hunghienhoa.com", "blog.hunghienhoa.com", "photobooth.hunghienhoa.com", "snap.hunghienhoa.com"],
     env: {
       VISITS: bindings.durableObject({ worker: "hunghienhoa", exportName: "VisitCounter" }),
       ASSETS: bindings.assets(),

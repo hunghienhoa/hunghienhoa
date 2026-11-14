@@ -6,9 +6,8 @@ export const ORIGINS={main:'https://hunghienhoa.com',blog:'https://blog.hunghien
 export const POLICY_PATHS=['/chinh-sach-rieng-tu','/dieu-khoan-su-dung','/bao-cao-ban-quyen','/cookie-va-quang-cao'];
 export function publicRedirect(input) {
   const url=new URL(input);
-  if(!['hunghienhoa.com','www.hunghienhoa.com','blog.hunghienhoa.com','photobooth.hunghienhoa.com','admin.hunghienhoa.com','snap.hunghienhoa.com','snaptik.hunghienhoa.com'].includes(url.hostname))return null;
+  if(!['hunghienhoa.com','www.hunghienhoa.com','blog.hunghienhoa.com','photobooth.hunghienhoa.com','admin.hunghienhoa.com','snap.hunghienhoa.com'].includes(url.hostname))return null;
   url.protocol='https:';
-  if(url.hostname==='snaptik.hunghienhoa.com')url.hostname='snap.hunghienhoa.com';
   if(url.hostname==='www.hunghienhoa.com')url.hostname='hunghienhoa.com';
   const legacy=url.pathname.match(/^\/(admin|blog|photobooth|snaptik|snap)(?:\/|$)/);
   if(url.hostname==='hunghienhoa.com'&&legacy){url.hostname=(['snaptik','snap'].includes(legacy[1])?'snap':legacy[1])+'.hunghienhoa.com';url.pathname=url.pathname.slice(legacy[1].length+1)||'/';}

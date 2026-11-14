@@ -28,7 +28,6 @@ for (const [url, target] of [
   ['https://hunghienhoa.com/blog/?bai=vui', 'https://blog.hunghienhoa.com/?bai=vui'],
   ['https://hunghienhoa.com/photobooth/', 'https://photobooth.hunghienhoa.com/'],
   ['https://hunghienhoa.com/admin/', 'https://admin.hunghienhoa.com/'],
-  ['https://snaptik.hunghienhoa.com/', 'https://snap.hunghienhoa.com/'],
   ['https://hunghienhoa.com/snap/', 'https://snap.hunghienhoa.com/']
 ]) {
   const response = await fetch(url, { redirect: 'manual', signal: AbortSignal.timeout(20000) });
@@ -38,4 +37,4 @@ for (const path of ['session', 'site', 'posts', 'submissions', 'submissions/test
   const response = await fetch(`https://admin.hunghienhoa.com/api/admin/${path}`, { signal: AbortSignal.timeout(20000) });
   assert.equal(response.status, 401, path); assert.equal(response.headers.get('cache-control'), 'no-store'); await response.body?.cancel();
 }
-console.log(`PASS: ${passed} trang/tài nguyên/API HTTPS; 6 chuyển hướng tên miền; 5 API quản trị chặn truy cập chưa đăng nhập.`);
+console.log(`PASS: ${passed} trang/tài nguyên/API HTTPS; 5 chuyển hướng tên miền; 5 API quản trị chặn truy cập chưa đăng nhập.`);

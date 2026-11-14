@@ -141,7 +141,7 @@ export async function snaptikRoute(request,{fetcher=fetch}={}) {
   }catch(e){
    if(!request.headers.get('accept')?.includes('text/html'))throw e;
    const text=String(e.message).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-   const back=['snap.hunghienhoa.com','snaptik.hunghienhoa.com'].includes(url.hostname)?'/':'/snaptik/';
+   const back=url.hostname==='snap.hunghienhoa.com'?'/':'/snaptik/';
    return new Response(`<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Chưa tải được file — Snap của Hùng</title><body style="background:#fbf2e3;color:#303487;font-family:Arial,sans-serif;max-width:650px;margin:12vh auto;padding:24px;line-height:1.8"><h1>Chưa tải được file.</h1><p>${text}</p><a href="${back}">← Trở về Snap để thử lại</a></body></html>`,{status:e.status||502,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Robots-Tag':'noindex','Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'"}});
   }
  }
