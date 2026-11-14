@@ -18,7 +18,7 @@ async function limitedJSON(response) {
 export async function resolveVideo(value,fetcher=fetch) {
  let url;try{url=tiktokURL(value);}catch(e){throw error(400,e.message);}
  let response;
- try{response=await fetcher('https://www.tikwm.com/api/',{method:'POST',headers:{Accept:'application/json'},body:new URLSearchParams({url,hd:'1'}),signal:AbortSignal.timeout(25000),redirect:'error'});}
+ try{response=await fetcher('https://www.tikwm.com/api/',{method:'POST',headers:{Accept:'application/json'},body:new URLSearchParams({url,hd:'1'}),signal:AbortSignal.timeout(25000),redirect:'manual'});}
  catch{throw error(504,'Nguồn video phản hồi chậm. Hãy thử lại sau một chút.');}
  if(response.status===429)throw error(429,'Nguồn video đang bận. Bạn chờ một chút rồi thử lại nhé.');
  if(!response.ok)throw error(502,'Chưa kết nối được nguồn video. Hãy thử lại sau.');
