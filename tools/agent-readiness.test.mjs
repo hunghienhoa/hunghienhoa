@@ -35,6 +35,7 @@ for(const [page,origin]of Object.entries(ORIGINS)){
  const rendered=decorateHtml(template,defaultSite,context,new URL(origin+'/'));
  assert.equal((rendered.match(/rel="canonical"/g)||[]).length,1,page);
  assert.equal((rendered.match(/property="og:site_name"/g)||[]).length,1,page);
+ assert.ok(!rendered.includes('name="keywords"'));assert.ok(rendered.includes('name="robots" content="max-image-preview:large"'));
  const nodes=JSON.parse(rendered.match(/type="application\/ld\+json">([\s\S]*?)<\/script>/)[1])['@graph'].filter(item=>item['@type']==='WebSite');
  assert.equal(nodes.length,1);assert.equal(nodes[0].url,origin+'/');assert.ok(nodes[0].name&&nodes[0].inLanguage==='vi');
 }

@@ -18,6 +18,7 @@ for(const host of hosts) {
       assert.equal(data['@context'],'https://schema.org');assert.ok(data['@graph'].some(item=>item['@type']==='Person'&&item.name&&item.url));
       const websites=data['@graph'].filter(item=>item['@type']==='WebSite');assert.equal(websites.length,1);assert.equal(websites[0].url,base+'/');assert.ok(websites[0].name);
       assert.equal((body.match(/rel="canonical"/g)||[]).length,1);assert.equal((body.match(/property="og:site_name"/g)||[]).length,1);
+      assert.ok(!body.includes('name="keywords"'));assert.ok(body.includes('name="robots" content="max-image-preview:large"'));
       if(host==='hunghienhoa.com')for(const project of ['photobooth','blog','snap'])assert.ok(body.includes(`href="https://${project}.hunghienhoa.com/"`));
       assert.ok(body.includes('rel="canonical"')&&body.includes('rel="alternate"'));
     }
