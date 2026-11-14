@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-const hosts=['hunghienhoa.com','blog.hunghienhoa.com','photobooth.hunghienhoa.com'];
+const hosts=['hunghienhoa.com','blog.hunghienhoa.com','photobooth.hunghienhoa.com','snaptik.hunghienhoa.com'];
 let passed=0;
 const links=new Set();
 async function get(url,accept='*/*',method='GET') {

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {ADSENSE_CLIENT,adsenseHtml} from '../server/adsense.mjs';
-for(const page of ['dist','dist/blog','dist/photobooth']) {
+for(const page of ['dist','dist/blog','dist/photobooth','dist/snaptik']) {
   const html=readFileSync(page+'/index.html','utf8');
   const head=html.split('</head>')[0];
   assert.equal((head.match(/adsbygoogle\.js\?client=/g)||[]).length,0);

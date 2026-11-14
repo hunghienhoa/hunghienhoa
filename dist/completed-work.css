@@ -1,4 +1,5 @@
 .completed-work{padding-bottom:92px}
+.completed-snaptik .completed-visual{background-color:#c4d8d1}.video-preview{position:absolute;inset:12% 24%;padding:7%;background:var(--blue);color:var(--cream);rotate:-6deg;border:8px solid var(--cream);box-shadow:12px 14px 0 #30348730;display:flex;flex-direction:column;justify-content:space-between}.video-preview>span{font-size:9px;letter-spacing:2px}.video-preview>b{font-size:clamp(20px,3vw,42px);line-height:1.1}.video-preview>i{font-style:normal;color:var(--yellow);font-size:48px}.video-preview>small{font-size:7px;letter-spacing:1px}
 .completed-project+.completed-project{margin-top:32px}
 .completed-blog .completed-visual{background-color:#e5c9a7}
 .blog-notebook{position:absolute;left:18%;top:20%;width:245px;height:290px;padding:25px;background:var(--cream);border:1px solid var(--blue);border-left:16px solid var(--blue);rotate:-8deg;box-shadow:10px 12px 0 #30348730;z-index:2}

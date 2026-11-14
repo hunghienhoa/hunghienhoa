@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import { readdirSync } from 'node:fs';
 
-const hosts = ['hunghienhoa.com', 'admin.hunghienhoa.com', 'blog.hunghienhoa.com', 'photobooth.hunghienhoa.com'];
+const hosts = ['hunghienhoa.com', 'admin.hunghienhoa.com', 'blog.hunghienhoa.com', 'photobooth.hunghienhoa.com', 'snaptik.hunghienhoa.com'];
 const files = readdirSync('dist', { recursive: true, withFileTypes: true }).filter(file => file.isFile() && /\.(css|js|mjs|webp|svg|woff2)$/.test(file.name) && !file.name.endsWith('.test.mjs'));
 const checks = hosts.map(host => ({ url: `https://${host}/`, type: /text\/html/ }));
 for (const file of files) {
   const relative = `${file.parentPath}/${file.name}`.replaceAll('\\', '/').replace(/^dist\//, '');
-  const section = relative.match(/^(admin|blog|photobooth)\//)?.[1];
+  const section = relative.match(/^(admin|blog|photobooth|snaptik)\//)?.[1];
   const path = section ? relative.slice(section.length + 1) : relative;
   const type = /\.(js|mjs)$/.test(file.name) ? /javascript/ : /\.css$/.test(file.name) ? /text\/css/ : /\.(svg|webp)$/.test(file.name) ? /image\// : /font\//;
   checks.push({ url: `https://${section ? section + '.' : ''}hunghienhoa.com/${path}`, type });

@@ -4,6 +4,7 @@ import {providerUsage} from './usage-providers.mjs';
 import { fail, post, siteSettings, submission, defaultSite, imageMime, mediaAsset } from '../server/validation.mjs';
 import { pageForVisit } from '../server/visits.mjs';
 import { adsenseHtml } from '../server/adsense.mjs';
+import {snaptikRoute} from '../server/snaptik.mjs';
 import {agentRoute,pageContext,representation,markdown404,publicHtml,publicRedirect} from '../server/agent-content.mjs';
 export { VisitCounter } from './visits.mjs';
 
@@ -132,6 +133,12 @@ function originAllowed(request) {
 
 async function publicApi(request, env, route, ctx) {
   if (!originAllowed(request)) fail(403, 'Nguồn gửi yêu cầu không được phép.');
+  if(route.startsWith('/api/snaptik/')) {
+    if(!env.SNAPTIK_LIMIT)fail(503,'Dịch vụ tải video đang được chuẩn bị.');
+    const key=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contributionDay(Date.now())+':'+(request.headers.get('CF-Connecting-IP')||'unknown')))),byte=>byte.toString(16).padStart(2,'0')).join('');
+    if(!(await env.SNAPTIK_LIMIT.limit({key})).success)fail(429,'Bạn thao tác hơi nhanh. Hãy chờ một phút rồi thử lại nhé.');
+    return snaptikRoute(request);
+  }
   if (request.method === 'GET' && route === '/api/health') return json({ ok: true, service: 'hunghienhoa' });
   const media=route.match(/^\/api\/media\/([a-f0-9-]{36})\.webp$/);
   if(request.method==='GET' && media) {
@@ -302,7 +309,8 @@ function assetRequest(request) {
   const url = new URL(request.url), host = url.hostname.toLowerCase();
   const redirect=publicRedirect(url);
   if(redirect)return Response.redirect(redirect.href,308);
-  const section = host === 'admin.hunghienhoa.com' ? 'admin' : host === 'blog.hunghienhoa.com' ? 'blog' : host === 'photobooth.hunghienhoa.com' ? 'photobooth' : '';
+  const section = host === 'admin.hunghienhoa.com' ? 'admin' : host === 'blog.hunghienhoa.com' ? 'blog' : host === 'photobooth.hunghienhoa.com' ? 'photobooth' : host === 'snaptik.hunghienhoa.com' ? 'snaptik' : '';
+  if(section==='snaptik'&&!['/','/index.html','/style.css','/app.js','/core.mjs'].includes(url.pathname))return new Request(url,request);
   if (section && !url.pathname.startsWith(`/${section}/`)) url.pathname = `/${section}${url.pathname === '/' ? '/' : url.pathname}`;
   return new Request(url, request);
 }

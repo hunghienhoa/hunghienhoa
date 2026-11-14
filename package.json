@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "cf build",
-    "check": "node check.cjs && node --test server/server.test.mjs dist/photobooth/core.test.mjs dist/photobooth/design.test.mjs dist/blog/core.test.mjs worker/index.test.mjs tools/admin-auth.test.mjs tools/admin-editor.test.mjs tools/photo-privacy.test.mjs tools/viewport.test.mjs tools/dashboard.test.mjs tools/usage.test.mjs tools/media.test.mjs tools/adsense.test.mjs tools/adsense-readiness.test.mjs tools/agent-readiness.test.mjs tools/face-effects.test.mjs tools/sticker-assets.test.mjs tools/reference-cards.test.mjs tools/material-cards.test.mjs && python tools/convert-webp.py --check",
+    "check": "node check.cjs && node --test server/server.test.mjs dist/photobooth/core.test.mjs dist/photobooth/design.test.mjs dist/blog/core.test.mjs worker/index.test.mjs tools/admin-auth.test.mjs tools/admin-editor.test.mjs tools/photo-privacy.test.mjs tools/viewport.test.mjs tools/dashboard.test.mjs tools/usage.test.mjs tools/media.test.mjs tools/snaptik.test.mjs tools/adsense.test.mjs tools/adsense-readiness.test.mjs tools/agent-readiness.test.mjs tools/face-effects.test.mjs tools/sticker-assets.test.mjs tools/reference-cards.test.mjs tools/material-cards.test.mjs && python tools/convert-webp.py --check",
     "deploy": "cf deploy"
   },
   "devDependencies": {

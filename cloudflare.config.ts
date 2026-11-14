@@ -7,10 +7,11 @@ export default defineConfig({
     entrypoint: "./worker/index.mjs",
     compatibilityDate: "2026-11-09",
     compatibilityFlags: ["nodejs_compat"],
-    domains: ["hunghienhoa.com", "www.hunghienhoa.com", "admin.hunghienhoa.com", "blog.hunghienhoa.com", "photobooth.hunghienhoa.com"],
+    domains: ["hunghienhoa.com", "www.hunghienhoa.com", "admin.hunghienhoa.com", "blog.hunghienhoa.com", "photobooth.hunghienhoa.com", "snaptik.hunghienhoa.com"],
     env: {
       VISITS: bindings.durableObject({ worker: "hunghienhoa", exportName: "VisitCounter" }),
       ASSETS: bindings.assets(),
+      SNAPTIK_LIMIT: bindings.rateLimit({ namespace: "914202611", simple: { limit: 30, period: 60 } }),
       CLOUDFLARE_USAGE_TOKEN: bindings.secret(),
       GITHUB_USAGE_TOKEN: bindings.secret(),
       FRAME_EMAIL: bindings.sendEmail({ destinationAddress: "hunghienhoa2110@gmail.com", allowedSenderAddresses: ["thongbao@hunghienhoa.com"] }),

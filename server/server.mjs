@@ -6,6 +6,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { randomBytes, randomUUID, createHash, scrypt, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
+import {Readable} from 'node:stream';
+import {pipeline} from 'node:stream/promises';
+import {snaptikRoute} from './snaptik.mjs';
 import { initVisits, recordVisit, visitSummary, pageForVisit } from './visits.mjs';
 import {usageReport} from './usage.mjs';
 import { adsenseHtml } from './adsense.mjs';
@@ -161,6 +164,13 @@ export function createApp(options = {}) {
       }
       if (!['GET', 'HEAD'].includes(req.method) && (!origin || !origins().has(origin))) fail(403, 'Nguồn thao tác chưa được cho phép.');
       cleanup();
+      if(route.startsWith('/api/snaptik/')) {
+        rateLimit(req,'snaptik',30,60000);
+        const request=new Request(new URL(req.url,`http://${req.headers.host}`),{method:req.method,headers:req.headers,...(req.method==='POST'?{body:JSON.stringify(await body(req))}:{})});
+        const response=await snaptikRoute(request,{fetcher:options.videoFetch||fetch});
+        res.writeHead(response.status,Object.fromEntries(response.headers));
+        if(response.body)await pipeline(Readable.fromWeb(response.body),res).catch(()=>res.destroy());else res.end();return;
+      }
       if (req.method === 'GET' && route === '/api/health') return json(res, { ok: true });
       if (req.method === 'GET' && route === '/api/site') return json(res, JSON.parse(getSetting('site')));
       if (req.method === 'GET' && route === '/api/posts') return json(res, { posts: db.prepare("SELECT * FROM posts WHERE status='published' ORDER BY published_at DESC,id").all().map(row => postData(row)) });

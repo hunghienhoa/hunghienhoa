@@ -2134,5 +2134,77 @@
     "page": "main",
     "label": "Chữ nổi 3D",
     "default": "Chữ nổi 3D"
+  },
+  {
+    "key": "main-150",
+    "page": "main",
+    "label": "TẢI VIDEO TIKTOK",
+    "default": "TẢI VIDEO TIKTOK"
+  },
+  {
+    "key": "main-151",
+    "page": "main",
+    "label": "SnapTik",
+    "default": "SnapTik"
+  },
+  {
+    "key": "main-152",
+    "page": "main",
+    "label": "Dán link, chọn file và lưu một chút hay về máy.",
+    "default": "Dán link, chọn file và lưu một chút hay về máy."
+  },
+  {
+    "key": "main-153",
+    "page": "main",
+    "label": "Mở SnapTik ",
+    "default": "Mở SnapTik"
+  },
+  {
+    "key": "snaptik-001",
+    "page": "snaptik",
+    "label": "MỘT LIÊN KẾT · MỘT CHÚT HAY",
+    "default": "MỘT LIÊN KẾT · MỘT CHÚT HAY"
+  },
+  {
+    "key": "snaptik-002",
+    "page": "snaptik",
+    "label": "Gặp điều hay. Giữ lại nhé.",
+    "default": "Gặp điều hay. Giữ lại nhé."
+  },
+  {
+    "key": "snaptik-003",
+    "page": "snaptik",
+    "label": "Video hay,",
+    "default": "Video hay,"
+  },
+  {
+    "key": "snaptik-004",
+    "page": "snaptik",
+    "label": "để dành xem lại.",
+    "default": "để dành xem lại."
+  },
+  {
+    "key": "snaptik-005",
+    "page": "snaptik",
+    "label": "Dán link TikTok công khai. Chọn file bạn cần, rồi mang một chút thú vị về máy.",
+    "default": "Dán link TikTok công khai. Chọn file bạn cần, rồi mang một chút thú vị về máy."
+  },
+  {
+    "key": "snaptik-006",
+    "page": "snaptik",
+    "label": "Liên kết TikTok của bạn",
+    "default": "Liên kết TikTok của bạn"
+  },
+  {
+    "key": "snaptik-007",
+    "page": "snaptik",
+    "label": "Dán link. Chọn file.",
+    "default": "Dán link. Chọn file."
+  },
+  {
+    "key": "snaptik-008",
+    "page": "snaptik",
+    "label": "Giữ video,",
+    "default": "Giữ video,"
   }
 ]
