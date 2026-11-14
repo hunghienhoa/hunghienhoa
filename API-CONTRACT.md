@@ -23,8 +23,6 @@ API trả JSON, lỗi `{error: 'Tiếng Việt'}`. Frontend dùng fetch cùng or
 - `GET /api/frames/:id/image.webp` → WebP approved.
 - `POST /api/frame-submissions` → body `{name,authorName,authorContact,authorLink,consent:true,design,imageDataUrl}`. `design` gồm các khóa cho phép `{background,ink,accent,title,footer,pattern,sticker}`; không chứa ảnh cá nhân hoặc dataURL. `imageDataUrl` là poster khung-only WebP tối đa 1MB. Trả `{id,status:'pending',expiresAt}`. Tên tác giả bắt buộc, liên hệ riêng tùy chọn; public link chỉ https/http.
 
-## API admin
-
 ### SnapTik (công khai, không cần tài khoản)
 
 - `POST /api/snaptik/resolve` nhận JSON `{url}`: liên kết bài TikTok công khai, hỗ trợ link đầy đủ và link rút gọn. Trả `{id,url,title,author,cover,duration,formats:[{kind,label,size}],imageCount}`. Không nhận URL file tùy ý từ người dùng.
