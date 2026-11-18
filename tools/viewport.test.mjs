@@ -1,21 +1,21 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import vm from 'node:vm';
-const source = fs.readFileSync('dist/viewport.js','utf8');
-const listeners = {};
-vm.runInNewContext(source, { document: { addEventListener: (name, fn) => { listeners[name] = fn; } } });
-function blocked(name, props) { let prevented = false; listeners[name]({ ...props, preventDefault() { prevented = true; } }); return prevented; }
-assert.equal(blocked('wheel', { ctrlKey:true }),true);
-assert.equal(blocked('wheel', {}),false);
-assert.equal(blocked('keydown', { metaKey:true,key:'+' }),true);
-assert.equal(blocked('keydown', { ctrlKey:true,key:'c' }),false);
-assert.equal(blocked('keydown', { key:'-' }),false);
-assert.equal(blocked('gesturestart', {}),true);
-for (const path of ['dist','dist/blog','dist/photobooth','dist/admin']) {
-  assert.equal(fs.readFileSync(`${path}/viewport.js`,'utf8'),source);
-  assert.match(fs.readFileSync(`${path}/index.html`,'utf8'),/maximum-scale=1,user-scalable=no/);
+// Người dùng phải phóng to được (WCAG 1.4.4): không khóa trong viewport meta, CSS hay JavaScript.
+const pages = fs.readdirSync('dist', { recursive: true }).filter(file => file.endsWith('.html')).map(file => `dist/${file}`);
+for (const page of pages) {
+  const html = fs.readFileSync(page, 'utf8');
+  assert.ok(!/user-scalable\s*=\s*no|maximum-scale\s*=\s*1(?:\.0)?\b/i.test(html), `${page} khóa phóng to`);
+  assert.ok(!html.includes('viewport.js'), `${page} còn nạp script chặn phóng to`);
 }
-console.log('PASS: zoom shortcuts blocked; normal scroll, typing, copy preserved on all pages.');
+for (const path of ['dist','dist/blog','dist/photobooth','dist/admin']) {
+  assert.ok(!fs.existsSync(`${path}/viewport.js`));
+  const css = fs.readFileSync(`${path}/viewport.css`,'utf8');
+  assert.ok(!/touch-action:\s*pan-x pan-y/.test(css), `${path}/viewport.css chặn pinch`);
+  assert.match(css, /input,textarea,select\{font-size:16px!important\}/);
+  assert.equal(css, fs.readFileSync('dist/viewport.css','utf8'));
+  assert.match(fs.readFileSync(`${path}/index.html`,'utf8'), /viewport\.css\?v=3/);
+}
+console.log('PASS: pinch and browser zoom allowed on every page; inputs stay 16px so iOS does not auto-zoom.');
 
 for(const folder of ['dist','dist/blog','dist/photobooth','dist/admin']) {
  const html=fs.readFileSync(`${folder}/index.html`,'utf8');
