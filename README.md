@@ -96,3 +96,12 @@ Chạy `node --test tools/snaptik.test.mjs` để kiểm tra luồng và đầu 
 HTML trả từ máy chủ có `WebSite` với tên và URL chuẩn của từng tên miền công khai, `og:site_name`, một canonical và quan hệ giữa portfolio với ba dự án. Trang chính dùng các liên kết HTML trực tiếp tới Hộp Ảnh, Góc tò mò và Snap; sitemap riêng được công bố trong robots.txt của từng miền.
 
 Google tự quyết định sitelinks và cách nhóm tên miền phụ; mã đánh dấu không bảo đảm bố cục như ảnh mẫu hoặc thời gian xuất hiện. Quản trị viên có thể gửi sitemap và yêu cầu thu thập lại URL trong Search Console đã xác minh. Xem [sitelinks](https://developers.google.com/search/docs/appearance/sitelinks) và [tên website](https://developers.google.com/search/docs/appearance/site-names).
+
+### Skill và plugin cho Claude Code
+
+Khai báo ở phạm vi dự án, áp dụng cho mọi phiên mở repo này (cloud và máy cục bộ):
+
+- `.claude/settings.json` bật 7 plugin từ marketplace GitHub: `mattpocock-skills` (mattpocock/skills), `ponytail` (DietrichGebert/ponytail), `impeccable` (pbakaus/impeccable), `diagram-design` (cathrynlavery/diagram-design), `superpowers` (obra/superpowers), `taste-skill` (Leonxlnx/taste-skill), `hallmark` (Nutlope/hallmark). Lần đầu mở dự án, Claude Code có thể hỏi tin cậy và cài các plugin này. Ponytail có tùy chọn webhook, mặc định để trống nên không gửi dữ liệu ra ngoài; bảng thống kê chỉ ghi vào `~/.config/ponytail/` trên máy.
+- `.claude/skills/security-audit`: chép từ cloudflare/security-audit-skill (MIT, xem `SOURCE.txt`).
+- `.claude/skills/graphify`: tạo bằng `graphify install --project` (graphifyy 0.9.112). Lệnh `graphify` cần cài trên từng máy: `uv tool install graphifyy==0.9.112` (hoặc `pipx install graphifyy==0.9.112`). Hook trong `.claude/settings.json` tự bỏ qua khi máy chưa có `graphify`. Chạy `/graphify .` để dựng đồ thị lần đầu.
+- Anatomy (wheresryan22/anatomy) nặng ~27 MB nên không đưa vào repo; môi trường cloud `hunghienhoa` cài nó cùng humanizer, visual-explainer, last30days, yt-dlp và Graphify qua setup script. Máy cục bộ: `git clone https://github.com/wheresryan22/anatomy ~/.claude/skills/anatomy`.
