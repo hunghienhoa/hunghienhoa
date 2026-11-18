@@ -167,6 +167,55 @@ function image(base64, privateImage = false) {
   return new Response(bytes, { headers: { 'Content-Type': imageMime(Buffer.from(bytes)), 'Cache-Control': privateImage ? 'no-store' : 'public, max-age=300', 'X-Content-Type-Options': 'nosniff' } });
 }
 
+// Bộ nhớ đệm tại máy chủ Cloudflare gần người xem (Cache API, theo từng trung tâm dữ liệu) để không phải hỏi
+// Supabase ở mỗi lượt mở trang. Admin lưu thì xóa khóa liên quan tại trung tâm đang dùng; nơi khác tự hết hạn sau TTL.
+const CONTENT_TTL = 60, IMAGE_TTL = 300;
+const cacheKey = name => new Request(`https://hunghienhoa.com/__edge-cache/v1/${encodeURIComponent(name)}`);
+const edgeCache = () => globalThis.caches?.default || null;
+
+function later(ctx, promise) {
+  const safe = promise.catch(() => console.error('edge_cache_failed'));
+  return ctx?.waitUntil ? ctx.waitUntil(safe) : safe;
+}
+
+async function cachedJson(ctx, name, load) {
+  const cache = edgeCache();
+  if (!cache) return load();
+  const hit = await cache.match(cacheKey(name)).catch(() => null);
+  if (hit) return hit.json();
+  const value = await load();
+  await later(ctx, cache.put(cacheKey(name), new Response(JSON.stringify(value), { headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${CONTENT_TTL}` } })));
+  return value;
+}
+
+async function cachedImage(ctx, name, load) {
+  const cache = edgeCache();
+  if (!cache) return image(await load());
+  const hit = await cache.match(cacheKey(name)).catch(() => null);
+  if (hit) return new Response(hit.body, { headers: { 'Content-Type': hit.headers.get('Content-Type'), 'Cache-Control': `public, max-age=${IMAGE_TTL}`, 'X-Content-Type-Options': 'nosniff' } });
+  const response = image(await load());
+  await later(ctx, cache.put(cacheKey(name), response.clone()));
+  return response;
+}
+
+async function purge(names) {
+  const cache = edgeCache();
+  if (cache) await Promise.all(names.map(name => cache.delete(cacheKey(name)).catch(() => false)));
+}
+
+async function loadSite(env) {
+  const rows = await rest(env, 'site_settings', { query: { select: 'data', id: 'eq.1', limit: 1 } });
+  if (!rows?.[0]) fail(503, 'Nội dung trang chưa được khởi tạo.');
+  return rows[0].data;
+}
+
+async function loadPost(env, slug) {
+  const rows = await rest(env, 'posts', { query: { select: POSTS_SELECT, slug: `eq.${slug}`, status: 'eq.published', limit: 1 } });
+  return rows?.[0] ? postData(rows[0]) : null;
+}
+
+const postKeys = slug => ['listing', 'posts', 'api-posts', ...(slug ? [`post:${slug}`] : [])];
+
 function originAllowed(request) {
   const origin = request.headers.get('origin');
   return !origin || origin === new URL(request.url).origin;
@@ -186,34 +235,29 @@ async function publicApi(request, env, route, ctx) {
     const rows=await rest(env,'media_assets',{query:{select:'image_base64',id:`eq.${media[1]}`,limit:1}});
     return image(rows?.[0]?.image_base64,true);
   }
-  if (request.method === 'GET' && route === '/api/site') {
-    const rows = await rest(env, 'site_settings', { query: { select: 'data', id: 'eq.1', limit: 1 } });
-    if (!rows?.[0]) fail(503, 'Nội dung trang chưa được khởi tạo.');
-    return json(rows[0].data);
-  }
+  if (request.method === 'GET' && route === '/api/site') return json(await cachedJson(ctx, 'site', () => loadSite(env)));
   if (request.method === 'GET' && route === '/api/posts') {
-    const rows = await rest(env, 'posts', { query: { select: POSTS_SELECT, status: 'eq.published', order: 'published_at.desc,id.asc' } });
-    return json({ posts: rows.map(row => postData(row)) });
+    return json({ posts: await cachedJson(ctx, 'api-posts', async () => (await rest(env, 'posts', { query: { select: POSTS_SELECT, status: 'eq.published', order: 'published_at.desc,id.asc' } })).map(row => postData(row))) });
   }
   let match = route.match(/^\/api\/posts\/([^/]+)\/cover\.webp$/);
   if (request.method === 'GET' && match) {
-    const rows = await rest(env, 'posts', { query: { select: 'cover_base64', id: `eq.${decodeURIComponent(match[1])}`, status: 'eq.published', limit: 1 } });
-    return image(rows?.[0]?.cover_base64);
+    const id = decodeURIComponent(match[1]);
+    return cachedImage(ctx, `cover:${id}`, async () => (await rest(env, 'posts', { query: { select: 'cover_base64', id: `eq.${id}`, status: 'eq.published', limit: 1 } }))?.[0]?.cover_base64);
   }
   match = route.match(/^\/api\/posts\/([^/]+)$/);
   if (request.method === 'GET' && match) {
-    const rows = await rest(env, 'posts', { query: { select: POSTS_SELECT, slug: `eq.${decodeURIComponent(match[1])}`, status: 'eq.published', limit: 1 } });
-    if (!rows?.[0]) fail(404, 'Không tìm thấy bài viết.');
-    return json({ post: postData(rows[0]) });
+    const slug = decodeURIComponent(match[1]);
+    const post = await cachedJson(ctx, `post:${slug}`, () => loadPost(env, slug));
+    if (!post) fail(404, 'Không tìm thấy bài viết.');
+    return json({ post });
   }
   if (request.method === 'GET' && route === '/api/frames') {
-    const rows = await rest(env, 'frames', { query: { select: FRAME_SELECT, order: 'created_at.desc,id.asc' } });
-    return json({ frames: rows.map(frameData) });
+    return json({ frames: await cachedJson(ctx, 'frames', async () => (await rest(env, 'frames', { query: { select: FRAME_SELECT, order: 'created_at.desc,id.asc' } })).map(frameData)) });
   }
   match = route.match(/^\/api\/frames\/([^/]+)\/image(?:\.webp)?$/);
   if (request.method === 'GET' && match) {
-    const rows = await rest(env, 'frames', { query: { select: 'image_base64', id: `eq.${decodeURIComponent(match[1])}`, limit: 1 } });
-    return image(rows?.[0]?.image_base64);
+    const id = decodeURIComponent(match[1]);
+    return cachedImage(ctx, `frame-image:${id}`, async () => (await rest(env, 'frames', { query: { select: 'image_base64', id: `eq.${id}`, limit: 1 } }))?.[0]?.image_base64);
   }
   if (request.method === 'POST' && route === '/api/frame-submissions') {
     const value = submission(await readJson(request)), id = crypto.randomUUID(), created = new Date(), expires = new Date(created.getTime() + 3600000);
@@ -283,6 +327,7 @@ async function adminApi(request, env, route) {
     if (request.method === 'PUT') {
       const value = siteSettings(await readJson(request));
       const rows = await rest(env, 'site_settings', { method: 'PATCH', token, query: { id: 'eq.1', select: 'data' }, body: { data: value, updated_at: new Date().toISOString() }, prefer: 'return=representation' });
+      await purge(['site']);
       return json(rows[0].data);
     }
   }
@@ -293,6 +338,7 @@ async function adminApi(request, env, route) {
   if (route === '/api/admin/posts' && request.method === 'POST') {
     const value = post(await readJson(request));
     const rows = await rest(env, 'posts', { method: 'POST', token, query: { select: POSTS_SELECT }, body: dbPost(value), prefer: 'return=representation' });
+    await purge([...postKeys(rows[0].slug), `cover:${rows[0].id}`]);
     return json({ post: postData(rows[0], true) }, 201);
   }
   let match = route.match(/^\/api\/admin\/posts\/([^/]+)\/cover\.webp$/);
@@ -303,12 +349,16 @@ async function adminApi(request, env, route) {
   match = route.match(/^\/api\/admin\/posts\/([^/]+)$/);
   if (match && request.method === 'PUT') {
     const id = decodeURIComponent(match[1]), value = post(await readJson(request));
+    const before = await rest(env, 'posts', { token, query: { select: 'slug', id: `eq.${id}`, limit: 1 } });
     const rows = await rest(env, 'posts', { method: 'PATCH', token, query: { id: `eq.${id}`, select: POSTS_SELECT }, body: dbPost(value), prefer: 'return=representation' });
     if (!rows?.[0]) fail(404, 'Không tìm thấy bài viết.');
+    await purge([...postKeys(rows[0].slug), ...(before?.[0]?.slug ? [`post:${before[0].slug}`] : []), `cover:${id}`]);
     return json({ post: postData(rows[0], true) });
   }
   if (match && request.method === 'DELETE') {
-    await rest(env, 'posts', { method: 'DELETE', token, query: { id: `eq.${decodeURIComponent(match[1])}` }, prefer: 'return=minimal' });
+    const id = decodeURIComponent(match[1]);
+    const rows = await rest(env, 'posts', { method: 'DELETE', token, query: { id: `eq.${id}`, select: 'slug' }, prefer: 'return=representation' });
+    await purge([...postKeys(rows?.[0]?.slug), `cover:${id}`]);
     return json({ ok: true });
   }
   if (route === '/api/admin/submissions' && request.method === 'GET') {
@@ -332,6 +382,7 @@ async function adminApi(request, env, route) {
     await rest(env, 'rpc/approve_frame_submission', { method: 'POST', token, body: { p_id: id } });
     const rows = await rest(env, 'frames', { token, query: { select: FRAME_SELECT, id: `eq.${id}`, limit: 1 } });
     if (!rows?.[0]) fail(404, 'Bản đóng góp đã hết hạn hoặc không còn tồn tại.');
+    await purge(['frames']);
     return json({ frame: frameData(rows[0]) });
   }
   if (route === '/api/admin/frames' && request.method === 'GET') {
@@ -340,7 +391,9 @@ async function adminApi(request, env, route) {
   }
   match = route.match(/^\/api\/admin\/frames\/([^/]+)$/);
   if (request.method === 'DELETE' && match) {
-    await rest(env, 'frames', { method: 'DELETE', token, query: { id: `eq.${decodeURIComponent(match[1])}` }, prefer: 'return=minimal' });
+    const id = decodeURIComponent(match[1]);
+    await rest(env, 'frames', { method: 'DELETE', token, query: { id: `eq.${id}` }, prefer: 'return=minimal' });
+    await purge(['frames', `frame-image:${id}`]);
     return json({ ok: true });
   }
   fail(404, 'Không tìm thấy chức năng quản trị.');
@@ -387,14 +440,14 @@ async function handle(request, env, ctx) {
       if (mapped instanceof Response) return mapped;
       const url=new URL(request.url),ctxPage=pageContext(url);
       const data={
-        site:async()=>{const rows=await rest(env,'site_settings',{query:{select:'data',id:'eq.1',limit:1}});if(!rows?.[0])fail(503,'Nội dung chưa sẵn sàng.');return rows[0].data;},
-        posts:async()=>{
+        site:()=>cachedJson(ctx,'site',()=>loadSite(env)),
+        posts:()=>cachedJson(ctx,'posts',async()=>{
           const posts=[];
           for(let offset=0;offset<50000;offset+=1000){const rows=await rest(env,'posts',{query:{select:'slug,title,excerpt,is_sample',status:'eq.published',order:'published_at.desc,id.asc',limit:1000,offset}});posts.push(...rows.map(row=>({...row,isSample:!!row.is_sample})));if(rows.length<1000)return posts;}
           fail(503,'Danh sách cần được chia thành nhiều sitemap.');
-        },
-        post:async slug=>{const rows=await rest(env,'posts',{query:{select:POSTS_SELECT,status:'eq.published',slug:'eq.'+slug,limit:1}});return rows[0]?postData(rows[0]):null;},
-        listing:async()=>{const rows=await rest(env,'posts',{query:{select:'id,slug,title,excerpt,category,published_at,is_sample,has_cover',status:'eq.published',order:'published_at.desc,id.asc',limit:50}});return rows.map(row=>postData(row));}
+        }),
+        post:slug=>cachedJson(ctx,`post:${slug}`,()=>loadPost(env,slug)),
+        listing:()=>cachedJson(ctx,'listing',async()=>{const rows=await rest(env,'posts',{query:{select:'id,slug,title,excerpt,category,published_at,is_sample,has_cover',status:'eq.published',order:'published_at.desc,id.asc',limit:50}});return rows.map(row=>postData(row));})
       };
       const agent=await agentRoute(request,data);
       if(agent)return withSecurity(agent,env);
