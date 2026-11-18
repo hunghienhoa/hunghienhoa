@@ -13,6 +13,47 @@ const POSTS_SELECT = 'id,slug,title,excerpt,content,category,tags,status,is_samp
 const FRAME_SELECT = 'id,name,author_name,author_link,design,created_at';
 const SUBMISSION_SELECT = 'id,name,author_name,author_contact,author_link,design,created_at,expires_at';
 
+const HSTS = 'max-age=31536000';
+const VERSIONED_CACHE = 'public, max-age=31536000, immutable';
+const FONT_CACHE = 'public, max-age=2592000';
+const IMAGE_CACHE = 'public, max-age=86400';
+
+// Static files referenced with ?v= are renamed by bumping v, so they can be cached for a year.
+function staticCache(url) {
+  if (url.pathname.startsWith('/api/')) return '';
+  if (/\.woff2$/i.test(url.pathname)) return FONT_CACHE;
+  if (url.searchParams.has('v') && /\.(?:css|m?js)$/i.test(url.pathname)) return VERSIONED_CACHE;
+  if (/\.(?:webp|svg|jpe?g|gif)$/i.test(url.pathname)) return IMAGE_CACHE;
+  return '';
+}
+
+function preferredEncoding(header) {
+  const accepted = new Set();
+  for (const part of String(header || '').toLowerCase().split(',')) {
+    const [name, ...params] = part.trim().split(';');
+    const q = params.map(p => p.trim()).find(p => p.startsWith('q='));
+    if (name && (!q || Number(q.slice(2)) > 0)) accepted.add(name.trim());
+  }
+  return accepted.has('br') ? 'br' : accepted.has('gzip') ? 'gzip' : '';
+}
+
+// HTML keeps Cache-Control: no-transform so Cloudflare cannot inject scripts that break the CSP nonce,
+// which also stops Cloudflare from compressing it. Setting Content-Encoding lets the Workers runtime compress it.
+function deliver(request, response) {
+  const url = new URL(request.url), headers = new Headers(response.headers);
+  headers.set('Strict-Transport-Security', HSTS);
+  const cacheControl = headers.get('Cache-Control') || '';
+  const cache = response.status === 200 && ['GET', 'HEAD'].includes(request.method) && !/no-store/i.test(cacheControl) && !headers.get('content-type')?.includes('text/html') ? staticCache(url) : '';
+  if (cache) headers.set('Cache-Control', cache);
+  const encoding = preferredEncoding(request.headers.get('accept-encoding'));
+  if (encoding && response.body && ![204, 304].includes(response.status) && headers.get('content-type')?.includes('text/html') && /no-transform/i.test(cacheControl) && !headers.has('Content-Encoding')) {
+    headers.set('Content-Encoding', encoding);
+    headers.append('Vary', 'Accept-Encoding');
+    headers.delete('Content-Length');
+  }
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
 function json(value, status = 200) {
   return new Response(JSON.stringify(value), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
 }
@@ -315,11 +356,27 @@ function assetRequest(request) {
   return new Request(url, request);
 }
 
+async function notFoundPage(request, env) {
+  if (!['GET', 'HEAD'].includes(request.method) || !/text\/html/i.test(request.headers.get('accept') || '') || !env.ASSETS) return null;
+  const page = await env.ASSETS.fetch(new Request(new URL('/404', request.url)));
+  if (!page.ok) return null;
+  const headers = new Headers(page.headers);
+  headers.set('X-Robots-Tag', 'noindex');
+  headers.set('Cache-Control', 'no-store');
+  return withSecurity(new Response(page.body, { status: 404, headers }), env, null, request.method === 'HEAD');
+}
+
 export default {
   async fetch(request, env, ctx) {
+    return deliver(request, await handle(request, env, ctx));
+  }
+};
+
+async function handle(request, env, ctx) {
     const redirect=publicRedirect(new URL(request.url));
     if(redirect)return Response.redirect(redirect.href,308);
     const route = new URL(request.url).pathname;
+    if (route === '/favicon.ico') return Response.redirect(new URL('/assets/star.svg', request.url).href, 301);
     try {
       if (route.startsWith('/api/')) {
         const response = route.startsWith('/api/admin/') ? await adminApi(request, env, route) : await publicApi(request, env, route, ctx);
@@ -343,6 +400,7 @@ export default {
       if(agent)return withSecurity(agent,env);
       const response = await env.ASSETS.fetch(mapped);
       if(response.status===404&&representation(request.headers.get('accept'))==='text/markdown')return withSecurity(markdown404(ctxPage,request.method==='HEAD'),env);
+      if(response.status===404){const page=await notFoundPage(request,env);if(page)return page;}
       const page = pageForVisit(new URL(mapped.url).pathname);
       if (env.VISITS && page && request.method === 'GET' && response.ok && response.headers.get('content-type')?.includes('text/html') && !/bot|crawler|spider|headless/i.test(request.headers.get('user-agent') || '')) {
         const key=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contributionDay(Date.now())+':'+(request.headers.get('CF-Connecting-IP')||'unknown')))),byte=>byte.toString(16).padStart(2,'0')).join('');
@@ -356,7 +414,6 @@ export default {
       if (status >= 500) console.error(JSON.stringify({ message: 'request_failed', status, path: route, error: error instanceof Error ? error.message : String(error) }));
       return json({ error: status >= 500 ? 'Máy chủ đang gặp sự cố. Hãy thử lại sau.' : error.message }, status);
     }
-  }
-};
+}
 
 export { assetRequest, readJson };

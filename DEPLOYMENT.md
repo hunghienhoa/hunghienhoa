@@ -3,8 +3,8 @@
 ## Kiến trúc đang dùng
 
 ```text
-GitHub (mã nguồn) → GitHub Actions (kiểm tra/build/deploy) → Cloudflare Worker
-                                                   ↓
+GitHub (mã nguồn) → GitHub Actions (kiểm tra/build/deploy) ─┬→ Supabase (migration trong supabase/migrations)
+                                                            └→ Cloudflare Worker
 Trình duyệt → hunghienhoa.com / các miền phụ → Supabase Auth + Postgres
 ```
 
@@ -51,13 +51,17 @@ Quy trình nằm trong `.github/workflows/deploy.yml`; xem các lượt chạy t
 
 1. Push hoặc merge vào `main` sẽ chạy `npm ci` và `npm run check`.
 2. Build một lần bằng `npm run build -- --mode production`, rồi dry-run đúng build đó.
-3. Chỉ nhánh `main` và sự kiện push/chạy thủ công được nhận token để deploy bằng `npx cf deploy --prebuilt --mode production`.
+3. Chỉ nhánh `main` và sự kiện push/chạy thủ công mới được nhận secret: trước tiên `supabase db push` áp các migration mới trong `supabase/migrations` lên Supabase, sau đó `npx cf deploy --prebuilt --mode production` triển khai Worker. Nếu migration lỗi, Worker không được triển khai.
 4. Sau deploy, kiểm tra website thật bằng `node tools/cloud-smoke.mjs`.
 5. Pull request chỉ kiểm tra/build/dry-run; không nhận token và không triển khai production.
 
 Node.js được khóa ở `24.22.1` trong `.node-version`, thư viện khóa bởi `package-lock.json`, hai GitHub Actions chính thức khóa theo commit SHA. Có thể chạy lại từ **Actions → Triển khai hunghienhoa → Run workflow** trên nhánh `main`.
 
 Khóa `CLOUDFLARE_API_TOKEN` đã lưu mã hóa trong **GitHub Settings → Secrets and variables → Actions**. Biến `CLOUDFLARE_ACCOUNT_ID` chọn đúng tài khoản. Token chỉ có Workers Scripts Write trong tài khoản Cloudflare đang dùng, cùng Workers Routes Write và Zone Read cho zone `hunghienhoa.com`; không có quyền Supabase, quản lý token hay sửa DNS tùy ý.
+
+Secret `SUPABASE_DB_URL` chứa chuỗi kết nối **Session pooler** của Supabase (Dashboard → Connect → Session pooler, dạng `postgresql://postgres.sybdjztpsaffwcvjuimd:<mật khẩu DB>@aws-...pooler.supabase.com:5432/postgres`). Không dùng Direct connection vì máy GitHub Actions không có IPv6. Chỉ lưu trong GitHub Secrets, không chép vào file hay chat. Đổi mật khẩu database thì cập nhật secret này.
+
+Tên file migration phải trùng `version` trong lịch sử của Supabase (`supabase_migrations.schema_migrations`); `db push` chỉ chạy file có version chưa có trong lịch sử và báo lỗi nếu lịch sử có version không có file tương ứng. Không sửa hay đổi tên migration đã chạy; muốn thay đổi thì thêm migration mới. Không áp migration thủ công trên Dashboard/MCP nữa, để lịch sử luôn khớp repo.
 
 Token tên `hunghienhoa-github-deploy` hết hạn **10/11/2027**. Trước ngày này, tạo token mới cùng phạm vi trong Cloudflare, cập nhật GitHub Secret, chạy workflow kiểm tra rồi thu hồi token cũ. Không chép token vào file, commit hay chat.
 
@@ -74,7 +78,7 @@ Mã nguồn không chứa mật khẩu mặc định. Hùng tự tạo tài kho�
 
 Hùng đã xác nhận đăng nhập bằng tài khoản thật thành công sau bản sửa `95c4e6b`. Lần kiểm tra connector gần nhất bị từ chối quyền quản trị Supabase; quyền connector độc lập với đăng nhập admin của website. Không tạo user trực tiếp bằng SQL vào bảng `auth.users`.
 
-Không gửi mật khẩu qua chat và không thêm mật khẩu, access token, database URL hoặc secret key vào GitHub.
+Không gửi mật khẩu qua chat và không thêm mật khẩu, access token, database URL hoặc secret key vào mã nguồn GitHub; các giá trị này chỉ nằm trong GitHub Secrets.
 
 ## Lệnh kiểm tra và triển khai thủ công
 
@@ -86,7 +90,7 @@ npm run deploy
 node tools/cloud-smoke.mjs
 ```
 
-Các migration Supabase nằm trong `supabase/migrations`. Sau mỗi thay đổi schema, chạy Security/Performance Advisors và xác nhận RLS trước khi triển khai.
+Các migration Supabase nằm trong `supabase/migrations` và được GitHub Actions áp khi merge vào `main`. Sau mỗi thay đổi schema, chạy Security/Performance Advisors và xác nhận RLS.
 
 ## Cập nhật hằng ngày
 
@@ -94,6 +98,7 @@ Các migration Supabase nằm trong `supabase/migrations`. Sau mỗi thay đổi
 2. Commit rồi push nhánh `main` lên GitHub.
 3. Theo dõi GitHub Actions đến khi toàn bộ lượt chạy xanh. Nếu kiểm thử lỗi, website giữ nguyên bản production trước đó. Vẫn có thể chạy `npm run deploy` thủ công từ máy đã đăng nhập đúng Cloudflare khi cần.
 4. Thay đổi nội dung hằng ngày thực hiện tại `admin.hunghienhoa.com`; nội dung được lưu trực tiếp trong Supabase, không cần commit Git.
+5. CSS/JS được tham chiếu kèm `?v=` được trình duyệt cache một năm (`immutable`). Khi sửa một tệp như vậy, tăng `v` ở mọi chỗ tham chiếu rồi chạy `node tools/asset-versions.mjs --write`; `npm run check` báo lỗi nếu nội dung đổi mà `v` giữ nguyên. Font cache 30 ngày, ảnh trong `assets` cache 1 ngày; HTML không cache.
 
 ## Giới hạn đã ghi nhận
 

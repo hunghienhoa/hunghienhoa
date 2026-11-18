@@ -36,6 +36,19 @@ jobs:
         run: npm run build -- --mode production
       - name: Kiểm tra bản triển khai
         run: npx cf deploy --prebuilt --mode production --dry-run
+      - name: Cập nhật cơ sở dữ liệu Supabase
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        # Chỉ chạy các migration trong supabase/migrations chưa có trong lịch sử của Supabase.
+        # Chạy trước Cloudflare để Worker mới không dùng bảng/policy chưa tồn tại.
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "::error::Thiếu GitHub Secret SUPABASE_DB_URL (chuỗi Session pooler của Supabase). Xem DEPLOYMENT.md."
+            exit 1
+          fi
+          npx --yes supabase@2.122.0 db push --db-url "$SUPABASE_DB_URL"
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SUPABASE_TELEMETRY_DISABLED: "1"
       - name: Triển khai lên Cloudflare
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: npx cf deploy --prebuilt --mode production

@@ -61,7 +61,6 @@ function makeArt(post, index = 0) {
 function postLink(post, className) {
   const link = element('a', className);
   link.href = `?bai=${encodeURIComponent(post.slug)}`;
-  link.setAttribute('aria-label', `Đọc bài viết ${post.title}`);
   return link;
 }
 
