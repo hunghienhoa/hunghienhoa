@@ -174,3 +174,49 @@ test('trang không tồn tại trả trang 404 tiếng Việt; favicon.ico chuy�
  assert.equal(icon.headers.get('Location'),'https://snap.hunghienhoa.com/assets/star.svg');
  assert.equal(icon.headers.get('Strict-Transport-Security'),'max-age=31536000');
 });
+
+test('dữ liệu Supabase được cache tại edge; admin lưu thì xóa đúng khóa; ảnh media riêng không cache', async t => {
+  const store = new Map();
+  const fakeCache = {
+    match: async request => store.get(request.url)?.clone() || undefined,
+    put: async (request, response) => { store.set(request.url, response.clone()); },
+    delete: async request => store.delete(request.url)
+  };
+  globalThis.caches = { default: fakeCache };
+  t.after(() => { delete globalThis.caches; });
+  const env = { SUPABASE_URL: 'https://database.example.test', SUPABASE_PUBLISHABLE_KEY: 'public-test-key', ADMIN_EMAIL: 'owner@example.test' };
+  const rest = [];
+  const webp = fs.readFileSync('server/fixtures/frame.webp').toString('base64');
+  t.mock.method(globalThis, 'fetch', async (url, options = {}) => {
+    const path = new URL(url).pathname;
+    if (path === '/auth/v1/user') return Response.json({ email: env.ADMIN_EMAIL });
+    rest.push(`${options.method || 'GET'} ${path}`);
+    if (path.endsWith('/site_settings')) return Response.json([{ data: { displayName: 'Hùng Hiền Hòa' } }]);
+    if (path.endsWith('/posts') && (options.method || 'GET') === 'GET') return Response.json([{ id: 7, slug: 'bai-mau', title: 'Bài', excerpt: 'Tóm tắt', content: 'Nội dung', category: 'Thử', tags: [], status: 'published', is_sample: false, created_at: '2026-11-18T00:00:00Z', published_at: '2026-11-18T00:00:00Z', has_cover: true, cover_base64: webp }]);
+    if (path.endsWith('/posts')) return Response.json([{ id: 7, slug: 'bai-mau', title: 'Bài', excerpt: 'Tóm tắt', content: 'Nội dung', category: 'Thử', tags: [], status: 'published', is_sample: false, created_at: '2026-11-18T00:00:00Z', published_at: '2026-11-18T00:00:00Z', has_cover: true }]);
+    if (path.endsWith('/media_assets')) return Response.json([{ image_base64: webp }]);
+    return Response.json([]);
+  });
+  const get = path => worker.fetch(new Request('https://hunghienhoa.com' + path), env, { waitUntil: () => {} });
+  const count = name => rest.filter(call => call === `GET /rest/v1/${name}`).length;
+
+  for (let i = 0; i < 3; i++) assert.equal((await (await get('/api/site')).json()).displayName, 'Hùng Hiền Hòa');
+  assert.equal(count('site_settings'), 1);
+  for (let i = 0; i < 2; i++) assert.equal((await get('/api/posts/bai-mau')).status, 200);
+  for (let i = 0; i < 2; i++) { const cover = await get('/api/posts/7/cover.webp'); assert.equal(cover.status, 200); assert.equal(cover.headers.get('content-type'), 'image/webp'); assert.equal(cover.headers.get('cache-control'), 'public, max-age=300'); }
+  assert.equal(count('posts'), 2);
+  for (let i = 0; i < 2; i++) assert.equal((await get('/api/media/11111111-1111-4111-8111-111111111111.webp')).headers.get('cache-control'), 'no-store');
+  assert.equal(count('media_assets'), 2);
+  assert.ok(![...store.keys()].some(key => key.includes('media')));
+
+  const admin = (method, path, body) => worker.fetch(new Request('https://admin.hunghienhoa.com' + path, { method, headers: { Authorization: 'Bearer token', 'Content-Type': 'application/json' }, body: body && JSON.stringify(body) }), env);
+  const del = await admin('DELETE', '/api/admin/posts/7');
+  assert.equal(del.status, 200);
+  assert.ok(!store.has('https://hunghienhoa.com/__edge-cache/v1/post%3Abai-mau'));
+  assert.ok(!store.has('https://hunghienhoa.com/__edge-cache/v1/cover%3A7'));
+  assert.ok(store.has('https://hunghienhoa.com/__edge-cache/v1/site'));
+  await get('/api/posts/bai-mau');
+  assert.equal(count('posts'), 3, 'sau khi xóa phải đọc lại từ Supabase');
+  await get('/api/site');
+  assert.equal(count('site_settings'), 1, 'khóa không liên quan vẫn còn cache');
+});

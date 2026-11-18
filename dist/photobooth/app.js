@@ -784,11 +784,14 @@ $('#contribution-form').addEventListener('submit', async event => {
   }
 });
 
-for (const name of ['blue', 'yellow', 'purple', 'coral', 'heart', 'star', 'bow', 'cat', 'cherry', 'cloud', 'butterfly', 'smile']) {
+// Vẽ lại một lần sau khi cả 12 sticker tải xong, thay vì vẽ lại toàn bộ dải ảnh và ảnh xem trước sau từng sticker.
+const stickerLoads = ['blue', 'yellow', 'purple', 'coral', 'heart', 'star', 'bow', 'cat', 'cherry', 'cloud', 'butterfly', 'smile'].map(name => new Promise(resolve => {
   const image = new Image();
-  image.onload = () => { stickers[name] = image; renderStrip(); renderDesignPreview(); frameFontsReady.then(renderFramePreviews); };
+  image.onload = () => { stickers[name] = image; resolve(); };
+  image.onerror = () => resolve();
   image.src = ['blue', 'yellow', 'purple', 'coral'].includes(name) ? `assets/asterisk-${name}-face.svg` : `assets/${name}.svg`;
-}
+}));
+Promise.all(stickerLoads).then(() => frameFontsReady).then(() => { renderStrip(); renderDesignPreview(); renderFramePreviews(); }).catch(() => {});
 frameFontsReady.then(() => { renderStrip(); renderDesignPreview(); }).catch(() => tell('Chưa tải được phông chữ. Kiểm tra kết nối trước khi tải ảnh hoặc gửi khung.', true));
 updateUI();
 renderDesignPreview();

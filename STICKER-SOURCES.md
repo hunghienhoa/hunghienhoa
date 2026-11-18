@@ -6,14 +6,14 @@
 
 Dùng ImageGen ở chế độ chỉnh sửa ảnh tham chiếu để làm sạch/dựng lại các hình, bỏ nền giấy, màng xốp và phản sáng. Đây là **hình tái dựng theo tham chiếu**, không phải cutout nguyên pixel hoặc chuỗi frame GIF gốc. Các nhân vật minh họa được giữ thành mô-típ; ảnh chân dung thật, tên, chữ ký và logo riêng của tác giả/nhãn hàng không được dùng để giới thiệu chủ website. Màn hình điện thoại, nhãn và thẻ được để trống hoặc trang trí lại. Nguồn người dùng cung cấp không tự chứng minh quyền khai thác; tài liệu này ghi quy trình và nguồn, không phải giấy phép.
 
-Ba atlas 4×4 có tổng cộng 48 ô, đọc từ trái sang phải, từ trên xuống dưới. Số ô gồm nhân vật, họa tiết và đồ vật; không có nghĩa là 48 nhân vật khác nhau, cũng không tính mỗi lần lặp trong GIF thành một hình mới. Atlas đầu dùng `assets/sticker-atlas.webp`; PNG nguồn nằm ngoài `dist`. Web dùng WebP có alpha, SVG gốc vẫn giữ SVG; các bản ở main/blog/photobooth phục vụ định tuyến từng miền.
+Ba atlas 4×4 có tổng cộng 48 ô, đọc từ trái sang phải, từ trên xuống dưới. Số ô gồm nhân vật, họa tiết và đồ vật; không có nghĩa là 48 nhân vật khác nhau, cũng không tính mỗi lần lặp trong GIF thành một hình mới. Ba atlas PNG nguồn nằm ngoài `dist`; web phục vụ từng ô thành tệp riêng `assets/stickers/sticker-01.webp` … `sticker-48.webp`. Web dùng WebP có alpha, SVG gốc vẫn giữ SVG; các bản ở main/blog/photobooth phục vụ định tuyến từng miền.
 
 ## Tệp phục vụ và nén ảnh
 
-- `dist/assets/sticker-atlas.webp`: ô 01–16, 399.092 byte, chất lượng 88.
-- `dist/assets/sticker-atlas-2.webp`: ô 17–32, 584.868 byte, chất lượng 84.
-- `dist/assets/sticker-atlas-3.webp`: ô 33–48, 399.024 byte, chất lượng 84.
-- Cả ba 1254 × 1254 px, alpha đối chiếu giống PNG gốc. PNG giữ tại `source-assets/original-png/assets/`, không phục vụ trực tiếp. Mỗi miền tải các atlas một lần và dùng lại bằng CSS.
+- PNG nguồn: `source-assets/original-png/assets/sticker-atlas.png` (ô 01–16), `sticker-atlas-2.png` (ô 17–32), `sticker-atlas-3.png` (ô 33–48), mỗi tệp 1254 × 1254 px, không phục vụ trực tiếp.
+- `python tools/split-sticker-atlas.py` cắt mỗi atlas thành 16 ô (~313 px) và lưu WebP có alpha vào `dist/assets/stickers/`, rồi chép sang `dist/blog` và `dist/photobooth`. Chất lượng giữ như atlas cũ: 88 cho ô 01–16, 84 cho ô 17–48; tổng 48 tệp khoảng 1,36 MB.
+- Mỗi trang chỉ tải sticker mình dùng thay vì cả ba atlas: trang chính ~430 KB (gồm ô 29–32 của thẻ dự án), Photobooth ~324 KB, Blog ~147 KB, phòng chụp ~22 KB.
+- CSS: `.sticker-NN{--sticker:url('assets/stickers/sticker-NN.webp')}`, hiển thị bằng `background-size:100% 100%`. Thay PNG nguồn thì chạy lại công cụ, tăng `?v=` của CSS nếu đổi CSS.
 
 ## Bộ prompt
 
