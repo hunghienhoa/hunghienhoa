@@ -130,3 +130,47 @@ test('HTML giữ CSP và không cho tự chèn script thống kê', async () => 
  assert.ok(response.headers.get('Content-Security-Policy').includes("script-src 'self'"));
  assert.ok(!(await response.text()).includes('cloudflareinsights'));
 });
+
+test('HSTS, nén HTML theo Accept-Encoding và cache dài cho tệp có ?v=', async () => {
+ const assets=new Map([
+  ['/admin/','<!doctype html><title>Quản trị</title>'],
+  ['/admin/style.css','body{}'],
+  ['/admin/fonts/BeVietnamPro-Bold.woff2','wOF2'],
+  ['/admin/assets/star.svg','<svg/>'],
+  ['/admin/config.js','x']
+ ]);
+ const types={'.css':'text/css','.woff2':'font/woff2','.svg':'image/svg+xml','.js':'text/javascript'};
+ const env={ASSETS:{fetch:async request=>{const path=new URL(request.url).pathname;if(!assets.has(path))return new Response(null,{status:404});return new Response(assets.get(path),{headers:{'Content-Type':types[path.slice(path.lastIndexOf('.'))]||'text/html','Cache-Control':'public, max-age=0, must-revalidate'}});}}};
+ const get=(path,headers={})=>worker.fetch(new Request('https://admin.hunghienhoa.com'+path,{headers}),env);
+ const html=await get('/',{'Accept-Encoding':'gzip, deflate, br, zstd'});
+ assert.equal(html.headers.get('Strict-Transport-Security'),'max-age=31536000');
+ assert.equal(html.headers.get('Content-Encoding'),'br');
+ assert.match(html.headers.get('Vary'),/Accept-Encoding/);
+ assert.match(html.headers.get('Cache-Control'),/no-transform/);
+ assert.equal((await get('/',{'Accept-Encoding':'gzip'})).headers.get('Content-Encoding'),'gzip');
+ assert.equal((await get('/',{'Accept-Encoding':'br;q=0, gzip'})).headers.get('Content-Encoding'),'gzip');
+ assert.equal((await get('/')).headers.get('Content-Encoding'),null);
+ assert.equal((await get('/style.css?v=3')).headers.get('Cache-Control'),'public, max-age=31536000, immutable');
+ assert.equal((await get('/style.css')).headers.get('Cache-Control'),'public, max-age=0, must-revalidate');
+ assert.equal((await get('/config.js')).headers.get('Cache-Control'),'public, max-age=0, must-revalidate');
+ assert.equal((await get('/fonts/BeVietnamPro-Bold.woff2')).headers.get('Cache-Control'),'public, max-age=2592000');
+ assert.equal((await get('/assets/star.svg')).headers.get('Cache-Control'),'public, max-age=86400');
+ assert.equal((await get('/style.css?v=3',{'Accept-Encoding':'br'})).headers.get('Content-Encoding'),null);
+});
+
+test('trang không tồn tại trả trang 404 tiếng Việt; favicon.ico chuyển về biểu tượng sao', async () => {
+ const page=fs.readFileSync('dist/404.html','utf8');
+ const env={ASSETS:{fetch:async request=>new URL(request.url).pathname==='/404'?new Response(page,{headers:{'Content-Type':'text/html'}}):new Response(null,{status:404})}};
+ const missing=await worker.fetch(new Request('https://blog.hunghienhoa.com/khong-co',{headers:{Accept:'text/html,application/xhtml+xml'}}),env);
+ assert.equal(missing.status,404);
+ assert.equal(missing.headers.get('X-Robots-Tag'),'noindex');
+ assert.match(missing.headers.get('Cache-Control'),/no-store/);
+ assert.ok(missing.headers.get('Content-Security-Policy').includes("default-src 'self'"));
+ assert.match(await missing.text(),/Trang này <em>lạc mất<\/em> rồi/);
+ const image=await worker.fetch(new Request('https://blog.hunghienhoa.com/khong-co.webp',{headers:{Accept:'image/webp,*/*'}}),env);
+ assert.equal(image.status,404);assert.equal(await image.text(),'');
+ const icon=await worker.fetch(new Request('https://snap.hunghienhoa.com/favicon.ico'),env);
+ assert.equal(icon.status,301);
+ assert.equal(icon.headers.get('Location'),'https://snap.hunghienhoa.com/assets/star.svg');
+ assert.equal(icon.headers.get('Strict-Transport-Security'),'max-age=31536000');
+});

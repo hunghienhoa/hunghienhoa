@@ -216,4 +216,15 @@ try {
   const response = await fetch(origin + '/api/admin/setup', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ password: 'Isolated-test-password-123' }) });
   assert.equal(response.status, 403);
   console.log('PASS: production cannot claim first admin without a bootstrap token.');
+  const missing = await fetch(origin + '/khong-co-trang-nay', { headers: { Accept: 'text/html' } });
+  assert.equal(missing.status, 404);
+  assert.equal(missing.headers.get('x-robots-tag'), 'noindex');
+  assert.match(await missing.text(), /Trang này <em>lạc mất<\/em> rồi/);
+  const missingApi = await fetch(origin + '/api/khong-co', { headers: { Accept: 'text/html' } });
+  assert.equal(missingApi.status, 404);
+  assert.match(missingApi.headers.get('content-type'), /application\/json/);
+  const icon = await fetch(origin + '/favicon.ico', { redirect: 'manual' });
+  assert.equal(icon.status, 301);
+  assert.equal(icon.headers.get('location'), '/assets/star.svg');
+  console.log('PASS: missing pages show the Vietnamese 404 page; favicon.ico points to the star icon.');
 } finally { await production.close(); fs.rmSync(publicData, { recursive: true, force: true }); }

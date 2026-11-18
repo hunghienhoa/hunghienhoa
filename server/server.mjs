@@ -320,6 +320,7 @@ export function createApp(options = {}) {
     const pageURL=new URL(req.url,`http://${req.headers.host}`),ctxPage=pageContext(pageURL);
     const redirect=publicRedirect(pageURL);
     if(redirect){res.writeHead(308,{Location:redirect.href});return res.end();}
+    if(pageURL.pathname==='/favicon.ico'){res.writeHead(301,{Location:'/assets/star.svg'});return res.end();}
     const data={
       site:async()=>JSON.parse(getSetting('site')),
       posts:async()=>db.prepare("SELECT slug,title,excerpt,is_sample FROM posts WHERE status='published' ORDER BY published_at DESC,id").all().map(row=>({...row,isSample:!!row.is_sample})),
@@ -361,6 +362,11 @@ export function createApp(options = {}) {
     if(error.status===404&&!req.url.startsWith('/api/')&&representation(req.headers.accept)==='text/markdown'){
       const response=markdown404(pageContext(new URL(req.url,`http://${req.headers.host}`)),req.method==='HEAD');
       res.writeHead(404,Object.fromEntries(response.headers));response.text().then(body=>res.end(req.method==='HEAD'?undefined:body));return;
+    }
+    if(error.status===404&&!req.url.startsWith('/api/')&&['GET','HEAD'].includes(req.method)&&/text\/html/i.test(req.headers.accept||'')){
+      const page=fs.readFileSync(path.join(dist,'404.html'));
+      res.writeHead(404,{'Content-Type':'text/html; charset=utf-8','Content-Length':page.length,'Cache-Control':'no-store','X-Robots-Tag':'noindex'});
+      return res.end(req.method==='HEAD'?undefined:page);
     }
     json(res, { error: error.status ? error.message : 'Máy chủ chưa xử lý được thao tác. Vui lòng thử lại.' }, error.status || 500);
     if (!error.status) console.error('Lỗi máy chủ:', error.code || error.name);

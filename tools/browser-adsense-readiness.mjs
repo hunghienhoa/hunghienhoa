@@ -31,7 +31,7 @@ try{
   for(const [name,url] of [['main',base+'/'],['blog',blog+'/'],['article',blog+'/?bai='+first.slug],['photobooth',photo+'/'],['shoot',photo+'/shoot']]){
    const response=await page.goto(url,{waitUntil:'networkidle'});assert.equal(response.status(),200,url);
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`${name} overflow at ${width}, JS ${javaScriptEnabled}`);
-   if(name==='blog'){assert.ok(await page.locator('a[href*="?bai="]').count()>=posts.length);assert.ok(await page.getByRole('link',{name:'Về portfolio của Hùng'}).isVisible());}
+   if(name==='blog'){assert.ok(await page.locator('a[href*="?bai="]').count()>=posts.length);assert.ok(await page.getByRole('link',{name:'Về Hùng'}).isVisible());}
    if(name==='article'){assert.ok(await page.locator('#article').isVisible());assert.ok((await page.locator('#article-body').innerText()).length>100);assert.ok((await page.title()).includes(first.title));assert.equal(await page.locator('meta[name="description"]').getAttribute('content'),first.excerpt);}
    if(name==='shoot'){assert.ok(await page.locator('h1#studio-title').isVisible());assert.equal(await page.locator('video').evaluate(e=>!!e.srcObject),false);}
    if(width===390)await page.screenshot({path:`outputs/adsense-readiness/${name}-js-${javaScriptEnabled}.png`});

@@ -94,6 +94,7 @@ Các migration Supabase nằm trong `supabase/migrations`. Sau mỗi thay đổi
 2. Commit rồi push nhánh `main` lên GitHub.
 3. Theo dõi GitHub Actions đến khi toàn bộ lượt chạy xanh. Nếu kiểm thử lỗi, website giữ nguyên bản production trước đó. Vẫn có thể chạy `npm run deploy` thủ công từ máy đã đăng nhập đúng Cloudflare khi cần.
 4. Thay đổi nội dung hằng ngày thực hiện tại `admin.hunghienhoa.com`; nội dung được lưu trực tiếp trong Supabase, không cần commit Git.
+5. CSS/JS được tham chiếu kèm `?v=` được trình duyệt cache một năm (`immutable`). Khi sửa một tệp như vậy, tăng `v` ở mọi chỗ tham chiếu rồi chạy `node tools/asset-versions.mjs --write`; `npm run check` báo lỗi nếu nội dung đổi mà `v` giữ nguyên. Font cache 30 ngày, ảnh trong `assets` cache 1 ngày; HTML không cache.
 
 ## Giới hạn đã ghi nhận
 
