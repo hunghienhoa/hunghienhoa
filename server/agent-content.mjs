@@ -145,7 +145,12 @@ export async function publicHtml(html,raw,ctx,url,data) {
       html=setContent(html,'result-count',`${posts.length} bài viết`);
     }
   }
-  if(!['localhost','127.0.0.1','[::1]'].includes(url.hostname)){html=html.replace(/href="photobooth\/"/g,'href="https://photobooth.hunghienhoa.com/"').replace(/href="blog\/"/g,'href="https://blog.hunghienhoa.com/"').replace(/href="snaptik\/"/g,'href="https://snap.hunghienhoa.com/"');}
+  if(ctx.page==='main'){
+    // Ba bài mới nhất dẫn thẳng vào blog: Googlebot vào trang chính hằng ngày nhưng chưa tự tìm tới bài blog. Lỗi dữ liệu thì giữ khối ẩn.
+    const latest=await Promise.resolve().then(()=>data.listing()).then(posts=>posts.filter(p=>!p.status||p.status==='published').slice(0,3)).catch(()=>[]);
+    if(latest.length)html=setContent(setHidden(html,'latest-posts',false),'latest-posts-list',latest.map(p=>`<li><a href="blog/?bai=${encodeURIComponent(p.slug)}">${escapeHtml(p.title)}</a></li>`).join(''));
+  }
+  if(!['localhost','127.0.0.1','[::1]'].includes(url.hostname)){html=html.replace(/href="blog\/\?bai=/g,'href="https://blog.hunghienhoa.com/?bai=').replace(/href="photobooth\/"/g,'href="https://photobooth.hunghienhoa.com/"').replace(/href="blog\/"/g,'href="https://blog.hunghienhoa.com/"').replace(/href="snaptik\/"/g,'href="https://snap.hunghienhoa.com/"');}
   return {body:decorateHtml(html,raw,ctx,url,post),status:200};
 }
 export function markdownPage(raw,ctx,posts=[],post=null) {
