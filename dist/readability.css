@@ -31,3 +31,11 @@
 .article-body,.policy-page{max-width:68ch;background:var(--cream,#fbf2e3);box-shadow:0 0 0 24px var(--cream,#fbf2e3)}
 .article-body{font-size:18px;line-height:1.8}
 @media(max-width:760px){.article-body{font-size:16px}.article-body,.policy-page{box-shadow:0 0 0 12px var(--cream,#fbf2e3)}}
+
+/* Chống "chìm" chữ: lưới nhạt hơn (giữ ô kẻ), đoạn văn dày nét hơn, không làm mờ chữ mang thông tin */
+:root{--line:#aebcd352}
+.hero>p,.section-head p,.section-heading p,.about-copy p,.contact-postcard p,.featured-copy p,.post-copy p,.hero-copy p,.intro-copy p,
+.how-to article>p,.steps article>p,.privacy p,.privacy-copy p,details>p,.community-intro,#community-status,.concept-disclaimer,.completed-copy p,
+#ve-goc-nho p,.article-body,.policy-page p,.policy-page li,.camera-help,.session-note,.editor-note{font-weight:500}
+.concept-disclaimer,.camera-help,.session-note,.editor-note,.caption-label>span,.social-note,.draft-label{opacity:1!important}
+.steps li:not(.current){opacity:.85!important}
