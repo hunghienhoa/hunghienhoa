@@ -3,51 +3,64 @@
 </a>
 
 <p align="center">
-  <a href="https://hunghienhoa.com"><b>Ghé portfolio ↗</b></a> &nbsp;·&nbsp;
-  <a href="https://photobooth.hunghienhoa.com">Chụp một chút vui</a> &nbsp;·&nbsp;
-  <a href="https://blog.hunghienhoa.com">Đọc một chút hay</a> &nbsp;·&nbsp;
+  <a href="https://hunghienhoa.com"><b>Portfolio ↗</b></a> &nbsp;·&nbsp;
+  <a href="https://photobooth.hunghienhoa.com">Hộp Ảnh</a> &nbsp;·&nbsp;
+  <a href="https://blog.hunghienhoa.com">Góc tò mò</a> &nbsp;·&nbsp;
   <a href="https://snap.hunghienhoa.com">Snap</a>
 </p>
 
-## Một chút về mình
-
-Mình là **Hùng** — Hùng Hiền Hòa. Mình thích những ý tưởng có cá tính, những thiết kế có chuyện để kể và những điều nhỏ khiến một ngày trở nên thú vị hơn.
-
-Ở đây, mình gom những thứ đang làm: một portfolio mang tinh thần mở hộp, một góc chụp ảnh giữ kỷ niệm và một nơi để viết về những điều hay ho. Mỗi dự án là một cách thử, học và tạo thêm một chút niềm vui.
+Mình là **Hùng** — Hùng Hiền Hòa. Mình thích những ý tưởng có cá tính, những thiết kế có chuyện để kể và những điều nhỏ khiến một ngày thú vị hơn. Đây là chiếc hộp mình gom những thứ đang làm.
 
 ## Có gì trong chiếc hộp?
 
 <table>
   <tr>
-    <td width="33%" valign="top">
-      <h3>01 · Portfolio</h3>
-      <p>Một hộp đầy ý tưởng, giấy kem, sticker và những chuyển động có cá tính.</p>
-      <a href="https://hunghienhoa.com"><b>Mở hộp cùng mình ↗</b></a>
+    <td width="50%" valign="top">
+      <a href="https://hunghienhoa.com"><img src=".github/profile/du-an-portfolio.webp" alt="Trang chính hunghienhoa.com: Một hộp đầy ý tưởng"></a>
+      <h3>Portfolio</h3>
+      <p>Một hộp đầy ý tưởng: thiết kế, sticker và những chuyển động có cá tính.</p>
+      <a href="https://hunghienhoa.com"><b>hunghienhoa.com ↗</b></a>
     </td>
-    <td width="33%" valign="top">
-      <h3>02 · Hộp Ảnh</h3>
-      <p>Chụp bốn khoảnh khắc, tự tạo khung và mang một dải kỷ niệm về nhà.</p>
-      <a href="https://photobooth.hunghienhoa.com"><b>Vào phòng chụp ↗</b></a>
+    <td width="50%" valign="top">
+      <a href="https://photobooth.hunghienhoa.com"><img src=".github/profile/du-an-hop-anh.webp" alt="Hộp Ảnh: Bốn khoảnh khắc. Một dải kỷ niệm."></a>
+      <h3>Hộp Ảnh</h3>
+      <p>Photobooth trực tuyến: bốn khoảnh khắc, một dải kỷ niệm.</p>
+      <a href="https://photobooth.hunghienhoa.com"><b>photobooth.hunghienhoa.com ↗</b></a>
     </td>
-    <td width="33%" valign="top">
-      <h3>03 · Góc nhỏ</h3>
-      <p>Nhặt một chút hay, giữ một chút tò mò và kể thêm một câu chuyện.</p>
-      <a href="https://blog.hunghienhoa.com"><b>Mở một trang mới ↗</b></a>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="https://blog.hunghienhoa.com"><img src=".github/profile/du-an-goc-to-mo.webp" alt="Góc tò mò của Hùng: blog những điều nhỏ mà thú vị"></a>
+      <h3>Góc tò mò</h3>
+      <p>Những điều nhỏ mà thú vị và những câu chuyện muốn chia sẻ.</p>
+      <a href="https://blog.hunghienhoa.com"><b>blog.hunghienhoa.com ↗</b></a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="https://snap.hunghienhoa.com"><img src=".github/profile/du-an-snap.webp" alt="Snap: Video hay, để dành xem lại."></a>
+      <h3>Snap</h3>
+      <p>Video hay từ TikTok, Instagram và Facebook, để dành xem lại.</p>
+      <a href="https://snap.hunghienhoa.com"><b>snap.hunghienhoa.com ↗</b></a>
     </td>
   </tr>
 </table>
 
 ## Bên trong xưởng nhỏ
 
-Những công cụ đang được dùng cho các dự án này:
+<p>
+  <img src="https://img.shields.io/badge/HTML-303487?style=flat-square&logo=html5&logoColor=white" alt="HTML">
+  <img src="https://img.shields.io/badge/CSS-303487?style=flat-square&logo=css&logoColor=white" alt="CSS">
+  <img src="https://img.shields.io/badge/JavaScript-303487?style=flat-square&logo=javascript&logoColor=white" alt="JavaScript">
+  <img src="https://img.shields.io/badge/Node.js-303487?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js">
+  <img src="https://img.shields.io/badge/Supabase-303487?style=flat-square&logo=supabase&logoColor=white" alt="Supabase">
+  <img src="https://img.shields.io/badge/Cloudflare_Workers-303487?style=flat-square&logo=cloudflareworkers&logoColor=white" alt="Cloudflare Workers">
+  <img src="https://img.shields.io/badge/GitHub_Actions-303487?style=flat-square&logo=githubactions&logoColor=white" alt="GitHub Actions">
+</p>
 
-`HTML` · `CSS` · `JavaScript` · `Node.js` · `Supabase` · `Cloudflare Workers` · `GitHub Actions`
-
-Mình thích giao diện có chất riêng, những chi tiết chuyển động vừa đủ và trải nghiệm dùng được cả trên máy tính lẫn điện thoại. Với Hộp Ảnh, ảnh chụp được xử lý ngay trong bộ nhớ trình duyệt, không gửi lên máy chủ.
+Ảnh chụp ở Hộp Ảnh chỉ nằm trong trình duyệt của bạn, không gửi lên máy chủ.
 
 ## Bắt đầu bằng một lời chào
 
-Bạn có ý tưởng muốn trao đổi, muốn góp một chiếc khung ảnh hay chỉ muốn chào nhau một tiếng?
+Có ý tưởng muốn trao đổi, muốn góp một chiếc khung ảnh hay chỉ muốn chào nhau một tiếng?
 
 **[Gửi email cho mình ↗](mailto:hunghienhoa2110@gmail.com)** &nbsp; `hunghienhoa2110@gmail.com`
 
@@ -58,9 +71,8 @@ Bạn có ý tưởng muốn trao đổi, muốn góp một chiếc khung ảnh 
   <a href="https://www.tiktok.com/@im.bqhung"><img src="dist/assets/social/tiktok.webp" width="28" height="28" alt="TikTok"></a>&nbsp;&nbsp;
   <a href="https://www.youtube.com/@hunghienhoa98886"><img src="dist/assets/social/youtube.webp" width="28" height="28" alt="YouTube"></a>&nbsp;&nbsp;
   <a href="https://zalo.me/0898298886"><img src="dist/assets/social/zalo.webp" width="28" height="28" alt="Zalo"></a>
+  &nbsp;&nbsp;WeChat: <code>bqhtit</code>
 </p>
-
-[Facebook](https://www.facebook.com/quanghungdethuong) · [Instagram](https://www.instagram.com/im.bqhung/) · [Threads](https://www.threads.com/@im.bqhung) · [TikTok](https://www.tiktok.com/@im.bqhung) · [YouTube](https://www.youtube.com/@hunghienhoa98886) · [Zalo](https://zalo.me/0898298886) · WeChat: `bqhtit`
 
 <a href="mailto:hunghienhoa2110@gmail.com">
   <img src=".github/profile/loi-chao.svg" width="100%" alt="Ý tưởng hay thường bắt đầu từ một lời chào. Rất vui được gặp bạn!">
@@ -69,40 +81,14 @@ Bạn có ý tưởng muốn trao đổi, muốn góp một chiếc khung ảnh 
 <details>
   <summary><b>Bạn đến đây vì mã nguồn?</b></summary>
 
-Kho này đồng thời chứa mã nguồn cho website của mình. Tài liệu kỹ thuật được giữ riêng để dễ tìm:
+<br>
 
-- [Hướng dẫn mã nguồn và chạy trên máy](PROJECT.md)
-- [Triển khai, tên miền và GitHub Actions](DEPLOYMENT.md)
+[![Triển khai](https://github.com/hunghienhoa/hunghienhoa/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/hunghienhoa/hunghienhoa/actions/workflows/deploy.yml)
+[![Giám sát website](https://github.com/hunghienhoa/hunghienhoa/actions/workflows/monitor.yml/badge.svg)](https://github.com/hunghienhoa/hunghienhoa/actions/workflows/monitor.yml)
+
+- [Mã nguồn, chạy trên máy và công cụ kiểm tra](PROJECT.md)
+- [Triển khai, giám sát và sao lưu](DEPLOYMENT.md)
 - [API và quyền riêng tư](API-CONTRACT.md)
 - [Quy trình ứng phó sự cố](INCIDENT-RESPONSE.md)
-- [Theo dõi các lượt triển khai](https://github.com/hunghienhoa/hunghienhoa/actions/workflows/deploy.yml)
 
 </details>
-
-
-### Kiểm tra giao diện và luồng bằng trình duyệt
-
-Khi máy đã có Playwright hoặc `@playwright/cli` và Chrome, chạy `node tools/browser-audit.mjs`. Bộ kiểm tra tự tạo máy chủ loopback ở cổng ngẫu nhiên và dữ liệu giả trong thư mục cục bộ riêng; không dùng tài khoản hoặc dữ liệu trên website thật. Nó kiểm tra 9 trang ở 7 kích thước (320–1920 px), các bảng Admin sau đăng nhập, đọc/sao chép bài viết, gửi–duyệt khung và chụp bằng luồng video giả lập. Báo cáo JSON và ảnh kiểm tra nằm trong `tmp/`. Đây là kiểm tra Chrome với viewport mobile, không thay thế thử camera/quyền tải file trên iPhone hoặc Android thật. Bộ này tùy chọn, không nằm trong `npm run check` vì cần trình duyệt được cài trên máy.
-
-### Snap của Hùng
-
-Trang `https://snap.hunghienhoa.com/` (cục bộ: `/snaptik/`) tự nhận diện link TikTok, Instagram và Facebook. TikTok dùng TikWM; Instagram/Facebook đọc dữ liệu nhúng công khai trực tiếp từ nền tảng, không dùng tài khoản hoặc cookie. API Node và Worker dùng chung `server/snaptik.mjs`; chỉ truyền file từ các miền nguồn được cho phép, kiểm tra chữ ký định dạng và giới hạn mỗi file 200 MB. Không tạo kho video; ảnh tải qua giao diện chuyển thành JPEG trong bộ nhớ trình duyệt. Chỉ tải và sử dụng nội dung khi có quyền.
-
-Không cần khóa API riêng. Nguồn TikWM có thể thay đổi, gián đoạn hoặc giới hạn truy cập; không cam kết mọi bài đều tải được. Worker giới hạn tần suất bằng binding `SNAPTIK_LIMIT`, máy chủ cục bộ dùng bộ giới hạn hiện có.
-
-Chạy `node --test tools/snaptik.test.mjs` để kiểm tra luồng và đầu vào; `node tools/browser-snaptik.mjs` kiểm tra Chrome ở 320/390/768/1440 px bằng nguồn giả lập. Đặt `SITE_URL=https://snap.hunghienhoa.com` để kiểm tra trang thật bằng liên kết mẫu. Bộ trình duyệt không tải toàn bộ video lớn; thử việc lưu file trên thiết bị thật riêng.
-
-### Tên website và liên kết trên Google
-
-HTML trả từ máy chủ có `WebSite` với tên và URL chuẩn của từng tên miền công khai, `og:site_name`, một canonical và quan hệ giữa portfolio với ba dự án. Trang chính dùng các liên kết HTML trực tiếp tới Hộp Ảnh, Góc tò mò và Snap; sitemap riêng được công bố trong robots.txt của từng miền.
-
-Google tự quyết định sitelinks và cách nhóm tên miền phụ; mã đánh dấu không bảo đảm bố cục như ảnh mẫu hoặc thời gian xuất hiện. Quản trị viên có thể gửi sitemap và yêu cầu thu thập lại URL trong Search Console đã xác minh. Xem [sitelinks](https://developers.google.com/search/docs/appearance/sitelinks) và [tên website](https://developers.google.com/search/docs/appearance/site-names).
-
-### Skill và plugin cho Claude Code
-
-Khai báo ở phạm vi dự án, áp dụng cho mọi phiên mở repo này (cloud và máy cục bộ):
-
-- `.claude/settings.json` bật 7 plugin từ marketplace GitHub: `mattpocock-skills` (mattpocock/skills), `ponytail` (DietrichGebert/ponytail), `impeccable` (pbakaus/impeccable), `diagram-design` (cathrynlavery/diagram-design), `superpowers` (obra/superpowers), `taste-skill` (Leonxlnx/taste-skill), `hallmark` (Nutlope/hallmark). Lần đầu mở dự án, Claude Code có thể hỏi tin cậy và cài các plugin này. Ponytail có tùy chọn webhook, mặc định để trống nên không gửi dữ liệu ra ngoài; bảng thống kê chỉ ghi vào `~/.config/ponytail/` trên máy.
-- `.claude/skills/security-audit`: chép từ cloudflare/security-audit-skill (MIT, xem `SOURCE.txt`).
-- `.claude/skills/graphify`: tạo bằng `graphify install --project` (graphifyy 0.9.112). Lệnh `graphify` cần cài trên từng máy: `uv tool install graphifyy==0.9.112` (hoặc `pipx install graphifyy==0.9.112`). Hook trong `.claude/settings.json` tự bỏ qua khi máy chưa có `graphify`. Chạy `/graphify .` để dựng đồ thị lần đầu.
-- Anatomy (wheresryan22/anatomy) nặng ~27 MB nên không đưa vào repo; môi trường cloud `hunghienhoa` cài nó cùng humanizer, visual-explainer, last30days, yt-dlp và Graphify qua setup script. Máy cục bộ: `git clone https://github.com/wheresryan22/anatomy ~/.claude/skills/anatomy`.
