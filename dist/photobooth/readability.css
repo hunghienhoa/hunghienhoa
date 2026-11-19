@@ -40,3 +40,9 @@
 .concept-disclaimer,.camera-help,.session-note,.editor-note,.caption-label>span,.social-note,.draft-label{opacity:1!important}
 .steps li:not(.current){opacity:.85!important}
 .slot-button>span{opacity:.8!important}
+
+/* Thanh vàng gạch chân nằm dưới phần thấp nhất của chữ (đuôi g, y, dấu nặng tiếng Việt) và nghiêng ít hơn để đầu thanh không chạm chữ */
+h1 em:after,h2 em:after{margin-top:.2em!important;transform:rotate(-1deg)!important;rotate:none!important}
+.ideas:after{bottom:-.26em!important}
+/* Tiếng Việt có dấu chồng phía trên (ầ, ể, ở) và dấu nặng phía dưới (ộ, ạ): tiêu đề lớn nhiều dòng cần khoảng cách dòng đủ rộng để dòng không chạm nhau */
+h1,h2{line-height:1.16!important}
