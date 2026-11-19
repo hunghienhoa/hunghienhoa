@@ -15,3 +15,6 @@ node_modules/
 
 .playwright-cli/
 supabase/.temp/
+
+# Bộ nhớ đệm cục bộ của graphify (trạng thái theo phiên), không commit
+graphify-out/cache/
