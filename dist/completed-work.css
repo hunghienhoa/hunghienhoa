@@ -63,3 +63,24 @@
  .completed-work .completed-copy .completed-cta{margin-top:18px;padding:12px 14px;min-height:46px;font-size:13px}
 }
 @media(max-width:360px){.completed-work .mini-booth{left:13%}.completed-work .mini-strip{right:10%}.completed-work .completed-visual,.completed-work .completed-blog .completed-visual{height:220px}}
+
+/* Màn hình rộng: ba dự án thành ba cột thẻ gọn (bố cục thẻ điện thoại, khung hình cao hơn) để thẻ không còn nửa trống */
+@media(min-width:1100px){
+ .completed-work{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+ .completed-work>.section-head{grid-column:1/-1}
+ .completed-work .completed-project{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr}
+ .completed-work .completed-project+.completed-project{margin-top:0}
+ .completed-work .completed-visual,.completed-work .completed-blog .completed-visual{min-height:0;height:310px}
+ .completed-work .mini-booth{left:15%;top:15%;scale:.66;transform-origin:top left}
+ .completed-work .mini-strip{right:13%;top:10%;scale:.68;transform-origin:top right}
+ .completed-work .blog-notebook{left:17%;top:14%;scale:.66;transform-origin:top left}
+ .completed-work .completed-blog .blog-note{top:auto;bottom:22px;right:8%;font-size:12px;padding:12px;max-width:150px}
+ .completed-work .completed-star{width:56px;bottom:18px}
+ .completed-work .completed-stamp{display:none}
+ .completed-work .completed-copy{padding:28px 26px;justify-content:flex-start}
+ .completed-work .completed-copy h3{font-size:42px;letter-spacing:-1.4px}
+ .completed-work .completed-copy>p{margin-bottom:24px}
+ .completed-work .completed-copy .completed-cta{margin-top:auto}
+ .completed-work .video-preview>b{font-size:clamp(24px,2.1vw,30px)}
+ .completed-work .video-preview>i{font-size:34px}
+}
