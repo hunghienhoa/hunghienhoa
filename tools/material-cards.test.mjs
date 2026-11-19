@@ -18,4 +18,5 @@ assert.ok(css.includes('prefers-reduced-motion:reduce')&&css.includes('animation
 assert.ok(css.includes('.wing-left>img{transform:scaleX(-1)}'),'Mirror only the illustration inside the left flag');
 assert.ok(css.includes('#dialog-art .project-art.material-scene{height:auto;aspect-ratio:4/3}'));
 assert.ok(css.includes('.project-open:hover .material-scene>div{translate:none}'));
+assert.equal((html.match(/<div class="project-detail" hidden><p class="project-description">[^<]{20,}<\/p><p class="project-scope">[^<]+<\/p><\/div><\/article>/g)||[]).length,6,'Mô tả từng thiết kế nằm sẵn trong HTML để Google đọc được');
 console.log('PASS: six distinct material scenes, approved card01 artwork, source-free homepage, responsive dialogs and reduced-motion flags.');

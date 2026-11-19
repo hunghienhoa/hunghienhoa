@@ -16,8 +16,8 @@
   "14": "ref_node_path",
   "15": "ref_node_assert",
   "16": "Cloud and Deployment Hunting",
-  "17": "preflightJsonText",
-  "18": "browser-usage-audit.mjs",
+  "17": "steps",
+  "18": "ref_node_os",
   "19": "Sticker từ 17 ảnh tham chiếu",
   "20": "AI, LLM, and Agent Hunting",
   "21": "ATTACK-CLASSES.md",
@@ -69,13 +69,14 @@
   "67": "browser-panels-audit.js",
   "68": "adsense.test.mjs",
   "69": "Nội dung dùng chung — hợp đồng giao tiếp",
-  "70": "browser-adsense-readiness.mjs",
+  "70": "sticker-assets.test.mjs",
   "71": "Kiểm tra triển khai hunghienhoa — 09/11/2026",
   "72": "Hướng dẫn mã nguồn — Hùng Hiền Hòa",
   "73": "Bắt đầu bằng một lời chào",
   "74": "server.mjs",
   "75": "createApp",
   "76": "steps",
-  "77": "browser-stickers-audit.mjs",
-  "78": "viewport.test.mjs"
+  "77": "browser-material-cards.mjs",
+  "78": "viewport.test.mjs",
+  "79": "agent-smoke.mjs"
 }

@@ -105,6 +105,21 @@ Các migration Supabase nằm trong `supabase/migrations` và được GitHub Ac
 
 Workflow `Giám sát website` (`.github/workflows/monitor.yml`) chạy mỗi giờ: kiểm tra các tên miền, `/api/site`, `/api/frames`, sitemap blog và gọi nhẹ Supabase REST để dự án gói miễn phí không bị tạm dừng vì không hoạt động. Lượt chạy đỏ thì GitHub gửi email (GitHub → Settings → Notifications → Actions). Có thể chạy tay ở tab Actions. GitHub tự tắt lịch chạy nếu repo không có commit trong 60 ngày; khi đó bật lại trong tab Actions.
 
+## Sao lưu database
+
+Workflow `Sao lưu database` (`.github/workflows/backup.yml`) chạy 02:41 sáng thứ Hai (giờ Việt Nam) và chạy tay được ở tab Actions. Nó dump cấu trúc và dữ liệu schema `public`, **trừ** bảng `frame_submissions` (bản chờ có liên hệ riêng, chỉ sống một giờ). Gói được mã hóa AES-256 rồi lưu thành artifact `database-backup` trong 90 ngày. Bản sao lưu không vào repo, `dist`, ZIP mã nguồn hay Releases.
+
+Cần một GitHub Secret `BACKUP_PASSPHRASE`: chuỗi ngẫu nhiên từ 20 ký tự, tạo bằng trình quản lý mật khẩu và cất ở đó. Mất chuỗi này thì không giải mã được bản sao lưu. Không gửi chuỗi này qua chat hay email.
+
+Khôi phục:
+
+1. Tab Actions → lượt chạy `Sao lưu database` → tải artifact `database-backup`, giải nén file zip.
+2. Giải mã (nhập `BACKUP_PASSPHRASE` khi được hỏi):
+   ```bash
+   openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 -in hunghienhoa-db-*.tar.gz.enc | tar -xzf -
+   ```
+3. Dự án Supabase mới hoặc trống: chạy migration (`supabase db push --db-url ...`) rồi nạp dữ liệu `psql "$SUPABASE_DB_URL" -f data.sql`. Dự án đang có dữ liệu thì chỉ nạp bảng cần khôi phục, kiểm tra kỹ trước khi ghi đè. `schema.sql` là ảnh chụp cấu trúc để đối chiếu.
+
 ## Giới hạn đã ghi nhận
 
 - Bản cục bộ tiếp tục dùng cookie/CSRF và SQLite riêng; dữ liệu trên máy và dữ liệu Supabase online là hai bộ dữ liệu khác nhau. Không tự đồng bộ database riêng lên GitHub.
