@@ -220,3 +220,12 @@ test('dữ liệu Supabase được cache tại edge; admin lưu thì xóa đún
   await get('/api/site');
   assert.equal(count('site_settings'), 1, 'khóa không liên quan vẫn còn cache');
 });
+
+test('README và file test trong dist không được phục vụ công khai', async () => {
+ const env={ASSETS:{fetch:async request=>{const path=new URL(request.url).pathname;return path==='/404'?new Response('<!doctype html><title>404</title>',{headers:{'Content-Type':'text/html'}}):new Response('bí mật nội bộ',{headers:{'Content-Type':'text/plain'}});}}};
+ for(const url of ['https://blog.hunghienhoa.com/README.md','https://admin.hunghienhoa.com/README.md','https://photobooth.hunghienhoa.com/core.test.mjs','https://photobooth.hunghienhoa.com/design.test.mjs','https://blog.hunghienhoa.com/readme.md']){
+  const response=await worker.fetch(new Request(url,{headers:{Accept:'text/html'}}),env);
+  assert.equal(response.status,404,url);assert.ok(!(await response.text()).includes('bí mật nội bộ'),url);
+ }
+ assert.equal((await worker.fetch(new Request('https://photobooth.hunghienhoa.com/core.mjs'),env)).status,200);
+});

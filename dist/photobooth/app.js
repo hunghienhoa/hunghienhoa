@@ -111,7 +111,7 @@ function updateUI() {
     button.setAttribute('aria-pressed', String(index === selectedSlot));
     button.classList.toggle('selected', index === selectedSlot);
     button.classList.toggle('has-photo', !!photos[index]);
-    button.setAttribute('aria-label', `Ảnh ${index + 1}, ${photos[index] ? 'chọn để thay ảnh' : 'chưa có ảnh'}`);
+    button.setAttribute('aria-label', `Ô ${String(index + 1).padStart(2, '0')}, ${photos[index] ? 'chọn để thay ảnh' : 'chưa có ảnh'}`);
     image.hidden = !photos[index];
     if (photos[index]) image.src = photos[index].url;
     else image.removeAttribute('src');

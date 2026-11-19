@@ -56,6 +56,8 @@ export function createApp(options = {}) {
     CREATE TABLE IF NOT EXISTS submissions(id TEXT PRIMARY KEY,name TEXT NOT NULL,author_name TEXT NOT NULL,author_contact TEXT NOT NULL,author_link TEXT NOT NULL,design TEXT NOT NULL,image BLOB NOT NULL,created_at INTEGER NOT NULL,expires_at INTEGER NOT NULL);
     CREATE INDEX IF NOT EXISTS submissions_expiry ON submissions(expires_at);
     CREATE TABLE IF NOT EXISTS frames(id TEXT PRIMARY KEY,name TEXT NOT NULL,author_name TEXT NOT NULL,author_link TEXT NOT NULL,design TEXT NOT NULL,image BLOB NOT NULL,created_at INTEGER NOT NULL);`);
+  // Bằng chứng đồng ý của khung đã duyệt (thời điểm gửi bản chờ), giống cột consented_at trên Supabase.
+  if (!db.prepare('PRAGMA table_info(frames)').all().some(column => column.name === 'consented_at')) db.exec('ALTER TABLE frames ADD COLUMN consented_at INTEGER');
   const quotaSql=(query,...params)=>db.prepare(query).all(...params);
   db.exec('CREATE TABLE IF NOT EXISTS media_assets(id TEXT PRIMARY KEY,scope TEXT NOT NULL,image BLOB NOT NULL)');
   initContributionLimit(quotaSql);
@@ -298,7 +300,7 @@ export function createApp(options = {}) {
             const row = db.prepare('SELECT * FROM submissions WHERE id=? AND expires_at>?').get(match[1], now());
             if (!row) fail(404, 'Bản chờ không còn hoặc đã hết hạn.');
             if (match[2] === 'approve') {
-              db.prepare('INSERT INTO frames VALUES(?,?,?,?,?,?,?)').run(row.id, row.name, row.author_name, row.author_link, row.design, row.image, now());
+              db.prepare('INSERT INTO frames(id,name,author_name,author_link,design,image,created_at,consented_at) VALUES(?,?,?,?,?,?,?,?)').run(row.id, row.name, row.author_name, row.author_link, row.design, row.image, now(), row.created_at);
               result = { frame: frameData(db.prepare('SELECT * FROM frames WHERE id=?').get(row.id)) };
             } else result = { ok: true };
             db.prepare('DELETE FROM submissions WHERE id=?').run(row.id);
@@ -329,7 +331,7 @@ export function createApp(options = {}) {
     };
     const agent=await agentRoute(new Request(pageURL,{method:req.method,headers:{Accept:req.headers.accept||'*/*'}}),data);
     if(agent){res.writeHead(agent.status,Object.fromEntries(agent.headers));return res.end(req.method==='HEAD'?undefined:Buffer.from(await agent.arrayBuffer()));}
-    if (route.includes('\0') || route.split(/[\\/]/).some(part => part.startsWith('.'))) fail(404, 'Không tìm thấy trang.');
+    if (route.includes('\0') || route.split(/[\\/]/).some(part => part.startsWith('.')) || /(?:^|\/)README\.md$|\.test\.mjs$/i.test(route)) fail(404, 'Không tìm thấy trang.');
     const adminHost = options.adminHost ?? process.env.ADMIN_HOST ?? 'admin.hunghienhoa.com';
     const requestHost = (req.headers.host || '').split(':')[0];
     if (requestHost === adminHost) route = `/admin${route}`;
