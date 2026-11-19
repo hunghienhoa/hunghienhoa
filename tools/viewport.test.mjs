@@ -37,7 +37,7 @@ assert.ok(compact.includes('@media(max-width:760px)') && compact.includes('min-h
 // Mức sàn cỡ chữ: một bản readability.css dùng chung, nạp sau cùng ở mọi trang công khai.
 const readability=fs.readFileSync('dist/readability.css','utf8');
 for(const folder of ['dist/blog','dist/photobooth'])assert.equal(fs.readFileSync(`${folder}/readability.css`,'utf8'),readability);
-for(const page of ['dist/index.html','dist/blog/index.html','dist/photobooth/index.html','dist/photobooth/shoot.html','dist/snaptik/index.html','dist/chinh-sach-rieng-tu.html','dist/dieu-khoan-su-dung.html','dist/bao-cao-ban-quyen.html','dist/cookie-va-quang-cao.html']){
+for(const page of ['dist/index.html','dist/blog/index.html','dist/photobooth/index.html','dist/photobooth/shoot.html','dist/snaptik/index.html','dist/lamnet/index.html','dist/chinh-sach-rieng-tu.html','dist/dieu-khoan-su-dung.html','dist/bao-cao-ban-quyen.html','dist/cookie-va-quang-cao.html']){
  const head=fs.readFileSync(page,'utf8').split('</head>')[0];
  assert.match(head,/readability\.css\?v=\d+"><\/head>|readability\.css\?v=\d+">$/,`${page} phải nạp readability.css sau cùng`);
 }

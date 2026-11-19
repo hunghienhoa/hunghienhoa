@@ -27,6 +27,23 @@ test('gửi email sau khi lưu bản chờ; lỗi email không làm mất đóng
   assert.equal(messages.length,1);
 });
 
+test('Làm Nét: tệp riêng trong /lamnet/, tệp dùng chung ở gốc; mọi phản hồi cho phép WebAssembly và cô lập nguồn gốc', async () => {
+  for (const [path, mapped] of [['/', '/lamnet/'], ['/app.js?v=1', '/lamnet/app.js'], ['/core.mjs?v=1', '/lamnet/core.mjs'], ['/style.css?v=1', '/lamnet/style.css'],
+    ['/vendor/ort-1.22.0/ort.webgpu.min.mjs', '/lamnet/vendor/ort-1.22.0/ort.webgpu.min.mjs'], ['/models/realesr-general-x4v3.onnx', '/lamnet/models/realesr-general-x4v3.onnx'],
+    ['/fonts/BeVietnamPro-Bold.woff2', '/fonts/BeVietnamPro-Bold.woff2'], ['/footer.css?v=3', '/footer.css'], ['/assets/star.svg', '/assets/star.svg']])
+    assert.equal(new URL(assetRequest(new Request('https://lamnet.hunghienhoa.com' + path)).url).pathname, mapped, path);
+  assert.equal(assetRequest(new Request('https://hunghienhoa.com/lamnet/')).headers.get('location'), 'https://lamnet.hunghienhoa.com/');
+  const seen = [];
+  const env = { ASSETS: { fetch: async request => { seen.push(new URL(request.url).pathname); return new Response('x', { headers: { 'Content-Type': 'application/wasm' } }); } } };
+  const wasm = await worker.fetch(new Request('https://lamnet.hunghienhoa.com/vendor/ort-1.22.0/ort-wasm-simd-threaded.jsep.wasm'), env);
+  assert.deepEqual(seen, ['/lamnet/vendor/ort-1.22.0/ort-wasm-simd-threaded.jsep.wasm']);
+  assert.match(wasm.headers.get('Content-Security-Policy'), /script-src 'self' 'wasm-unsafe-eval'/);
+  assert.equal(wasm.headers.get('Cross-Origin-Opener-Policy'), 'same-origin');
+  assert.equal(wasm.headers.get('Cross-Origin-Embedder-Policy'), 'require-corp');
+  assert.equal(wasm.headers.get('Cache-Control'), 'public, max-age=31536000, immutable');
+  const other = await worker.fetch(new Request('https://snap.hunghienhoa.com/assets/star.svg'), env);
+  assert.ok(!other.headers.get('Content-Security-Policy').includes('wasm-unsafe-eval') && !other.headers.has('Cross-Origin-Embedder-Policy'), 'Chỉ Làm Nét được nới CSP');
+});
 test('miền phụ được ánh xạ vào đúng thư mục giao diện', () => {
   assert.equal(new URL(assetRequest(new Request('https://admin.hunghienhoa.com/')).url).pathname, '/admin/');
   assert.equal(new URL(assetRequest(new Request('https://blog.hunghienhoa.com/style.css')).url).pathname, '/blog/style.css');
