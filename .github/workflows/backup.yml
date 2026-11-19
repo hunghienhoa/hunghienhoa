@@ -1,0 +1,49 @@
+name: Sao lưu database
+# Mỗi tuần: dump cấu trúc và dữ liệu schema public, trừ bản chờ duyệt frame_submissions (có liên hệ riêng, chỉ được sống
+# một giờ). Gói được mã hóa AES-256 bằng secret BACKUP_PASSPHRASE rồi lưu thành artifact 90 ngày; không đưa vào repo,
+# dist, ZIP mã nguồn hay Releases. Repo công khai nên artifact phải luôn được mã hóa.
+on:
+  schedule:
+    - cron: '41 19 * * 0'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: db-backup
+  cancel-in-progress: false
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+      SUPABASE_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Kiểm tra secret
+        shell: bash
+        run: |
+          [ -n "$SUPABASE_DB_URL" ] || { echo "::error::Thiếu GitHub Secret SUPABASE_DB_URL."; exit 1; }
+          [ "${#BACKUP_PASSPHRASE}" -ge 20 ] || { echo "::error::Thiếu GitHub Secret BACKUP_PASSPHRASE (ít nhất 20 ký tự). Xem DEPLOYMENT.md, mục Sao lưu database."; exit 1; }
+      - name: Dump và mã hóa
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          dir=$(mktemp -d)
+          npx --yes supabase@2.122.0 db dump --db-url "$SUPABASE_DB_URL" -s public -f "$dir/schema.sql"
+          npx --yes supabase@2.122.0 db dump --db-url "$SUPABASE_DB_URL" -s public --data-only --use-copy -x public.frame_submissions -f "$dir/data.sql"
+          if grep -q 'COPY "\?public"\?\."\?frame_submissions' "$dir/data.sql"; then echo "::error::Bản chờ duyệt lọt vào bản sao lưu."; exit 1; fi
+          name="hunghienhoa-db-$(date -u +%Y%m%d-%H%M).tar.gz.enc"
+          tar -C "$dir" -czf - schema.sql data.sql | openssl enc -aes-256-cbc -pbkdf2 -iter 600000 -salt -pass env:BACKUP_PASSPHRASE -out "$RUNNER_TEMP/$name"
+          rm -rf "$dir"
+          # Tự kiểm tra: giải mã lại được và có đủ hai tệp.
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 -pass env:BACKUP_PASSPHRASE -in "$RUNNER_TEMP/$name" | tar -tzf - | sort | tr '\n' ' ' | grep -q 'data.sql schema.sql'
+          echo "BACKUP_FILE=$RUNNER_TEMP/$name" >> "$GITHUB_ENV"
+          ls -l "$RUNNER_TEMP/$name"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: database-backup
+          path: ${{ env.BACKUP_FILE }}
+          retention-days: 90
+          if-no-files-found: error
