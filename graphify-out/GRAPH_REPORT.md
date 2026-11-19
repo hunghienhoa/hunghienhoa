@@ -1,7 +1,7 @@
 # Graph Report - hunghienhoa  (2026-11-19)
 
 ## Corpus Check
-- 124 files · ~90,027 words
+- 124 files · ~90,084 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 18 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `78f20c5b`
+- Built from commit: `09725cd9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -105,14 +105,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `Dữ liệu cá nhân website đang giữ` --references--> `VisitCounter`  [INFERRED]
   INCIDENT-RESPONSE.md → worker/visits.mjs
-- `withSecurity()` --calls--> `adsenseHtml()`  [EXTRACTED]
-  worker/index.mjs → server/adsense.mjs
-- `handle()` --calls--> `pageContext()`  [EXTRACTED]
-  worker/index.mjs → server/agent-content.mjs
-- `handle()` --calls--> `representation()`  [EXTRACTED]
-  worker/index.mjs → server/agent-content.mjs
-- `withSecurity()` --calls--> `publicHtml()`  [EXTRACTED]
-  worker/index.mjs → server/agent-content.mjs
+- `handle()` --calls--> `pageForVisit()`  [EXTRACTED]
+  worker/index.mjs → server/visits.mjs
+- `adminApi()` --calls--> `fail()`  [EXTRACTED]
+  worker/index.mjs → server/validation.mjs
+- `adminApi()` --calls--> `mediaAsset()`  [EXTRACTED]
+  worker/index.mjs → server/validation.mjs
+- `adminApi()` --calls--> `post()`  [EXTRACTED]
+  worker/index.mjs → server/validation.mjs
 
 ## Import Cycles
 - None detected.
@@ -370,16 +370,16 @@ Nodes (3): Reporting a Vulnerability, Security Policy, Supported Versions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `VisitCounter` connect `server.mjs` to `index.mjs`, `Quy trình ứng phó sự cố`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
+  _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `handle()` (e.g. with `frameData()` and `pendingData()`) actually correct?**
   _`handle()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `index.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.11563367252543941 - nodes in this community are weakly interconnected._
 - **Why does `Dữ liệu cá nhân website đang giữ` connect `Quy trình ứng phó sự cố` to `server.mjs`?**
-  _High betweenness centrality (0.057) - this node is a cross-community bridge._
+  _High betweenness centrality (0.050) - this node is a cross-community bridge._
 - **Should `validate-findings.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.05750658472344162 - nodes in this community are weakly interconnected._
-- **Why does `Quy trình ứng phó sự cố` connect `Quy trình ứng phó sự cố` to `3. Sáu bước`, `README.md`?**
-  _High betweenness centrality (0.057) - this node is a cross-community bridge._
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06559356136820925 - nodes in this community are weakly interconnected._
+- **Should `agent-content.mjs` be split into smaller, more focused modules?**
+  _Cohesion score 0.07215686274509804 - nodes in this community are weakly interconnected._

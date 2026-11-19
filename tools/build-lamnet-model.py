@@ -60,10 +60,15 @@ def build_model(state):
             nodes.append(helper.make_node('Conv', [x, f'w{i}', f'b{i}'], [f'c{i}'], kernel_shape=[3, 3], pads=[1, 1, 1, 1]))
             x = f'c{i}'
         else:
+            # PReLU viết bằng Greater/Mul/Where: ONNX Runtime Web 1.22 không có PRelu trên WebGPU,
+            # để nguyên thì mỗi lớp bị đẩy về CPU và chép dữ liệu qua lại giữa GPU và CPU.
             slope = state[f'body.{i}.weight'].astype(np.float32).reshape(-1, 1, 1)
             inits.append(numpy_helper.from_array(slope, f's{i}'))
-            nodes.append(helper.make_node('PRelu', [x, f's{i}'], [f'p{i}']))
+            nodes += [helper.make_node('Greater', [x, 'zero'], [f'g{i}']),
+                      helper.make_node('Mul', [x, f's{i}'], [f'm{i}']),
+                      helper.make_node('Where', [f'g{i}', x, f'm{i}'], [f'p{i}'])]
             x = f'p{i}'
+    inits.append(numpy_helper.from_array(np.array(0, np.float32), 'zero'))
     nodes.append(helper.make_node('DepthToSpace', [x], ['shuffled'], blocksize=SCALE, mode='CRD'))
     inits.append(numpy_helper.from_array(np.array([1, 1, SCALE, SCALE], np.float32), 'scales'))
     nodes.append(helper.make_node('Resize', ['input', '', 'scales'], ['base'], mode='nearest', coordinate_transformation_mode='asymmetric', nearest_mode='floor'))

@@ -49,6 +49,7 @@ console.log('PASS: aggregate-only analytics, time windows, retention, safe text 
 assert.equal(pageForVisit('/photobooth/shoot'),'photobooth');
 assert.equal(pageForVisit('/photobooth/shoot.html'),'photobooth');
 assert.equal(pageForVisit('/photobooth/shootxhtml'),null);
+assert.equal(pageForVisit('/lamnet/'),'lamnet');assert.equal(pageForVisit('/lamnet/app.js'),null);
 
 const {initContributionLimit,claimContribution,contributionDay}=await import('../server/contribution-limit.mjs');
 const quotaDb=new DatabaseSync(':memory:');

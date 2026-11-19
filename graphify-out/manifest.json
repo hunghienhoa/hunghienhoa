@@ -60,14 +60,14 @@
     "semantic_hash": ""
   },
   "cloudflare.config.ts": {
-    "mtime": 1795083224.6295865,
-    "seen": 1795083553.0204587,
+    "mtime": 1795083553.7329557,
+    "seen": 1795132450.5475113,
     "ast_hash": "3cf5f61ec97acee474b0aa0dbeb0b170",
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1795083239.086676,
-    "seen": 1795083553.0204601,
+    "mtime": 1795083553.7365046,
+    "seen": 1795132450.5475128,
     "ast_hash": "79a4a53aa5815e107cc6302ac7b95217",
     "semantic_hash": ""
   },
@@ -78,8 +78,8 @@
     "semantic_hash": ""
   },
   "server/agent-content.mjs": {
-    "mtime": 1795083191.8294678,
-    "seen": 1795083553.0204768,
+    "mtime": 1795083575.124506,
+    "seen": 1795132450.5475302,
     "ast_hash": "4bf9986348311156c8c82d337c5f7094",
     "semantic_hash": ""
   },
@@ -90,8 +90,8 @@
     "semantic_hash": ""
   },
   "server/server.mjs": {
-    "mtime": 1795083215.5849574,
-    "seen": 1795083553.0204937,
+    "mtime": 1795083553.7365046,
+    "seen": 1795132450.5475802,
     "ast_hash": "4be1f22afdf35a5c355d5494be8c52ce",
     "semantic_hash": ""
   },
@@ -120,9 +120,9 @@
     "semantic_hash": ""
   },
   "server/visits.mjs": {
-    "mtime": 1795004904.1902685,
-    "seen": 1795063948.6967444,
-    "ast_hash": "ec70a52547bc3947b0b3fbf52bfa12fb",
+    "mtime": 1795132353.7796009,
+    "seen": 1795132450.5476441,
+    "ast_hash": "5721164bd5d8adf74575cbcc9b2bb3aa",
     "semantic_hash": ""
   },
   "tools/admin-auth.test.mjs": {
@@ -156,8 +156,8 @@
     "semantic_hash": ""
   },
   "tools/agent-readiness.test.mjs": {
-    "mtime": 1795083249.2526255,
-    "seen": 1795083553.0206456,
+    "mtime": 1795083553.7365046,
+    "seen": 1795132450.5477202,
     "ast_hash": "77d83ca018f6c2027167c552b9bfbb2e",
     "semantic_hash": ""
   },
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795083458.804499,
-    "seen": 1795083553.020662,
-    "ast_hash": "63c02a5d0534470f44b0c4dd23e7744a",
+    "mtime": 1795132363.8367712,
+    "seen": 1795132450.5477357,
+    "ast_hash": "1e7326a260b0602bb2304d2a8f02705c",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -264,9 +264,9 @@
     "semantic_hash": ""
   },
   "tools/cloud-smoke.mjs": {
-    "mtime": 1795004904.4342575,
-    "seen": 1795063948.69677,
-    "ast_hash": "41dc4f469463d5213ce8f9554a308ec1",
+    "mtime": 1795084209.9144402,
+    "seen": 1795132450.547996,
+    "ast_hash": "3577a590314c0e5027de281d43d6e435",
     "semantic_hash": ""
   },
   "tools/convert-webp.py": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "tools/dashboard.test.mjs": {
-    "mtime": 1795004904.4342575,
-    "seen": 1795063948.6967719,
-    "ast_hash": "dcb9fbafb5fdb32d7e8ae9fe85d74937",
+    "mtime": 1795132353.7851677,
+    "seen": 1795132450.548012,
+    "ast_hash": "416e84aadd2e20227186f032cdaf2749",
     "semantic_hash": ""
   },
   "tools/face-effects.test.mjs": {
@@ -378,20 +378,20 @@
     "semantic_hash": ""
   },
   "tools/viewport.test.mjs": {
-    "mtime": 1795083529.368139,
-    "seen": 1795083553.0211737,
+    "mtime": 1795083553.7365046,
+    "seen": 1795132450.548248,
     "ast_hash": "6d1d2ff695b2020285b3a40894fe79c5",
     "semantic_hash": ""
   },
   "worker/index.mjs": {
-    "mtime": 1795083204.5357466,
-    "seen": 1795083553.0211754,
+    "mtime": 1795083553.7365046,
+    "seen": 1795132450.54825,
     "ast_hash": "71e132f7f66938cfd0f574f56d46fe73",
     "semantic_hash": ""
   },
   "worker/index.test.mjs": {
-    "mtime": 1795083272.830311,
-    "seen": 1795083553.0211768,
+    "mtime": 1795083553.7365046,
+    "seen": 1795132450.5482514,
     "ast_hash": "e9f7a5e27840a68def7d27d6e0700555",
     "semantic_hash": ""
   },
@@ -588,14 +588,14 @@
     "semantic_hash": ""
   },
   "PROJECT.md": {
-    "mtime": 1795083529.368503,
-    "seen": 1795083553.0217288,
+    "mtime": 1795083553.7329557,
+    "seen": 1795132450.548772,
     "ast_hash": "1e38a0f14bbf57e8ac2544d8fe8f6aa8",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1795083503.5085015,
-    "seen": 1795083553.0217304,
+    "mtime": 1795083553.7329557,
+    "seen": 1795132450.5487733,
     "ast_hash": "8d09943a9c23f9a4c014a3d3e0203365",
     "semantic_hash": ""
   },
@@ -1770,8 +1770,8 @@
     "semantic_hash": ""
   },
   ".github/workflows/monitor.yml": {
-    "mtime": 1795083224.633823,
-    "seen": 1795083553.0204055,
+    "mtime": 1795083553.7329557,
+    "seen": 1795132450.5474586,
     "ast_hash": "912a3cd4eb491364ece12bd51b46caf9",
     "semantic_hash": ""
   },
@@ -1806,9 +1806,9 @@
     "semantic_hash": ""
   },
   "tools/build-lamnet-model.py": {
-    "mtime": 1795082713.9084547,
-    "seen": 1795083553.0208747,
-    "ast_hash": "983bb90a692efa979c9c60c30cde7392",
+    "mtime": 1795132300.3367689,
+    "seen": 1795132450.5479803,
+    "ast_hash": "1c2957ec1dbe9d663bc5495ce030380b",
     "semantic_hash": ""
   },
   "tools/lamnet.test.mjs": {
