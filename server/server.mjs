@@ -58,12 +58,14 @@ export function createApp(options = {}) {
     CREATE TABLE IF NOT EXISTS frames(id TEXT PRIMARY KEY,name TEXT NOT NULL,author_name TEXT NOT NULL,author_link TEXT NOT NULL,design TEXT NOT NULL,image BLOB NOT NULL,created_at INTEGER NOT NULL);`);
   // Bằng chứng đồng ý của khung đã duyệt (thời điểm gửi bản chờ), giống cột consented_at trên Supabase.
   if (!db.prepare('PRAGMA table_info(frames)').all().some(column => column.name === 'consented_at')) db.exec('ALTER TABLE frames ADD COLUMN consented_at INTEGER');
+  // Thời điểm sửa bài gần nhất cho <lastmod> của sitemap, giống cột updated_at trên Supabase.
+  if (!db.prepare('PRAGMA table_info(posts)').all().some(column => column.name === 'updated_at')) db.exec('ALTER TABLE posts ADD COLUMN updated_at INTEGER');
   const quotaSql=(query,...params)=>db.prepare(query).all(...params);
   db.exec('CREATE TABLE IF NOT EXISTS media_assets(id TEXT PRIMARY KEY,scope TEXT NOT NULL,image BLOB NOT NULL)');
   initContributionLimit(quotaSql);
   db.prepare('INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)').run('site', JSON.stringify(defaultSite));
   if (!db.prepare('SELECT value FROM settings WHERE key=?').get('seeded')) {
-    for (const seed of seedPosts) db.prepare('INSERT INTO posts VALUES(?,?,?,?,?,?,?,?,?,?,?,?)').run(randomUUID(), seed.slug, seed.title, seed.excerpt, seed.content, seed.category, JSON.stringify(seed.tags), 'published', 1, null, now(), now());
+    for (const seed of seedPosts) db.prepare('INSERT INTO posts(id,slug,title,excerpt,content,category,tags,status,is_sample,cover,created_at,published_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)').run(randomUUID(), seed.slug, seed.title, seed.excerpt, seed.content, seed.category, JSON.stringify(seed.tags), 'published', 1, null, now(), now(), now());
     db.prepare('INSERT INTO settings(key,value) VALUES(?,?)').run('seeded', 'true');
   }
   try { fs.chmodSync(path.join(dataDir, 'content.sqlite'), 0o600); } catch {}
@@ -275,8 +277,8 @@ export function createApp(options = {}) {
           if (duplicate && duplicate.id !== existing?.id) fail(409, 'Đường dẫn bài viết đã có. Hãy chọn đường dẫn khác.');
           const id = existing?.id || randomUUID();
           const publishedAt = value.status === 'published' ? existing?.published_at ?? now() : null;
-          if (existing) db.prepare('UPDATE posts SET slug=?,title=?,excerpt=?,content=?,category=?,tags=?,status=?,is_sample=?,cover=?,published_at=? WHERE id=?').run(value.slug, value.title, value.excerpt, value.content, value.category, JSON.stringify(value.tags), value.status, Number(value.isSample), value.cover === undefined ? existing.cover : value.cover, publishedAt, id);
-          else db.prepare('INSERT INTO posts VALUES(?,?,?,?,?,?,?,?,?,?,?,?)').run(id, value.slug, value.title, value.excerpt, value.content, value.category, JSON.stringify(value.tags), value.status, Number(value.isSample), value.cover || null, now(), publishedAt);
+          if (existing) db.prepare('UPDATE posts SET slug=?,title=?,excerpt=?,content=?,category=?,tags=?,status=?,is_sample=?,cover=?,published_at=?,updated_at=? WHERE id=?').run(value.slug, value.title, value.excerpt, value.content, value.category, JSON.stringify(value.tags), value.status, Number(value.isSample), value.cover === undefined ? existing.cover : value.cover, publishedAt, now(), id);
+          else db.prepare('INSERT INTO posts(id,slug,title,excerpt,content,category,tags,status,is_sample,cover,created_at,published_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)').run(id, value.slug, value.title, value.excerpt, value.content, value.category, JSON.stringify(value.tags), value.status, Number(value.isSample), value.cover || null, now(), publishedAt, now());
           return json(res, { post: postData(db.prepare('SELECT * FROM posts WHERE id=?').get(id), true) }, existing ? 200 : 201);
         }
         match = route.match(/^\/api\/admin\/posts\/([^/]+)\/cover\.webp$/);
@@ -325,7 +327,7 @@ export function createApp(options = {}) {
     if(pageURL.pathname==='/favicon.ico'){res.writeHead(301,{Location:'/assets/star.svg'});return res.end();}
     const data={
       site:async()=>JSON.parse(getSetting('site')),
-      posts:async()=>db.prepare("SELECT slug,title,excerpt,is_sample FROM posts WHERE status='published' ORDER BY published_at DESC,id").all().map(row=>({...row,isSample:!!row.is_sample})),
+      posts:async()=>db.prepare("SELECT slug,title,excerpt,is_sample,published_at,updated_at FROM posts WHERE status='published' ORDER BY published_at DESC,id").all().map(row=>({...row,isSample:!!row.is_sample})),
       post:async slug=>{const row=db.prepare("SELECT * FROM posts WHERE slug=? AND status='published'").get(slug);return row?postData(row):null;},
       listing:async()=>db.prepare("SELECT id,slug,title,excerpt,category,tags,published_at,is_sample,cover IS NOT NULL AS has_cover FROM posts WHERE status='published' ORDER BY published_at DESC,id LIMIT 50").all().map(row=>({...postData(row),coverUrl:row.has_cover?`/api/posts/${row.id}/cover.webp`:null}))
     };

@@ -175,12 +175,14 @@ export function llms(raw,ctx) {
   return `# ${md(site.displayName)}\n\n> Portfolio cá nhân của ${md(site.displayName)}, dự án Photobooth Hộp Ảnh và Blog chia sẻ điều thú vị.\n\nNội dung công khai bằng tiếng Việt. Hỗ trợ HTTP GET với Accept: text/markdown tại URL trang; có bản /index.md. Không bao gồm dữ liệu quản trị, ảnh cá nhân hoặc bản đóng góp chờ duyệt.\n\n## When to use this — Khi nên sử dụng\n\n- [Portfolio](https://hunghienhoa.com/index.md): tìm danh tính, dự án và thông tin liên hệ chính thức của Hùng.\n- [Photobooth](https://photobooth.hunghienhoa.com/index.md): khi người dùng muốn chụp/ghép bốn ảnh, tạo frame và tải JPEG; cần thao tác bằng trình duyệt.\n- [Snap](https://snap.hunghienhoa.com/index.md): tham khảo cách tải nội dung TikTok, Instagram và Facebook công khai, cần người dùng chọn link và tải file; không tự gửi tải hàng loạt.\n- [Blog](https://blog.hunghienhoa.com/index.md): tìm và đọc các bài đã xuất bản về hình ảnh, sáng tạo và chuyện thú vị.\n\n## Hướng dẫn truy cập\n\n- [Hướng dẫn cho agent](${ctx.origin}/agent-instructions.md): cách gọi HTTP, trường hợp phù hợp và giới hạn hành động.\n- [Sitemap](${ctx.origin}/sitemap.xml): URL công khai trên tên miền này.\n`;
 }
 export function sitemap(ctx,posts=[]) {
-  const urls=[ctx.origin+'/'];
-  if(ctx.page==='main')urls.push(...POLICY_PATHS.map(path=>ctx.origin+path));
-  if(ctx.page==='photobooth')urls.push(ctx.origin+'/shoot');
-  if(ctx.page==='blog')for(const post of posts)urls.push(ctx.origin+'/?bai='+encodeURIComponent(post.slug));
+  // lastmod = lần sửa bài gần nhất (updated_at, dự phòng ngày đăng) để Google biết bài nào cần thu thập lại; trang tĩnh không có ngày đáng tin nên bỏ trống.
+  const day=value=>{const time=typeof value==='number'?value:Date.parse(value);return Number.isFinite(time)?new Date(time).toISOString().slice(0,10):'';};
+  const urls=[{loc:ctx.origin+'/',lastmod:ctx.page==='blog'?posts.map(post=>day(post.updated_at??post.published_at)).filter(Boolean).sort().pop()||'':''}];
+  if(ctx.page==='main')urls.push(...POLICY_PATHS.map(path=>({loc:ctx.origin+path})));
+  if(ctx.page==='photobooth')urls.push({loc:ctx.origin+'/shoot'});
+  if(ctx.page==='blog')for(const post of posts)urls.push({loc:ctx.origin+'/?bai='+encodeURIComponent(post.slug),lastmod:day(post.updated_at??post.published_at)});
   if(urls.length>50000)throw new Error('Sitemap cần được chia thành nhiều tệp.');
-  return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+urls.map(url=>`  <url><loc>${escapeHtml(url)}</loc></url>`).join('\n')+'\n</urlset>\n';
+  return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+urls.map(url=>`  <url><loc>${escapeHtml(url.loc)}</loc>${url.lastmod?`<lastmod>${url.lastmod}</lastmod>`:''}</url>`).join('\n')+'\n</urlset>\n';
 }
 export function textResponse(body,type='text/markdown',status=200,head=false) {
   return new Response(head?null:body,{status,headers:{'Content-Type':type+'; charset=utf-8','Vary':'Accept','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
