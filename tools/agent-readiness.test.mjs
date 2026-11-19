@@ -75,7 +75,7 @@ async function verify(request,base,blogPrefix='/blog') {
     for(const route of [blogPrefix+'/', '/photobooth/']){r=await get(route,'text/markdown');assert.equal(r.status,200);assert.match(r.headers.get('content-type'),/^text\/markdown/);}
     r=await get(blogPrefix+'/?bai=published','text/markdown');assert.equal(r.status,200);assert.ok((await r.text()).includes('PUBLIC-ARTICLE'));
     for(const slug of ['draft','not-found','invalid%26slug'])assert.equal((await get(blogPrefix+'/?bai='+slug,'text/markdown')).status,404);
-    r=await get(blogPrefix+'/sitemap.xml');body=await r.text();assert.ok(body.includes('bai=published')&&!body.includes('bai=draft'));
+    r=await get(blogPrefix+'/sitemap.xml');body=await r.text();assert.ok(body.includes('bai=published')&&!body.includes('bai=draft'));assert.match(body,/bai=published<\/loc><lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/,'Bài đã đăng có lastmod');
   }
 }
 

@@ -325,7 +325,7 @@ export function createApp(options = {}) {
     if(pageURL.pathname==='/favicon.ico'){res.writeHead(301,{Location:'/assets/star.svg'});return res.end();}
     const data={
       site:async()=>JSON.parse(getSetting('site')),
-      posts:async()=>db.prepare("SELECT slug,title,excerpt,is_sample FROM posts WHERE status='published' ORDER BY published_at DESC,id").all().map(row=>({...row,isSample:!!row.is_sample})),
+      posts:async()=>db.prepare("SELECT slug,title,excerpt,is_sample,published_at FROM posts WHERE status='published' ORDER BY published_at DESC,id").all().map(row=>({...row,isSample:!!row.is_sample})),
       post:async slug=>{const row=db.prepare("SELECT * FROM posts WHERE slug=? AND status='published'").get(slug);return row?postData(row):null;},
       listing:async()=>db.prepare("SELECT id,slug,title,excerpt,category,tags,published_at,is_sample,cover IS NOT NULL AS has_cover FROM posts WHERE status='published' ORDER BY published_at DESC,id LIMIT 50").all().map(row=>({...postData(row),coverUrl:row.has_cover?`/api/posts/${row.id}/cover.webp`:null}))
     };

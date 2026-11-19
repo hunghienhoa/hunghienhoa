@@ -1,7 +1,7 @@
 # Graph Report - hunghienhoa  (2026-11-19)
 
 ## Corpus Check
-- 118 files · ~86,802 words
+- 118 files · ~86,843 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 18 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e9e67505`
+- Built from commit: `8017e82a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -102,14 +102,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `Dữ liệu cá nhân website đang giữ` --references--> `VisitCounter`  [INFERRED]
   INCIDENT-RESPONSE.md → worker/visits.mjs
-- `publicApi()` --calls--> `snaptikRoute()`  [EXTRACTED]
-  worker/index.mjs → server/snaptik.mjs
 - `withSecurity()` --calls--> `publicHtml()`  [EXTRACTED]
   worker/index.mjs → server/agent-content.mjs
+- `publicApi()` --calls--> `snaptikRoute()`  [EXTRACTED]
+  worker/index.mjs → server/snaptik.mjs
 - `provider()` --calls--> `mediaURL()`  [EXTRACTED]
   tools/snaptik.test.mjs → server/snaptik.mjs
-- `withSecurity()` --calls--> `adsenseHtml()`  [EXTRACTED]
-  worker/index.mjs → server/adsense.mjs
+- `assetRequest()` --calls--> `publicRedirect()`  [EXTRACTED]
+  worker/index.mjs → server/agent-content.mjs
 
 ## Import Cycles
 - None detected.

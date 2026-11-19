@@ -446,7 +446,7 @@ async function handle(request, env, ctx) {
         site:()=>cachedJson(ctx,'site',()=>loadSite(env)),
         posts:()=>cachedJson(ctx,'posts',async()=>{
           const posts=[];
-          for(let offset=0;offset<50000;offset+=1000){const rows=await rest(env,'posts',{query:{select:'slug,title,excerpt,is_sample',status:'eq.published',order:'published_at.desc,id.asc',limit:1000,offset}});posts.push(...rows.map(row=>({...row,isSample:!!row.is_sample})));if(rows.length<1000)return posts;}
+          for(let offset=0;offset<50000;offset+=1000){const rows=await rest(env,'posts',{query:{select:'slug,title,excerpt,is_sample,published_at',status:'eq.published',order:'published_at.desc,id.asc',limit:1000,offset}});posts.push(...rows.map(row=>({...row,isSample:!!row.is_sample})));if(rows.length<1000)return posts;}
           fail(503,'Danh sách cần được chia thành nhiều sitemap.');
         }),
         post:slug=>cachedJson(ctx,`post:${slug}`,()=>loadPost(env,slug)),
