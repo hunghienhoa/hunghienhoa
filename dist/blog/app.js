@@ -2,7 +2,9 @@ import { readingMinutes, filterPosts, articleBlocks, inlineTokens, safeCoverURL 
 
 const $ = selector => document.querySelector(selector);
 const API = String(window.HUNG_API_BASE || '').replace(/\/$/, '');
-const state = { posts: [], query: '', category: '', loaded: false };
+// Hiện vài chủ đề nhiều bài nhất và một trang bài; phần còn lại mở bằng nút để không phải lướt qua cả bức tường lựa chọn.
+const TOP_CATEGORIES = 7, PAGE_SIZE = 12;
+const state = { posts: [], query: '', category: '', loaded: false, limit: PAGE_SIZE, allCategories: false };
 let blogName = 'Góc nhỏ của Hùng';
 let articleRequest = 0;
 
@@ -97,14 +99,24 @@ function message(title, body, action = '') {
 }
 
 function renderCategories() {
-  const names = [...new Set(state.posts.map(post => post.category).filter(value => typeof value === 'string' && value))];
-  const buttons = ['', ...names].map(name => {
+  const counts = new Map();
+  for (const post of state.posts) if (typeof post.category === 'string' && post.category) counts.set(post.category, (counts.get(post.category) || 0) + 1);
+  const names = [...counts.keys()].sort((a, b) => counts.get(b) - counts.get(a));
+  const shown = state.allCategories ? names : names.filter((name, index) => index < TOP_CATEGORIES || name === state.category);
+  const buttons = ['', ...shown].map(name => {
     const button = element('button', '', name || 'Tất cả');
     button.type = 'button';
     button.setAttribute('aria-pressed', String(state.category === name));
-    button.addEventListener('click', () => { state.category = name; renderFeed(); });
+    button.addEventListener('click', () => { state.category = name; state.limit = PAGE_SIZE; renderFeed(); });
     return button;
   });
+  if (names.length > TOP_CATEGORIES) {
+    const toggle = element('button', 'more-categories', state.allCategories ? 'Thu gọn chủ đề' : `Thêm chủ đề (+${names.length - shown.length})`);
+    toggle.type = 'button';
+    toggle.setAttribute('aria-expanded', String(!!state.allCategories));
+    toggle.addEventListener('click', () => { state.allCategories = !state.allCategories; renderCategories(); $('.more-categories').focus(); });
+    buttons.push(toggle);
+  }
   $('#categories').replaceChildren(...buttons);
 }
 
@@ -116,7 +128,9 @@ function renderFeed() {
   if (useFeatured) renderFeatured(posts[0]);
   else $('#featured').replaceChildren();
   const cards = useFeatured ? posts.slice(1) : posts;
-  $('#post-grid').replaceChildren(...cards.map(renderCard));
+  $('#post-grid').replaceChildren(...cards.slice(0, state.limit).map(renderCard));
+  $('#more-posts').hidden = cards.length <= state.limit;
+  $('#more-posts').textContent = `Xem thêm bài viết (${cards.length - Math.min(state.limit, cards.length)})`;
   $('#post-grid').setAttribute('aria-busy', 'false');
   $('#result-count').textContent = `${posts.length} bài viết`;
   $('#feed-message').hidden = posts.length > 0;
@@ -227,9 +241,10 @@ async function openArticle(slug) {
   }
 }
 
-$('#search-form').addEventListener('submit', event => { event.preventDefault(); state.query = $('#search').value; renderFeed(); });
-$('#search').addEventListener('input', () => { state.query = $('#search').value; if (state.loaded) renderFeed(); });
-$('#clear-filters').addEventListener('click', () => { state.query = ''; state.category = ''; $('#search').value = ''; renderFeed(); });
+$('#search-form').addEventListener('submit', event => { event.preventDefault(); state.query = $('#search').value; state.limit = PAGE_SIZE; renderFeed(); });
+$('#search').addEventListener('input', () => { state.query = $('#search').value; state.limit = PAGE_SIZE; if (state.loaded) renderFeed(); });
+$('#clear-filters').addEventListener('click', () => { state.query = ''; state.category = ''; state.limit = PAGE_SIZE; $('#search').value = ''; renderFeed(); });
+$('#more-posts').addEventListener('click', () => { const first = state.limit; state.limit += PAGE_SIZE; renderFeed(); $('#post-grid').children[first]?.focus(); });
 $('#retry').addEventListener('click', loadPosts);
 $('#list-nav').href='./#bai-viet';
 
