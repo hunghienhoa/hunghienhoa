@@ -46,13 +46,7 @@ assert.equal(schema.headline,post.title);assert.equal(schema.datePublished,'2026
 assert.equal(schema.image[0],'https://blog.hunghienhoa.com/api/posts/1/cover.webp');
 const listing=await publicHtml(template,defaultSite,pageContext(new URL('https://blog.hunghienhoa.com/')),new URL('https://blog.hunghienhoa.com/'),data);
 assert.ok(listing.body.includes('href="?bai=published"')&&!listing.body.includes('PRIVATE-DRAFT'));
-// Trang chính: tối đa 3 bài đã đăng, tiêu đề được escape, link tuyệt đối tới blog; lỗi dữ liệu thì khối vẫn ẩn.
-const homeUrl=new URL('https://hunghienhoa.com/'),homeTemplate=fs.readFileSync('dist/index.html','utf8');
-const home=await publicHtml(homeTemplate,defaultSite,pageContext(homeUrl),homeUrl,{...data,listing:async()=>[post,{...post,slug:'draft',title:'PRIVATE-DRAFT',status:'draft'},{...post,slug:'b'},{...post,slug:'c'},{...post,slug:'d'}]});
-assert.ok(home.body.includes('<li><a href="https://blog.hunghienhoa.com/?bai=published">PUBLIC-ARTICLE $&amp; &lt;/title&gt;')&&!home.body.includes('PRIVATE-DRAFT')&&!home.body.includes('?bai=d"'));
-assert.ok(!/id="latest-posts"[^>]*hidden/.test(home.body));
-const homeDown=await publicHtml(homeTemplate,defaultSite,pageContext(homeUrl),homeUrl,{...data,listing:async()=>{throw new Error('down');}});
-assert.equal(homeDown.status,200);assert.match(homeDown.body,/id="latest-posts"[^>]*hidden/);
+
 
 async function verify(request,base,blog='/blog'){
  const get=(route,method='GET')=>request(base+route,{method,headers:{Accept:'text/html'}});
@@ -89,7 +83,7 @@ try{
   let r=await worker.fetch(new Request('https://blog.hunghienhoa.com/?bai=published',{method}),env);assert.equal(r.status,200);const body=await r.text();assert.ok(method==='HEAD'?body==='':body.includes('Tiêu đề riêng')&&body.includes('"@type":"Article"'));
   r=await worker.fetch(new Request('https://blog.hunghienhoa.com/?bai=not-found',{method}),env);assert.equal(r.status,404);assert.match(r.headers.get('x-robots-tag'),/noindex/);if(method==='HEAD')assert.equal(await r.text(),'');
  }
- const root=await worker.fetch(new Request('https://hunghienhoa.com/'),env);const rootHtml=await root.text();assert.ok(rootHtml.includes('href="https://blog.hunghienhoa.com/"')&&rootHtml.includes('href="https://blog.hunghienhoa.com/?bai=published"'));
+ const root=await worker.fetch(new Request('https://hunghienhoa.com/'),env);const rootHtml=await root.text();assert.ok(rootHtml.includes('href="https://blog.hunghienhoa.com/"')&&!rootHtml.includes('latest-posts'));
  const shoot=await worker.fetch(new Request('https://photobooth.hunghienhoa.com/shoot'),env);assert.ok((await shoot.text()).includes('rel="canonical" href="https://photobooth.hunghienhoa.com/shoot"'));
  for(const source of ['http://hunghienhoa.com/','http://blog.hunghienhoa.com/?bai=published','http://www.hunghienhoa.com/photobooth/shoot/','https://blog.hunghienhoa.com/ads.txt']){const r=await worker.fetch(new Request(source),env);assert.equal(r.status,308);assert.equal(r.headers.get('location'),publicRedirect(source).href);}
 }finally{globalThis.fetch=originalFetch;}

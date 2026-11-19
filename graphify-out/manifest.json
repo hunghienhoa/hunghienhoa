@@ -78,9 +78,9 @@
     "semantic_hash": ""
   },
   "server/agent-content.mjs": {
-    "mtime": 1795070824.6629913,
-    "seen": 1795070902.6195598,
-    "ast_hash": "dc49587120f061d4cdde73aac7d758e6",
+    "mtime": 1795082154.0263302,
+    "seen": 1795082173.2215602,
+    "ast_hash": "b84585216af6ce973d8d2bf01bc5d51d",
     "semantic_hash": ""
   },
   "server/contribution-limit.mjs": {
@@ -138,9 +138,9 @@
     "semantic_hash": ""
   },
   "tools/adsense-readiness.test.mjs": {
-    "mtime": 1795070824.6636443,
-    "seen": 1795070902.619707,
-    "ast_hash": "86f51406563e4e2120ecaa96e19f7a4b",
+    "mtime": 1795082154.0268025,
+    "seen": 1795082173.2216864,
+    "ast_hash": "b8084dee493b47e6b2763bc19d95e7f2",
     "semantic_hash": ""
   },
   "tools/adsense-smoke.mjs": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795070939.910862,
-    "seen": 1795071077.8315227,
-    "ast_hash": "a2cb6ca9e3917fdc81f9e09c93f58970",
+    "mtime": 1795082154.1164215,
+    "seen": 1795082173.2217443,
+    "ast_hash": "293bc5e4353d089c73925bbec5eafaaa",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -1803,6 +1803,12 @@
     "mtime": 1795074586.0431528,
     "seen": 1795074641.240446,
     "ast_hash": "100cc68fbeee0d197835c37268d02186",
+    "semantic_hash": ""
+  },
+  "SECURITY.md": {
+    "mtime": 1795082142.7404208,
+    "seen": 1795082173.2228274,
+    "ast_hash": "b1060e70aaff0e2baed6fc1d91ebe9b3",
     "semantic_hash": ""
   },
   "package-lock.json": {
