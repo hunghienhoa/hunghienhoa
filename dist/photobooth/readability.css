@@ -1,0 +1,33 @@
+/* Mức sàn cỡ chữ để dễ đọc: nhãn ≥12px, menu/nút ≥14px, đoạn văn ≥16px. Nạp sau cùng để đè cả quy tắc thu nhỏ chữ trên điện thoại.
+   Chỉ nâng chữ đang nhỏ hơn mức sàn; chữ đã lớn hơn trên máy tính được nâng riêng trong khối @media màn hình hẹp.
+   Chữ vẽ trong hình minh họa (hộp quà, thùng carton, thẻ ID, dải số, tem, bìa sách) cố ý không có ở đây.
+   Bản sao giống hệt ở dist/blog và dist/photobooth; tools/viewport.test.mjs kiểm tra. */
+
+/* Nhãn, dòng thông tin phụ */
+.eyebrow,.hero-top>span,.hero-bottom>span,.side-note,.sample-note,.header-note,.about-note span,.skills span,.brand small,.brand>span:last-child,
+.post-meta span,.reader-meta .post-meta,.project-caption>span,.social-link small,#result-count,#photo-count,.camera-state,.preview-note,
+.trust-row li,.landing-promises li,#url-help,.steps b,.caption-label span,#status,.about-art>.label,.article-tags span{font-size:12px!important}
+
+/* Menu, nút, liên kết hành động; dòng hướng dẫn ngắn trong khung công cụ của phòng chụp */
+.site-header nav a,.social-link,.policy-links a,.contact-phone span,.hero-bottom>a,.filters button,.categories button,
+.card-read,.read-link,.completed-cta,.contact-button,#paste,.button,.quiet-button,.zoom-options button,.effect-options button,
+.mirror-label,.caption-label,.search-form label,.search-form button,details>summary,.showcase-card>span,#input-title,.back-link,
+.camera-help,.session-note,.photo-effects>p,.editor-note{font-size:14px!important}
+
+/* Đoạn văn */
+.hero>p,.section-head p,.section-heading p,.about-copy p:not(.about-lead),.contact-postcard p,.featured-copy p,.post-copy p,
+.how-to article>p,.steps article>p,.privacy p,.privacy-copy p,details>p,.community-intro,#community-status,
+.concept-disclaimer,.completed-copy p,.policy-page p,.policy-page li,#ve-goc-nho p[data-edit]{font-size:16px!important}
+.footer-wish{font-size:clamp(17px,1.7vw,20px)!important}
+
+/* Chỉ nhỏ trên màn hình hẹp */
+@media(max-width:760px){
+ header nav a,.policy-header a{font-size:14px!important}
+ .hero-copy p,.intro-copy p,.about-lead{font-size:16px!important}
+ .intro-copy>.paper-label,.hero>.paper-label,.label.tilted,.steps li,.camera-empty p{font-size:12px!important}
+}
+
+/* Khối đọc dài: ~68 ký tự mỗi dòng, nền kem trơn che lưới kẻ */
+.article-body,.policy-page{max-width:68ch;background:var(--cream,#fbf2e3);box-shadow:0 0 0 24px var(--cream,#fbf2e3)}
+.article-body{font-size:18px;line-height:1.8}
+@media(max-width:760px){.article-body{font-size:16px}.article-body,.policy-page{box-shadow:0 0 0 12px var(--cream,#fbf2e3)}}
