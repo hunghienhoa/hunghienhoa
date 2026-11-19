@@ -101,6 +101,10 @@ Các migration Supabase nằm trong `supabase/migrations` và được GitHub Ac
 5. CSS/JS được tham chiếu kèm `?v=` được trình duyệt cache một năm (`immutable`). Khi sửa một tệp như vậy, tăng `v` ở mọi chỗ tham chiếu rồi chạy `node tools/asset-versions.mjs --write`; `npm run check` báo lỗi nếu nội dung đổi mà `v` giữ nguyên. Font cache 30 ngày, ảnh trong `assets` cache 1 ngày; HTML không cache.
 6. Worker giữ dữ liệu Supabase công khai tại máy chủ Cloudflare gần người xem: nội dung trang, danh sách và từng bài, danh sách khung 60 giây; ảnh bìa bài và ảnh khung đã duyệt 5 phút. Khi lưu trong admin, cache ở trung tâm dữ liệu đang dùng được xóa ngay; nơi khác tự cập nhật trong tối đa 60 giây (ảnh 5 phút). Ảnh `/api/media/` không cache để ảnh bị gỡ biến mất ngay.
 
+## Giám sát
+
+Workflow `Giám sát website` (`.github/workflows/monitor.yml`) chạy mỗi giờ: kiểm tra các tên miền, `/api/site`, `/api/frames`, sitemap blog và gọi nhẹ Supabase REST để dự án gói miễn phí không bị tạm dừng vì không hoạt động. Lượt chạy đỏ thì GitHub gửi email (GitHub → Settings → Notifications → Actions). Có thể chạy tay ở tab Actions. GitHub tự tắt lịch chạy nếu repo không có commit trong 60 ngày; khi đó bật lại trong tab Actions.
+
 ## Giới hạn đã ghi nhận
 
 - Bản cục bộ tiếp tục dùng cookie/CSRF và SQLite riêng; dữ liệu trên máy và dữ liệu Supabase online là hai bộ dữ liệu khác nhau. Không tự đồng bộ database riêng lên GitHub.

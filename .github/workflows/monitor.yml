@@ -1,0 +1,47 @@
+name: Giám sát website
+# Mỗi giờ: kiểm tra các trang và API thật, rồi gọi nhẹ Supabase để dự án gói miễn phí không bị tạm dừng vì
+# "không hoạt động". Lỗi thì lượt chạy đỏ và GitHub gửi email cho chủ repo.
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: monitor
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          sparse-checkout: cloudflare.config.ts
+          sparse-checkout-cone-mode: false
+      - name: Kiểm tra trang, API và Supabase
+        shell: bash
+        run: |
+          fail=0
+          check() {
+            # Thử lại 2 lần cách 15 giây để một lần mạng chập chờn không gây báo động giả.
+            code=$(curl -sS -o /dev/null -w '%{http_code}' -f --retry 2 --retry-delay 15 --retry-all-errors --max-time 20 "$@") || true
+            if [ "$code" = "200" ]; then echo "ok   $code $1"; else echo "::error::$1 trả về $code"; fail=1; fi
+          }
+          for url in \
+            https://hunghienhoa.com/ \
+            https://blog.hunghienhoa.com/ \
+            https://photobooth.hunghienhoa.com/ \
+            https://photobooth.hunghienhoa.com/shoot \
+            https://snap.hunghienhoa.com/ \
+            https://admin.hunghienhoa.com/ \
+            https://hunghienhoa.com/api/site \
+            https://hunghienhoa.com/api/frames \
+            https://blog.hunghienhoa.com/sitemap.xml; do
+            check "$url"
+          done
+          # Gọi thẳng Supabase (bỏ qua cache Cloudflare) bằng publishable key công khai trong cloudflare.config.ts.
+          url=$(grep -o 'https://[a-z0-9]*\.supabase\.co' cloudflare.config.ts | head -1)
+          key=$(grep -o 'sb_publishable_[A-Za-z0-9_-]*' cloudflare.config.ts | head -1)
+          check "$url/rest/v1/posts?select=id&status=eq.published&limit=1" -H "apikey: $key"
+          exit $fail

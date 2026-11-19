@@ -1,5 +1,5 @@
 {
-  "0": "server.mjs",
+  "0": "index.mjs",
   "1": "validate-findings.cjs",
   "2": "validate-coverage-ledger.cjs",
   "3": "usage.mjs",
@@ -17,7 +17,7 @@
   "15": "ref_node_assert",
   "16": "Cloud and Deployment Hunting",
   "17": "preflightJsonText",
-  "18": "ref_node_os",
+  "18": "browser-usage-audit.mjs",
   "19": "Sticker từ 17 ảnh tham chiếu",
   "20": "AI, LLM, and Agent Hunting",
   "21": "ATTACK-CLASSES.md",
@@ -40,7 +40,7 @@
   "38": "Kiểm tra toàn bộ website — 10/11/2026",
   "39": "Rà soát sơ bộ website Hùng Hiền Hòa — 10/11/2026",
   "40": "Search Console cho website của Hùng",
-  "41": "browser-material-cards.mjs",
+  "41": "dashboard.test.mjs",
   "42": "Nguồn tham khảo khung Hộp Ảnh",
   "43": "Quy trình ứng phó sự cố",
   "44": "Quản trị các trang của Hùng",
@@ -72,5 +72,10 @@
   "70": "browser-adsense-readiness.mjs",
   "71": "Kiểm tra triển khai hunghienhoa — 09/11/2026",
   "72": "Hướng dẫn mã nguồn — Hùng Hiền Hòa",
-  "73": "Bắt đầu bằng một lời chào"
+  "73": "Bắt đầu bằng một lời chào",
+  "74": "server.mjs",
+  "75": "createApp",
+  "76": "steps",
+  "77": "browser-stickers-audit.mjs",
+  "78": "viewport.test.mjs"
 }
