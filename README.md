@@ -74,6 +74,7 @@ Kho này đồng thời chứa mã nguồn cho website của mình. Tài liệu 
 - [Hướng dẫn mã nguồn và chạy trên máy](PROJECT.md)
 - [Triển khai, tên miền và GitHub Actions](DEPLOYMENT.md)
 - [API và quyền riêng tư](API-CONTRACT.md)
+- [Quy trình ứng phó sự cố](INCIDENT-RESPONSE.md)
 - [Theo dõi các lượt triển khai](https://github.com/hunghienhoa/hunghienhoa/actions/workflows/deploy.yml)
 
 </details>
