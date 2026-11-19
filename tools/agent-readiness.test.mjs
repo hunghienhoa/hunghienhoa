@@ -6,7 +6,7 @@ import {spawnSync} from 'node:child_process';
 import {createApp} from '../server/server.mjs';
 import worker from '../worker/index.mjs';
 import {defaultSite} from '../server/validation.mjs';
-import {representation,pageContext,decorateHtml,markdownPage,structuredData,ORIGINS} from '../server/agent-content.mjs';
+import {representation,pageContext,decorateHtml,markdownPage,structuredData,sitemap,ORIGINS} from '../server/agent-content.mjs';
 
 for(const [accept,expected] of [
   [null,'text/html'],['*/*','text/html'],['text/markdown','text/markdown'],['TEXT/MARKDOWN; charset="UTF-8"','text/markdown'],
@@ -114,4 +114,7 @@ try {
   let r=await worker.fetch(new Request('https://admin.hunghienhoa.com/robots.txt'),env);assert.equal(await r.text(),'User-agent: *\nDisallow: /\n');
   r=await worker.fetch(new Request('https://admin.hunghienhoa.com/llms.txt'),env);assert.equal(r.status,404);
 }finally{globalThis.fetch=originalFetch;}
+// lastmod theo lần sửa gần nhất (updated_at), không theo ngày đăng; ngày rỗng thì bỏ trống.
+{const xml=sitemap({origin:'https://blog.hunghienhoa.com',page:'blog'},[{slug:'sua',published_at:'2026-11-10T01:00:00Z',updated_at:'2026-11-18T01:00:00Z'},{slug:'cu',published_at:1762700000000},{slug:'rong',published_at:null}]);
+ assert.ok(xml.includes('?bai=sua</loc><lastmod>2026-11-18</lastmod>')&&xml.includes('https://blog.hunghienhoa.com/</loc><lastmod>2026-11-18</lastmod>')&&xml.includes('?bai=rong</loc></url>'));}
 console.log('PASS: local + Worker Markdown/HTML negotiation, q-values/406/HEAD, meaningful404, llms format, XML sitemap, JSON-LD escaping, current admin content and draft/admin isolation.');

@@ -1,17 +1,17 @@
 # Graph Report - hunghienhoa  (2026-11-19)
 
 ## Corpus Check
-- 118 files · ~86,843 words
+- 119 files · ~87,016 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 18 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
 ## Summary
-- 983 nodes · 1700 edges · 74 communities (62 shown, 12 thin omitted)
+- 983 nodes · 1701 edges · 74 communities (62 shown, 12 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 27 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8017e82a`
+- Built from commit: `0d60bb10`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -133,7 +133,7 @@ Cohesion: 0.32
 Nodes (9): usageEntry(), usageMetrics, usageProviders, utcDay(), now, dailyQuery, nonnegative(), providerUsage() (+1 more)
 
 ### Community 4 - "agent-content.mjs"
-Cohesion: 0.06
+Cohesion: 0.07
 Nodes (42): articleHtml(), canonical(), decorateHtml(), escapeHtml(), html404(), inlineHtml(), instructions(), llms() (+34 more)
 
 ### Community 5 - "build-ui-symbols.py"
@@ -383,4 +383,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.07740112994350283 - nodes in this community are weakly interconnected._
 - **Should `agent-content.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.06464646464646465 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06531986531986532 - nodes in this community are weakly interconnected._
