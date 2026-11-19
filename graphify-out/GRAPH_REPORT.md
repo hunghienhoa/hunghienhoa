@@ -1,7 +1,7 @@
 # Graph Report - hunghienhoa  (2026-11-19)
 
 ## Corpus Check
-- 121 files · ~87,910 words
+- 121 files · ~88,164 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 18 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2c1d883c`
+- Built from commit: `0e4d0d01`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -108,13 +108,13 @@
 ## Surprising Connections (you probably didn't know these)
 - `Dữ liệu cá nhân website đang giữ` --references--> `VisitCounter`  [INFERRED]
   INCIDENT-RESPONSE.md → worker/visits.mjs
-- `adminApi()` --calls--> `usageReport()`  [EXTRACTED]
-  worker/index.mjs → server/usage.mjs
-- `adminApi()` --calls--> `fail()`  [EXTRACTED]
+- `withSecurity()` --calls--> `adsenseHtml()`  [EXTRACTED]
+  worker/index.mjs → server/adsense.mjs
+- `withSecurity()` --calls--> `publicHtml()`  [EXTRACTED]
+  worker/index.mjs → server/agent-content.mjs
+- `readJson()` --calls--> `fail()`  [EXTRACTED]
   worker/index.mjs → server/validation.mjs
-- `adminApi()` --calls--> `mediaAsset()`  [EXTRACTED]
-  worker/index.mjs → server/validation.mjs
-- `adminApi()` --calls--> `post()`  [EXTRACTED]
+- `rest()` --calls--> `fail()`  [EXTRACTED]
   worker/index.mjs → server/validation.mjs
 
 ## Import Cycles
@@ -393,16 +393,16 @@ Nodes (3): compact, pages, readability
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `VisitCounter` connect `dashboard.test.mjs` to `index.mjs`, `Quy trình ứng phó sự cố`?**
-  _High betweenness centrality (0.066) - this node is a cross-community bridge._
+  _High betweenness centrality (0.076) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `handle()` (e.g. with `frameData()` and `pendingData()`) actually correct?**
   _`handle()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `validate-findings.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
 - **Why does `Dữ liệu cá nhân website đang giữ` connect `Quy trình ứng phó sự cố` to `dashboard.test.mjs`?**
-  _High betweenness centrality (0.064) - this node is a cross-community bridge._
+  _High betweenness centrality (0.074) - this node is a cross-community bridge._
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06559356136820925 - nodes in this community are weakly interconnected._
+- **Why does `Quy trình ứng phó sự cố` connect `Quy trình ứng phó sự cố` to `3. Sáu bước`, `README.md`?**
+  _High betweenness centrality (0.074) - this node is a cross-community bridge._
 - **Should `agent-content.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.061343204653622425 - nodes in this community are weakly interconnected._
-- **Should `build-ui-symbols.py` be split into smaller, more focused modules?**
-  _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._

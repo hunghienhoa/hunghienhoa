@@ -221,6 +221,27 @@ test('dữ liệu Supabase được cache tại edge; admin lưu thì xóa đún
   assert.equal(count('site_settings'), 1, 'khóa không liên quan vẫn còn cache');
 });
 
+test('dữ liệu cache quá 60 giây vẫn trả ngay, làm mới phía sau cho lượt sau', async t => {
+  const store = new Map();
+  globalThis.caches = { default: { match: async request => store.get(request.url)?.clone(), put: async (request, response) => { store.set(request.url, response.clone()); }, delete: async request => store.delete(request.url) } };
+  t.after(() => { delete globalThis.caches; });
+  const env = { SUPABASE_URL: 'https://database.example.test', SUPABASE_PUBLISHABLE_KEY: 'public-test-key', ADMIN_EMAIL: 'owner@example.test' };
+  let version = 'cũ', calls = 0;
+  t.mock.method(globalThis, 'fetch', async url => { if (new URL(url).pathname.endsWith('/site_settings')) { calls++; return Response.json([{ data: { displayName: version } }]); } return Response.json([]); });
+  const pending = [];
+  const get = async () => (await (await worker.fetch(new Request('https://hunghienhoa.com/api/site'), env, { waitUntil: promise => pending.push(promise) })).json()).displayName;
+  assert.equal(await get(), 'cũ');
+  const key = 'https://hunghienhoa.com/__edge-cache/v1/site', saved = store.get(key), headers = new Headers(saved.headers);
+  headers.set('X-Fetched-At', String(Date.now() - 120000));
+  store.set(key, new Response(await saved.clone().text(), { headers }));
+  version = 'mới';
+  assert.equal(await get(), 'cũ', 'trả ngay bản đã lưu, không chờ Supabase');
+  await Promise.all(pending);
+  assert.equal(calls, 2, 'đã làm mới phía sau đúng một lần');
+  assert.equal(await get(), 'mới');
+  assert.equal(calls, 2, 'bản vừa làm mới còn hạn nên không gọi lại');
+});
+
 test('README và file test trong dist không được phục vụ công khai', async () => {
  const env={ASSETS:{fetch:async request=>{const path=new URL(request.url).pathname;return path==='/404'?new Response('<!doctype html><title>404</title>',{headers:{'Content-Type':'text/html'}}):new Response('bí mật nội bộ',{headers:{'Content-Type':'text/plain'}});}}};
  for(const url of ['https://blog.hunghienhoa.com/README.md','https://admin.hunghienhoa.com/README.md','https://photobooth.hunghienhoa.com/core.test.mjs','https://photobooth.hunghienhoa.com/design.test.mjs','https://blog.hunghienhoa.com/readme.md']){

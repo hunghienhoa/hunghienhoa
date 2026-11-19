@@ -179,13 +179,21 @@ function later(ctx, promise) {
   return ctx?.waitUntil ? ctx.waitUntil(safe) : safe;
 }
 
+// Stale-while-revalidate: bản đã lưu được trả ngay; quá CONTENT_TTL thì làm mới phía sau cho lượt sau, nên người xem
+// không phải chờ Supabase (~1 giây từ máy chủ xa Singapore). Bản lưu bị bỏ hẳn sau STALE_TTL.
+const STALE_TTL = 86400;
 async function cachedJson(ctx, name, load) {
   const cache = edgeCache();
   if (!cache) return load();
-  const hit = await cache.match(cacheKey(name)).catch(() => null);
-  if (hit) return hit.json();
+  const key = cacheKey(name);
+  const store = value => cache.put(key, new Response(JSON.stringify(value), { headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${STALE_TTL}`, 'X-Fetched-At': String(Date.now()) } }));
+  const hit = await cache.match(key).catch(() => null);
+  if (hit) {
+    if (!(Date.now() - Number(hit.headers.get('X-Fetched-At')) <= CONTENT_TTL * 1000)) later(ctx, load().then(store));
+    return hit.json();
+  }
   const value = await load();
-  await later(ctx, cache.put(cacheKey(name), new Response(JSON.stringify(value), { headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${CONTENT_TTL}` } })));
+  await later(ctx, store(value));
   return value;
 }
 
