@@ -18,14 +18,6 @@ document.querySelectorAll('[data-filter]').forEach(button => button.addEventList
   projects.forEach(project => { project.hidden = button.dataset.filter !== 'all' && project.dataset.category !== button.dataset.filter; });
   document.querySelector('#filter-status').textContent = `Hiển thị ${projects.filter(project => !project.hidden).length} thiết kế.`;
 }));
-const descriptions = [
- ['Poster chủ đề mua sắm mùa hè với tông xanh mát, chữ vàng nổi bật và bố cục phối cảnh. Nhân vật, quà tặng cùng chi tiết giảm giá tạo cảm giác sôi động cho thiết kế.', 'Poster · Ghép ảnh · Chữ nổi'],
- ['Một thế giới đồ chơi rực rỡ với máy gắp, máy chơi game và các chi tiết âm nhạc. Tông xanh ngọc, hồng và vàng cùng những lớp mây tạo chiều sâu và cảm giác vui nhộn.', 'Ảnh ghép sáng tạo · Bố cục · Màu sắc'],
- ['Mockup móc khóa tên riêng trên nền đỏ, kết hợp chữ viết tay, viền ánh kim và charm nhân vật. Ánh sáng phản chiếu làm nổi bật bề mặt và chi tiết của thiết kế.', 'Mockup · Chữ trang trí · Trình bày sản phẩm'],
- ['Thiết kế chữ kết hợp nét viết tay và chữ in hoa, điểm xuyết cầu vồng cùng các ngôi sao. Viền trắng và bóng đổ tạo cảm giác như một nhãn dán mang dấu ấn cá nhân.', 'Thiết kế chữ · Nhãn dán · Màu sắc'],
- ['Thiết kế chữ in hoa uốn cong với các lớp nổi khối. Xanh đậm, đỏ cam và phần đổ khối màu vàng tạo chiều sâu, giúp tên và dấu nhận diện cá nhân nổi bật.', 'Chữ nổi 3D · Bố cục chữ · Phối màu'],
- ['Túi minh họa đựng những chuyện bé xíu. Hai lá cờ mở ra hai bên, bảng nhỏ xuất hiện phía dưới.', 'Minh họa · Túi giấy và cờ']
-];
 const dialog = document.querySelector('#project-dialog');
 let currentProject = 0;
 function showProject(index) {
@@ -34,8 +26,9 @@ function showProject(index) {
   const artwork = projects[index].querySelector('.project-art').cloneNode(true);
   artwork.querySelectorAll('img').forEach(image => { image.loading = 'eager'; });
   document.querySelector('#dialog-art').replaceChildren(artwork);
-  document.querySelector('#dialog-description').textContent = descriptions[index][0];
-  document.querySelector('#dialog-scope').textContent = descriptions[index][1];
+  // Mô tả nằm sẵn trong HTML của từng thẻ (Google đọc được); hộp chi tiết chỉ hiển thị lại.
+  document.querySelector('#dialog-description').textContent = projects[index].querySelector('.project-description').textContent;
+  document.querySelector('#dialog-scope').textContent = projects[index].querySelector('.project-scope').textContent;
   dialog.querySelector('.eyebrow').textContent = index < 5 ? 'THIẾT KẾ CÁ NHÂN' : 'BẢN DỰNG CHUYỂN ĐỘNG';
   dialog.querySelector('.draft-label').style.display = index < 5 ? 'none' : '';
   if (!dialog.open) dialog.showModal();
