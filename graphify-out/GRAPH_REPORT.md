@@ -1,17 +1,17 @@
 # Graph Report - hunghienhoa  (2026-11-19)
 
 ## Corpus Check
-- 120 files · ~87,308 words
+- 120 files · ~87,387 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 18 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
 ## Summary
-- 1007 nodes · 1724 edges · 79 communities (66 shown, 13 thin omitted)
+- 1009 nodes · 1726 edges · 79 communities (66 shown, 13 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 27 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c52228d9`
+- Built from commit: `585aecc6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -107,13 +107,13 @@
 ## Surprising Connections (you probably didn't know these)
 - `Dữ liệu cá nhân website đang giữ` --references--> `VisitCounter`  [INFERRED]
   INCIDENT-RESPONSE.md → worker/visits.mjs
-- `withSecurity()` --calls--> `adsenseHtml()`  [EXTRACTED]
-  worker/index.mjs → server/adsense.mjs
-- `handle()` --calls--> `agentRoute()`  [EXTRACTED]
+- `handle()` --calls--> `pageContext()`  [EXTRACTED]
+  worker/index.mjs → server/agent-content.mjs
+- `handle()` --calls--> `representation()`  [EXTRACTED]
+  worker/index.mjs → server/agent-content.mjs
+- `withSecurity()` --calls--> `publicHtml()`  [EXTRACTED]
   worker/index.mjs → server/agent-content.mjs
 - `handle()` --calls--> `markdown404()`  [EXTRACTED]
-  worker/index.mjs → server/agent-content.mjs
-- `handle()` --calls--> `pageContext()`  [EXTRACTED]
   worker/index.mjs → server/agent-content.mjs
 
 ## Import Cycles
@@ -139,7 +139,7 @@ Nodes (10): usageEntry(), usageMetrics, usageProviders, usageReport(), utcDay(),
 
 ### Community 4 - "agent-content.mjs"
 Cohesion: 0.07
-Nodes (42): articleHtml(), canonical(), decorateHtml(), escapeHtml(), html404(), inlineHtml(), instructions(), llms() (+34 more)
+Nodes (44): articleHtml(), canonical(), decorateHtml(), escapeHtml(), html404(), inlineHtml(), instructions(), llms() (+36 more)
 
 ### Community 5 - "build-ui-symbols.py"
 Cohesion: 0.06
@@ -278,7 +278,7 @@ Cohesion: 0.29
 Nodes (6): Gửi sitemap, Kiểm tra URL và yêu cầu lập chỉ mục, Những phần đã có trên website, Search Console cho website của Hùng, Trạng thái đã kiểm tra ngày 14/11/2026, Xác minh quyền sở hữu
 
 ### Community 41 - "dashboard.test.mjs"
-Cohesion: 0.10
+Cohesion: 0.11
 Nodes (20): claimContribution(), contributionDay(), initContributionLimit(), initVisits(), recordVisit(), VISIT_PAGES, visitDay(), visitSummary() (+12 more)
 
 ### Community 42 - "Nguồn tham khảo khung Hộp Ảnh"
@@ -392,16 +392,16 @@ Nodes (3): compact, pages, readability
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `VisitCounter` connect `dashboard.test.mjs` to `index.mjs`, `Quy trình ứng phó sự cố`?**
-  _High betweenness centrality (0.093) - this node is a cross-community bridge._
+  _High betweenness centrality (0.067) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `handle()` (e.g. with `frameData()` and `pendingData()`) actually correct?**
   _`handle()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `validate-findings.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.05750658472344162 - nodes in this community are weakly interconnected._
-- **Why does `Quy trình ứng phó sự cố` connect `Quy trình ứng phó sự cố` to `3. Sáu bước`, `README.md`?**
-  _High betweenness centrality (0.093) - this node is a cross-community bridge._
+- **Why does `Dữ liệu cá nhân website đang giữ` connect `Quy trình ứng phó sự cố` to `dashboard.test.mjs`?**
+  _High betweenness centrality (0.063) - this node is a cross-community bridge._
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.07740112994350283 - nodes in this community are weakly interconnected._
-- **Why does `Dữ liệu cá nhân website đang giữ` connect `Quy trình ứng phó sự cố` to `dashboard.test.mjs`?**
-  _High betweenness centrality (0.092) - this node is a cross-community bridge._
 - **Should `agent-content.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.06894049346879536 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06531986531986532 - nodes in this community are weakly interconnected._
+- **Should `build-ui-symbols.py` be split into smaller, more focused modules?**
+  _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._
