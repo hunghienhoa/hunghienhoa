@@ -384,9 +384,9 @@
     "semantic_hash": ""
   },
   "worker/index.mjs": {
-    "mtime": 1795071141.838874,
-    "seen": 1795071194.7839775,
-    "ast_hash": "01099a2d4abde44457081be3ec4a9653",
+    "mtime": 1795071444.2825515,
+    "seen": 1795071450.2615798,
+    "ast_hash": "6720bbe9fc54f18d0f856091b23802c5",
     "semantic_hash": ""
   },
   "worker/index.test.mjs": {

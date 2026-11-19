@@ -180,8 +180,9 @@ function later(ctx, promise) {
 }
 
 // Stale-while-revalidate: bản đã lưu được trả ngay; quá CONTENT_TTL thì làm mới phía sau cho lượt sau, nên người xem
-// không phải chờ Supabase (~1 giây từ máy chủ xa Singapore). Bản lưu bị bỏ hẳn sau STALE_TTL.
-const STALE_TTL = 86400;
+// không phải chờ Supabase (~1 giây từ máy chủ xa Singapore). Bản lưu bị bỏ hẳn sau STALE_TTL: nội dung đã gỡ có thể
+// còn hiện một lượt ở trung tâm dữ liệu khác trong tối đa một giờ (admin lưu xóa ngay ở trung tâm đang dùng).
+const STALE_TTL = 3600;
 async function cachedJson(ctx, name, load) {
   const cache = edgeCache();
   if (!cache) return load();
