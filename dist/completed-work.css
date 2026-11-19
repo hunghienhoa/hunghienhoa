@@ -84,11 +84,3 @@
  .completed-work .video-preview>b{font-size:clamp(24px,2.1vw,30px)}
  .completed-work .video-preview>i{font-size:34px}
 }
-
-/* Bài mới trên blog: máy chủ điền sẵn tối đa 3 liên kết để người xem và Google đi thẳng vào bài */
-.latest-posts{display:block;margin:32px 0 0;padding:20px 24px;border:1px solid var(--blue);background:var(--cream);font-size:inherit}
-.latest-posts[hidden]{display:none}
-.latest-posts ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px}
-.latest-posts a{color:var(--blue);font-weight:700;font-size:16px;line-height:1.5;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.3em;text-decoration-color:#30348755}
-.latest-posts a:hover,.latest-posts a:focus-visible{text-decoration-color:var(--blue)}
-@media(min-width:1100px){.completed-work>.latest-posts{grid-column:1/-1;margin-top:0}}
