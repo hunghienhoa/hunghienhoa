@@ -2,14 +2,14 @@ import fields from '../dist/content-fields.json' with {type:'json'};
 import {defaultSite} from './validation.mjs';
 import {articleBlocks,inlineTokens,safeCoverURL,readingMinutes} from '../dist/blog/core.mjs';
 
-export const ORIGINS={main:'https://hunghienhoa.com',blog:'https://blog.hunghienhoa.com',photobooth:'https://photobooth.hunghienhoa.com',snaptik:'https://snap.hunghienhoa.com'};
+export const ORIGINS={main:'https://hunghienhoa.com',blog:'https://blog.hunghienhoa.com',photobooth:'https://photobooth.hunghienhoa.com',snaptik:'https://snap.hunghienhoa.com',lamnet:'https://lamnet.hunghienhoa.com'};
 export const POLICY_PATHS=['/chinh-sach-rieng-tu','/dieu-khoan-su-dung','/bao-cao-ban-quyen','/cookie-va-quang-cao'];
 export function publicRedirect(input) {
   const url=new URL(input);
-  if(!['hunghienhoa.com','www.hunghienhoa.com','blog.hunghienhoa.com','photobooth.hunghienhoa.com','admin.hunghienhoa.com','snap.hunghienhoa.com'].includes(url.hostname))return null;
+  if(!['hunghienhoa.com','www.hunghienhoa.com','blog.hunghienhoa.com','photobooth.hunghienhoa.com','admin.hunghienhoa.com','snap.hunghienhoa.com','lamnet.hunghienhoa.com'].includes(url.hostname))return null;
   url.protocol='https:';
   if(url.hostname==='www.hunghienhoa.com')url.hostname='hunghienhoa.com';
-  const legacy=url.pathname.match(/^\/(admin|blog|photobooth|snaptik|snap)(?:\/|$)/);
+  const legacy=url.pathname.match(/^\/(admin|blog|photobooth|snaptik|snap|lamnet)(?:\/|$)/);
   if(url.hostname==='hunghienhoa.com'&&legacy){url.hostname=(['snaptik','snap'].includes(legacy[1])?'snap':legacy[1])+'.hunghienhoa.com';url.pathname=url.pathname.slice(legacy[1].length+1)||'/';}
   if(url.hostname!=='admin.hunghienhoa.com'&&url.pathname==='/index.html')url.pathname='/';
   if(url.hostname==='photobooth.hunghienhoa.com'&&['/shoot/','/shoot.html'].includes(url.pathname))url.pathname='/shoot';
@@ -22,7 +22,7 @@ export function pageContext(url) {
   const hosted=Object.keys(ORIGINS).find(page=>new URL(ORIGINS[page]).hostname===url.hostname);
   const local=['localhost','127.0.0.1','[::1]'].includes(url.hostname);
   if(!hosted&&!local)return null;
-  const section=local?url.pathname.match(/^\/(blog|photobooth|snaptik)(?=\/|$)/)?.[1]:null;
+  const section=local?url.pathname.match(/^\/(blog|photobooth|snaptik|lamnet)(?=\/|$)/)?.[1]:null;
   const page=section||hosted||'main';
   const path=section?url.pathname.slice(section.length+1)||'/':url.pathname;
   return {page,path,origin:ORIGINS[page]};
@@ -60,22 +60,23 @@ export function canonical(ctx,url) {
 }
 export function structuredData(raw,ctx,url,post=null) {
   const site=model(raw),personId=ORIGINS.main+'/#hung';
-  const person={'@type':'Person','@id':personId,name:site.displayName,url:ORIGINS.main+'/',description:value(site,'main',defaultSite.about,site.about),knowsAbout:['Hộp Ảnh','Photobooth','Blog','Snap','Portfolio cá nhân'],sameAs:Object.values(site.socials).filter(link=>typeof link==='string'&&/^https:\/\//.test(link))};
+  const person={'@type':'Person','@id':personId,name:site.displayName,url:ORIGINS.main+'/',description:value(site,'main',defaultSite.about,site.about),knowsAbout:['Hộp Ảnh','Photobooth','Blog','Snap','Làm nét ảnh','Portfolio cá nhân'],sameAs:Object.values(site.socials).filter(link=>typeof link==='string'&&/^https:\/\//.test(link))};
   const photo={'@type':'SoftwareApplication','@id':ORIGINS.photobooth+'/#app',name:value(site,'main','Hộp Ảnh'),description:'Photobooth trực tuyến: chụp hoặc chọn bốn ảnh, tự tạo khung và tải dải ảnh JPEG.',url:ORIGINS.photobooth+'/',applicationCategory:'MultimediaApplication',operatingSystem:'Web browser',isAccessibleForFree:true,creator:{'@id':personId}};
   const blog={'@type':'Blog','@id':ORIGINS.blog+'/#blog',name:site.blogTitle,description:site.blogIntro,url:ORIGINS.blog+'/',author:{'@id':personId}};
   const snap={'@type':'SoftwareApplication','@id':ORIGINS.snaptik+'/#app',name:'Snap của Hùng',description:'Tải video, âm thanh và ảnh từ liên kết TikTok, Instagram và Facebook công khai.',url:ORIGINS.snaptik+'/',applicationCategory:'MultimediaApplication',operatingSystem:'Web browser',creator:{'@id':personId}};
-  const graph=[person,photo,blog,snap,{'@type':ctx.page==='main'?'ProfilePage':'WebPage','@id':canonical(ctx,url)+'#page',name:post?post.title:pageTitle(site,ctx.page),description:post?post.excerpt:ctx.page==='main'?site.intro:ctx.page==='blog'?site.blogIntro:ctx.page==='snaptik'?snap.description:photo.description,url:canonical(ctx,url),mainEntity:{'@id':post?canonical(ctx,url)+'#article':ctx.page==='main'?personId:ctx.page==='blog'?blog['@id']:ctx.page==='snaptik'?snap['@id']:photo['@id']}}];
+  const lamnet={'@type':'SoftwareApplication','@id':ORIGINS.lamnet+'/#app',name:'Làm Nét của Hùng',description:'Làm nét và phóng to ảnh 4 lần bằng AI Real-ESRGAN chạy ngay trong trình duyệt; ảnh không rời khỏi máy.',url:ORIGINS.lamnet+'/',applicationCategory:'MultimediaApplication',operatingSystem:'Web browser',isAccessibleForFree:true,creator:{'@id':personId}};
+  const graph=[person,photo,blog,snap,lamnet,{'@type':ctx.page==='main'?'ProfilePage':'WebPage','@id':canonical(ctx,url)+'#page',name:post?post.title:pageTitle(site,ctx.page),description:post?post.excerpt:ctx.page==='main'?site.intro:ctx.page==='blog'?site.blogIntro:ctx.page==='snaptik'?snap.description:ctx.page==='lamnet'?lamnet.description:photo.description,url:canonical(ctx,url),mainEntity:{'@id':post?canonical(ctx,url)+'#article':ctx.page==='main'?personId:ctx.page==='blog'?blog['@id']:ctx.page==='snaptik'?snap['@id']:ctx.page==='lamnet'?lamnet['@id']:photo['@id']}}];
   const website={'@type':'WebSite','@id':ctx.origin+'/#website',url:ctx.origin+'/',name:siteName(site,ctx.page),alternateName:new URL(ctx.origin).hostname,inLanguage:'vi',publisher:{'@id':personId}};
-  if(ctx.page==='main')website.hasPart=[photo,blog,snap].map(item=>({'@id':item['@id']}));
+  if(ctx.page==='main')website.hasPart=[photo,blog,snap,lamnet].map(item=>({'@id':item['@id']}));
   graph.at(-1).isPartOf={'@id':website['@id']};graph.push(website);
   if(post){const image=safeCoverURL(post.coverUrl,'',ctx.origin);const published=new Date(post.publishedAt);graph.push({'@type':'Article','@id':canonical(ctx,url)+'#article',headline:post.title,description:post.excerpt||'',url:canonical(ctx,url),mainEntityOfPage:{'@id':canonical(ctx,url)+'#page'},author:{'@id':personId},publisher:{'@id':personId},isPartOf:{'@id':blog['@id']},inLanguage:'vi',...(post.publishedAt!=null&&Number.isFinite(published.getTime())?{datePublished:published.toISOString()}:{}),...(image?{image:[image]}:{})});}
   return {'@context':'https://schema.org','@graph':graph};
 }
-function siteName(site,page){return page==='main'?site.displayName:page==='blog'?site.blogTitle:page==='photobooth'?`Hộp Ảnh của ${site.shortName}`:`Snap của ${site.shortName}`;}
-export function pageTitle(site,page) {return page==='snaptik'?`Snap của ${site.shortName} — Tải video TikTok, Instagram và Facebook`:page==='main'?`${site.displayName} — Portfolio và các dự án`:page==='blog'?`${site.blogTitle} — Blog của ${site.shortName}`:`Hộp Ảnh — Photobooth trực tuyến của ${site.shortName}`;}
+function siteName(site,page){return page==='main'?site.displayName:page==='blog'?site.blogTitle:page==='photobooth'?`Hộp Ảnh của ${site.shortName}`:page==='lamnet'?`Làm Nét của ${site.shortName}`:`Snap của ${site.shortName}`;}
+export function pageTitle(site,page) {return page==='lamnet'?`Làm Nét của ${site.shortName} — Làm nét ảnh bằng AI`:page==='snaptik'?`Snap của ${site.shortName} — Tải video TikTok, Instagram và Facebook`:page==='main'?`${site.displayName} — Portfolio và các dự án`:page==='blog'?`${site.blogTitle} — Blog của ${site.shortName}`:`Hộp Ảnh — Photobooth trực tuyến của ${site.shortName}`;}
 export function decorateHtml(html,raw,ctx,url,post=null) {
   const site=model(raw),title=post?`${post.title} — ${site.blogTitle}`:ctx.page==='photobooth'&&ctx.path.startsWith('/shoot')?`Phòng chụp — Hộp Ảnh của ${site.shortName}`:pageTitle(site,ctx.page);
-  const description=post?(post.excerpt||String(post.content).replace(/[#*`]/g,'').slice(0,160)):ctx.page==='main'?`${site.displayName} — portfolio thiết kế và các dự án cá nhân: Hộp Ảnh, Góc tò mò, Snap.`:ctx.page==='blog'?site.blogIntro:ctx.page==='snaptik'?'Snap của Hùng: tự nhận diện liên kết TikTok, Instagram hoặc Facebook công khai, chọn video, âm thanh hoặc ảnh để tải về thiết bị.':'Photobooth trực tuyến: chụp bốn ảnh, tự tạo khung và tải JPEG ngay trên thiết bị.';
+  const description=post?(post.excerpt||String(post.content).replace(/[#*`]/g,'').slice(0,160)):ctx.page==='main'?`${site.displayName} — portfolio thiết kế và các dự án cá nhân: Hộp Ảnh, Góc tò mò, Snap, Làm Nét.`:ctx.page==='blog'?site.blogIntro:ctx.page==='lamnet'?'Làm nét và phóng to ảnh 4 lần bằng AI Real-ESRGAN chạy ngay trong trình duyệt. Ảnh không rời khỏi máy bạn.':ctx.page==='snaptik'?'Snap của Hùng: tự nhận diện liên kết TikTok, Instagram hoặc Facebook công khai, chọn video, âm thanh hoặc ảnh để tải về thiết bị.':'Photobooth trực tuyến: chụp bốn ảnh, tự tạo khung và tải JPEG ngay trên thiết bị.';
   const mdUrl=new URL('/index.md',ctx.origin);if(url.searchParams.has('bai'))mdUrl.searchParams.set('bai',url.searchParams.get('bai'));
   if(ctx.page==='photobooth'&&ctx.path.startsWith('/shoot'))mdUrl.pathname='/shoot';
   const data=JSON.stringify(structuredData(site,ctx,url,post)).replace(/</g,'\\u003c');
@@ -145,7 +146,7 @@ export async function publicHtml(html,raw,ctx,url,data) {
       html=setContent(html,'result-count',`${posts.length} bài viết`);
     }
   }
-  if(!['localhost','127.0.0.1','[::1]'].includes(url.hostname)){html=html.replace(/href="photobooth\/"/g,'href="https://photobooth.hunghienhoa.com/"').replace(/href="blog\/"/g,'href="https://blog.hunghienhoa.com/"').replace(/href="snaptik\/"/g,'href="https://snap.hunghienhoa.com/"');}
+  if(!['localhost','127.0.0.1','[::1]'].includes(url.hostname)){html=html.replace(/href="photobooth\/"/g,'href="https://photobooth.hunghienhoa.com/"').replace(/href="blog\/"/g,'href="https://blog.hunghienhoa.com/"').replace(/href="snaptik\/"/g,'href="https://snap.hunghienhoa.com/"').replace(/href="lamnet\/"/g,'href="https://lamnet.hunghienhoa.com/"');}
   return {body:decorateHtml(html,raw,ctx,url,post),status:200};
 }
 export function markdownPage(raw,ctx,posts=[],post=null) {
@@ -154,11 +155,13 @@ export function markdownPage(raw,ctx,posts=[],post=null) {
   let text=`# ${md(pageTitle(site,ctx.page))}\n\n`;
   if(ctx.page==='main') {
     text+='## '+md(value(site,'main','Một hộp')+' '+value(site,'main','đầy ý tưởng.'))+'\n\n'+md(value(site,'main',defaultSite.intro,site.intro))+'\n\n## Về Hùng\n\n'+md(value(site,'main',defaultSite.about,site.about));
-    text+=`\n\n## Dự án đã làm\n\n- ${link(value(site,'main','Hộp Ảnh'),ORIGINS.photobooth+'/')}: Photobooth trực tuyến, chụp hoặc chọn bốn ảnh, chỉnh khung, nhãn dán và tải JPEG.\n- ${link(value(site,'main','Góc tò mò'),ORIGINS.blog+'/')}: ${md(site.blogIntro)}\n\nSnap: https://snap.hunghienhoa.com/ — tự nhận diện link TikTok, Instagram và Facebook công khai để tải file.\n\nBộ sưu tập gồm năm thiết kế cá nhân của Hùng và một thẻ minh họa chuyển động.\n\n## Liên hệ\n\n- Email: ${md(site.email)}\n- Điện thoại: ${md(site.phone)}\n`;
+    text+=`\n\n## Dự án đã làm\n\n- ${link(value(site,'main','Hộp Ảnh'),ORIGINS.photobooth+'/')}: Photobooth trực tuyến, chụp hoặc chọn bốn ảnh, chỉnh khung, nhãn dán và tải JPEG.\n- ${link(value(site,'main','Góc tò mò'),ORIGINS.blog+'/')}: ${md(site.blogIntro)}\n\nSnap: https://snap.hunghienhoa.com/ — tự nhận diện link TikTok, Instagram và Facebook công khai để tải file.\nLàm Nét: https://lamnet.hunghienhoa.com/ — làm nét và phóng to ảnh 4 lần bằng AI ngay trong trình duyệt.\n\nBộ sưu tập gồm năm thiết kế cá nhân của Hùng và một thẻ minh họa chuyển động.\n\n## Liên hệ\n\n- Email: ${md(site.email)}\n- Điện thoại: ${md(site.phone)}\n`;
     for(const [name,url]of Object.entries(site.socials))if(/^https:\/\//.test(url))text+=`- ${link(name,url)}\n`;
   } else if(ctx.page==='blog') {
     text+=md(site.blogIntro)+'\n\n## Bài đã xuất bản\n\n';
     text+=posts.length?posts.map(post=>`- ${link(post.title,ORIGINS.blog+'/?bai='+encodeURIComponent(post.slug))}${post.isSample?' (bài mẫu)':''}: ${md(post.excerpt)}`).join('\n'):'Chưa có bài viết công khai.';
+  } else if(ctx.page==='lamnet') {
+    text+="Làm nét và phóng to ảnh 4 lần bằng mô hình Real-ESRGAN chạy ngay trong trình duyệt (WebGPU hoặc WebAssembly). Người dùng tự chọn ảnh JPG, PNG hoặc WebP trên thiết bị; ảnh không gửi lên máy chủ, không lưu lại và bị xóa khi rời trang hoặc sau một giờ. Kết quả tải về dạng JPEG. Đây không phải API cho agent.\n";
   } else if(ctx.page==='snaptik') {
     text+="Dán một liên kết công khai từ TikTok, Instagram hoặc Facebook. Snap tự nhận diện nền tảng và hiện lựa chọn tải ngay trên cùng trang. Không yêu cầu tài khoản, mật khẩu hoặc cookie đăng nhập.\n\n## Cách sử dụng\n\n1. Sao chép liên kết video, Reels hoặc bài ảnh được hỗ trợ.\n2. Dán vào ô nhập và bấm Lấy liên kết tải.\n3. Chọn video, âm thanh có sẵn hoặc từng ảnh JPEG. Chất lượng tùy thuộc nguồn; không cam kết 4K hoặc mọi bài đều tải được. Story, nội dung riêng tư và video đang trực tiếp chưa được hỗ trợ.\n\n## Riêng tư và quyền sử dụng\n\nLink TikTok được gửi tới TikWM để phân tích; Instagram và Facebook được đọc từ dữ liệu nhúng công khai của chính nền tảng. File truyền về thiết bị, không lưu thành thư viện trên website. Chỉ dùng nội dung bạn có quyền sử dụng. Dự án của Hùng không liên kết với các nền tảng hoặc SnapInsta/SnapSave/snaptik.vn. Không cần cung cấp cookie hay mật khẩu. Giới hạn mỗi file 200 MB.\n";
   } else {
@@ -172,7 +175,7 @@ export function instructions(raw) {
 }
 export function llms(raw,ctx) {
   const site=model(raw);
-  return `# ${md(site.displayName)}\n\n> Portfolio cá nhân của ${md(site.displayName)}, dự án Photobooth Hộp Ảnh và Blog chia sẻ điều thú vị.\n\nNội dung công khai bằng tiếng Việt. Hỗ trợ HTTP GET với Accept: text/markdown tại URL trang; có bản /index.md. Không bao gồm dữ liệu quản trị, ảnh cá nhân hoặc bản đóng góp chờ duyệt.\n\n## When to use this — Khi nên sử dụng\n\n- [Portfolio](https://hunghienhoa.com/index.md): tìm danh tính, dự án và thông tin liên hệ chính thức của Hùng.\n- [Photobooth](https://photobooth.hunghienhoa.com/index.md): khi người dùng muốn chụp/ghép bốn ảnh, tạo frame và tải JPEG; cần thao tác bằng trình duyệt.\n- [Snap](https://snap.hunghienhoa.com/index.md): tham khảo cách tải nội dung TikTok, Instagram và Facebook công khai, cần người dùng chọn link và tải file; không tự gửi tải hàng loạt.\n- [Blog](https://blog.hunghienhoa.com/index.md): tìm và đọc các bài đã xuất bản về hình ảnh, sáng tạo và chuyện thú vị.\n\n## Hướng dẫn truy cập\n\n- [Hướng dẫn cho agent](${ctx.origin}/agent-instructions.md): cách gọi HTTP, trường hợp phù hợp và giới hạn hành động.\n- [Sitemap](${ctx.origin}/sitemap.xml): URL công khai trên tên miền này.\n`;
+  return `# ${md(site.displayName)}\n\n> Portfolio cá nhân của ${md(site.displayName)}, dự án Photobooth Hộp Ảnh và Blog chia sẻ điều thú vị.\n\nNội dung công khai bằng tiếng Việt. Hỗ trợ HTTP GET với Accept: text/markdown tại URL trang; có bản /index.md. Không bao gồm dữ liệu quản trị, ảnh cá nhân hoặc bản đóng góp chờ duyệt.\n\n## When to use this — Khi nên sử dụng\n\n- [Portfolio](https://hunghienhoa.com/index.md): tìm danh tính, dự án và thông tin liên hệ chính thức của Hùng.\n- [Photobooth](https://photobooth.hunghienhoa.com/index.md): khi người dùng muốn chụp/ghép bốn ảnh, tạo frame và tải JPEG; cần thao tác bằng trình duyệt.\n- [Snap](https://snap.hunghienhoa.com/index.md): tham khảo cách tải nội dung TikTok, Instagram và Facebook công khai, cần người dùng chọn link và tải file; không tự gửi tải hàng loạt.\n- [Blog](https://blog.hunghienhoa.com/index.md): tìm và đọc các bài đã xuất bản về hình ảnh, sáng tạo và chuyện thú vị.\n- [Làm Nét](https://lamnet.hunghienhoa.com/index.md): khi người dùng muốn làm nét, phóng to ảnh bằng AI ngay trong trình duyệt; cần người dùng tự chọn ảnh.\n\n## Hướng dẫn truy cập\n\n- [Hướng dẫn cho agent](${ctx.origin}/agent-instructions.md): cách gọi HTTP, trường hợp phù hợp và giới hạn hành động.\n- [Sitemap](${ctx.origin}/sitemap.xml): URL công khai trên tên miền này.\n`;
 }
 export function sitemap(ctx,posts=[]) {
   // lastmod = lần sửa bài gần nhất (updated_at, dự phòng ngày đăng) để Google biết bài nào cần thu thập lại; trang tĩnh không có ngày đáng tin nên bỏ trống.

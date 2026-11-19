@@ -18,11 +18,17 @@ const DEV_ONLY = /(?:^|\/)README\.md$|\.test\.mjs$/i;
 const VERSIONED_CACHE = 'public, max-age=31536000, immutable';
 const FONT_CACHE = 'public, max-age=2592000';
 const IMAGE_CACHE = 'public, max-age=86400';
+// Làm Nét chạy WebAssembly (cả trong luồng phụ) nên mọi phản hồi của tên miền này cần 'wasm-unsafe-eval';
+// COOP/COEP bật crossOriginIsolated để WebAssembly dùng nhiều luồng khi máy không có WebGPU.
+const LAMNET_HOST = 'lamnet.hunghienhoa.com';
+const LAMNET_CSP = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'";
 
 // Static files referenced with ?v= are renamed by bumping v, so they can be cached for a year.
 function staticCache(url) {
   if (url.pathname.startsWith('/api/')) return '';
   if (/\.woff2$/i.test(url.pathname)) return FONT_CACHE;
+  // Bộ chạy nằm trong thư mục có số phiên bản, mô hình đổi tên khi đổi nội dung: cache một năm.
+  if (url.hostname === LAMNET_HOST && /^\/(?:vendor\/ort-[\d.]+|models)\/[^/]+\.(?:wasm|mjs|onnx)$/.test(url.pathname)) return VERSIONED_CACHE;
   if (url.searchParams.has('v') && /\.(?:css|m?js)$/i.test(url.pathname)) return VERSIONED_CACHE;
   if (/\.(?:webp|svg|jpe?g|gif)$/i.test(url.pathname)) return IMAGE_CACHE;
   return '';
@@ -43,6 +49,11 @@ function preferredEncoding(header) {
 function deliver(request, response) {
   const url = new URL(request.url), headers = new Headers(response.headers);
   headers.set('Strict-Transport-Security', HSTS);
+  if (url.hostname === LAMNET_HOST) {
+    headers.set('Content-Security-Policy', LAMNET_CSP);
+    headers.set('Cross-Origin-Opener-Policy', 'same-origin');
+    headers.set('Cross-Origin-Embedder-Policy', 'require-corp');
+  }
   const cacheControl = headers.get('Cache-Control') || '';
   const cache = response.status === 200 && ['GET', 'HEAD'].includes(request.method) && !/no-store/i.test(cacheControl) && !headers.get('content-type')?.includes('text/html') ? staticCache(url) : '';
   if (cache) headers.set('Cache-Control', cache);
@@ -413,8 +424,10 @@ function assetRequest(request) {
   const url = new URL(request.url), host = url.hostname.toLowerCase();
   const redirect=publicRedirect(url);
   if(redirect)return Response.redirect(redirect.href,308);
-  const section = host === 'admin.hunghienhoa.com' ? 'admin' : host === 'blog.hunghienhoa.com' ? 'blog' : host === 'photobooth.hunghienhoa.com' ? 'photobooth' : host === 'snap.hunghienhoa.com' ? 'snaptik' : '';
+  const section = host === 'admin.hunghienhoa.com' ? 'admin' : host === 'blog.hunghienhoa.com' ? 'blog' : host === 'photobooth.hunghienhoa.com' ? 'photobooth' : host === 'snap.hunghienhoa.com' ? 'snaptik' : host === LAMNET_HOST ? 'lamnet' : '';
   if(section==='snaptik'&&!['/','/index.html','/style.css','/app.js','/core.mjs'].includes(url.pathname))return new Request(url,request);
+  // Font, ảnh và CSS dùng chung nằm ở gốc; chỉ tệp riêng của Làm Nét nằm trong /lamnet/.
+  if(section==='lamnet'&&!(['/','/index.html','/style.css','/app.js','/core.mjs'].includes(url.pathname)||/^\/(?:vendor|models)\//.test(url.pathname)))return new Request(url,request);
   if (section && !url.pathname.startsWith(`/${section}/`)) url.pathname = `/${section}${url.pathname === '/' ? '/' : url.pathname}`;
   return new Request(url, request);
 }

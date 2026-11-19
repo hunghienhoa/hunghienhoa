@@ -144,7 +144,7 @@ export function createApp(options = {}) {
     const activePort = typeof address === 'object' && address ? address.port : port;
     return new Set([`http://127.0.0.1:${activePort}`, `http://localhost:${activePort}`, `http://[::1]:${activePort}`, ...extraOrigins]);
   }
-  const types = { '.wasm': 'application/wasm', '.tflite': 'application/octet-stream', '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json; charset=utf-8', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ico': 'image/x-icon' };
+  const types = { '.wasm': 'application/wasm', '.tflite': 'application/octet-stream', '.onnx': 'application/octet-stream', '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json; charset=utf-8', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ico': 'image/x-icon' };
   async function handle(req, res) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'no-referrer');
@@ -337,6 +337,12 @@ export function createApp(options = {}) {
     const adminHost = options.adminHost ?? process.env.ADMIN_HOST ?? 'admin.hunghienhoa.com';
     const requestHost = (req.headers.host || '').split(':')[0];
     if (requestHost === adminHost) route = `/admin${route}`;
+    // Giống Worker: Làm Nét cần biên dịch WebAssembly (cả trong luồng phụ) và crossOriginIsolated để chạy nhiều luồng.
+    if (/^\/lamnet(?:\/|$)/.test(route)) {
+      res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
+      res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+      res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    }
     if (route === '/photobooth/shoot/') { res.writeHead(308, {Location:'/photobooth/shoot'}); return res.end(); }
     if (route === '/photobooth/shoot') route = '/photobooth/shoot.html';
     if(POLICY_PATHS.includes(route))route+='.html';

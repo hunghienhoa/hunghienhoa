@@ -6,7 +6,8 @@
   <a href="https://hunghienhoa.com"><b>Portfolio ↗</b></a> &nbsp;·&nbsp;
   <a href="https://photobooth.hunghienhoa.com">Hộp Ảnh</a> &nbsp;·&nbsp;
   <a href="https://blog.hunghienhoa.com">Góc tò mò</a> &nbsp;·&nbsp;
-  <a href="https://snap.hunghienhoa.com">Snap</a>
+  <a href="https://snap.hunghienhoa.com">Snap</a> &nbsp;·&nbsp;
+  <a href="https://lamnet.hunghienhoa.com">Làm Nét</a>
 </p>
 
 Mình là **Hùng** — Hùng Hiền Hòa. Mình thích những ý tưởng có cá tính, những thiết kế có chuyện để kể và những điều nhỏ khiến một ngày thú vị hơn. Đây là chiếc hộp mình gom những thứ đang làm.
@@ -16,30 +17,30 @@ Mình là **Hùng** — Hùng Hiền Hòa. Mình thích những ý tưởng có 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <a href="https://hunghienhoa.com"><img src=".github/profile/du-an-portfolio.webp" alt="Trang chính hunghienhoa.com: Một hộp đầy ý tưởng"></a>
-      <h3>Portfolio</h3>
-      <p>Một hộp đầy ý tưởng: thiết kế, sticker và những chuyển động có cá tính.</p>
-      <a href="https://hunghienhoa.com"><b>hunghienhoa.com ↗</b></a>
-    </td>
-    <td width="50%" valign="top">
       <a href="https://photobooth.hunghienhoa.com"><img src=".github/profile/du-an-hop-anh.webp" alt="Hộp Ảnh: Bốn khoảnh khắc. Một dải kỷ niệm."></a>
       <h3>Hộp Ảnh</h3>
       <p>Photobooth trực tuyến: bốn khoảnh khắc, một dải kỷ niệm.</p>
       <a href="https://photobooth.hunghienhoa.com"><b>photobooth.hunghienhoa.com ↗</b></a>
     </td>
-  </tr>
-  <tr>
     <td width="50%" valign="top">
       <a href="https://blog.hunghienhoa.com"><img src=".github/profile/du-an-goc-to-mo.webp" alt="Góc tò mò của Hùng: blog những điều nhỏ mà thú vị"></a>
       <h3>Góc tò mò</h3>
       <p>Những điều nhỏ mà thú vị và những câu chuyện muốn chia sẻ.</p>
       <a href="https://blog.hunghienhoa.com"><b>blog.hunghienhoa.com ↗</b></a>
     </td>
+  </tr>
+  <tr>
     <td width="50%" valign="top">
       <a href="https://snap.hunghienhoa.com"><img src=".github/profile/du-an-snap.webp" alt="Snap: Video hay, để dành xem lại."></a>
       <h3>Snap</h3>
       <p>Video hay từ TikTok, Instagram và Facebook, để dành xem lại.</p>
       <a href="https://snap.hunghienhoa.com"><b>snap.hunghienhoa.com ↗</b></a>
+    </td>
+    <td width="50%" valign="top">
+      <a href="https://lamnet.hunghienhoa.com"><img src=".github/profile/du-an-lam-net.webp" alt="Làm Nét: Ảnh hơi mờ? Làm nét một chút."></a>
+      <h3>Làm Nét</h3>
+      <p>Ảnh hơi mờ? AI phóng to 4 lần, ngay trong trình duyệt.</p>
+      <a href="https://lamnet.hunghienhoa.com"><b>lamnet.hunghienhoa.com ↗</b></a>
     </td>
   </tr>
 </table>
@@ -54,9 +55,10 @@ Mình là **Hùng** — Hùng Hiền Hòa. Mình thích những ý tưởng có 
   <img src="https://img.shields.io/badge/Supabase-303487?style=flat-square&logo=supabase&logoColor=white" alt="Supabase">
   <img src="https://img.shields.io/badge/Cloudflare_Workers-303487?style=flat-square&logo=cloudflareworkers&logoColor=white" alt="Cloudflare Workers">
   <img src="https://img.shields.io/badge/GitHub_Actions-303487?style=flat-square&logo=githubactions&logoColor=white" alt="GitHub Actions">
+  <img src="https://img.shields.io/badge/ONNX_Runtime_Web-303487?style=flat-square&logo=onnx&logoColor=white" alt="ONNX Runtime Web">
 </p>
 
-Ảnh chụp ở Hộp Ảnh chỉ nằm trong trình duyệt của bạn, không gửi lên máy chủ.
+Ảnh ở Hộp Ảnh và Làm Nét chỉ nằm trong trình duyệt của bạn, không gửi lên máy chủ.
 
 ## Bắt đầu bằng một lời chào
 

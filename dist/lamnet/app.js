@@ -1,0 +1,177 @@
+// Làm Nét: Real-ESRGAN x4 chạy trong trình duyệt bằng ONNX Runtime Web (WebGPU, hoặc WebAssembly trong luồng phụ).
+// Ảnh chỉ nằm trong bộ nhớ trang: không gửi đi, không lưu vào trình duyệt; xóa khi rời trang hoặc sau một giờ.
+import { SCALE, LIMITS, MAX_FILE, fitSize, tiles, toTensor, fromTensor, outputName } from './core.mjs?v=1';
+
+const $ = selector => document.querySelector(selector);
+const ORT_DIR = new URL('vendor/ort-1.22.0/', import.meta.url);
+const MODEL_URL = new URL('models/realesr-general-x4v3.onnx', import.meta.url);
+const SIZES = { wasm: 21872216, model: 4858607 }; // byte sau giải nén, để tính tiến độ khi máy chủ không gửi Content-Length
+const HOUR = 3600000;
+const ui = {
+  picker: $('#picker'), input: $('#file'), drop: $('#dropzone'), working: $('#working'), result: $('#result'),
+  bar: $('#progress-bar'), progress: $('#progress'), step: $('#step'), status: $('#status'), cancel: $('#cancel'),
+  compare: $('#compare'), slider: $('#slider'), info: $('#result-info'), download: $('#download'), again: $('#again')
+};
+let ai, run = 0, before, after, fileName = '', expireTimer;
+
+function say(message, error = false) { ui.status.textContent = message; ui.status.dataset.error = String(error); }
+function show(state) { for (const name of ['picker', 'working', 'result']) ui[name].hidden = name !== state; }
+function setProgress(fraction, text) {
+  const percent = Math.max(0, Math.min(100, Math.round(fraction * 100)));
+  ui.bar.style.width = percent + '%';
+  ui.progress.setAttribute('aria-valuenow', String(percent));
+  if (text) ui.step.textContent = text;
+}
+
+// Xóa mọi ảnh khỏi bộ nhớ: canvas về 0x0, bỏ tham chiếu, hủy hẹn giờ.
+function clearImages() {
+  run++;
+  for (const canvas of [before, after]) if (canvas) { canvas.width = 0; canvas.height = 0; canvas.remove(); }
+  before = after = undefined;
+  fileName = '';
+  ui.input.value = '';
+  clearTimeout(expireTimer);
+}
+
+async function fetchBytes(url, expected, onBytes) {
+  const response = await fetch(url);
+  if (!response.ok || !response.body) throw new Error('Không tải được tệp AI (' + response.status + ').');
+  const total = Number(response.headers.get('content-length')) || expected, reader = response.body.getReader(), chunks = [];
+  let loaded = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    loaded += value.byteLength;
+    onBytes(Math.min(loaded, total));
+  }
+  const bytes = new Uint8Array(loaded);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  return bytes;
+}
+
+// Nạp bộ chạy và mô hình một lần; WebGPU nếu máy có, không thì WebAssembly trong luồng phụ để trang không bị đơ.
+async function loadAI(token) {
+  if (ai) return ai;
+  const adapter = await navigator.gpu?.requestAdapter?.().catch(() => null);
+  // GPU giả lập bằng phần mềm (SwiftShader...) chậm hơn WebAssembly nhiều luồng nên không dùng.
+  const provider = adapter && !(adapter.info?.isFallbackAdapter || adapter.isFallbackAdapter) ? 'webgpu' : 'wasm';
+  const ort = await import(new URL('ort.webgpu.min.mjs', ORT_DIR).href);
+  const loaded = { wasm: 0, model: 0 }, total = SIZES.wasm + SIZES.model;
+  const report = () => setProgress((loaded.wasm + loaded.model) / total, `Đang tải AI lần đầu: ${((loaded.wasm + loaded.model) / 1048576).toFixed(1)} / ${(total / 1048576).toFixed(0)} MB`);
+  const [wasm, model] = await Promise.all([
+    fetchBytes(new URL('ort-wasm-simd-threaded.jsep.wasm', ORT_DIR), SIZES.wasm, n => { loaded.wasm = n; report(); }),
+    fetchBytes(MODEL_URL, SIZES.model, n => { loaded.model = n; report(); })
+  ]);
+  if (token !== run) throw new Error('cancelled');
+  ort.env.logLevel = 'error';
+  ort.env.wasm.wasmPaths = ORT_DIR.href;
+  ort.env.wasm.wasmBinary = wasm;
+  ort.env.wasm.numThreads = self.crossOriginIsolated ? Math.max(1, Math.min(4, (navigator.hardwareConcurrency || 2) - 1)) : 1;
+  ort.env.wasm.proxy = provider === 'wasm';
+  setProgress(1, 'Đang khởi động AI…');
+  const session = await ort.InferenceSession.create(model, { executionProviders: [provider], graphOptimizationLevel: 'all' });
+  ai = { ort, session, provider, limit: LIMITS[provider === 'webgpu' ? 'gpu' : 'cpu'] };
+  return ai;
+}
+
+async function decode(file) {
+  try { return await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+  catch {
+    const url = URL.createObjectURL(file);
+    try { const image = new Image(); image.src = url; await image.decode(); return image; }
+    finally { URL.revokeObjectURL(url); }
+  }
+}
+
+async function enhance(file) {
+  if (!file) return;
+  if (!/^image\//.test(file.type) && !/\.(jpe?g|png|webp)$/i.test(file.name)) return say('Hãy chọn một tấm ảnh JPG, PNG hoặc WebP.', true);
+  if (file.size > MAX_FILE) return say('Ảnh lớn hơn 25 MB. Hãy chọn ảnh nhỏ hơn.', true);
+  clearImages();
+  const token = run;
+  fileName = file.name;
+  show('working');
+  say('');
+  setProgress(0, 'Đang chuẩn bị AI…');
+  try {
+    const engine = await loadAI(token);
+    let image;
+    try { image = await decode(file); } catch { throw new Error('Không đọc được ảnh này. Hãy thử JPG, PNG hoặc WebP.'); }
+    const source = { width: image.naturalWidth || image.width, height: image.naturalHeight || image.height };
+    const fit = fitSize(source.width, source.height, engine.limit);
+    before = document.createElement('canvas');
+    before.width = fit.width; before.height = fit.height;
+    const bctx = before.getContext('2d', { willReadFrequently: true });
+    bctx.fillStyle = '#fff';
+    bctx.fillRect(0, 0, fit.width, fit.height);
+    bctx.imageSmoothingQuality = 'high';
+    bctx.drawImage(image, 0, 0, fit.width, fit.height);
+    image.close?.();
+    const rgba = bctx.getImageData(0, 0, fit.width, fit.height).data;
+    after = document.createElement('canvas');
+    after.width = fit.width * SCALE; after.height = fit.height * SCALE;
+    const actx = after.getContext('2d');
+    const list = tiles(fit.width, fit.height, engine.limit.tile);
+    for (let i = 0; i < list.length; i++) {
+      if (token !== run) return;
+      const tile = list[i];
+      setProgress(i / list.length, `Đang làm nét: ${Math.round((i / list.length) * 100)}% (phần ${i + 1}/${list.length})`);
+      await new Promise(requestAnimationFrame);
+      const input = new engine.ort.Tensor('float32', toTensor(rgba, fit.width, tile), [1, 3, tile.th, tile.tw]);
+      const output = (await engine.session.run({ input })).output;
+      if (token !== run) return;
+      const pixels = fromTensor(await output.getData(), tile);
+      actx.putImageData(new ImageData(pixels, tile.w * SCALE, tile.h * SCALE), tile.x * SCALE, tile.y * SCALE);
+      output.dispose?.();
+    }
+    setProgress(1, 'Xong!');
+    showResult(source, fit, engine.provider);
+  } catch (error) {
+    if (token !== run || error?.message === 'cancelled') return;
+    clearImages();
+    show('picker');
+    say(error?.message?.startsWith('Không') || error?.message?.startsWith('Hãy') ? error.message : 'Máy này chưa chạy được AI làm nét. Hãy thử trình duyệt Chrome, Edge hoặc Safari bản mới.', true);
+    console.error(error);
+  }
+}
+
+function showResult(source, fit, provider) {
+  for (const [canvas, label] of [[after, 'Ảnh sau khi làm nét'], [before, 'Ảnh gốc']]) {
+    canvas.setAttribute('role', 'img');
+    canvas.setAttribute('aria-label', label);
+  }
+  before.className = 'before';
+  after.className = 'after';
+  ui.compare.style.aspectRatio = `${fit.width} / ${fit.height}`;
+  ui.compare.prepend(after, before);
+  ui.slider.value = '50';
+  ui.compare.style.setProperty('--pos', '50%');
+  const resized = fit.scaled ? `Ảnh gốc ${source.width}×${source.height} được thu về ${fit.width}×${fit.height} trước khi làm nét. ` : '';
+  ui.info.textContent = `${resized}Kết quả ${after.width}×${after.height} điểm ảnh${provider === 'webgpu' ? '' : ' (máy chưa hỗ trợ WebGPU nên ảnh được giới hạn 512px)'}.`;
+  show('result');
+  say('Đã làm nét xong. Kéo thanh giữa ảnh để so sánh trước và sau.');
+  ui.download.focus();
+  clearTimeout(expireTimer);
+  expireTimer = setTimeout(() => { clearImages(); show('picker'); say('Đã quá một giờ nên ảnh được xóa khỏi trang. Bạn có thể chọn lại ảnh.'); }, HOUR);
+}
+
+ui.input.addEventListener('change', () => enhance(ui.input.files?.[0]));
+for (const type of ['dragenter', 'dragover']) ui.drop.addEventListener(type, event => { event.preventDefault(); ui.drop.classList.add('dragging'); });
+for (const type of ['dragleave', 'drop']) ui.drop.addEventListener(type, () => ui.drop.classList.remove('dragging'));
+ui.drop.addEventListener('drop', event => { event.preventDefault(); enhance(event.dataTransfer?.files?.[0]); });
+ui.cancel.addEventListener('click', () => { clearImages(); show('picker'); say('Đã dừng. Bạn có thể chọn ảnh khác.'); ui.input.focus(); });
+ui.again.addEventListener('click', () => { clearImages(); show('picker'); say(''); ui.input.focus(); });
+ui.slider.addEventListener('input', () => ui.compare.style.setProperty('--pos', ui.slider.value + '%'));
+ui.download.addEventListener('click', () => {
+  if (!after) return;
+  after.toBlob(blob => {
+    if (!blob) return say('Không tạo được file JPEG. Hãy thử lại.', true);
+    const url = URL.createObjectURL(blob), link = document.createElement('a');
+    link.href = url; link.download = outputName(fileName);
+    document.body.append(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }, 'image/jpeg', 0.92);
+});
+addEventListener('pagehide', clearImages);
