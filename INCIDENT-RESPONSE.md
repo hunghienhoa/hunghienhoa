@@ -18,7 +18,7 @@ Nhật ký sự cố và ảnh chụp bằng chứng lưu ngoài GitHub, ở th�
 | Dữ liệu | Nơi lưu | Thời hạn | Nếu bị lộ |
 | --- | --- | --- | --- |
 | Ảnh chụp, ảnh chọn để ghép | Chỉ bộ nhớ trình duyệt của người dùng | Xóa khi rời trang hoặc sau 1 giờ | Máy chủ không có ảnh để lộ. Rủi ro thật là **mã lạ chèn vào trang** đọc trộm camera (tình huống D) |
-| Bản đóng góp chờ duyệt: tên khung, tên hiển thị, **thông tin liên hệ**, liên kết, ảnh khung | Supabase, bảng `frame_submissions` | Bị chặn khi đủ 1 giờ; pg_cron xóa mỗi phút | Lộ liên hệ của người gửi trong khoảng 1 giờ gần nhất (hoặc trong suốt thời gian kẻ tấn công còn quyền truy cập) |
+| Bản đóng góp chờ duyệt: tên khung, tên hiển thị, **thông tin liên hệ**, liên kết, ảnh khung | Supabase, bảng `frame_submissions` | Hết hạn tối đa khoảng 1 giờ sau lúc gửi, tính theo đồng hồ database; pg_cron xóa mỗi phút | Lộ liên hệ của người gửi trong khoảng 1 giờ gần nhất (hoặc trong suốt thời gian kẻ tấn công còn quyền truy cập) |
 | Khung đã duyệt: tên, tên hiển thị, liên kết, thời điểm đồng ý | Supabase, bảng `frames` | Lâu dài | Đây là dữ liệu công khai, không có liên hệ riêng |
 | Bài viết, nội dung trang, ảnh media | Supabase | Lâu dài | Không chứa dữ liệu cá nhân của người khác |
 | Đếm lượt truy cập | Cloudflare Durable Object `VisitCounter` | Mã băm IP theo ngày, thống kê khoảng 90 ngày | Lộ mã băm, không có IP gốc |
@@ -33,7 +33,7 @@ Vì bản chờ tự xóa sau 1 giờ và khung đã duyệt không giữ liên 
 | --- | --- | --- | --- |
 | Mật khẩu database Supabase | Áp migration khi deploy | Supabase → Project Settings → Database → Reset database password | GitHub → repo → Settings → Secrets and variables → Actions → `SUPABASE_DB_URL` |
 | Mật khẩu admin website | Đăng nhập admin.hunghienhoa.com | Supabase → Authentication → Users → `hunghienhoa2110@gmail.com` → đặt lại mật khẩu | Không cần cập nhật nơi khác |
-| Khóa ký JWT Supabase | Phiên đăng nhập | Supabase → Project Settings → JWT Keys → xoay khóa | Không cần cập nhật code; mọi phiên cũ hết hiệu lực |
+| Khóa ký JWT Supabase | Phiên đăng nhập | Supabase → Project Settings → JWT Keys → xoay khóa (Rotate), **rồi thu hồi khóa cũ (Revoke)** | Không cần cập nhật code. Chỉ xoay thì token cũ vẫn được chấp nhận; thu hồi khóa cũ thì token cũ mới hết hiệu lực |
 | Secret key Supabase (`sb_secret_…`) | Code không dùng | Supabase → Project Settings → API Keys → thu hồi, tạo mới | Không cần |
 | Publishable key Supabase (`sb_publishable_…`) | Công khai theo thiết kế, RLS bảo vệ dữ liệu | Chỉ đổi khi bị lạm dụng | `cloudflare.config.ts` và `config.js` trong `dist`, rồi deploy |
 | `CLOUDFLARE_API_TOKEN` | GitHub Actions deploy Worker | Cloudflare → My Profile → API Tokens → Roll hoặc Revoke | GitHub Actions secret `CLOUDFLARE_API_TOKEN` |
@@ -76,7 +76,7 @@ Làm theo tình huống khớp nhất. Nhiều tình huống cùng lúc thì là
 **B. Tài khoản bị chiếm** (admin website, Gmail, GitHub, Cloudflare, Supabase)
 
 - [ ] Lấy lại tài khoản: đổi mật khẩu, bật hoặc đặt lại 2FA, đăng xuất mọi phiên lạ.
-- [ ] Admin website: đặt lại mật khẩu admin và xoay khóa ký JWT để mọi phiên cũ hết hiệu lực.
+- [ ] Admin website: đặt lại mật khẩu admin; xoay khóa ký JWT **rồi thu hồi khóa cũ** (chỉ xoay thì token kẻ tấn công đang giữ vẫn dùng được); đăng xuất mọi phiên của admin (SQL ở mục 4).
 - [ ] Gmail: xóa quy tắc chuyển tiếp hoặc bộ lọc lạ. Gmail là đường khôi phục mật khẩu admin.
 - [ ] GitHub: Settings → Applications, thu hồi ứng dụng lạ; xem Security log; xem commit và workflow mới trên `main`.
 - [ ] Cloudflare/Supabase: xem thành viên, API token mới tạo, thay đổi DNS, thay đổi chính sách RLS. Thu hồi cái lạ.
@@ -120,6 +120,7 @@ Trả lời bốn câu hỏi: **xảy ra từ khi nào, qua đường nào, dữ
 | GitHub → Actions và lịch sử commit `main` | Deploy hoặc commit không phải của Hùng |
 | GitHub → Settings → Security log | Đăng nhập, token, ứng dụng mới |
 | Supabase SQL: `select * from cron.job_run_details order by end_time desc limit 20;` | Tác vụ xóa bản chờ có chạy đều không (lịch sử giữ 7 ngày) |
+| Supabase SQL: `select count(*) from public.frame_submissions where expires_at > now() + interval '1 hour 1 minute';` | Phải bằng 0. Lớn hơn 0 nghĩa là có bản chờ lách được giới hạn 1 giờ |
 
 Ghi kết luận vào nhật ký: loại dữ liệu, số người ảnh hưởng (ước lượng nếu chưa chắc), thời gian bị lộ, nguyên nhân.
 
@@ -154,7 +155,7 @@ Chuẩn bị sẵn để điền mẫu (lấy từ nhật ký):
 
 - [ ] Viết vài dòng vào nhật ký: diễn biến, nguyên nhân, đã làm gì, lần sau làm khác gì.
 - [ ] Cập nhật tài liệu này nếu có bước sai hoặc thiếu.
-- [ ] Giữ hồ sơ sự cố ít nhất 5 năm (theo tóm tắt Nghị định 356/2025; xem lại văn bản gốc), ngoài GitHub.
+- [ ] Giữ nhật ký và bản thông báo đã gửi, ngoài GitHub, đủ lâu để chứng minh đã xử lý và thông báo đúng hạn khi cơ quan chức năng hỏi. Không giữ dữ liệu cá nhân bị lộ. Mốc tối thiểu 5 năm của Nghị định 356/2025 áp dụng cho sự cố dữ liệu vị trí và sinh trắc học (Điều 29); website hiện không xử lý loại dữ liệu này.
 
 ## 4. Lệnh khẩn cấp
 
@@ -180,6 +181,15 @@ alter policy submissions_public_insert on public.frame_submissions
 ```
 
 Đây là sửa nóng trên production, không đi qua migration. Sau sự cố nhớ mở lại. Nếu muốn giữ trạng thái tạm dừng lâu dài thì thêm migration mới vào `supabase/migrations`, vì lần sau có thể chạy lại migration cũ.
+
+Đăng xuất mọi phiên của admin (kèm thu hồi khóa JWT cũ ở bảng mục 1):
+
+```sql
+delete from auth.sessions
+  where user_id = (select id from auth.users where email = 'hunghienhoa2110@gmail.com');
+```
+
+Nếu SQL Editor báo không đủ quyền với schema `auth`, xóa user admin trong Authentication → Users rồi tạo lại theo DEPLOYMENT.md; xóa user cũng xóa mọi phiên của user đó.
 
 Đưa Worker về bản trước: Cloudflare → Workers & Pages → `hunghienhoa` → Deployments → Rollback (xem tình huống D).
 
@@ -220,7 +230,7 @@ alter policy submissions_public_insert on public.frame_submissions
 ## Căn cứ pháp lý
 
 - **Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15** (hiệu lực 01/01/2026), Điều 23 về thông báo vi phạm: thông báo cơ quan chuyên trách chậm nhất 72 giờ kể từ khi phát hiện, với các vi phạm có thể gây tổn hại như ở bước 4.
-- **Nghị định 356/2025/NĐ-CP** (hiệu lực 01/01/2026): Mẫu số 08, Điều 28 về nội dung thông báo, cách gửi qua Cổng thông tin quốc gia về bảo vệ dữ liệu cá nhân hoặc bưu chính. Điều 29 về dữ liệu vị trí và sinh trắc học; website hiện không xử lý loại dữ liệu này trên máy chủ.
+- **Nghị định 356/2025/NĐ-CP** (hiệu lực 01/01/2026): Mẫu số 08, Điều 28 về nội dung thông báo, cách gửi qua Cổng thông tin quốc gia về bảo vệ dữ liệu cá nhân hoặc bưu chính. Điều 29 về dữ liệu vị trí và sinh trắc học (gồm lưu hồ sơ tối thiểu 5 năm); website hiện không xử lý loại dữ liệu này trên máy chủ.
 - **Luật An ninh mạng số 116/2025/QH15** (hiệu lực 01/07/2026) và Nghị định 333/2026/NĐ-CP hướng dẫn luật này. Nghĩa vụ báo cáo sự cố an ninh mạng theo hai văn bản này **chưa được đối chiếu** trong tài liệu này. Nếu bị tấn công nghiêm trọng (chiếm quyền, chèn mã, tấn công làm sập kéo dài), báo thêm Cục A05.
 - Xử phạt vi phạm hành chính về an ninh mạng và bảo vệ dữ liệu cá nhân: Nghị định 330/2026/NĐ-CP.
 
