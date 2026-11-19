@@ -128,8 +128,11 @@ try {
   assert.equal(queued.data.submissions[0].authorContact, pending.authorContact);
   assert.equal(queued.response.headers.get('cache-control'), 'no-store');
   assert.deepEqual((await request(queued.data.submissions[0].imageUrl)).data, frame);
+  const consentedAt = app.db.prepare('SELECT created_at FROM submissions WHERE id=?').get(pendingId).created_at;
   const approved = await request(`/api/admin/submissions/${pendingId}/approve`, { method: 'POST', body: {} });
   assert.equal(approved.response.status, 200);
+  assert.equal(app.db.prepare('SELECT consented_at FROM frames WHERE id=?').get(pendingId).consented_at, consentedAt, 'Khung đã duyệt giữ thời điểm đồng ý');
+  assert.equal('consentedAt' in approved.data.frame, false);
   assert.equal(approved.data.frame.authorName, pending.authorName);
   assert.equal('authorContact' in approved.data.frame, false);
   assert.equal((await request('/api/admin/submissions')).data.submissions.length, 0);
@@ -145,7 +148,7 @@ try {
   console.log('PASS: pending posters are private; approval retains only public credit and clears private contact.');
   for(const format of ['png','jpeg']) {
     const raw=Buffer.from(fs.readFileSync(path.join(folder,`fixtures/frame-${format}.base64`),'utf8'),'base64');
-    app.db.prepare('INSERT INTO frames VALUES(?,?,?,?,?,?,?)').run(`format-${format}`,'Khung thử','QA','',JSON.stringify(design),raw,clock);
+    app.db.prepare('INSERT INTO frames(id,name,author_name,author_link,design,image,created_at) VALUES(?,?,?,?,?,?,?)').run(`format-${format}`,'Khung thử','QA','',JSON.stringify(design),raw,clock);
     const result=await request(`/api/frames/format-${format}/image`,{anonymous:true});
     assert.equal(result.response.headers.get('content-type'),`image/${format}`);
     assert.deepEqual(result.data,raw);

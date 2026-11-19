@@ -14,6 +14,7 @@ const FRAME_SELECT = 'id,name,author_name,author_link,design,created_at';
 const SUBMISSION_SELECT = 'id,name,author_name,author_contact,author_link,design,created_at,expires_at';
 
 const HSTS = 'max-age=31536000';
+const DEV_ONLY = /(?:^|\/)README\.md$|\.test\.mjs$/i;
 const VERSIONED_CACHE = 'public, max-age=31536000, immutable';
 const FONT_CACHE = 'public, max-age=2592000';
 const IMAGE_CACHE = 'public, max-age=86400';
@@ -430,6 +431,8 @@ async function handle(request, env, ctx) {
     if(redirect)return Response.redirect(redirect.href,308);
     const route = new URL(request.url).pathname;
     if (route === '/favicon.ico') return Response.redirect(new URL('/assets/star.svg', request.url).href, 301);
+    // Tài liệu và test dành cho lập trình viên nằm trong dist nhưng không phục vụ công khai.
+    if (DEV_ONLY.test(route)) return (await notFoundPage(request, env)) || new Response(null, { status: 404 });
     try {
       if (route.startsWith('/api/')) {
         const response = route.startsWith('/api/admin/') ? await adminApi(request, env, route) : await publicApi(request, env, route, ctx);

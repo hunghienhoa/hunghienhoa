@@ -39,3 +39,4 @@
 #ve-goc-nho p,.article-body,.policy-page p,.policy-page li,.camera-help,.session-note,.editor-note{font-weight:500}
 .concept-disclaimer,.camera-help,.session-note,.editor-note,.caption-label>span,.social-note,.draft-label{opacity:1!important}
 .steps li:not(.current){opacity:.85!important}
+.slot-button>span{opacity:.8!important}
