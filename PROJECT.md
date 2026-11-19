@@ -60,3 +60,30 @@ Sáu dự án đều là concept minh họa; không phải khách hàng, kinh ng
 Phần liên hệ dùng email và số điện thoại do người dùng cung cấp: nút gửi email mở ứng dụng thư, số điện thoại mở trình gọi và Zalo dùng liên kết theo số điện thoại. Facebook, Instagram, Threads, TikTok và YouTube trỏ tới URL người dùng cung cấp; kênh YouTube là `https://www.youtube.com/@hunghienhoa98886`. WeChat sao chép ID `bqhtit` khi bấm nút; thông báo thành công tự ẩn sau 3 giây. Hướng dẫn sao chép thủ công vẫn hiển thị nếu trình duyệt từ chối clipboard. Không gửi tin nhắn tự động. Giao diện liên hệ nằm trong `dist/contact.css`, xử lý WeChat trong `dist/contact.js`.
 
 Hiệu ứng: hộp mở bằng thao tác chạm, sticker lắc/nảy, dải chữ chạy, cassette quay, CD xoay, ánh nilon khi hover, nội dung xuất hiện khi cuộn. Hiệu ứng tự chạy, đã bỏ nút tạm dừng theo yêu cầu; vẫn hỗ trợ prefers-reduced-motion. Dialog dùng phần tử HTML gốc hỗ trợ Escape và giữ focus.
+
+## Kiểm tra giao diện và luồng bằng trình duyệt
+
+Khi máy đã có Playwright hoặc `@playwright/cli` và Chrome, chạy `node tools/browser-audit.mjs`. Bộ kiểm tra tự tạo máy chủ loopback ở cổng ngẫu nhiên và dữ liệu giả trong thư mục cục bộ riêng; không dùng tài khoản hoặc dữ liệu trên website thật. Nó kiểm tra 9 trang ở 7 kích thước (320–1920 px), các bảng Admin sau đăng nhập, đọc/sao chép bài viết, gửi–duyệt khung và chụp bằng luồng video giả lập. Báo cáo JSON và ảnh kiểm tra nằm trong `tmp/`. Đây là kiểm tra Chrome với viewport mobile, không thay thế thử camera/quyền tải file trên iPhone hoặc Android thật. Bộ này tùy chọn, không nằm trong `npm run check` vì cần trình duyệt được cài trên máy.
+
+## Snap của Hùng
+
+Trang `https://snap.hunghienhoa.com/` (cục bộ: `/snaptik/`) tự nhận diện link TikTok, Instagram và Facebook. TikTok dùng TikWM; Instagram/Facebook đọc dữ liệu nhúng công khai trực tiếp từ nền tảng, không dùng tài khoản hoặc cookie. API Node và Worker dùng chung `server/snaptik.mjs`; chỉ truyền file từ các miền nguồn được cho phép, kiểm tra chữ ký định dạng và giới hạn mỗi file 200 MB. Không tạo kho video; ảnh tải qua giao diện chuyển thành JPEG trong bộ nhớ trình duyệt. Chỉ tải và sử dụng nội dung khi có quyền.
+
+Không cần khóa API riêng. Nguồn TikWM có thể thay đổi, gián đoạn hoặc giới hạn truy cập; không cam kết mọi bài đều tải được. Worker giới hạn tần suất bằng binding `SNAPTIK_LIMIT`, máy chủ cục bộ dùng bộ giới hạn hiện có.
+
+Chạy `node --test tools/snaptik.test.mjs` để kiểm tra luồng và đầu vào; `node tools/browser-snaptik.mjs` kiểm tra Chrome ở 320/390/768/1440 px bằng nguồn giả lập. Đặt `SITE_URL=https://snap.hunghienhoa.com` để kiểm tra trang thật bằng liên kết mẫu. Bộ trình duyệt không tải toàn bộ video lớn; thử việc lưu file trên thiết bị thật riêng.
+
+## Tên website và liên kết trên Google
+
+HTML trả từ máy chủ có `WebSite` với tên và URL chuẩn của từng tên miền công khai, `og:site_name`, một canonical và quan hệ giữa portfolio với ba dự án. Trang chính dùng các liên kết HTML trực tiếp tới Hộp Ảnh, Góc tò mò và Snap; sitemap riêng được công bố trong robots.txt của từng miền.
+
+Google tự quyết định sitelinks và cách nhóm tên miền phụ; mã đánh dấu không bảo đảm bố cục như ảnh mẫu hoặc thời gian xuất hiện. Quản trị viên có thể gửi sitemap và yêu cầu thu thập lại URL trong Search Console đã xác minh. Xem [sitelinks](https://developers.google.com/search/docs/appearance/sitelinks) và [tên website](https://developers.google.com/search/docs/appearance/site-names).
+
+## Skill và plugin cho Claude Code
+
+Khai báo ở phạm vi dự án, áp dụng cho mọi phiên mở repo này (cloud và máy cục bộ):
+
+- `.claude/settings.json` bật 7 plugin từ marketplace GitHub: `mattpocock-skills` (mattpocock/skills), `ponytail` (DietrichGebert/ponytail), `impeccable` (pbakaus/impeccable), `diagram-design` (cathrynlavery/diagram-design), `superpowers` (obra/superpowers), `taste-skill` (Leonxlnx/taste-skill), `hallmark` (Nutlope/hallmark). Lần đầu mở dự án, Claude Code có thể hỏi tin cậy và cài các plugin này. Ponytail có tùy chọn webhook, mặc định để trống nên không gửi dữ liệu ra ngoài; bảng thống kê chỉ ghi vào `~/.config/ponytail/` trên máy.
+- `.claude/skills/security-audit`: chép từ cloudflare/security-audit-skill (MIT, xem `SOURCE.txt`).
+- `.claude/skills/graphify`: tạo bằng `graphify install --project` (graphifyy 0.9.112). Lệnh `graphify` cần cài trên từng máy: `uv tool install graphifyy==0.9.112` (hoặc `pipx install graphifyy==0.9.112`). Hook trong `.claude/settings.json` tự bỏ qua khi máy chưa có `graphify`. Chạy `/graphify .` để dựng đồ thị lần đầu.
+- Anatomy (wheresryan22/anatomy) nặng ~27 MB nên không đưa vào repo; môi trường cloud `hunghienhoa` cài nó cùng humanizer, visual-explainer, last30days, yt-dlp và Graphify qua setup script. Máy cục bộ: `git clone https://github.com/wheresryan22/anatomy ~/.claude/skills/anatomy`.

@@ -1,17 +1,17 @@
 # Graph Report - hunghienhoa  (2026-11-19)
 
 ## Corpus Check
-- 121 files · ~88,195 words
+- 121 files · ~88,134 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 18 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
 ## Summary
-- 1039 nodes · 1755 edges · 80 communities (66 shown, 14 thin omitted)
+- 1038 nodes · 1754 edges · 74 communities (61 shown, 13 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 27 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `32a69e05`
+- Built from commit: `4633c723`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,7 +19,7 @@
 - index.mjs
 - validate-findings.cjs
 - validate-coverage-ledger.cjs
-- usage.mjs
+- browser-adsense-readiness.mjs
 - agent-content.mjs
 - build-ui-symbols.py
 - Triển khai `hunghienhoa`
@@ -34,7 +34,7 @@
 - ref_node_assert
 - Cloud and Deployment Hunting
 - steps
-- ref_node_os
+- browser-usage-audit.mjs
 - Sticker từ 17 ảnh tham chiếu
 - AI, LLM, and Agent Hunting
 - ATTACK-CLASSES.md
@@ -49,7 +49,7 @@
 - HTTP-Protocol and Authentication Hunting
 - Supply Chain and Release Hunting
 - asset-versions.mjs
-- server.test.mjs
+- browser-stickers-audit.mjs
 - check.cjs
 - ref_node_fs
 - browser-audit.mjs
@@ -82,16 +82,10 @@
 - SOCIAL-LOGO-SOURCES.md
 - adsense.test.mjs
 - Nội dung dùng chung — hợp đồng giao tiếp
-- sticker-assets.test.mjs
 - Kiểm tra triển khai hunghienhoa — 09/11/2026
 - Hướng dẫn mã nguồn — Hùng Hiền Hòa
-- Bắt đầu bằng một lời chào
-- server.mjs
-- createApp
 - steps
-- browser-material-cards.mjs
 - viewport.test.mjs
-- agent-smoke.mjs
 
 ## God Nodes (most connected - your core abstractions)
 1. `createApp()` - 52 edges
@@ -108,39 +102,39 @@
 ## Surprising Connections (you probably didn't know these)
 - `Dữ liệu cá nhân website đang giữ` --references--> `VisitCounter`  [INFERRED]
   INCIDENT-RESPONSE.md → worker/visits.mjs
-- `withSecurity()` --calls--> `adsenseHtml()`  [EXTRACTED]
-  worker/index.mjs → server/adsense.mjs
+- `publicApi()` --calls--> `snaptikRoute()`  [EXTRACTED]
+  worker/index.mjs → server/snaptik.mjs
 - `withSecurity()` --calls--> `publicHtml()`  [EXTRACTED]
   worker/index.mjs → server/agent-content.mjs
-- `readJson()` --calls--> `fail()`  [EXTRACTED]
-  worker/index.mjs → server/validation.mjs
-- `rest()` --calls--> `fail()`  [EXTRACTED]
-  worker/index.mjs → server/validation.mjs
+- `provider()` --calls--> `mediaURL()`  [EXTRACTED]
+  tools/snaptik.test.mjs → server/snaptik.mjs
+- `assetRequest()` --calls--> `publicRedirect()`  [EXTRACTED]
+  worker/index.mjs → server/agent-content.mjs
 
 ## Import Cycles
 - None detected.
 
-## Communities (80 total, 14 thin omitted)
+## Communities (74 total, 13 thin omitted)
 
 ### Community 0 - "index.mjs"
-Cohesion: 0.17
-Nodes (32): publicRedirect(), adminApi(), assetRequest(), bearer(), cachedImage(), cachedJson(), cacheKey(), dbPost() (+24 more)
+Cohesion: 0.05
+Nodes (104): adsenseHtml(), agentRoute(), markdown404(), pageContext(), publicRedirect(), representation(), textResponse(), claimContribution() (+96 more)
 
 ### Community 1 - "validate-findings.cjs"
 Cohesion: 0.06
-Nodes (54): canonicalKey(), append(), encode(), codePointLength(), collect(), collectDataLimitErrors(), collectFindingSemanticErrors(), collectSchemaErrors() (+46 more)
+Nodes (56): canonicalKey(), append(), encode(), codePointLength(), collect(), collectDataLimitErrors(), collectFindingSemanticErrors(), collectSchemaErrors() (+48 more)
 
 ### Community 2 - "validate-coverage-ledger.cjs"
 Cohesion: 0.07
 Nodes (65): ATTEMPT_FIELDS, ATTEMPT_STATUSES, canonicalCoverageId(), collectUnitErrors(), createErrorList(), encodeCanonicalRef(), escapeUnsafeDiagnosticCharacters(), fs (+57 more)
 
-### Community 3 - "usage.mjs"
-Cohesion: 0.20
-Nodes (14): usageEntry(), usageMetrics, usageProviders, usageReport(), utcDay(), app, {chromium}, cli (+6 more)
+### Community 3 - "browser-adsense-readiness.mjs"
+Cohesion: 0.33
+Nodes (5): ads, base, {chromium}, errors, local
 
 ### Community 4 - "agent-content.mjs"
 Cohesion: 0.06
-Nodes (49): agentRoute(), articleHtml(), canonical(), decorateHtml(), escapeHtml(), html404(), inlineHtml(), instructions() (+41 more)
+Nodes (44): articleHtml(), canonical(), decorateHtml(), escapeHtml(), html404(), inlineHtml(), instructions(), llms() (+36 more)
 
 ### Community 5 - "build-ui-symbols.py"
 Cohesion: 0.06
@@ -151,8 +145,8 @@ Cohesion: 0.18
 Nodes (11): Cập nhật hằng ngày, GitHub → Cloudflare tự triển khai, Giám sát, Giới hạn đã ghi nhận, Kiến trúc đang dùng, Lệnh kiểm tra và triển khai thủ công, Sao lưu database, Triển khai `hunghienhoa` (+3 more)
 
 ### Community 7 - "snaptik.test.mjs"
-Cohesion: 0.12
-Nodes (24): embeddedData(), walk(), entities(), error(), facebookId(), limitedJSON(), limitedText(), mediaURL() (+16 more)
+Cohesion: 0.09
+Nodes (32): embeddedData(), walk(), entities(), error(), facebookId(), limitedJSON(), limitedText(), mediaURL() (+24 more)
 
 ### Community 8 - "steps"
 Cohesion: 0.06
@@ -179,8 +173,8 @@ Cohesion: 0.11
 Nodes (18): Anti-patterns, Core principles, Cost budget, Coverage and prior runs, Full audit planning, Full audit setup, Full audit workflow, Operating modes (+10 more)
 
 ### Community 14 - "ref_node_path"
-Cohesion: 0.15
-Nodes (9): {chromium}, errors, {chromium}, errors, app, errors, failures, report (+1 more)
+Cohesion: 0.14
+Nodes (9): {chromium}, errors, {chromium}, errors, scopes, sources, titles, {chromium} (+1 more)
 
 ### Community 15 - "ref_node_assert"
 Cohesion: 0.17
@@ -194,9 +188,9 @@ Nodes (10): Cloud and Deployment Hunting, Configuration and secret lifecycle att
 Cohesion: 0.07
 Nodes (28): env, runs-on, steps, timeout-minutes, concurrency, cancel-in-progress, group, BACKUP_PASSPHRASE (+20 more)
 
-### Community 18 - "ref_node_os"
-Cohesion: 0.17
-Nodes (9): ads, base, {chromium}, errors, local, {chromium}, errors, mock (+1 more)
+### Community 18 - "browser-usage-audit.mjs"
+Cohesion: 0.18
+Nodes (8): {chromium}, errors, mock, mp4, app, {chromium}, cli, dataDir
 
 ### Community 19 - "Sticker từ 17 ảnh tham chiếu"
 Cohesion: 0.18
@@ -250,9 +244,9 @@ Nodes (8): CI and automation attack classes (subagent_type: `general`), Core dis
 Cohesion: 0.22
 Nodes (5): current, dist, manifestPath, html, manifest
 
-### Community 33 - "server.test.mjs"
-Cohesion: 0.14
-Nodes (12): app, clock, dataDir, design, folder, frame, login(), pending (+4 more)
+### Community 33 - "browser-stickers-audit.mjs"
+Cohesion: 0.33
+Nodes (5): app, errors, failures, report, require
 
 ### Community 34 - "check.cjs"
 Cohesion: 0.25
@@ -279,8 +273,8 @@ Cohesion: 0.29
 Nodes (6): Gửi sitemap, Kiểm tra URL và yêu cầu lập chỉ mục, Những phần đã có trên website, Search Console cho website của Hùng, Trạng thái đã kiểm tra ngày 14/11/2026, Xác minh quyền sở hữu
 
 ### Community 41 - "dashboard.test.mjs"
-Cohesion: 0.09
-Nodes (24): claimContribution(), contributionDay(), initContributionLimit(), derive, loopback(), root, seedPosts, initVisits() (+16 more)
+Cohesion: 0.11
+Nodes (17): initVisits(), recordVisit(), VISIT_PAGES, visitDay(), visitSummary(), colors, counter, db (+9 more)
 
 ### Community 42 - "Nguồn tham khảo khung Hộp Ảnh"
 Cohesion: 0.33
@@ -336,7 +330,7 @@ Nodes (3): Approved material reconstruction — 2026-11-11, Artwork balance, Six
 
 ### Community 55 - "README.md"
 Cohesion: 0.38
-Nodes (3): Bên trong xưởng nhỏ, Có gì trong chiếc hộp?, Một chút về mình
+Nodes (3): Bên trong xưởng nhỏ, Bắt đầu bằng một lời chào, Có gì trong chiếc hộp?
 
 ### Community 57 - "3. Sáu bước"
 Cohesion: 0.29
@@ -350,59 +344,39 @@ Nodes (5): ADSENSE_CLIENT, admin, booth, main, policies
 Cohesion: 0.33
 Nodes (5): API admin, API public, Bảo mật và vòng đời, Nội dung dùng chung — hợp đồng giao tiếp, Snap (công khai, không cần tài khoản)
 
-### Community 70 - "sticker-assets.test.mjs"
-Cohesion: 0.22
-Nodes (8): file(), css, folders, main, originalWork, owners, pages, used
-
 ### Community 71 - "Kiểm tra triển khai hunghienhoa — 09/11/2026"
 Cohesion: 0.40
 Nodes (4): Chưa hoàn tất và giới hạn kiểm tra, Kiểm tra triển khai hunghienhoa — 09/11/2026, Kết quả đã kiểm chứng, Sửa biểu mẫu đăng nhập — 10/11/2026
 
 ### Community 72 - "Hướng dẫn mã nguồn — Hùng Hiền Hòa"
-Cohesion: 0.40
-Nodes (5): Chạy tại máy, Chỉnh nội dung, Dự án đã làm và Hộp Ảnh, Hướng dẫn mã nguồn — Hùng Hiền Hòa, Xưởng khung, dữ liệu và WebP
-
-### Community 73 - "Bắt đầu bằng một lời chào"
-Cohesion: 0.40
-Nodes (5): Bắt đầu bằng một lời chào, Kiểm tra giao diện và luồng bằng trình duyệt, Skill và plugin cho Claude Code, Snap của Hùng, Tên website và liên kết trên Google
-
-### Community 74 - "server.mjs"
-Cohesion: 0.27
-Nodes (17): decodeFrameImage(), decodeWebP(), defaultSite, design(), fail(), imageMime(), keys(), MAX_IMAGE_BYTES (+9 more)
-
-### Community 75 - "createApp"
-Cohesion: 0.20
-Nodes (21): adsenseHtml(), createApp(), activeSession(), auth(), body(), cleanup(), frameData(), getSetting() (+13 more)
+Cohesion: 0.22
+Nodes (9): Chạy tại máy, Chỉnh nội dung, Dự án đã làm và Hộp Ảnh, Hướng dẫn mã nguồn — Hùng Hiền Hòa, Kiểm tra giao diện và luồng bằng trình duyệt, Skill và plugin cho Claude Code, Snap của Hùng, Tên website và liên kết trên Google (+1 more)
 
 ### Community 76 - "steps"
 Cohesion: 0.09
 Nodes (22): runs-on, steps, timeout-minutes, concurrency, cancel-in-progress, group, jobs, check (+14 more)
-
-### Community 77 - "browser-material-cards.mjs"
-Cohesion: 0.29
-Nodes (5): {chromium}, errors, scopes, sources, titles
 
 ### Community 78 - "viewport.test.mjs"
 Cohesion: 0.50
 Nodes (3): compact, pages, readability
 
 ## Knowledge Gaps
-- **14 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `VisitCounter` connect `dashboard.test.mjs` to `index.mjs`, `Quy trình ứng phó sự cố`?**
-  _High betweenness centrality (0.076) - this node is a cross-community bridge._
+  _High betweenness centrality (0.067) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `handle()` (e.g. with `frameData()` and `pendingData()`) actually correct?**
   _`handle()` has 2 INFERRED edges - model-reasoned connections that need verification._
+- **Should `index.mjs` be split into smaller, more focused modules?**
+  _Cohesion score 0.0518444666001994 - nodes in this community are weakly interconnected._
+- **Why does `Quy trình ứng phó sự cố` connect `Quy trình ứng phó sự cố` to `3. Sáu bước`, `README.md`?**
+  _High betweenness centrality (0.067) - this node is a cross-community bridge._
 - **Should `validate-findings.cjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05750658472344162 - nodes in this community are weakly interconnected._
 - **Why does `Dữ liệu cá nhân website đang giữ` connect `Quy trình ứng phó sự cố` to `dashboard.test.mjs`?**
-  _High betweenness centrality (0.074) - this node is a cross-community bridge._
+  _High betweenness centrality (0.066) - this node is a cross-community bridge._
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06559356136820925 - nodes in this community are weakly interconnected._
-- **Why does `Quy trình ứng phó sự cố` connect `Quy trình ứng phó sự cố` to `3. Sáu bước`, `README.md`?**
-  _High betweenness centrality (0.074) - this node is a cross-community bridge._
-- **Should `agent-content.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.061343204653622425 - nodes in this community are weakly interconnected._
