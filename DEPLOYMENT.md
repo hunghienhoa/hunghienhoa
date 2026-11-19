@@ -78,7 +78,7 @@ Mã nguồn không chứa mật khẩu mặc định. Hùng tự tạo tài kho�
 
 Hùng đã xác nhận đăng nhập bằng tài khoản thật thành công sau bản sửa `95c4e6b`. Lần kiểm tra connector gần nhất bị từ chối quyền quản trị Supabase; quyền connector độc lập với đăng nhập admin của website. Không tạo user trực tiếp bằng SQL vào bảng `auth.users`.
 
-Không gửi mật khẩu qua chat và không thêm mật khẩu, access token, database URL hoặc secret key vào mã nguồn GitHub; các giá trị này chỉ nằm trong GitHub Secrets.
+Không gửi mật khẩu qua chat và không thêm mật khẩu, access token, database URL hoặc secret key vào mã nguồn GitHub; các giá trị này chỉ nằm trong GitHub Secrets. Lỡ để lộ một giá trị như vậy thì làm theo tình huống A trong [quy trình ứng phó sự cố](INCIDENT-RESPONSE.md).
 
 ## Lệnh kiểm tra và triển khai thủ công
 

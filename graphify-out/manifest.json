@@ -168,8 +168,8 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795063930.5157483,
-    "seen": 1795063948.6967518,
+    "mtime": 1795065174.4848006,
+    "seen": 1795065421.0741937,
     "ast_hash": "1cfb001afaffb3af18f6820c660c6a81",
     "semantic_hash": ""
   },
@@ -552,9 +552,9 @@
     "semantic_hash": ""
   },
   "DEPLOYMENT.md": {
-    "mtime": 1795045969.790218,
-    "seen": 1795063948.696812,
-    "ast_hash": "6230552c1353471099e5990b1eb47445",
+    "mtime": 1795065412.3652241,
+    "seen": 1795065421.0756817,
+    "ast_hash": "2679a97f359f1e57fa081e4b2ecc0c62",
     "semantic_hash": ""
   },
   "FONT-SOURCES.md": {
@@ -594,9 +594,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1795047495.154414,
-    "seen": 1795063948.696818,
-    "ast_hash": "4dbc4efceb5f92858b18c8701a415f04",
+    "mtime": 1795065412.3642197,
+    "seen": 1795065421.0757923,
+    "ast_hash": "68d14f5fa6709b9db4830c446d1a8a34",
     "semantic_hash": ""
   },
   "REFERENCE-ANIMATIONS.md": {
@@ -1761,6 +1761,12 @@
     "mtime": 1795004904.4273255,
     "seen": 1795063948.696981,
     "ast_hash": "fb00561b25d438e73a7fff6245f5108f",
+    "semantic_hash": ""
+  },
+  "INCIDENT-RESPONSE.md": {
+    "mtime": 1795065398.7992737,
+    "seen": 1795065421.0757535,
+    "ast_hash": "7a78c6b8d8ee372539aef1474a9b1f5a",
     "semantic_hash": ""
   },
   "package-lock.json": {
