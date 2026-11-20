@@ -137,7 +137,7 @@ async function enhance(file) {
     before = original; upscaled = sharp; after = shown; original = sharp = undefined;
     await applySharpness();
     if (token !== run) return;
-    showResult(source, fit, engine.provider);
+    showResult(source, fit);
   } catch (error) {
     if (token !== run || error?.message === 'cancelled') return;
     clearImages();
@@ -166,7 +166,7 @@ async function applySharpness() {
   ui.download.disabled = false;
 }
 
-function showResult(source, fit, provider) {
+function showResult(source, fit) {
   for (const [canvas, label] of [[after, 'Ảnh sau khi làm nét'], [before, 'Ảnh gốc']]) {
     canvas.setAttribute('role', 'img');
     canvas.setAttribute('aria-label', label);
@@ -178,7 +178,7 @@ function showResult(source, fit, provider) {
   ui.slider.value = '50';
   ui.compare.style.setProperty('--pos', '50%');
   const resized = fit.scaled ? `Ảnh gốc ${source.width}×${source.height} được thu về ${fit.width}×${fit.height} trước khi làm nét. ` : '';
-  ui.info.textContent = `${resized}Kết quả ${after.width}×${after.height} điểm ảnh${provider === 'webgpu' ? '' : ' (máy chưa hỗ trợ WebGPU nên AI chạy bằng CPU)'}.`;
+  ui.info.textContent = `${resized}Kết quả ${after.width}×${after.height} điểm ảnh.`;
   show('result');
   say('Đã làm nét xong. Kéo thanh giữa ảnh để so sánh, hoặc chọn độ nét khác.');
   ui.download.focus();
