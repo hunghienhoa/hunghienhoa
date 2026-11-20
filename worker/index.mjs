@@ -254,8 +254,8 @@ async function publicApi(request, env, route, ctx) {
   if (route === '/api/lamnet/ai') {
     if (!env.VISITS) fail(503, 'Chưa kiểm tra được lượt dùng AI. Hãy thử lại sau.');
     const key=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contributionDay(Date.now())+':'+(request.headers.get('CF-Connecting-IP')||'unknown')))),byte=>byte.toString(16).padStart(2,'0')).join('');
-    const counter=env.VISITS.get(env.VISITS.idFromName('site')), keys={ gemini: env.GEMINI_API_KEY, openai: env.OPENAI_API_KEY };
-    if (request.method === 'GET') return json({ ...(await (await counter.fetch(`https://counter/ai-status?key=${key}`)).json()), providers: { gemini: !!keys.gemini, openai: !!keys.openai } });
+    const counter=env.VISITS.get(env.VISITS.idFromName('site')), keys={ gemini: env.GEMINI_API_KEY };
+    if (request.method === 'GET') return json({ ...(await (await counter.fetch(`https://counter/ai-status?key=${key}`)).json()), providers: { gemini: !!keys.gemini } });
     if (request.method !== 'POST') fail(405, 'Phương thức chưa được hỗ trợ.');
     const value = parseAiRequest(await readJson(request, AI_BODY_LIMIT));
     const quota=await counter.fetch(`https://counter/ai?key=${key}`,{method:'POST'}), claim=await quota.json().catch(()=>({}));

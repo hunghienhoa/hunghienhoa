@@ -1,5 +1,5 @@
 // Làm Nét: Real-ESRGAN x4 chạy trong trình duyệt bằng ONNX Runtime Web (WebGPU, hoặc WebAssembly trong luồng phụ),
-// hoặc Gemini/ChatGPT qua /api/lamnet/ai khi người dùng chọn và đồng ý gửi ảnh.
+// hoặc Gemini qua /api/lamnet/ai khi người dùng chọn và đồng ý gửi ảnh.
 // Ảnh chỉ nằm trong bộ nhớ trang: không lưu vào trình duyệt; xóa khi rời trang hoặc sau một giờ.
 import { SCALE, LIMITS, MAX_FILE, HALO, fitSize, tiles, toTensor, fromTensor, unsharp, outputName } from './core.mjs?v=2';
 
@@ -10,8 +10,8 @@ const SIZES = { wasm: 21872216, model: 4860375 }; // byte sau giải nén, để
 const HOUR = 3600000;
 const BAND = 256; // số hàng mỗi lượt làm nét thêm, để không phải đọc cả ảnh 4096px vào bộ nhớ một lúc
 const AI_URL = '/api/lamnet/ai';
-const CLOUD = { side: 2048, area: 2048 * 2048 }; // ảnh gửi Gemini/ChatGPT: đủ chi tiết mà dưới 3 MB
-const NAMES = { gemini: 'Gemini', openai: 'ChatGPT' }, ORG = { gemini: 'Google', openai: 'OpenAI' };
+const CLOUD = { side: 2048, area: 2048 * 2048 }; // ảnh gửi Gemini: đủ chi tiết mà dưới 3 MB
+const NAMES = { gemini: 'Gemini' }, ORG = { gemini: 'Google' };
 const ui = {
   picker: $('#picker'), input: $('#file'), drop: $('#dropzone'), working: $('#working'), result: $('#result'),
   bar: $('#progress-bar'), progress: $('#progress'), step: $('#step'), status: $('#status'), cancel: $('#cancel'),
@@ -33,7 +33,7 @@ function setProgress(fraction, text) {
   ui.progress.setAttribute('aria-valuenow', String(percent));
   if (text) ui.step.textContent = text;
 }
-// Gemini/ChatGPT không báo tiến độ: thanh chạy chậm dần tới 92% trong lúc chờ.
+// Gemini không báo tiến độ: thanh chạy chậm dần tới 92% trong lúc chờ.
 function crawl(token, text) {
   let fraction = 0.12;
   setProgress(fraction, text);
@@ -103,14 +103,14 @@ async function decode(file) {
   }
 }
 
-// Số lượt Gemini/ChatGPT còn lại hôm nay và model nào đã bật; chỉ hỏi khi người dùng chọn AI đám mây.
+// Số lượt Gemini còn lại hôm nay và Gemini đã bật chưa; chỉ hỏi khi người dùng chọn AI đám mây.
 async function refreshQuota(force = false) {
   try {
     if (force || !cloud) cloud = await (await fetch(AI_URL)).json();
     for (const name of Object.keys(NAMES)) ui.engines.querySelector(`input[value=${name}]`).disabled = !cloud.providers?.[name];
     const name = checked(ui.engines);
     ui.quota.textContent = !cloud.providers?.[name] ? `${NAMES[name]} chưa được bật trên website này.`
-      : cloud.remaining > 0 ? `Còn ${cloud.remaining} lượt Gemini/ChatGPT hôm nay.` : 'Hôm nay bạn đã dùng hết lượt Gemini/ChatGPT. Làm nét trên máy vẫn dùng được.';
+      : cloud.remaining > 0 ? `Còn ${cloud.remaining} lượt Gemini hôm nay.` : 'Hôm nay bạn đã dùng hết lượt Gemini. Làm nét trên máy vẫn dùng được.';
   } catch { ui.quota.textContent = 'Chưa kiểm tra được số lượt còn lại.'; }
 }
 
@@ -216,7 +216,7 @@ async function enhance(file) {
       const blob = await askCloud({ provider, mode: 'enhance', consent: true, image: data });
       if (token !== run) return;
       sharp = await canvasFrom(blob);
-      ui.sharpness.querySelector('input[value="0"]').checked = true; // ảnh của Gemini/ChatGPT đã nét, không làm nét thêm mặc định
+      ui.sharpness.querySelector('input[value="0"]').checked = true; // ảnh của Gemini đã nét, không làm nét thêm mặc định
     }
     setProgress(1, 'Đang làm rõ chi tiết…');
     const shown = document.createElement('canvas');
@@ -241,7 +241,7 @@ async function generate() {
   if (!prompt) { ui.prompt.focus(); return say('Hãy mô tả ảnh muốn tạo.', true); }
   clearImages();
   const token = run;
-  downloadName = `anh-ai-${provider === 'gemini' ? 'gemini' : 'chatgpt'}.jpg`;
+  downloadName = 'anh-ai-gemini.jpg';
   show('working');
   say('');
   let sharp, stop;
