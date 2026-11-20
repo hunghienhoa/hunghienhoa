@@ -1,21 +1,43 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
-import { SCALE, LIMITS, MAX_FILE, fitSize, tiles, toTensor, fromTensor, outputName } from '../dist/lamnet/core.mjs';
+import { SCALE, LIMITS, MAX_FILE, HALO, fitSize, tiles, toTensor, fromTensor, unsharp, outputName } from '../dist/lamnet/core.mjs';
 
 test('thu nhỏ ảnh lớn về giới hạn, không phóng to ảnh nhỏ', () => {
   assert.deepEqual(fitSize(4000, 3000, LIMITS.gpu), { width: 1024, height: 768, scaled: true });
+  assert.deepEqual(fitSize(4000, 3000, LIMITS.cpu), { width: 1024, height: 768, scaled: true });
   assert.deepEqual(fitSize(300, 200, LIMITS.gpu), { width: 300, height: 200, scaled: false });
   const square = fitSize(2000, 2000, LIMITS.cpu);
-  assert.ok(square.width <= 512 && square.width * square.height <= LIMITS.cpu.area && square.scaled);
-  const tall = fitSize(1000, 10, LIMITS.cpu);
-  assert.equal(tall.width, 512);
+  assert.ok(square.width <= 1024 && square.width * square.height <= LIMITS.cpu.area && square.scaled);
+  const tall = fitSize(4000, 10, LIMITS.cpu);
+  assert.equal(tall.width, 1024);
   assert.ok(tall.height >= 1);
   // Kết quả x4 luôn nằm trong giới hạn canvas 4096px / 16,7 triệu điểm ảnh.
-  for (const [w, h] of [[5000, 5000], [8000, 1200], [999, 1001]]) {
-    const fit = fitSize(w, h, LIMITS.gpu);
+  for (const limit of [LIMITS.gpu, LIMITS.cpu]) for (const [w, h] of [[5000, 5000], [8000, 1200], [999, 1001]]) {
+    const fit = fitSize(w, h, limit);
     assert.ok(Math.max(fit.width, fit.height) * SCALE <= 4096 && fit.width * fit.height * SCALE * SCALE <= 16777216);
   }
+});
+
+test('làm nét thêm: giữ vùng phẳng, tăng tương phản mép, xử lý theo dải cho kết quả như cả ảnh', () => {
+  const width = 23, height = 37, rgba = new Uint8ClampedArray(width * height * 4);
+  for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) rgba.set([x < 11 ? 60 : 190, (x * 13 + y * 7) % 256, y < 18 ? 30 : 220, 200], (y * width + x) * 4);
+  assert.deepEqual(unsharp(rgba, width, height, 0), rgba);
+  const flat = new Uint8ClampedArray(9 * 9 * 4).fill(128);
+  assert.deepEqual(unsharp(flat, 9, 9, 1.2), flat);
+  const out = unsharp(rgba, width, height, 0.6);
+  const at = (x, y, c) => out[(y * width + x) * 4 + c];
+  assert.ok(at(10, 5, 0) < 60 && at(11, 5, 0) > 190, 'hai bên mép tối hơn/sáng hơn ảnh gốc');
+  assert.equal(at(2, 5, 0), 60, 'xa mép thì giữ nguyên');
+  assert.equal(at(4, 4, 3), 200, 'giữ kênh alpha');
+  // Ghép các dải 8 hàng (kèm HALO hàng đệm) như app.js phải ra đúng kết quả xử lý cả ảnh một lần.
+  const banded = new Uint8ClampedArray(out.length), band = 8;
+  for (let y = 0; y < height; y += band) {
+    const top = Math.max(0, y - HALO), rows = Math.min(height, y + band + HALO) - top;
+    const part = unsharp(rgba.subarray(top * width * 4, (top + rows) * width * 4), width, rows, 0.6);
+    banded.set(part.subarray((y - top) * width * 4, (y - top + Math.min(band, height - y)) * width * 4), y * width * 4);
+  }
+  assert.deepEqual(banded, out);
 });
 
 test('các ô phủ kín ảnh đúng một lần, viền nằm trong ảnh', () => {
