@@ -110,6 +110,7 @@ async function enhance(file) {
     bctx.fillRect(0, 0, fit.width, fit.height);
     bctx.imageSmoothingQuality = 'high';
     bctx.drawImage(image, 0, 0, fit.width, fit.height);
+    image.close?.(); image = undefined; // ảnh giải mã đủ độ phân giải có thể hàng trăm MB: nhả ngay, không giữ suốt lúc AI chạy
     const rgba = bctx.getImageData(0, 0, fit.width, fit.height).data;
     sharp = document.createElement('canvas');
     sharp.width = fit.width * SCALE; sharp.height = fit.height * SCALE;
