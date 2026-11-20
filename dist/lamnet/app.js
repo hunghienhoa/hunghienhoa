@@ -1,18 +1,21 @@
 // Làm Nét: Real-ESRGAN x4 chạy trong trình duyệt bằng ONNX Runtime Web (WebGPU, hoặc WebAssembly trong luồng phụ).
 // Ảnh chỉ nằm trong bộ nhớ trang: không gửi đi, không lưu vào trình duyệt; xóa khi rời trang hoặc sau một giờ.
-import { SCALE, LIMITS, MAX_FILE, fitSize, tiles, toTensor, fromTensor, outputName } from './core.mjs?v=1';
+import { SCALE, LIMITS, MAX_FILE, HALO, fitSize, tiles, toTensor, fromTensor, unsharp, outputName } from './core.mjs?v=2';
 
 const $ = selector => document.querySelector(selector);
 const ORT_DIR = new URL('vendor/ort-1.22.0/', import.meta.url);
 const MODEL_URL = new URL('models/realesr-general-x4v3.onnx?v=2', import.meta.url); // tệp cache vĩnh viễn: đổi mô hình thì tăng v
 const SIZES = { wasm: 21872216, model: 4860375 }; // byte sau giải nén, để tính tiến độ khi máy chủ không gửi Content-Length
 const HOUR = 3600000;
+const BAND = 256; // số hàng mỗi lượt làm nét thêm, để không phải đọc cả ảnh 4096px vào bộ nhớ một lúc
 const ui = {
   picker: $('#picker'), input: $('#file'), drop: $('#dropzone'), working: $('#working'), result: $('#result'),
   bar: $('#progress-bar'), progress: $('#progress'), step: $('#step'), status: $('#status'), cancel: $('#cancel'),
-  compare: $('#compare'), slider: $('#slider'), info: $('#result-info'), download: $('#download'), again: $('#again')
+  compare: $('#compare'), slider: $('#slider'), info: $('#result-info'), download: $('#download'), again: $('#again'),
+  sharpness: $('#sharpness')
 };
-let ai, run = 0, before, after, fileName = '', expireTimer;
+// before: ảnh gốc đã thu; upscaled: kết quả AI chưa làm nét thêm (không gắn vào trang); after: ảnh hiển thị và tải về.
+let ai, run = 0, pass = 0, before, upscaled, after, fileName = '', expireTimer;
 
 function say(message, error = false) { ui.status.textContent = message; ui.status.dataset.error = String(error); }
 function show(state) { for (const name of ['picker', 'working', 'result']) ui[name].hidden = name !== state; }
@@ -26,8 +29,8 @@ function setProgress(fraction, text) {
 // Xóa mọi ảnh khỏi bộ nhớ: canvas về 0x0, bỏ tham chiếu, hủy hẹn giờ.
 function clearImages() {
   run++;
-  for (const canvas of [before, after]) if (canvas) { canvas.width = 0; canvas.height = 0; canvas.remove(); }
-  before = after = undefined;
+  for (const canvas of [before, upscaled, after]) if (canvas) { canvas.width = 0; canvas.height = 0; canvas.remove(); }
+  before = upscaled = after = undefined;
   fileName = '';
   ui.input.value = '';
   clearTimeout(expireTimer);
@@ -114,7 +117,7 @@ async function enhance(file) {
     const rgba = bctx.getImageData(0, 0, fit.width, fit.height).data;
     sharp = document.createElement('canvas');
     sharp.width = fit.width * SCALE; sharp.height = fit.height * SCALE;
-    const actx = sharp.getContext('2d');
+    const actx = sharp.getContext('2d', { willReadFrequently: true });
     const list = tiles(fit.width, fit.height, engine.limit.tile);
     for (let i = 0; i < list.length; i++) {
       if (token !== run) return;
@@ -128,8 +131,12 @@ async function enhance(file) {
       actx.putImageData(new ImageData(pixels, tile.w * SCALE, tile.h * SCALE), tile.x * SCALE, tile.y * SCALE);
       output.dispose?.();
     }
-    setProgress(1, 'Xong!');
-    before = original; after = sharp; original = sharp = undefined;
+    setProgress(1, 'Đang làm rõ chi tiết…');
+    const shown = document.createElement('canvas');
+    shown.width = sharp.width; shown.height = sharp.height;
+    before = original; upscaled = sharp; after = shown; original = sharp = undefined;
+    await applySharpness();
+    if (token !== run) return;
     showResult(source, fit, engine.provider);
   } catch (error) {
     if (token !== run || error?.message === 'cancelled') return;
@@ -141,6 +148,22 @@ async function enhance(file) {
     image?.close?.();
     for (const canvas of [original, sharp]) if (canvas) { canvas.width = 0; canvas.height = 0; }
   }
+}
+
+// Chép kết quả AI sang ảnh hiển thị với độ nét đang chọn, từng dải BAND hàng (kèm HALO hàng đệm để mép dải không lộ).
+// Đổi độ nét giữa chừng thì lượt cũ dừng; nút tải về khóa tới khi xong để không tải ảnh dở.
+async function applySharpness() {
+  const token = run, mine = ++pass, amount = Number(ui.sharpness.querySelector('input:checked')?.value) || 0;
+  const { width, height } = upscaled, source = upscaled.getContext('2d', { willReadFrequently: true }), target = after.getContext('2d');
+  ui.download.disabled = true;
+  for (let y = 0; y < height; y += BAND) {
+    const top = Math.max(0, y - HALO), rows = Math.min(height, y + BAND + HALO) - top;
+    const pixels = unsharp(source.getImageData(0, top, width, rows).data, width, rows, amount);
+    target.putImageData(new ImageData(pixels, width, rows), 0, top, 0, y - top, width, Math.min(BAND, height - y));
+    await new Promise(resolve => setTimeout(resolve));
+    if (token !== run || mine !== pass) return;
+  }
+  ui.download.disabled = false;
 }
 
 function showResult(source, fit, provider) {
@@ -155,9 +178,9 @@ function showResult(source, fit, provider) {
   ui.slider.value = '50';
   ui.compare.style.setProperty('--pos', '50%');
   const resized = fit.scaled ? `Ảnh gốc ${source.width}×${source.height} được thu về ${fit.width}×${fit.height} trước khi làm nét. ` : '';
-  ui.info.textContent = `${resized}Kết quả ${after.width}×${after.height} điểm ảnh${provider === 'webgpu' ? '' : ' (máy chưa hỗ trợ WebGPU nên ảnh được giới hạn 512px)'}.`;
+  ui.info.textContent = `${resized}Kết quả ${after.width}×${after.height} điểm ảnh${provider === 'webgpu' ? '' : ' (máy chưa hỗ trợ WebGPU nên AI chạy bằng CPU)'}.`;
   show('result');
-  say('Đã làm nét xong. Kéo thanh giữa ảnh để so sánh trước và sau.');
+  say('Đã làm nét xong. Kéo thanh giữa ảnh để so sánh, hoặc chọn độ nét khác.');
   ui.download.focus();
   clearTimeout(expireTimer);
   expireTimer = setTimeout(() => { clearImages(); show('picker'); say('Đã quá một giờ nên ảnh được xóa khỏi trang. Bạn có thể chọn lại ảnh.'); }, HOUR);
@@ -170,6 +193,7 @@ ui.drop.addEventListener('drop', event => { event.preventDefault(); enhance(even
 ui.cancel.addEventListener('click', () => { clearImages(); show('picker'); say('Đã dừng. Bạn có thể chọn ảnh khác.'); ui.input.focus(); });
 ui.again.addEventListener('click', () => { clearImages(); show('picker'); say(''); ui.input.focus(); });
 ui.slider.addEventListener('input', () => ui.compare.style.setProperty('--pos', ui.slider.value + '%'));
+ui.sharpness.addEventListener('change', () => { if (upscaled && after) applySharpness(); });
 ui.download.addEventListener('click', () => {
   if (!after) return;
   after.toBlob(blob => {

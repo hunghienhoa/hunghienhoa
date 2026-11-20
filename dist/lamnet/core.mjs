@@ -1,7 +1,8 @@
 // Phần tính toán của Làm Nét (không đụng DOM): giới hạn kích thước, chia ô và đổi ảnh <-> tensor của Real-ESRGAN x4.
 export const SCALE = 4;
-// WebGPU xử lý tới 1024px (kết quả 4096px, vừa giới hạn canvas của iPhone); CPU chậm hơn nhiều nên giữ 512px.
-export const LIMITS = { gpu: { side: 1024, area: 1024 * 1024, tile: 256 }, cpu: { side: 512, area: 512 * 512, tile: 128 } };
+// WebGPU xử lý tới 1024px (kết quả 4096px, vừa giới hạn canvas của iPhone). CPU tới 1024×768 (~30 giây với 3 luồng):
+// 512px làm ảnh điện thoại mất quá nhiều chi tiết. Ô 256px nhanh hơn ô 128px ~15% vì ít phần viền phải tính lại.
+export const LIMITS = { gpu: { side: 1024, area: 1024 * 1024, tile: 256 }, cpu: { side: 1024, area: 1024 * 768, tile: 256 } };
 export const PAD = 12;
 export const MAX_FILE = 25 * 1024 * 1024;
 
@@ -52,6 +53,43 @@ export function fromTensor(data, tile, target = new Uint8ClampedArray(tile.w * S
     }
   }
   return target;
+}
+
+// Làm nét thêm sau AI (unsharp mask): out = ảnh + amount × (ảnh − ảnh_mờ). Ảnh mờ dùng lọc tam giác 9 điểm
+// (= hai lần lọc hộp 5 điểm, độ lệch chuẩn 2px) theo hai chiều, mép ảnh lặp điểm biên. Mỗi điểm chỉ phụ thuộc
+// HALO hàng trên/dưới, nên có thể xử lý từng dải hàng (kèm HALO hàng đệm) để không phải giữ cả ảnh lớn trong bộ nhớ.
+export const HALO = 4;
+const WEIGHTS = [1, 2, 3, 4, 5, 4, 3, 2, 1].map(w => w / 25);
+export function unsharp(rgba, width, height, amount) {
+  const out = new Uint8ClampedArray(rgba.length);
+  if (!amount) { out.set(rgba); return out; }
+  const row = new Float32Array(width * 3 * height);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      let r = 0, g = 0, b = 0;
+      for (let k = -HALO; k <= HALO; k++) {
+        const s = (y * width + Math.min(width - 1, Math.max(0, x + k))) * 4, w = WEIGHTS[k + HALO];
+        r += rgba[s] * w; g += rgba[s + 1] * w; b += rgba[s + 2] * w;
+      }
+      const d = (y * width + x) * 3;
+      row[d] = r; row[d + 1] = g; row[d + 2] = b;
+    }
+  }
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      let r = 0, g = 0, b = 0;
+      for (let k = -HALO; k <= HALO; k++) {
+        const s = (Math.min(height - 1, Math.max(0, y + k)) * width + x) * 3, w = WEIGHTS[k + HALO];
+        r += row[s] * w; g += row[s + 1] * w; b += row[s + 2] * w;
+      }
+      const i = (y * width + x) * 4;
+      out[i] = rgba[i] + amount * (rgba[i] - r);
+      out[i + 1] = rgba[i + 1] + amount * (rgba[i + 1] - g);
+      out[i + 2] = rgba[i + 2] + amount * (rgba[i + 2] - b);
+      out[i + 3] = rgba[i + 3];
+    }
+  }
+  return out;
 }
 
 // Tên file tải về: giữ tên gốc (bỏ dấu và ký tự lạ), đuôi .jpg.
