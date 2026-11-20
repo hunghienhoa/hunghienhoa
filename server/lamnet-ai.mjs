@@ -64,10 +64,11 @@ async function call(url, init, provider, fetchImpl) {
   const data = await response.json().catch(() => null);
   if (response.ok) return data;
   const code = data?.error?.code, status = data?.error?.status;
+  // Thông điệp lỗi của Google chỉ nói về khóa/hạn mức/định dạng, không chứa ảnh hay câu lệnh: ghi lại để chẩn đoán.
+  console.error(JSON.stringify({ message: 'lamnet_ai_failed', provider, status: response.status, code: code || status || null, detail: String(data?.error?.message || '').slice(0, 300) }));
   if (status === 'INVALID_ARGUMENT' && /safety|policy/i.test(data?.error?.message || '')) fail(422, `${NAMES[provider]} từ chối xử lý nội dung này. Hãy thử ảnh hoặc mô tả khác.`);
   if ([401, 403].includes(response.status)) fail(503, `${NAMES[provider]} chưa sẵn sàng (khóa API chưa đúng hoặc chưa bật thanh toán).`);
   if (response.status === 429) fail(503, `${NAMES[provider]} đang bận hoặc hết hạn mức. Hãy thử lại sau.`);
-  console.error(JSON.stringify({ message: 'lamnet_ai_failed', provider, status: response.status, code: code || status || null }));
   fail(502, `${NAMES[provider]} đang gặp lỗi. Hãy thử lại sau.`);
 }
 

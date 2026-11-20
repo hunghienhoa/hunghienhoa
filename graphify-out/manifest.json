@@ -36,9 +36,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
-    "mtime": 1795021682.5193114,
-    "seen": 1795063948.6967306,
-    "ast_hash": "e5d89b16d6b201263dbb1d741506e960",
+    "mtime": 1795160515.9743285,
+    "seen": 1795160831.1408715,
+    "ast_hash": "1b7e9b66c09c7d3379f480eeb964bf4f",
     "semantic_hash": ""
   },
   ".github/workflows/release.yml": {
@@ -552,9 +552,9 @@
     "semantic_hash": ""
   },
   "DEPLOYMENT.md": {
-    "mtime": 1795159351.1964355,
-    "seen": 1795159414.7303512,
-    "ast_hash": "b5f7e2eede462c26e50a566a67795c3e",
+    "mtime": 1795160522.830329,
+    "seen": 1795160831.142783,
+    "ast_hash": "3f950e18df5d43819158597c33070946",
     "semantic_hash": ""
   },
   "FONT-SOURCES.md": {
@@ -1824,9 +1824,9 @@
     "semantic_hash": ""
   },
   "server/lamnet-ai.mjs": {
-    "mtime": 1795159322.5942802,
-    "seen": 1795159414.728465,
-    "ast_hash": "086371f11d20c738e492149da1f85c50",
+    "mtime": 1795160819.1171982,
+    "seen": 1795160831.1410866,
+    "ast_hash": "b9bcd89cbce1f0d0c6d194a114ec5ad3",
     "semantic_hash": ""
   },
   "tools/lamnet-ai.test.mjs": {
