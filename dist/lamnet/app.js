@@ -14,12 +14,13 @@ const ui = {
   picker: $('#picker'), input: $('#file'), drop: $('#dropzone'), working: $('#working'), result: $('#result'),
   bar: $('#progress-bar'), progress: $('#progress'), step: $('#step'), status: $('#status'), cancel: $('#cancel'),
   compare: $('#compare'), slider: $('#slider'), info: $('#result-info'), download: $('#download'), again: $('#again'),
-  sharpness: $('#sharpness'), task: $('#task'), engines: $('#engines'), cloudNote: $('#cloud-note'), consentRow: $('#consent-row'),
+  sharpness: $('#sharpness'), task: $('#task'), engines: $('#engines'), cloudNote: $('#cloud-note'), ready: $('#ready'),
+  readyName: $('#ready-name'), start: $('#start'), repick: $('#repick'), dialog: $('#consent-dialog'), consentOk: $('#consent-ok'),
   consent: $('#consent'), quota: $('#quota'), enhancePanel: $('#enhance-panel'),
   generatePanel: $('#generate-panel'), prompt: $('#prompt'), generate: $('#generate')
 };
 // before: ảnh gốc đã thu; upscaled: kết quả AI chưa làm nét thêm (không gắn vào trang); after: ảnh hiển thị và tải về.
-let ai, cloud, run = 0, pass = 0, before, upscaled, after, downloadName = '', expireTimer;
+let ai, cloud, pendingFile, run = 0, pass = 0, before, upscaled, after, downloadName = '', expireTimer;
 
 const userError = message => Object.assign(new Error(message), { user: true });
 const checked = group => group.querySelector('input:checked')?.value;
@@ -42,11 +43,34 @@ function crawl(token, text) {
 // Xóa mọi ảnh khỏi bộ nhớ: canvas về 0x0, bỏ tham chiếu, hủy hẹn giờ.
 function clearImages() {
   run++;
+  resetReady();
   for (const canvas of [before, upscaled, after]) if (canvas) { canvas.width = 0; canvas.height = 0; canvas.remove(); }
   before = upscaled = after = undefined;
   downloadName = '';
   ui.input.value = '';
   clearTimeout(expireTimer);
+}
+
+// Ảnh đã chọn cho AI đám mây chờ người dùng bấm Làm nét và đồng ý; chỉ giữ tham chiếu tệp, chưa đọc hay gửi.
+function resetReady() {
+  pendingFile = undefined;
+  ui.ready.hidden = true;
+  ui.drop.hidden = false;
+  ui.input.value = '';
+}
+function prepareCloud(file) {
+  pendingFile = file;
+  ui.readyName.textContent = file.name || 'ảnh';
+  ui.drop.hidden = true;
+  ui.ready.hidden = false;
+  say('');
+  ui.start.focus();
+}
+function askConsent() {
+  ui.consent.checked = false;
+  ui.consentOk.disabled = true;
+  ui.dialog.returnValue = '';
+  ui.dialog.showModal();
 }
 
 async function fetchBytes(url, expected, onBytes) {
@@ -119,8 +143,8 @@ function syncChoices() {
   ui.enhancePanel.hidden = generating;
   ui.generatePanel.hidden = !generating;
   ui.cloudNote.hidden = !remote;
-  ui.consentRow.hidden = generating;
   if (remote) refreshQuota();
+  resetReady();
 }
 
 async function askCloud(body) {
@@ -160,12 +184,12 @@ function failed(token, error) {
   if (/lượt/.test(error?.message || '')) refreshQuota(true);
 }
 
-async function enhance(file) {
+async function enhance(file, consented = false) {
   if (!file) return;
   if (!/^image\//.test(file.type) && !/\.(jpe?g|png|webp)$/i.test(file.name)) return say('Hãy chọn một tấm ảnh JPG, PNG hoặc WebP.', true);
   if (file.size > MAX_FILE) return say('Ảnh lớn hơn 25 MB. Hãy chọn ảnh nhỏ hơn.', true);
   const provider = checked(ui.engines);
-  if (provider !== 'local' && !ui.consent.checked) { ui.input.value = ''; ui.consent.focus(); return say('Hãy tích ô đồng ý gửi ảnh lên AI đám mây trước khi chọn ảnh.', true); }
+  if (provider !== 'local' && !consented) return prepareCloud(file); // AI đám mây: chờ bấm Làm nét và đồng ý trong popup
   clearImages();
   const token = run;
   downloadName = outputName(file.name);
@@ -302,6 +326,14 @@ ui.input.addEventListener('change', () => enhance(ui.input.files?.[0]));
 for (const type of ['dragenter', 'dragover']) ui.drop.addEventListener(type, event => { event.preventDefault(); ui.drop.classList.add('dragging'); });
 for (const type of ['dragleave', 'drop']) ui.drop.addEventListener(type, () => ui.drop.classList.remove('dragging'));
 ui.drop.addEventListener('drop', event => { event.preventDefault(); enhance(event.dataTransfer?.files?.[0]); });
+ui.start.addEventListener('click', askConsent);
+ui.repick.addEventListener('click', () => { resetReady(); ui.input.click(); });
+ui.consent.addEventListener('change', () => { ui.consentOk.disabled = !ui.consent.checked; });
+ui.dialog.addEventListener('close', () => {
+  const file = pendingFile;
+  if (ui.dialog.returnValue === 'ok' && ui.consent.checked && file) enhance(file, true);
+  else ui.start.focus();
+});
 ui.task.addEventListener('change', syncChoices);
 ui.engines.addEventListener('change', syncChoices);
 ui.generate.addEventListener('click', generate);
