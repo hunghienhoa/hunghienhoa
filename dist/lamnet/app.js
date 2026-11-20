@@ -1,7 +1,7 @@
 // Làm Nét: Real-ESRGAN x4 chạy trong trình duyệt bằng ONNX Runtime Web (WebGPU, hoặc WebAssembly trong luồng phụ),
-// hoặc Gemini qua /api/lamnet/ai khi người dùng chọn và đồng ý gửi ảnh.
+// hoặc AI đám mây (Cloudflare Workers AI) qua /api/lamnet/ai khi người dùng chọn và đồng ý gửi ảnh.
 // Ảnh chỉ nằm trong bộ nhớ trang: không lưu vào trình duyệt; xóa khi rời trang hoặc sau một giờ.
-import { SCALE, LIMITS, MAX_FILE, HALO, fitSize, tiles, toTensor, fromTensor, unsharp, outputName } from './core.mjs?v=2';
+import { SCALE, LIMITS, MAX_FILE, HALO, CLOUD_INPUT, fitSize, cloudSize, tiles, toTensor, fromTensor, unsharp, outputName } from './core.mjs?v=3';
 
 const $ = selector => document.querySelector(selector);
 const ORT_DIR = new URL('vendor/ort-1.22.0/', import.meta.url);
@@ -10,14 +10,12 @@ const SIZES = { wasm: 21872216, model: 4860375 }; // byte sau giải nén, để
 const HOUR = 3600000;
 const BAND = 256; // số hàng mỗi lượt làm nét thêm, để không phải đọc cả ảnh 4096px vào bộ nhớ một lúc
 const AI_URL = '/api/lamnet/ai';
-const CLOUD = { side: 2048, area: 2048 * 2048 }; // ảnh gửi Gemini: đủ chi tiết mà dưới 3 MB
-const NAMES = { gemini: 'Gemini' }, ORG = { gemini: 'Google' };
 const ui = {
   picker: $('#picker'), input: $('#file'), drop: $('#dropzone'), working: $('#working'), result: $('#result'),
   bar: $('#progress-bar'), progress: $('#progress'), step: $('#step'), status: $('#status'), cancel: $('#cancel'),
   compare: $('#compare'), slider: $('#slider'), info: $('#result-info'), download: $('#download'), again: $('#again'),
   sharpness: $('#sharpness'), task: $('#task'), engines: $('#engines'), cloudNote: $('#cloud-note'), consentRow: $('#consent-row'),
-  consent: $('#consent'), consentOrg: $('#consent-org'), quota: $('#quota'), enhancePanel: $('#enhance-panel'),
+  consent: $('#consent'), quota: $('#quota'), enhancePanel: $('#enhance-panel'),
   generatePanel: $('#generate-panel'), prompt: $('#prompt'), generate: $('#generate')
 };
 // before: ảnh gốc đã thu; upscaled: kết quả AI chưa làm nét thêm (không gắn vào trang); after: ảnh hiển thị và tải về.
@@ -33,7 +31,7 @@ function setProgress(fraction, text) {
   ui.progress.setAttribute('aria-valuenow', String(percent));
   if (text) ui.step.textContent = text;
 }
-// Gemini không báo tiến độ: thanh chạy chậm dần tới 92% trong lúc chờ.
+// AI đám mây không báo tiến độ: thanh chạy chậm dần tới 92% trong lúc chờ.
 function crawl(token, text) {
   let fraction = 0.12;
   setProgress(fraction, text);
@@ -103,27 +101,26 @@ async function decode(file) {
   }
 }
 
-// Số lượt Gemini còn lại hôm nay và Gemini đã bật chưa; chỉ hỏi khi người dùng chọn AI đám mây.
+// Số lượt AI đám mây còn lại hôm nay và đã bật chưa; chỉ hỏi khi người dùng chọn AI đám mây.
 async function refreshQuota(force = false) {
   try {
     if (force || !cloud) cloud = await (await fetch(AI_URL)).json();
-    for (const name of Object.keys(NAMES)) ui.engines.querySelector(`input[value=${name}]`).disabled = !cloud.providers?.[name];
-    const name = checked(ui.engines);
-    ui.quota.textContent = !cloud.providers?.[name] ? `${NAMES[name]} chưa được bật trên website này.`
-      : cloud.remaining > 0 ? `Còn ${cloud.remaining} lượt Gemini hôm nay.` : 'Hôm nay bạn đã dùng hết lượt Gemini. Làm nét trên máy vẫn dùng được.';
+    ui.engines.querySelector('input[value=cloud]').disabled = !cloud.enabled;
+    ui.quota.textContent = !cloud.enabled ? 'AI đám mây chưa được bật trên website này.'
+      : cloud.remaining > 0 ? `Còn ${cloud.remaining} lượt AI đám mây hôm nay.` : 'Hôm nay bạn đã dùng hết lượt AI đám mây. Làm nét trên máy vẫn dùng được.';
   } catch { ui.quota.textContent = 'Chưa kiểm tra được số lượt còn lại.'; }
 }
 
 function syncChoices() {
   const generating = checked(ui.task) === 'generate', local = ui.engines.querySelector('input[value=local]');
   local.closest('label').hidden = generating;
-  if (generating && local.checked) ui.engines.querySelector('input[value=gemini]').checked = true;
+  if (generating && local.checked) ui.engines.querySelector('input[value=cloud]').checked = true;
   const name = checked(ui.engines), remote = name !== 'local';
   ui.enhancePanel.hidden = generating;
   ui.generatePanel.hidden = !generating;
   ui.cloudNote.hidden = !remote;
   ui.consentRow.hidden = generating;
-  if (remote) { ui.consentOrg.textContent = ORG[name]; refreshQuota(); }
+  if (remote) refreshQuota();
 }
 
 async function askCloud(body) {
@@ -139,7 +136,7 @@ async function askCloud(body) {
 async function jpegData(canvas) {
   for (const quality of [0.9, 0.8, 0.7]) {
     const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
-    if (blob && blob.size <= 3 * 1024 * 1024) return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(blob); });
+    if (blob && blob.size <= 1024 * 1024) return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(blob); });
   }
   throw userError('Ảnh quá lớn để gửi. Hãy chọn ảnh nhỏ hơn.');
 }
@@ -168,7 +165,7 @@ async function enhance(file) {
   if (!/^image\//.test(file.type) && !/\.(jpe?g|png|webp)$/i.test(file.name)) return say('Hãy chọn một tấm ảnh JPG, PNG hoặc WebP.', true);
   if (file.size > MAX_FILE) return say('Ảnh lớn hơn 25 MB. Hãy chọn ảnh nhỏ hơn.', true);
   const provider = checked(ui.engines);
-  if (provider !== 'local' && !ui.consent.checked) { ui.input.value = ''; ui.consent.focus(); return say(`Hãy tích ô đồng ý gửi ảnh tới ${ORG[provider]} trước khi chọn ảnh.`, true); }
+  if (provider !== 'local' && !ui.consent.checked) { ui.input.value = ''; ui.consent.focus(); return say('Hãy tích ô đồng ý gửi ảnh lên AI đám mây trước khi chọn ảnh.', true); }
   clearImages();
   const token = run;
   downloadName = outputName(file.name);
@@ -182,7 +179,7 @@ async function enhance(file) {
     try { image = await decode(file); } catch { throw userError('Không đọc được ảnh này. Hãy thử JPG, PNG hoặc WebP.'); }
     if (token !== run) return;
     const source = { width: image.naturalWidth || image.width, height: image.naturalHeight || image.height };
-    const fit = fitSize(source.width, source.height, engine ? engine.limit : CLOUD);
+    const fit = fitSize(source.width, source.height, engine ? engine.limit : CLOUD_INPUT);
     original = document.createElement('canvas');
     original.width = fit.width; original.height = fit.height;
     const bctx = original.getContext('2d', { willReadFrequently: true });
@@ -212,11 +209,11 @@ async function enhance(file) {
     } else {
       const data = await jpegData(original);
       if (token !== run) return;
-      stop = crawl(token, `${NAMES[provider]} đang làm nét… thường mất 10–60 giây`);
-      const blob = await askCloud({ provider, mode: 'enhance', consent: true, image: data });
+      stop = crawl(token, 'AI đám mây đang làm nét… thường mất vài giây');
+      const blob = await askCloud({ mode: 'enhance', consent: true, image: data, ...cloudSize(fit.width, fit.height) });
       if (token !== run) return;
       sharp = await canvasFrom(blob);
-      ui.sharpness.querySelector('input[value="0"]').checked = true; // ảnh của Gemini đã nét, không làm nét thêm mặc định
+      ui.sharpness.querySelector('input[value="0"]').checked = true; // ảnh AI đám mây vẽ lại đã nét, không làm nét thêm mặc định
     }
     setProgress(1, 'Đang làm rõ chi tiết…');
     const shown = document.createElement('canvas');
@@ -225,7 +222,7 @@ async function enhance(file) {
     await applySharpness();
     if (token !== run) return;
     const resized = fit.scaled ? `Ảnh gốc ${source.width}×${source.height} được thu về ${fit.width}×${fit.height} trước khi làm nét. ` : '';
-    showResult(`${resized}Kết quả ${after.width}×${after.height} điểm ảnh${engine ? '' : `, làm nét bởi ${NAMES[provider]}`}.`);
+    showResult(`${resized}Kết quả ${after.width}×${after.height} điểm ảnh${engine ? '' : ', làm nét bởi AI đám mây'}.`);
   } catch (error) {
     failed(token, error);
   } finally {
@@ -236,18 +233,18 @@ async function enhance(file) {
 }
 
 async function generate() {
-  const provider = checked(ui.engines), prompt = ui.prompt.value.trim();
-  if (!NAMES[provider]) return;
+  const prompt = ui.prompt.value.trim();
+  if (checked(ui.engines) !== 'cloud') return;
   if (!prompt) { ui.prompt.focus(); return say('Hãy mô tả ảnh muốn tạo.', true); }
   clearImages();
   const token = run;
-  downloadName = 'anh-ai-gemini.jpg';
+  downloadName = 'anh-ai.jpg';
   show('working');
   say('');
   let sharp, stop;
   try {
-    stop = crawl(token, `${NAMES[provider]} đang tạo ảnh… thường mất 10–60 giây`);
-    const blob = await askCloud({ provider, mode: 'generate', prompt });
+    stop = crawl(token, 'AI đám mây đang tạo ảnh… thường mất vài giây');
+    const blob = await askCloud({ mode: 'generate', prompt });
     if (token !== run) return;
     sharp = await canvasFrom(blob);
     ui.sharpness.querySelector('input[value="0"]').checked = true;
@@ -256,7 +253,7 @@ async function generate() {
     upscaled = sharp; after = shown; sharp = undefined;
     await applySharpness();
     if (token !== run) return;
-    showResult(`Ảnh ${after.width}×${after.height} điểm ảnh, tạo bởi ${NAMES[provider]}.`, true);
+    showResult(`Ảnh ${after.width}×${after.height} điểm ảnh, tạo bởi AI đám mây.`, true);
   } catch (error) {
     failed(token, error);
   } finally {

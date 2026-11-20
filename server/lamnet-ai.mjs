@@ -1,18 +1,17 @@
-// Làm Nét bằng Gemini: kiểm tra yêu cầu, đếm lượt, gọi API. Dùng chung cho Worker và server cục bộ.
-// Ảnh và câu lệnh chỉ đi qua bộ nhớ tới Google khi người dùng đồng ý: không lưu, không ghi log nội dung.
+// Làm Nét bằng AI đám mây (Cloudflare Workers AI, FLUX.2 [klein] 4B): kiểm tra yêu cầu, đếm lượt, gọi model.
+// Dùng chung cho Worker và server cục bộ. Ảnh và câu lệnh chỉ đi qua bộ nhớ tới Workers AI khi người dùng đồng ý:
+// website không lưu, không ghi log nội dung; Workers AI không giữ lại và không dùng để huấn luyện.
 import { contributionDay } from './contribution-limit.mjs';
 import { fail, imageMime } from './validation.mjs';
 
-export const AI_DAILY_LIMIT = 30;   // tổng mỗi ngày (giờ Việt Nam) cho cả website, để chặn trần chi phí
+export const AI_DAILY_LIMIT = 30;   // tổng mỗi ngày (giờ Việt Nam) cho cả website: tối đa ~3.800 Neuron, dưới 10.000 Neuron miễn phí/ngày
 export const AI_CLIENT_LIMIT = 3;   // mỗi người (IP băm theo ngày) mỗi ngày
-export const AI_MAX_IMAGE = 3 * 1024 * 1024;
+export const AI_MAX_IMAGE = 1024 * 1024; // ảnh gửi vào nhỏ hơn 512px nên 1 MB là dư
 export const AI_MAX_PROMPT = 1000;
 export const AI_BODY_LIMIT = Math.ceil(AI_MAX_IMAGE / 3) * 4 + 8192;
-export const AI_MODELS = { gemini: 'gemini-nano-banana-2.1' };
-const NAMES = { gemini: 'Gemini' };
+export const AI_MODEL = '@cf/black-forest-labs/flux-2-klein-4b';
 const ENHANCE = 'Restore and sharpen this photo. Remove blur, noise and compression artifacts and bring out fine, natural detail. '
   + 'Keep the exact composition, framing, colors, lighting, faces, identity, text and every object unchanged. Do not add, remove or restyle anything.';
-const TIMEOUT = 120000;
 
 export function initAiQuota(sql) {
   sql('CREATE TABLE IF NOT EXISTS ai_quota(day TEXT,client TEXT,count INTEGER NOT NULL,PRIMARY KEY(day,client))');
@@ -36,59 +35,49 @@ export function aiStatus(sql, client, now = Date.now()) {
 }
 
 export function quotaMessage(reason) {
-  return reason === 'global' ? 'Hôm nay website đã dùng hết lượt Gemini. Hãy quay lại vào ngày mai, hoặc dùng chế độ làm nét trên máy.'
-    : `Bạn đã dùng đủ ${AI_CLIENT_LIMIT} lượt Gemini hôm nay. Hãy quay lại vào ngày mai, hoặc dùng chế độ làm nét trên máy.`;
+  return reason === 'global' ? 'Hôm nay website đã dùng hết lượt AI đám mây. Hãy quay lại vào ngày mai, hoặc dùng chế độ làm nét trên máy.'
+    : `Bạn đã dùng đủ ${AI_CLIENT_LIMIT} lượt AI đám mây hôm nay. Hãy quay lại vào ngày mai, hoặc dùng chế độ làm nét trên máy.`;
 }
+
+// Kích thước ảnh trả về: bội số của 16, mỗi cạnh 256–1024px.
+const side = value => Number.isInteger(value) && value % 16 === 0 && value >= 256 && value <= 1024;
 
 export function parseAiRequest(value) {
-  const provider = value?.provider, mode = value?.mode;
-  if (!Object.hasOwn(NAMES, provider)) fail(400, 'Hãy chọn Gemini.');
-  if (mode === 'generate') {
+  if (value?.mode === 'generate') {
     const prompt = typeof value.prompt === 'string' ? value.prompt.trim() : '';
     if (!prompt || prompt.length > AI_MAX_PROMPT) fail(400, `Hãy mô tả ảnh muốn tạo, tối đa ${AI_MAX_PROMPT.toLocaleString('vi-VN')} ký tự.`);
-    return { provider, mode, prompt };
+    return { mode: 'generate', prompt, width: 1024, height: 1024 };
   }
-  if (mode !== 'enhance') fail(400, 'Chế độ chưa hợp lệ.');
-  if (value.consent !== true) fail(400, 'Bạn cần đồng ý gửi ảnh trước khi dùng Gemini.');
+  if (value?.mode !== 'enhance') fail(400, 'Chế độ chưa hợp lệ.');
+  if (value.consent !== true) fail(400, 'Bạn cần đồng ý gửi ảnh trước khi dùng AI đám mây.');
+  if (!side(value.width) || !side(value.height)) fail(400, 'Kích thước ảnh kết quả chưa hợp lệ.');
   const match = typeof value.image === 'string' && value.image.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/]+={0,2})$/);
-  if (!match || match[2].length > Math.ceil(AI_MAX_IMAGE / 3) * 4 || match[2].length % 4) fail(400, 'Chỉ nhận ảnh JPEG, PNG hoặc WebP dưới 3 MB.');
+  if (!match || match[2].length > Math.ceil(AI_MAX_IMAGE / 3) * 4 || match[2].length % 4) fail(400, 'Chỉ nhận ảnh JPEG, PNG hoặc WebP dưới 1 MB.');
   const image = Buffer.from(match[2], 'base64');
   if (image.length > AI_MAX_IMAGE || image.toString('base64') !== match[2] || imageMime(image) !== match[1]) fail(400, 'Nội dung ảnh không khớp định dạng.');
-  return { provider, mode, image, mime: match[1] };
+  return { mode: 'enhance', image, mime: match[1], width: value.width, height: value.height };
 }
 
-async function call(url, init, provider, fetchImpl) {
-  let response;
-  try { response = await fetchImpl(url, { ...init, signal: AbortSignal.timeout(TIMEOUT) }); }
-  catch { fail(504, `${NAMES[provider]} phản hồi quá lâu. Hãy thử lại sau.`); }
-  const data = await response.json().catch(() => null);
-  if (response.ok) return data;
-  const code = data?.error?.code, status = data?.error?.status;
-  // Thông điệp lỗi của Google chỉ nói về khóa/hạn mức/định dạng, không chứa ảnh hay câu lệnh: ghi lại để chẩn đoán.
-  console.error(JSON.stringify({ message: 'lamnet_ai_failed', provider, status: response.status, code: code || status || null, detail: String(data?.error?.message || '').slice(0, 300) }));
-  if (status === 'INVALID_ARGUMENT' && /safety|policy/i.test(data?.error?.message || '')) fail(422, `${NAMES[provider]} từ chối xử lý nội dung này. Hãy thử ảnh hoặc mô tả khác.`);
-  if ([401, 403].includes(response.status)) fail(503, `${NAMES[provider]} chưa sẵn sàng (khóa API chưa đúng hoặc chưa bật thanh toán).`);
-  if (response.status === 429) fail(503, `${NAMES[provider]} đang bận hoặc hết hạn mức. Hãy thử lại sau.`);
-  fail(502, `${NAMES[provider]} đang gặp lỗi. Hãy thử lại sau.`);
-}
-
-function result(base64, provider) {
-  if (typeof base64 !== 'string' || !base64) fail(422, `${NAMES[provider]} không trả về ảnh. Hãy thử ảnh hoặc mô tả khác.`);
-  const bytes = Buffer.from(base64, 'base64');
-  try { return { bytes, mime: imageMime(bytes) }; } catch { fail(502, `${NAMES[provider]} trả về dữ liệu không phải ảnh. Hãy thử lại sau.`); }
-}
-
-// Gọi Gemini. keys: { gemini }; fetchImpl để test thay bằng bản giả.
-export async function runAi(request, keys, fetchImpl = fetch) {
-  const key = keys?.[request.provider];
-  if (!key) fail(503, `${NAMES[request.provider]} chưa được bật trên website này.`);
-  const parts = request.mode === 'enhance'
-    ? [{ text: ENHANCE }, { inline_data: { mime_type: request.mime, data: request.image.toString('base64') } }]
-    : [{ text: request.prompt }];
-  const data = await call(`https://generativelanguage.googleapis.com/v1/models/${AI_MODELS.gemini}:generateContent`, {
-    method: 'POST', headers: { 'x-goog-api-key': key, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseModalities: ['IMAGE'], imageConfig: { imageSize: '2K' } } })
-  }, 'gemini', fetchImpl);
-  const part = data?.candidates?.[0]?.content?.parts?.find(item => item.inlineData || item.inline_data);
-  return result((part?.inlineData || part?.inline_data)?.data, 'gemini');
+// Gọi FLUX.2 [klein] qua binding Workers AI (env.AI trên Worker; server cục bộ truyền vào khi có).
+export async function runAi(request, ai) {
+  if (!ai?.run) fail(503, 'AI đám mây chưa được bật trên website này.');
+  const form = new FormData();
+  form.append('prompt', request.mode === 'enhance' ? ENHANCE : request.prompt);
+  form.append('width', String(request.width));
+  form.append('height', String(request.height));
+  if (request.mode === 'enhance') form.append('input_image_0', new Blob([request.image], { type: request.mime }), 'anh.' + request.mime.split('/')[1]);
+  const multipart = new Response(form);
+  let data;
+  try { data = await ai.run(AI_MODEL, { multipart: { body: multipart.body, contentType: multipart.headers.get('content-type') } }); }
+  catch (error) {
+    // Lỗi của Workers AI chỉ nói về hạn mức/định dạng/bộ lọc, không chứa ảnh hay câu lệnh: ghi lại để chẩn đoán.
+    const detail = String(error?.message || error).slice(0, 300);
+    console.error(JSON.stringify({ message: 'lamnet_ai_failed', detail }));
+    if (/4006|daily free allocation|neurons/i.test(detail)) fail(503, 'Hôm nay AI đám mây đã dùng hết phần miễn phí. Hãy quay lại vào ngày mai, hoặc dùng chế độ làm nét trên máy.');
+    if (/nsfw|safety|flagged|moderat|policy/i.test(detail)) fail(422, 'AI từ chối xử lý nội dung này. Hãy thử ảnh hoặc mô tả khác.');
+    fail(502, 'AI đám mây đang gặp lỗi. Hãy thử lại sau.');
+  }
+  if (typeof data?.image !== 'string' || !data.image) fail(422, 'AI không trả về ảnh. Hãy thử ảnh hoặc mô tả khác.');
+  const bytes = Buffer.from(data.image, 'base64');
+  try { return { bytes, mime: imageMime(bytes) }; } catch { fail(502, 'AI trả về dữ liệu không phải ảnh. Hãy thử lại sau.'); }
 }

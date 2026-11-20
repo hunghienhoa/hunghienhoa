@@ -11,6 +11,7 @@ export default defineConfig({
     env: {
       VISITS: bindings.durableObject({ worker: "hunghienhoa", exportName: "VisitCounter" }),
       ASSETS: bindings.assets(),
+      AI: bindings.ai(),
       SNAPTIK_LIMIT: bindings.rateLimit({ namespace: "914202611", simple: { limit: 30, period: 60 } }),
       CLOUDFLARE_USAGE_TOKEN: bindings.secret(),
       GITHUB_USAGE_TOKEN: bindings.secret(),

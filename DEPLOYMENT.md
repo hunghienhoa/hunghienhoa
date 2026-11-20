@@ -120,16 +120,15 @@ Khôi phục:
    ```
 3. Dự án Supabase mới hoặc trống: chạy migration (`supabase db push --db-url ...`) rồi nạp dữ liệu `psql "$SUPABASE_DB_URL" -f data.sql`. Dự án đang có dữ liệu thì chỉ nạp bảng cần khôi phục, kiểm tra kỹ trước khi ghi đè. `schema.sql` là ảnh chụp cấu trúc để đối chiếu.
 
-## Gemini cho Làm Nét
+## AI đám mây cho Làm Nét (miễn phí)
 
-Làm Nét có thêm lựa chọn Gemini (làm nét ảnh và tạo ảnh mới) qua `/api/lamnet/ai`. Mỗi người 3 lượt/ngày, cả website 30 lượt/ngày (giờ Việt Nam); lỗi thì trả lại lượt. Chưa có khóa thì nút Gemini hiện mờ, làm nét trên máy vẫn chạy.
+Làm Nét có lựa chọn AI đám mây (làm nét ảnh và tạo ảnh mới) qua `/api/lamnet/ai`, chạy model `@cf/black-forest-labs/flux-2-klein-4b` của Cloudflare Workers AI bằng binding `AI` (khai báo `AI: bindings.ai()` trong `cloudflare.config.ts`). Không cần khóa API hay nạp tiền.
 
-1. Tạo khóa ở Google AI Studio → API keys, chọn dự án Google Cloud **đã bật thanh toán**. Bản miễn phí cho phép Google dùng dữ liệu để cải thiện sản phẩm, trái với chính sách riêng tư của website. Nên đặt hạn mức chi tiêu tháng.
-2. Cloudflare → Workers & Pages → `hunghienhoa` → Settings → Variables and Secrets → Add, kiểu **Secret**, tên `GEMINI_API_KEY`. Có hiệu lực ngay, không cần triển khai lại; các lần triển khai sau vẫn giữ (`keepSecrets`). Sửa trên Dashboard (hoặc qua API) tạo phiên bản có nguồn `dash`/`api` khiến `cf deploy` (cài cứng strict) dừng vì “conflicts”; bước “Cho phép ghi đè nếu Worker vừa được sửa ngoài cf” trong `deploy.yml` tắt strict riêng cho lần đó (cấu hình lấy từ `cloudflare.config.ts`, secret giữ nguyên).
-3. Không thêm khóa này vào `cloudflare.config.ts`: khai báo `bindings.secret()` biến nó thành bắt buộc, thiếu là lần triển khai báo lỗi.
-4. Chạy cục bộ: đặt biến môi trường `GEMINI_API_KEY` trước `node server/server.mjs`.
-
-Model đang dùng nằm ở `AI_MODELS` trong `server/lamnet-ai.mjs` (`gemini-nano-banana-2.1`, ảnh 2K ≈ 0,05 USD). Khi Google ngừng model, đổi tên ở đó.
+- Workers AI cho 10.000 Neuron miễn phí mỗi ngày (cả gói Workers Free lẫn Paid). Ảnh 1024px tốn khoảng 104 Neuron, làm nét (có ảnh gửi vào) khoảng 126 Neuron.
+- Website giới hạn 3 lượt/người và 30 lượt/website mỗi ngày (giờ Việt Nam), tức tối đa khoảng 3.800 Neuron/ngày, luôn trong phần miễn phí; lỗi thì trả lại lượt. Đừng nâng `AI_DAILY_LIMIT` quá khoảng 75 nếu không muốn phát sinh phí trên gói Paid.
+- FLUX.2 chỉ nhận ảnh đầu vào nhỏ hơn 512px: trình duyệt thu ảnh về tối đa 496px, model vẽ lại thành ảnh cạnh dài 1024px.
+- Workers AI không giữ lại ảnh/kết quả và không dùng để huấn luyện (trang Data usage của Workers AI).
+- Chạy cục bộ không có Workers AI nên lựa chọn này hiện “chưa bật”.
 
 ## Giới hạn đã ghi nhận
 

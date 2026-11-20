@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import test from 'node:test';
-import { SCALE, LIMITS, MAX_FILE, HALO, fitSize, tiles, toTensor, fromTensor, unsharp, outputName } from '../dist/lamnet/core.mjs';
+import { SCALE, LIMITS, MAX_FILE, HALO, CLOUD_INPUT, fitSize, cloudSize, tiles, toTensor, fromTensor, unsharp, outputName } from '../dist/lamnet/core.mjs';
 
 test('thu nhỏ ảnh lớn về giới hạn, không phóng to ảnh nhỏ', () => {
   assert.deepEqual(fitSize(4000, 3000, LIMITS.gpu), { width: 1024, height: 768, scaled: true });
@@ -17,6 +17,17 @@ test('thu nhỏ ảnh lớn về giới hạn, không phóng to ảnh nhỏ', ()
     const fit = fitSize(w, h, limit);
     assert.ok(Math.max(fit.width, fit.height) * SCALE <= 4096 && fit.width * fit.height * SCALE * SCALE <= 16777216);
   }
+});
+
+test('AI đám mây: ảnh gửi đi dưới 512px, ảnh nhận về cạnh dài 1024px, bội số của 16, giữ tỉ lệ', () => {
+  const sent = fitSize(4000, 3000, CLOUD_INPUT);
+  assert.ok(Math.max(sent.width, sent.height) < 512);
+  for (const [w, h] of [[sent.width, sent.height], [496, 496], [120, 80], [80, 496], [496, 20]]) {
+    const out = cloudSize(w, h);
+    assert.equal(Math.max(out.width, out.height), 1024);
+    assert.ok([out.width, out.height].every(v => v % 16 === 0 && v >= 256 && v <= 1024), `${w}x${h} -> ${out.width}x${out.height}`);
+  }
+  assert.deepEqual(cloudSize(496, 372), { width: 1024, height: 768 });
 });
 
 test('làm nét thêm: giữ vùng phẳng, tăng tương phản mép, xử lý theo dải cho kết quả như cả ảnh', () => {
