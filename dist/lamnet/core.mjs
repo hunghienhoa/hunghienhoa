@@ -4,6 +4,12 @@ export const SCALE = 4;
 // 512px làm ảnh điện thoại mất quá nhiều chi tiết. Ô 256px nhanh hơn ô 128px ~15% vì ít phần viền phải tính lại.
 export const LIMITS = { gpu: { side: 1024, area: 1024 * 1024, tile: 256 }, cpu: { side: 1024, area: 1024 * 768, tile: 256 } };
 export const PAD = 12;
+// AI đám mây (FLUX.2 [klein]) chỉ nhận ảnh nhỏ hơn 512px và trả ảnh có cạnh là bội số của 16, từ 256 đến 1024px.
+export const CLOUD_INPUT = { side: 496, area: 496 * 496 };
+export function cloudSize(width, height) {
+  const scale = 1024 / Math.max(width, height), fit = value => Math.min(1024, Math.max(256, Math.round(value * scale / 16) * 16));
+  return { width: fit(width), height: fit(height) };
+}
 export const MAX_FILE = 25 * 1024 * 1024;
 
 // Thu nhỏ (không bao giờ phóng to) để cạnh dài và diện tích nằm trong giới hạn.

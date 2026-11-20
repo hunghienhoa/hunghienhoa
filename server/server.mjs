@@ -65,8 +65,8 @@ export function createApp(options = {}) {
   db.exec('CREATE TABLE IF NOT EXISTS media_assets(id TEXT PRIMARY KEY,scope TEXT NOT NULL,image BLOB NOT NULL)');
   initContributionLimit(quotaSql);
   initAiQuota(quotaSql);
-  // Khóa Gemini chỉ đọc từ biến môi trường của máy chạy server, không lưu vào database hay dist.
-  const aiKeys = options.aiKeys ?? { gemini: process.env.GEMINI_API_KEY };
+  // Workers AI chỉ có trên Cloudflare; chạy cục bộ thì AI đám mây tắt (test truyền options.ai giả).
+  const cloudAi = options.ai;
   db.prepare('INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)').run('site', JSON.stringify(defaultSite));
   if (!db.prepare('SELECT value FROM settings WHERE key=?').get('seeded')) {
     for (const seed of seedPosts) db.prepare('INSERT INTO posts(id,slug,title,excerpt,content,category,tags,status,is_sample,cover,created_at,published_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)').run(randomUUID(), seed.slug, seed.title, seed.excerpt, seed.content, seed.category, JSON.stringify(seed.tags), 'published', 1, null, now(), now(), now());
@@ -181,13 +181,13 @@ export function createApp(options = {}) {
       }
       if (route === '/api/lamnet/ai') {
         const client=createHash('sha256').update(contributionDay(now())+':'+req.socket.remoteAddress).digest('hex');
-        if (req.method === 'GET') return json(res, { ...aiStatus(quotaSql, client, now()), providers: { gemini: !!aiKeys.gemini } });
+        if (req.method === 'GET') return json(res, { ...aiStatus(quotaSql, client, now()), enabled: !!cloudAi });
         if (req.method !== 'POST') fail(405, 'Phương thức chưa được hỗ trợ.');
         const value = parseAiRequest(await body(req, AI_BODY_LIMIT));
         const claim = claimAi(quotaSql, client, now());
         if (claim.reason) fail(429, quotaMessage(claim.reason));
         let out;
-        try { out = await runAi(value, aiKeys, options.aiFetch || fetch); } catch (error) { claimAi(quotaSql, client, now(), true); throw error; }
+        try { out = await runAi(value, cloudAi); } catch (error) { claimAi(quotaSql, client, now(), true); throw error; }
         res.writeHead(200, { 'Content-Type': out.mime, 'Content-Length': out.bytes.length, 'Cache-Control': 'no-store', 'X-Lamnet-Remaining': String(claim.remaining) });
         return res.end(out.bytes);
       }
