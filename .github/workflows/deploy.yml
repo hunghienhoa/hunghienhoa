@@ -49,6 +49,21 @@ jobs:
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           SUPABASE_TELEMETRY_DISABLED: "1"
+      - name: Cho phép ghi đè nếu Worker vừa được sửa ngoài cf
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        # cf deploy cài cứng strict: phiên bản mới nhất tạo trên Dashboard (ví dụ thêm GEMINI_API_KEY) hoặc qua API
+        # thì nó dừng vì "conflicts". cloudflare.config.ts là cấu hình chuẩn và secret được giữ (keepSecrets),
+        # nên chỉ trong trường hợp đó tắt strict cho lần triển khai này. Nâng cấp cf mà không tìm thấy cờ thì báo lỗi.
+        run: |
+          from=$(curl -fsS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts" | jq -r '.result[] | select(.id=="hunghienhoa") | .last_deployed_from')
+          case "$from" in dash|api) ;; *) echo "Không cần (lần gần nhất: $from)."; exit 0 ;; esac
+          files=$(grep -rlE 'command:`deploy`,[^}]*strict:!0,legacyAssetPaths' node_modules/cf/dist || true)
+          if [ "$(echo $files | wc -w)" != 1 ]; then echo "::error::Không tìm thấy cờ strict của cf deploy. Kiểm tra lại bước này sau khi nâng cấp cf."; exit 1; fi
+          sed -i 's/strict:!0,legacyAssetPaths/strict:!1,legacyAssetPaths/' $files
+          echo "::warning::Worker vừa được sửa ngoài cf ($from). Lần triển khai này ghi đè cấu hình bằng cloudflare.config.ts; secret giữ nguyên."
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
       - name: Triển khai lên Cloudflare
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: npx cf deploy --prebuilt --mode production
