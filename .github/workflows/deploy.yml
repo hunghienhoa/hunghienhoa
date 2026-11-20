@@ -49,6 +49,22 @@ jobs:
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           SUPABASE_TELEMETRY_DISABLED: "1"
+      - name: Gỡ chặn nếu vừa sửa Worker trên Dashboard
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        # cf deploy luôn chạy strict: nếu phiên bản mới nhất được tạo trên Dashboard (ví dụ vừa thêm GEMINI_API_KEY)
+        # nó dừng để khỏi ghi đè. Tạo lại phiên bản y hệt qua API (giữ mã, binding, secret) để nguồn thành "api".
+        # exports phải khớp cloudflare.config.ts, sai thì Cloudflare từ chối và bước này báo lỗi.
+        run: |
+          base="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts"
+          auth="Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+          from=$(curl -fsS -H "$auth" "$base" | jq -r '.result[] | select(.id=="hunghienhoa") | .last_deployed_from')
+          if [ "$from" != "dash" ]; then echo "Không cần gỡ chặn (lần gần nhất: $from)."; exit 0; fi
+          date=$(curl -fsS -H "$auth" "$base/hunghienhoa/settings" | jq -r .result.compatibility_date)
+          curl -fsS -X PATCH -H "$auth" -F "settings={\"compatibility_date\":\"$date\",\"exports\":{\"VisitCounter\":{\"type\":\"durable-object\",\"storage\":\"sqlite\"}}};type=application/json" "$base/hunghienhoa/settings" > /dev/null
+          echo "Đã tạo lại phiên bản đang chạy qua API để triển khai tiếp."
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
       - name: Triển khai lên Cloudflare
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: npx cf deploy --prebuilt --mode production

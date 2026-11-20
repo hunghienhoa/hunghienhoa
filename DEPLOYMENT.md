@@ -125,7 +125,7 @@ Khôi phục:
 Làm Nét có thêm lựa chọn Gemini (làm nét ảnh và tạo ảnh mới) qua `/api/lamnet/ai`. Mỗi người 3 lượt/ngày, cả website 30 lượt/ngày (giờ Việt Nam); lỗi thì trả lại lượt. Chưa có khóa thì nút Gemini hiện mờ, làm nét trên máy vẫn chạy.
 
 1. Tạo khóa ở Google AI Studio → API keys, chọn dự án Google Cloud **đã bật thanh toán**. Bản miễn phí cho phép Google dùng dữ liệu để cải thiện sản phẩm, trái với chính sách riêng tư của website. Nên đặt hạn mức chi tiêu tháng.
-2. Cloudflare → Workers & Pages → `hunghienhoa` → Settings → Variables and Secrets → Add, kiểu **Secret**, tên `GEMINI_API_KEY`. Có hiệu lực ngay, không cần triển khai lại; các lần triển khai sau vẫn giữ (`keepSecrets`).
+2. Cloudflare → Workers & Pages → `hunghienhoa` → Settings → Variables and Secrets → Add, kiểu **Secret**, tên `GEMINI_API_KEY`. Có hiệu lực ngay, không cần triển khai lại; các lần triển khai sau vẫn giữ (`keepSecrets`). Sửa trên Dashboard tạo phiên bản có nguồn `dash` khiến `cf deploy` (luôn strict) dừng; bước “Gỡ chặn nếu vừa sửa Worker trên Dashboard” trong `deploy.yml` tự tạo lại phiên bản y hệt qua API rồi triển khai tiếp.
 3. Không thêm khóa này vào `cloudflare.config.ts`: khai báo `bindings.secret()` biến nó thành bắt buộc, thiếu là lần triển khai báo lỗi.
 4. Chạy cục bộ: đặt biến môi trường `GEMINI_API_KEY` trước `node server/server.mjs`.
 
