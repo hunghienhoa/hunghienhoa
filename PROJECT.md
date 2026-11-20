@@ -94,5 +94,6 @@ Trang `https://lamnet.hunghienhoa.com/` (cục bộ: `/lamnet/`) làm nét và p
 
 - `dist/lamnet/core.mjs`: giới hạn kích thước (WebGPU 1024×1024, CPU 1024×768), chia ô 256px kèm viền 12px, đổi ảnh ↔ tensor, làm nét thêm sau AI (unsharp mask, chọn Tự nhiên / Nét / Rất nét). Test: `tools/lamnet.test.mjs`.
 - `dist/lamnet/models/realesr-general-x4v3.onnx` dựng lại bằng `python tools/build-lamnet-model.py realesr-general-x4v3.pth` (cần numpy, onnx, onnxruntime; không cần PyTorch). Script tự đối chiếu với bản tính numpy.
+- `server/lamnet-ai.mjs`: Gemini/ChatGPT cho Làm Nét (kiểm tra yêu cầu, đếm lượt 3/người và 30/website mỗi ngày, gọi API). Worker đếm lượt trong Durable Object `VisitCounter`, server cục bộ trong SQLite. Khóa và model: xem DEPLOYMENT.md. Test: `tools/lamnet-ai.test.mjs`.
 - `dist/lamnet/vendor/ort-1.22.0/`: chép nguyên từ npm `onnxruntime-web@1.22.0`. Bản 1.2x mới hơn có tệp WebGPU trên 25 MiB, vượt giới hạn mỗi tệp của Cloudflare.
 - Worker và máy chủ cục bộ gắn cho mọi phản hồi của Làm Nét CSP có `'wasm-unsafe-eval'` và COOP/COEP (crossOriginIsolated để WebAssembly chạy nhiều luồng). Trang không gắn mã quảng cáo.

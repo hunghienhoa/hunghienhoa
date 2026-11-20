@@ -79,9 +79,12 @@ test('tên file tải về là JPEG, không dấu, không ký tự lạ', () => 
   assert.ok(MAX_FILE === 25 * 1024 * 1024);
 });
 
-test('trang Làm Nét: ảnh chỉ xử lý trên máy, xóa khi rời trang và sau một giờ', () => {
+test('trang Làm Nét: mặc định xử lý trên máy, chỉ gửi ảnh tới API của website khi đã đồng ý, xóa khi rời trang và sau một giờ', () => {
   const app = fs.readFileSync('dist/lamnet/app.js', 'utf8'), html = fs.readFileSync('dist/lamnet/index.html', 'utf8');
-  assert.ok(!/\bfetch\([^)]*(?:blob|file|canvas)/i.test(app) && !/XMLHttpRequest|sendBeacon|localStorage|sessionStorage|indexedDB/.test(app), 'Không gửi hoặc lưu ảnh');
+  assert.ok(!/XMLHttpRequest|sendBeacon|localStorage|sessionStorage|indexedDB/.test(app), 'Không lưu ảnh vào trình duyệt');
+  assert.ok(html.includes('<input type="radio" name="engine" value="local" checked>'), 'Mặc định làm nét trên máy');
+  assert.deepEqual([...app.matchAll(/fetch\(([^,)]+)/g)].map(match => match[1]), ['url', 'AI_URL', 'AI_URL'], 'Chỉ tải tệp AI và gọi API của chính website');
+  assert.ok(app.includes("const AI_URL = '/api/lamnet/ai'") && /provider !== 'local' && !ui\.consent\.checked\) \{[^}]*return/.test(app), 'Chưa tích đồng ý thì không gửi ảnh');
   assert.ok(app.includes("addEventListener('pagehide'") && app.includes('HOUR'), 'Xóa ảnh khi rời trang và sau một giờ');
   assert.ok(app.includes("'image/jpeg'"), 'Tải về JPEG');
   assert.ok(!html.includes('google-adsense-account'), 'Không gắn mã quảng cáo vào trang xử lý ảnh');
