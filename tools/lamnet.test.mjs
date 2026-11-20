@@ -95,7 +95,10 @@ test('trang Làm Nét: mặc định xử lý trên máy, chỉ gửi ảnh tớ
   assert.ok(!/XMLHttpRequest|sendBeacon|localStorage|sessionStorage|indexedDB/.test(app), 'Không lưu ảnh vào trình duyệt');
   assert.ok(html.includes('<input type="radio" name="engine" value="local" checked>'), 'Mặc định làm nét trên máy');
   assert.deepEqual([...app.matchAll(/fetch\(([^,)]+)/g)].map(match => match[1]), ['url', 'AI_URL', 'AI_URL'], 'Chỉ tải tệp AI và gọi API của chính website');
-  assert.ok(app.includes("const AI_URL = '/api/lamnet/ai'") && /provider !== 'local' && !ui\.consent\.checked\) \{[^}]*return/.test(app), 'Chưa tích đồng ý thì không gửi ảnh');
+  assert.ok(app.includes("const AI_URL = '/api/lamnet/ai'") && app.includes("if (provider !== 'local' && !consented) return prepareCloud(file);"), 'AI đám mây chỉ chờ, chưa gửi ảnh khi chưa đồng ý');
+  assert.ok(app.includes("if (ui.dialog.returnValue === 'ok' && ui.consent.checked && file) enhance(file, true);") && app.includes('ui.consent.checked = false;'), 'Chỉ gửi sau khi bấm Đồng ý trong popup, mỗi ảnh hỏi lại');
+  assert.ok(html.includes('id="consent-ok" value="ok" disabled') && html.includes('chinh-sach-rieng-tu#lam-net-ai') && html.includes('dieu-khoan-su-dung#lam-net-ai'), 'Popup có chính sách, điều khoản và nút đồng ý khóa tới khi tích');
+  for (const page of ['dist/chinh-sach-rieng-tu.html', 'dist/dieu-khoan-su-dung.html']) assert.ok(fs.readFileSync(page, 'utf8').includes('id="lam-net-ai"'), page);
   assert.ok(app.includes("addEventListener('pagehide'") && app.includes('HOUR'), 'Xóa ảnh khi rời trang và sau một giờ');
   assert.ok(app.includes("'image/jpeg'"), 'Tải về JPEG');
   assert.ok(!html.includes('google-adsense-account'), 'Không gắn mã quảng cáo vào trang xử lý ảnh');
