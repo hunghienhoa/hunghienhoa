@@ -78,9 +78,9 @@
     "semantic_hash": ""
   },
   "server/agent-content.mjs": {
-    "mtime": 1795155578.9899027,
-    "seen": 1795155652.7929895,
-    "ast_hash": "c3d410ebfeacc851aab4cdb41583deb0",
+    "mtime": 1795159351.19565,
+    "seen": 1795159414.728443,
+    "ast_hash": "183342ffee653e4c56c66b19b481a1e5",
     "semantic_hash": ""
   },
   "server/contribution-limit.mjs": {
@@ -90,9 +90,9 @@
     "semantic_hash": ""
   },
   "server/server.mjs": {
-    "mtime": 1795155266.6301785,
-    "seen": 1795155652.793011,
-    "ast_hash": "d9705290defa86f5cb1ae34ffb2157b5",
+    "mtime": 1795159351.1945329,
+    "seen": 1795159414.7284667,
+    "ast_hash": "a7c377e838ea57157c4581e4060d2c3a",
     "semantic_hash": ""
   },
   "server/server.test.mjs": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795157649.8100545,
-    "seen": 1795157671.3166378,
-    "ast_hash": "a9fe658f187ab8018c02f230769409e8",
+    "mtime": 1795159383.8475404,
+    "seen": 1795159414.7287319,
+    "ast_hash": "80da46ccb61fba216df323c4bee234bd",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -384,9 +384,9 @@
     "semantic_hash": ""
   },
   "worker/index.mjs": {
-    "mtime": 1795155371.1673687,
-    "seen": 1795155652.793914,
-    "ast_hash": "73e7903f5854ed4749a793e5da99367a",
+    "mtime": 1795159351.1941416,
+    "seen": 1795159414.729499,
+    "ast_hash": "1cfbb1406d4b57faf4cf32727ab3ed9c",
     "semantic_hash": ""
   },
   "worker/index.test.mjs": {
@@ -528,9 +528,9 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1795155554.6063008,
-    "seen": 1795155652.7943404,
-    "ast_hash": "2cb842832f7acab7bb9a9ae1b4f7235e",
+    "mtime": 1795159351.1958337,
+    "seen": 1795159414.7302709,
+    "ast_hash": "4d321c3d09b135e84aa76846bb5c32de",
     "semantic_hash": ""
   },
   "API-CONTRACT.md": {
@@ -552,9 +552,9 @@
     "semantic_hash": ""
   },
   "DEPLOYMENT.md": {
-    "mtime": 1795155578.9905639,
-    "seen": 1795155652.7943895,
-    "ast_hash": "6b3177847445c6ca5fc93fa9c017b24f",
+    "mtime": 1795159351.1964355,
+    "seen": 1795159414.7303512,
+    "ast_hash": "b5f7e2eede462c26e50a566a67795c3e",
     "semantic_hash": ""
   },
   "FONT-SOURCES.md": {
@@ -588,9 +588,9 @@
     "semantic_hash": ""
   },
   "PROJECT.md": {
-    "mtime": 1795155578.991677,
-    "seen": 1795155652.7944808,
-    "ast_hash": "c6c8aae9736ab623a900ae3bcfc66d02",
+    "mtime": 1795159351.1960316,
+    "seen": 1795159414.7304733,
+    "ast_hash": "a6203ba306eed553b55f27fbae576704",
     "semantic_hash": ""
   },
   "README.md": {
@@ -1824,15 +1824,15 @@
     "semantic_hash": ""
   },
   "server/lamnet-ai.mjs": {
-    "mtime": 1795155223.68736,
-    "seen": 1795155652.793009,
-    "ast_hash": "566e48ae76a0eed9bbfce857de811d94",
+    "mtime": 1795159322.5942802,
+    "seen": 1795159414.728465,
+    "ast_hash": "086371f11d20c738e492149da1f85c50",
     "semantic_hash": ""
   },
   "tools/lamnet-ai.test.mjs": {
-    "mtime": 1795155374.7370763,
-    "seen": 1795155652.7936518,
-    "ast_hash": "784808b1bae85bfb4b0b3592675b2c79",
+    "mtime": 1795159382.1115403,
+    "seen": 1795159414.7292354,
+    "ast_hash": "785a9676462f9bfdf5705599a621c728",
     "semantic_hash": ""
   },
   "package-lock.json": {

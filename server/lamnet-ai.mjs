@@ -1,5 +1,5 @@
-// Làm Nét bằng Gemini/ChatGPT: kiểm tra yêu cầu, đếm lượt, gọi API. Dùng chung cho Worker và server cục bộ.
-// Ảnh và câu lệnh chỉ đi qua bộ nhớ tới Google/OpenAI khi người dùng đồng ý: không lưu, không ghi log nội dung.
+// Làm Nét bằng Gemini: kiểm tra yêu cầu, đếm lượt, gọi API. Dùng chung cho Worker và server cục bộ.
+// Ảnh và câu lệnh chỉ đi qua bộ nhớ tới Google khi người dùng đồng ý: không lưu, không ghi log nội dung.
 import { contributionDay } from './contribution-limit.mjs';
 import { fail, imageMime } from './validation.mjs';
 
@@ -8,8 +8,8 @@ export const AI_CLIENT_LIMIT = 3;   // mỗi người (IP băm theo ngày) mỗi
 export const AI_MAX_IMAGE = 3 * 1024 * 1024;
 export const AI_MAX_PROMPT = 1000;
 export const AI_BODY_LIMIT = Math.ceil(AI_MAX_IMAGE / 3) * 4 + 8192;
-export const AI_MODELS = { gemini: 'gemini-nano-banana-2.1', openaiEdit: 'gpt-image-2.6-sunburst', openaiGenerate: 'gpt-image-2.6-flare' };
-const NAMES = { gemini: 'Gemini', openai: 'ChatGPT' };
+export const AI_MODELS = { gemini: 'gemini-nano-banana-2.1' };
+const NAMES = { gemini: 'Gemini' };
 const ENHANCE = 'Restore and sharpen this photo. Remove blur, noise and compression artifacts and bring out fine, natural detail. '
   + 'Keep the exact composition, framing, colors, lighting, faces, identity, text and every object unchanged. Do not add, remove or restyle anything.';
 const TIMEOUT = 120000;
@@ -36,20 +36,20 @@ export function aiStatus(sql, client, now = Date.now()) {
 }
 
 export function quotaMessage(reason) {
-  return reason === 'global' ? 'Hôm nay website đã dùng hết lượt Gemini/ChatGPT. Hãy quay lại vào ngày mai, hoặc dùng chế độ làm nét trên máy.'
-    : `Bạn đã dùng đủ ${AI_CLIENT_LIMIT} lượt Gemini/ChatGPT hôm nay. Hãy quay lại vào ngày mai, hoặc dùng chế độ làm nét trên máy.`;
+  return reason === 'global' ? 'Hôm nay website đã dùng hết lượt Gemini. Hãy quay lại vào ngày mai, hoặc dùng chế độ làm nét trên máy.'
+    : `Bạn đã dùng đủ ${AI_CLIENT_LIMIT} lượt Gemini hôm nay. Hãy quay lại vào ngày mai, hoặc dùng chế độ làm nét trên máy.`;
 }
 
 export function parseAiRequest(value) {
   const provider = value?.provider, mode = value?.mode;
-  if (!Object.hasOwn(NAMES, provider)) fail(400, 'Hãy chọn Gemini hoặc ChatGPT.');
+  if (!Object.hasOwn(NAMES, provider)) fail(400, 'Hãy chọn Gemini.');
   if (mode === 'generate') {
     const prompt = typeof value.prompt === 'string' ? value.prompt.trim() : '';
     if (!prompt || prompt.length > AI_MAX_PROMPT) fail(400, `Hãy mô tả ảnh muốn tạo, tối đa ${AI_MAX_PROMPT.toLocaleString('vi-VN')} ký tự.`);
     return { provider, mode, prompt };
   }
   if (mode !== 'enhance') fail(400, 'Chế độ chưa hợp lệ.');
-  if (value.consent !== true) fail(400, 'Bạn cần đồng ý gửi ảnh trước khi dùng Gemini hoặc ChatGPT.');
+  if (value.consent !== true) fail(400, 'Bạn cần đồng ý gửi ảnh trước khi dùng Gemini.');
   const match = typeof value.image === 'string' && value.image.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/]+={0,2})$/);
   if (!match || match[2].length > Math.ceil(AI_MAX_IMAGE / 3) * 4 || match[2].length % 4) fail(400, 'Chỉ nhận ảnh JPEG, PNG hoặc WebP dưới 3 MB.');
   const image = Buffer.from(match[2], 'base64');
@@ -64,7 +64,7 @@ async function call(url, init, provider, fetchImpl) {
   const data = await response.json().catch(() => null);
   if (response.ok) return data;
   const code = data?.error?.code, status = data?.error?.status;
-  if (code === 'moderation_blocked' || code === 'content_policy_violation' || status === 'INVALID_ARGUMENT' && /safety|policy/i.test(data?.error?.message || '')) fail(422, `${NAMES[provider]} từ chối xử lý nội dung này. Hãy thử ảnh hoặc mô tả khác.`);
+  if (status === 'INVALID_ARGUMENT' && /safety|policy/i.test(data?.error?.message || '')) fail(422, `${NAMES[provider]} từ chối xử lý nội dung này. Hãy thử ảnh hoặc mô tả khác.`);
   if ([401, 403].includes(response.status)) fail(503, `${NAMES[provider]} chưa sẵn sàng (khóa API chưa đúng hoặc chưa bật thanh toán).`);
   if (response.status === 429) fail(503, `${NAMES[provider]} đang bận hoặc hết hạn mức. Hãy thử lại sau.`);
   console.error(JSON.stringify({ message: 'lamnet_ai_failed', provider, status: response.status, code: code || status || null }));
@@ -77,34 +77,17 @@ function result(base64, provider) {
   try { return { bytes, mime: imageMime(bytes) }; } catch { fail(502, `${NAMES[provider]} trả về dữ liệu không phải ảnh. Hãy thử lại sau.`); }
 }
 
-// Gọi Gemini hoặc OpenAI. keys: { gemini, openai }; fetchImpl để test thay bằng bản giả.
+// Gọi Gemini. keys: { gemini }; fetchImpl để test thay bằng bản giả.
 export async function runAi(request, keys, fetchImpl = fetch) {
   const key = keys?.[request.provider];
   if (!key) fail(503, `${NAMES[request.provider]} chưa được bật trên website này.`);
-  if (request.provider === 'gemini') {
-    const parts = request.mode === 'enhance'
-      ? [{ text: ENHANCE }, { inline_data: { mime_type: request.mime, data: request.image.toString('base64') } }]
-      : [{ text: request.prompt }];
-    const data = await call(`https://generativelanguage.googleapis.com/v1/models/${AI_MODELS.gemini}:generateContent`, {
-      method: 'POST', headers: { 'x-goog-api-key': key, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseModalities: ['IMAGE'], imageConfig: { imageSize: '2K' } } })
-    }, 'gemini', fetchImpl);
-    const part = data?.candidates?.[0]?.content?.parts?.find(item => item.inlineData || item.inline_data);
-    return result((part?.inlineData || part?.inline_data)?.data, 'gemini');
-  }
-  let data;
-  if (request.mode === 'enhance') {
-    const form = new FormData();
-    form.append('model', AI_MODELS.openaiEdit);
-    form.append('image[]', new Blob([request.image], { type: request.mime }), 'anh.' + request.mime.split('/')[1]);
-    form.append('prompt', ENHANCE);
-    for (const [name, value] of [['size', 'auto'], ['quality', 'medium'], ['output_format', 'jpeg'], ['n', '1']]) form.append(name, value);
-    data = await call('https://api.openai.com/v1/images/edits', { method: 'POST', headers: { Authorization: `Bearer ${key}` }, body: form }, 'openai', fetchImpl);
-  } else {
-    data = await call('https://api.openai.com/v1/images/generations', {
-      method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: AI_MODELS.openaiGenerate, prompt: request.prompt, size: '1024x1024', quality: 'medium', output_format: 'jpeg', n: 1 })
-    }, 'openai', fetchImpl);
-  }
-  return result(data?.data?.[0]?.b64_json, 'openai');
+  const parts = request.mode === 'enhance'
+    ? [{ text: ENHANCE }, { inline_data: { mime_type: request.mime, data: request.image.toString('base64') } }]
+    : [{ text: request.prompt }];
+  const data = await call(`https://generativelanguage.googleapis.com/v1/models/${AI_MODELS.gemini}:generateContent`, {
+    method: 'POST', headers: { 'x-goog-api-key': key, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseModalities: ['IMAGE'], imageConfig: { imageSize: '2K' } } })
+  }, 'gemini', fetchImpl);
+  const part = data?.candidates?.[0]?.content?.parts?.find(item => item.inlineData || item.inline_data);
+  return result((part?.inlineData || part?.inline_data)?.data, 'gemini');
 }
