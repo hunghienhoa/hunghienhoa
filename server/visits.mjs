@@ -1,4 +1,4 @@
-export const VISIT_PAGES = ['main', 'blog', 'photobooth', 'snaptik'];
+export const VISIT_PAGES = ['main', 'blog', 'photobooth', 'snaptik', 'lamnet'];
 export const visitDay = now => new Date(now + 7 * 3600000).toISOString().slice(0, 10);
 export function initVisits(sql) {
   sql('CREATE TABLE IF NOT EXISTS visit_days(day TEXT,page TEXT,count INTEGER NOT NULL,PRIMARY KEY(day,page))');
@@ -24,5 +24,6 @@ export function pageForVisit(path) {
   if (/^\/blog\/(?:index.html)?$/.test(path)) return 'blog';
   if (/^\/photobooth\/(?:index\.html|shoot(?:\.html)?)?$/.test(path)) return 'photobooth';
   if (/^\/snaptik\/(?:index\.html)?$/.test(path)) return 'snaptik';
+  if (/^\/lamnet\/(?:index\.html)?$/.test(path)) return 'lamnet';
   return null;
 }

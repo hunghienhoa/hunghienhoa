@@ -4,8 +4,8 @@ import { SCALE, LIMITS, MAX_FILE, fitSize, tiles, toTensor, fromTensor, outputNa
 
 const $ = selector => document.querySelector(selector);
 const ORT_DIR = new URL('vendor/ort-1.22.0/', import.meta.url);
-const MODEL_URL = new URL('models/realesr-general-x4v3.onnx', import.meta.url);
-const SIZES = { wasm: 21872216, model: 4858607 }; // byte sau giải nén, để tính tiến độ khi máy chủ không gửi Content-Length
+const MODEL_URL = new URL('models/realesr-general-x4v3.onnx?v=2', import.meta.url); // tệp cache vĩnh viễn: đổi mô hình thì tăng v
+const SIZES = { wasm: 21872216, model: 4860375 }; // byte sau giải nén, để tính tiến độ khi máy chủ không gửi Content-Length
 const HOUR = 3600000;
 const ui = {
   picker: $('#picker'), input: $('#file'), drop: $('#dropzone'), working: $('#working'), result: $('#result'),
@@ -95,24 +95,25 @@ async function enhance(file) {
   show('working');
   say('');
   setProgress(0, 'Đang chuẩn bị AI…');
+  // Canvas nằm trong biến cục bộ tới khi xong; lượt bị hủy hoặc lỗi thì finally xóa, không để ảnh sót lại hay đè lượt mới.
+  let image, original, sharp;
   try {
     const engine = await loadAI(token);
-    let image;
     try { image = await decode(file); } catch { throw new Error('Không đọc được ảnh này. Hãy thử JPG, PNG hoặc WebP.'); }
+    if (token !== run) return;
     const source = { width: image.naturalWidth || image.width, height: image.naturalHeight || image.height };
     const fit = fitSize(source.width, source.height, engine.limit);
-    before = document.createElement('canvas');
-    before.width = fit.width; before.height = fit.height;
-    const bctx = before.getContext('2d', { willReadFrequently: true });
+    original = document.createElement('canvas');
+    original.width = fit.width; original.height = fit.height;
+    const bctx = original.getContext('2d', { willReadFrequently: true });
     bctx.fillStyle = '#fff';
     bctx.fillRect(0, 0, fit.width, fit.height);
     bctx.imageSmoothingQuality = 'high';
     bctx.drawImage(image, 0, 0, fit.width, fit.height);
-    image.close?.();
     const rgba = bctx.getImageData(0, 0, fit.width, fit.height).data;
-    after = document.createElement('canvas');
-    after.width = fit.width * SCALE; after.height = fit.height * SCALE;
-    const actx = after.getContext('2d');
+    sharp = document.createElement('canvas');
+    sharp.width = fit.width * SCALE; sharp.height = fit.height * SCALE;
+    const actx = sharp.getContext('2d');
     const list = tiles(fit.width, fit.height, engine.limit.tile);
     for (let i = 0; i < list.length; i++) {
       if (token !== run) return;
@@ -127,6 +128,7 @@ async function enhance(file) {
       output.dispose?.();
     }
     setProgress(1, 'Xong!');
+    before = original; after = sharp; original = sharp = undefined;
     showResult(source, fit, engine.provider);
   } catch (error) {
     if (token !== run || error?.message === 'cancelled') return;
@@ -134,6 +136,9 @@ async function enhance(file) {
     show('picker');
     say(error?.message?.startsWith('Không') || error?.message?.startsWith('Hãy') ? error.message : 'Máy này chưa chạy được AI làm nét. Hãy thử trình duyệt Chrome, Edge hoặc Safari bản mới.', true);
     console.error(error);
+  } finally {
+    image?.close?.();
+    for (const canvas of [original, sharp]) if (canvas) { canvas.width = 0; canvas.height = 0; }
   }
 }
 
