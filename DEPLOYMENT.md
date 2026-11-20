@@ -120,6 +120,20 @@ Khôi phục:
    ```
 3. Dự án Supabase mới hoặc trống: chạy migration (`supabase db push --db-url ...`) rồi nạp dữ liệu `psql "$SUPABASE_DB_URL" -f data.sql`. Dự án đang có dữ liệu thì chỉ nạp bảng cần khôi phục, kiểm tra kỹ trước khi ghi đè. `schema.sql` là ảnh chụp cấu trúc để đối chiếu.
 
+## Gemini và ChatGPT cho Làm Nét
+
+Làm Nét có thêm lựa chọn Gemini và ChatGPT (làm nét ảnh và tạo ảnh mới) qua `/api/lamnet/ai`. Mỗi người 3 lượt/ngày, cả website 30 lượt/ngày (giờ Việt Nam); lỗi thì trả lại lượt. Model nào chưa có khóa thì nút đó hiện “chưa bật”, phần còn lại vẫn chạy.
+
+1. Tạo khóa:
+   - Gemini: Google AI Studio → API keys, chọn dự án Google Cloud **đã bật thanh toán**. Bản miễn phí cho phép Google dùng dữ liệu để cải thiện sản phẩm, trái với chính sách riêng tư của website.
+   - ChatGPT: platform.openai.com → API keys, nạp tiền (Billing). OpenAI có thể yêu cầu xác minh tổ chức (Organization Verification) trước khi cho dùng model ảnh.
+   - Nên đặt hạn mức chi tiêu tháng ở cả hai nơi.
+2. Cloudflare → Workers & Pages → `hunghienhoa` → Settings → Variables and Secrets → Add, kiểu **Secret**: `GEMINI_API_KEY`, `OPENAI_API_KEY`. Có hiệu lực ngay, không cần triển khai lại; các lần triển khai sau vẫn giữ (`keepSecrets`).
+3. Không thêm hai khóa này vào `cloudflare.config.ts`: khai báo `bindings.secret()` biến chúng thành bắt buộc, thiếu là lần triển khai báo lỗi.
+4. Chạy cục bộ: đặt biến môi trường `GEMINI_API_KEY`, `OPENAI_API_KEY` trước `node server/server.mjs`.
+
+Model đang dùng nằm ở `AI_MODELS` trong `server/lamnet-ai.mjs` (Gemini `gemini-nano-banana-2.1`, ảnh 2K ≈ 0,05 USD; OpenAI `gpt-image-2.6-sunburst` để làm nét và `gpt-image-2.6-flare` để tạo ảnh, chất lượng medium ≈ 0,05 USD). Khi nhà cung cấp ngừng model, đổi tên ở đó.
+
 ## Giới hạn đã ghi nhận
 
 - Bản cục bộ tiếp tục dùng cookie/CSRF và SQLite riêng; dữ liệu trên máy và dữ liệu Supabase online là hai bộ dữ liệu khác nhau. Không tự đồng bộ database riêng lên GitHub.

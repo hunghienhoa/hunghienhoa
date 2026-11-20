@@ -3,6 +3,7 @@ import {usageReport} from '../server/usage.mjs';
 import {providerUsage} from './usage-providers.mjs';
 import { fail, post, siteSettings, submission, defaultSite, imageMime, mediaAsset } from '../server/validation.mjs';
 import { pageForVisit } from '../server/visits.mjs';
+import { AI_BODY_LIMIT, parseAiRequest, quotaMessage, runAi } from '../server/lamnet-ai.mjs';
 import { adsenseHtml } from '../server/adsense.mjs';
 import {snaptikRoute} from '../server/snaptik.mjs';
 import {agentRoute,pageContext,representation,markdown404,publicHtml,publicRedirect} from '../server/agent-content.mjs';
@@ -96,10 +97,10 @@ async function withSecurity(response, env, metadata, head=false) {
   return new Response(head?null:body, { status, headers });
 }
 
-async function readJson(request) {
+async function readJson(request, limit = API_LIMIT) {
   if (!request.headers.get('content-type')?.toLowerCase().startsWith('application/json')) fail(415, 'Yêu cầu cần dùng dữ liệu JSON.');
   const declared = Number(request.headers.get('content-length') || 0);
-  if (declared > API_LIMIT) fail(413, 'Dữ liệu gửi lên quá lớn.');
+  if (declared > limit) fail(413, 'Dữ liệu gửi lên quá lớn.');
   if (!request.body) fail(400, 'Dữ liệu gửi lên đang trống.');
   const reader = request.body.getReader(), chunks = [];
   let total = 0;
@@ -107,7 +108,7 @@ async function readJson(request) {
     const { done, value } = await reader.read();
     if (done) break;
     total += value.byteLength;
-    if (total > API_LIMIT) { await reader.cancel(); fail(413, 'Dữ liệu gửi lên quá lớn.'); }
+    if (total > limit) { await reader.cancel(); fail(413, 'Dữ liệu gửi lên quá lớn.'); }
     chunks.push(value);
   }
   const bytes = new Uint8Array(total);
@@ -249,6 +250,25 @@ async function publicApi(request, env, route, ctx) {
     const key=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contributionDay(Date.now())+':'+(request.headers.get('CF-Connecting-IP')||'unknown')))),byte=>byte.toString(16).padStart(2,'0')).join('');
     if(!(await env.SNAPTIK_LIMIT.limit({key})).success)fail(429,'Bạn thao tác hơi nhanh. Hãy chờ một phút rồi thử lại nhé.');
     return snaptikRoute(request);
+  }
+  if (route === '/api/lamnet/ai') {
+    if (!env.VISITS) fail(503, 'Chưa kiểm tra được lượt dùng AI. Hãy thử lại sau.');
+    const key=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contributionDay(Date.now())+':'+(request.headers.get('CF-Connecting-IP')||'unknown')))),byte=>byte.toString(16).padStart(2,'0')).join('');
+    const counter=env.VISITS.get(env.VISITS.idFromName('site')), keys={ gemini: env.GEMINI_API_KEY, openai: env.OPENAI_API_KEY };
+    if (request.method === 'GET') return json({ ...(await (await counter.fetch(`https://counter/ai-status?key=${key}`)).json()), providers: { gemini: !!keys.gemini, openai: !!keys.openai } });
+    if (request.method !== 'POST') fail(405, 'Phương thức chưa được hỗ trợ.');
+    const value = parseAiRequest(await readJson(request, AI_BODY_LIMIT));
+    const quota=await counter.fetch(`https://counter/ai?key=${key}`,{method:'POST'}), claim=await quota.json().catch(()=>({}));
+    if (quota.status === 429) fail(429, quotaMessage(claim.reason));
+    if (!quota.ok) fail(503, 'Chưa kiểm tra được lượt dùng AI. Hãy thử lại sau.');
+    try {
+      const out = await runAi(value, keys);
+      return new Response(out.bytes, { headers: { 'Content-Type': out.mime, 'Cache-Control': 'no-store', 'X-Lamnet-Remaining': String(claim.remaining) } });
+    } catch (error) {
+      await counter.fetch(`https://counter/ai-release?key=${key}`,{method:'POST'}).catch(()=>{});
+      if (!error?.status) throw error;
+      return json({ error: error.message }, error.status); // thông báo đã soạn sẵn (chưa bật, đang bận, từ chối…), không chứa khóa hay nội dung
+    }
   }
   if (request.method === 'GET' && route === '/api/health') return json({ ok: true, service: 'hunghienhoa' });
   const media=route.match(/^\/api\/media\/([a-f0-9-]{36})\.webp$/);

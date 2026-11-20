@@ -1,4 +1,5 @@
 import {initContributionLimit,claimContribution,contributionDay} from './contribution-limit.mjs';
+import {initAiQuota,claimAi,aiStatus,quotaMessage,parseAiRequest,runAi,AI_BODY_LIMIT} from './lamnet-ai.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -63,6 +64,9 @@ export function createApp(options = {}) {
   const quotaSql=(query,...params)=>db.prepare(query).all(...params);
   db.exec('CREATE TABLE IF NOT EXISTS media_assets(id TEXT PRIMARY KEY,scope TEXT NOT NULL,image BLOB NOT NULL)');
   initContributionLimit(quotaSql);
+  initAiQuota(quotaSql);
+  // Khóa Gemini/OpenAI chỉ đọc từ biến môi trường của máy chạy server, không lưu vào database hay dist.
+  const aiKeys = options.aiKeys ?? { gemini: process.env.GEMINI_API_KEY, openai: process.env.OPENAI_API_KEY };
   db.prepare('INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)').run('site', JSON.stringify(defaultSite));
   if (!db.prepare('SELECT value FROM settings WHERE key=?').get('seeded')) {
     for (const seed of seedPosts) db.prepare('INSERT INTO posts(id,slug,title,excerpt,content,category,tags,status,is_sample,cover,created_at,published_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)').run(randomUUID(), seed.slug, seed.title, seed.excerpt, seed.content, seed.category, JSON.stringify(seed.tags), 'published', 1, null, now(), now(), now());
@@ -117,14 +121,14 @@ export function createApp(options = {}) {
     if (write && req.headers['x-csrf-token'] !== session.csrf) fail(403, 'Phiên xác thực thao tác chưa hợp lệ. Hãy tải lại trang.');
     return session;
   }
-  async function body(req) {
+  async function body(req, limit = 2 * 1024 * 1024) {
     if (!/^application\/json(?:;|$)/i.test(req.headers['content-type'] || '')) fail(415, 'Chỉ nhận dữ liệu JSON.');
-    if (Number(req.headers['content-length'] || 0) > 2 * 1024 * 1024) fail(413, 'Dữ liệu gửi lên quá lớn.');
+    if (Number(req.headers['content-length'] || 0) > limit) fail(413, 'Dữ liệu gửi lên quá lớn.');
     let size = 0;
     const chunks = [];
     for await (const chunk of req) {
       size += chunk.length;
-      if (size > 2 * 1024 * 1024) fail(413, 'Dữ liệu gửi lên quá lớn.');
+      if (size > limit) fail(413, 'Dữ liệu gửi lên quá lớn.');
       chunks.push(chunk);
     }
     try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { fail(400, 'Dữ liệu JSON chưa hợp lệ.'); }
@@ -174,6 +178,18 @@ export function createApp(options = {}) {
         const response=await snaptikRoute(request,{fetcher:options.videoFetch||fetch});
         res.writeHead(response.status,Object.fromEntries(response.headers));
         if(response.body)await pipeline(Readable.fromWeb(response.body),res).catch(()=>res.destroy());else res.end();return;
+      }
+      if (route === '/api/lamnet/ai') {
+        const client=createHash('sha256').update(contributionDay(now())+':'+req.socket.remoteAddress).digest('hex');
+        if (req.method === 'GET') return json(res, { ...aiStatus(quotaSql, client, now()), providers: { gemini: !!aiKeys.gemini, openai: !!aiKeys.openai } });
+        if (req.method !== 'POST') fail(405, 'Phương thức chưa được hỗ trợ.');
+        const value = parseAiRequest(await body(req, AI_BODY_LIMIT));
+        const claim = claimAi(quotaSql, client, now());
+        if (claim.reason) fail(429, quotaMessage(claim.reason));
+        let out;
+        try { out = await runAi(value, aiKeys, options.aiFetch || fetch); } catch (error) { claimAi(quotaSql, client, now(), true); throw error; }
+        res.writeHead(200, { 'Content-Type': out.mime, 'Content-Length': out.bytes.length, 'Cache-Control': 'no-store', 'X-Lamnet-Remaining': String(claim.remaining) });
+        return res.end(out.bytes);
       }
       if (req.method === 'GET' && route === '/api/health') return json(res, { ok: true });
       if (req.method === 'GET' && route === '/api/site') return json(res, JSON.parse(getSetting('site')));
