@@ -102,9 +102,9 @@
     "semantic_hash": ""
   },
   "server/snaptik.mjs": {
-    "mtime": 1795004904.1902685,
-    "seen": 1795063948.6967418,
-    "ast_hash": "840b72ca7579b5f45e8b43652abc1ae8",
+    "mtime": 1795617148.934203,
+    "seen": 1795617383.1877072,
+    "ast_hash": "61a05120fafeaa88d149042a9fa647d4",
     "semantic_hash": ""
   },
   "server/usage.mjs": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795163751.152507,
-    "seen": 1795163769.7426758,
-    "ast_hash": "5b040f9b03c2f3d03a3c7dd308679e20",
+    "mtime": 1795617302.7126238,
+    "seen": 1795617383.1879356,
+    "ast_hash": "5691d98aa6c9f2636878199a817c71aa",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -354,9 +354,9 @@
     "semantic_hash": ""
   },
   "tools/snaptik.test.mjs": {
-    "mtime": 1795004904.4342575,
-    "seen": 1795063948.6967828,
-    "ast_hash": "789b61063b113c532b3a54367578567c",
+    "mtime": 1795617186.5743945,
+    "seen": 1795617383.18851,
+    "ast_hash": "5583f6a79727d96283ad3faee4207484",
     "semantic_hash": ""
   },
   "tools/split-sticker-atlas.py": {

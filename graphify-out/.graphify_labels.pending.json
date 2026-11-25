@@ -13,7 +13,7 @@
   "11": "Element",
   "12": "package.json",
   "13": "Security Audit",
-  "14": "ref_node_path",
+  "14": "ref_node_os",
   "15": "sticker-assets.test.mjs",
   "16": "Cloud and Deployment Hunting",
   "17": "steps",
@@ -74,12 +74,11 @@
   "72": "Hướng dẫn mã nguồn — Hùng Hiền Hòa",
   "73": "ref_node_path",
   "74": "load_state",
-  "75": "lamnet-ai.mjs",
+  "75": "server.mjs",
   "76": "steps",
   "77": "Security Policy",
   "78": "browser-material-cards.mjs",
   "79": "server.test.mjs",
-  "80": "server.mjs",
-  "81": "browser-adsense-readiness.mjs",
+  "80": "browser-stickers-audit.mjs",
   "83": "adsense.test.mjs"
 }
