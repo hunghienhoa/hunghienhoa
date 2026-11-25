@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1795613240.9062338,
-    "seen": 1795613278.328919,
-    "ast_hash": "44e396579bb0a24ab9f184011973742e",
+    "mtime": 1795625413.5611875,
+    "seen": 1795625661.7288215,
+    "ast_hash": "033ed1ffc72bbb081d008a0858da5d27",
     "semantic_hash": ""
   },
   "server/adsense.mjs": {
@@ -150,9 +150,9 @@
     "semantic_hash": ""
   },
   "tools/adsense.test.mjs": {
-    "mtime": 1795617542.8440332,
-    "seen": 1795617662.9253042,
-    "ast_hash": "b302a92f578f38d52ed4191ae820c800",
+    "mtime": 1795625410.1671972,
+    "seen": 1795625661.7290776,
+    "ast_hash": "d392a531e16cce9cc23335564ed13569",
     "semantic_hash": ""
   },
   "tools/agent-readiness.test.mjs": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795623170.5669692,
-    "seen": 1795623184.7687628,
-    "ast_hash": "193ee60fed9ba42ec992cd2332be1947",
+    "mtime": 1795625652.8073099,
+    "seen": 1795625661.7291334,
+    "ast_hash": "ee8978eec9813a94086881abf25d5ed6",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -378,21 +378,21 @@
     "semantic_hash": ""
   },
   "tools/viewport.test.mjs": {
-    "mtime": 1795623170.498969,
-    "seen": 1795623184.7694767,
-    "ast_hash": "911b8cfb22667d57c9924647cc7d9e77",
+    "mtime": 1795625410.1677446,
+    "seen": 1795625661.7298992,
+    "ast_hash": "1a4d69f41dd5824f6c69aaa0c6386745",
     "semantic_hash": ""
   },
   "worker/index.mjs": {
-    "mtime": 1795617630.4263778,
-    "seen": 1795617662.9263897,
-    "ast_hash": "58b7b57863213b70da9510a0785af2ab",
+    "mtime": 1795624022.046543,
+    "seen": 1795625661.7299018,
+    "ast_hash": "9885f8058fbec3be9ad547e49d7cb165",
     "semantic_hash": ""
   },
   "worker/index.test.mjs": {
-    "mtime": 1795617542.843105,
-    "seen": 1795617662.9263928,
-    "ast_hash": "a80a650968081b41bad4ba7cc28ce089",
+    "mtime": 1795624035.9832118,
+    "seen": 1795625661.7299042,
+    "ast_hash": "22c01d330ee1027a906a9f100228bb5a",
     "semantic_hash": ""
   },
   "worker/usage-providers.mjs": {
@@ -528,9 +528,9 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1795161604.8893445,
-    "seen": 1795161679.3580089,
-    "ast_hash": "bc1978bcbc056439674e002392d013f0",
+    "mtime": 1795625584.0060792,
+    "seen": 1795625661.7305424,
+    "ast_hash": "7de184f04c22559f7f73d56522ce8913",
     "semantic_hash": ""
   },
   "API-CONTRACT.md": {
@@ -1839,6 +1839,12 @@
     "mtime": 1795617630.426905,
     "seen": 1795617662.9253066,
     "ast_hash": "1fbb257095ce6dbed4622607d4fdae84",
+    "semantic_hash": ""
+  },
+  "tools/i18n.test.mjs": {
+    "mtime": 1795625565.4051325,
+    "seen": 1795625661.729493,
+    "ast_hash": "7d080fe95992fbb8a3dc38247811b35e",
     "semantic_hash": ""
   },
   "package-lock.json": {

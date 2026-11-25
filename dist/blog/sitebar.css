@@ -42,3 +42,11 @@ html{scroll-padding-top:84px}
 .sitebar-home span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media(max-width:900px){.sitebar-nav>.sitebar-home{width:100%;justify-content:flex-start;padding:0 4px}.sitebar-home span{position:static;width:auto;height:auto;overflow:visible;clip:auto}.sitebar-static .sitebar-nav>.sitebar-home{width:auto;padding:0 12px}.sitebar-static .sitebar-home span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 @media(prefers-reduced-motion:no-preference){.sitebar-nav>a,.sitebar-projects>summary,.sitebar-list a{transition:background-color .15s}}
+/* Nút chuyển ngôn ngữ Việt / English; trang được giấu ngắn trong lúc tải bản dịch để không nháy chữ Việt. */
+html.i18n-wait body{opacity:0}
+.sitebar-lang{display:inline-flex;align-items:center;justify-content:center;gap:3px;flex:none;min-width:64px;min-height:44px;margin-left:6px;padding:0 8px;border:1px solid var(--blue,#303487);background:transparent;color:var(--blue,#303487);font:900 12px/1 inherit;font-family:inherit;letter-spacing:.5px;cursor:pointer}
+.sitebar-lang span{padding:4px 5px}
+.sitebar-lang span[aria-hidden]{padding:0;opacity:.5}
+.sitebar-lang span.on{background:var(--yellow,#ffdc38)}
+.sitebar-lang:focus-visible{outline:3px solid #ec6550;outline-offset:2px}
+@media(max-width:900px){.sitebar-lang{width:100%;margin:10px 0 0;min-height:48px}.sitebar-static .sitebar-lang{width:auto;margin:0 0 0 6px}}

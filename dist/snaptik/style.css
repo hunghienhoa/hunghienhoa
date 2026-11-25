@@ -6,3 +6,4 @@
 #platform{font-size:12px;font-weight:700;margin-top:14px;color:var(--blue)}.text-link b{font-weight:inherit;margin-left:4px;margin-right:auto}
 
 html,body{overflow-x:clip}
+.input-shell input{flex:1 1 0}.input-shell button{flex:none}
