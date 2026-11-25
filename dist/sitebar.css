@@ -36,4 +36,9 @@ html{scroll-padding-top:84px}
   .sitebar-nav>.sitebar-cta,.sitebar-tag{margin:10px 0 0;justify-content:center;rotate:0deg}
 }
 @media(max-width:900px){.sitebar-static .sitebar-in{flex-wrap:wrap}.sitebar-static .sitebar-nav{display:flex;position:static;flex:1;flex-direction:row;flex-wrap:wrap;justify-content:flex-end;max-height:none;padding:0;background:none;border:0;box-shadow:none}.sitebar-static .sitebar-nav>a,.sitebar-static .sitebar-projects>summary{width:auto;min-height:44px;border:0;font-size:14px}.sitebar-static .sitebar-projects{width:auto}.sitebar-static .sitebar-list{position:absolute;right:0;top:calc(100% + 6px);width:min(270px,calc(100vw - 32px));padding:8px;border:1px solid var(--blue,#303487);box-shadow:5px 6px 0 #30348740;background:var(--cream,#fbf2e3)}}
+/* Biểu tượng ngôi nhà: trên máy tính chỉ hiện hình (chữ vẫn có cho trình đọc màn hình), trong menu ☰ hiện cả chữ. */
+.sitebar-nav>.sitebar-home{width:46px;padding:0;justify-content:center}
+.sitebar-home svg{width:22px;height:22px;flex:none}
+.sitebar-home span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(max-width:900px){.sitebar-nav>.sitebar-home{width:100%;justify-content:flex-start;padding:0 4px}.sitebar-home span{position:static;width:auto;height:auto;overflow:visible;clip:auto}.sitebar-static .sitebar-nav>.sitebar-home{width:auto;padding:0 12px}.sitebar-static .sitebar-home span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}}
 @media(prefers-reduced-motion:no-preference){.sitebar-nav>a,.sitebar-projects>summary,.sitebar-list a{transition:background-color .15s}}
