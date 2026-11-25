@@ -18,7 +18,7 @@ const page=await browser.newPage();
 const errors=[],failures=[],report=[];
 page.on('pageerror',e=>errors.push(e.message));
 page.on('response',r=>{if(/assets\/stickers\/|decorative-stickers/.test(r.url())&&![200,304].includes(r.status()))failures.push([r.url(),r.status()]);});
-const pages=process.env.STICKER_AUDIT_ORIGIN?['https://hunghienhoa.com/','https://blog.hunghienhoa.com/','https://photobooth.hunghienhoa.com/']:['/','/blog/','/photobooth/'];
+const pages=process.env.STICKER_AUDIT_ORIGIN?['https://hunghienhoa.com/','https://hunghienhoa.com/blog/','https://hunghienhoa.com/photobooth/']:['/','/blog/','/photobooth/'];
 try{
  for(let i=0;i<pages.length;i++)for(const width of [320,390,768,1440,1920]){
   await page.setViewportSize({width,height:900});

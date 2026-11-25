@@ -24,7 +24,7 @@
 
 Lượt này không kiểm tra trực quan PC/mobile vì quyền trình duyệt cục bộ trong Work settings bị tắt. Chưa thử máy ảnh thật, Safari/iPhone thật hoặc thiết lập tài khoản thật. Các phần giao diện trước lượt mở rộng này đã được kiểm tra, nhưng không dùng kết quả cũ để khẳng định giao diện mới.
 
-Chưa gắn `admin.hunghienhoa.com`, DNS/HTTPS hoặc database cloud. Website có API mới cần host Node/API tương thích; đưa riêng `dist` lên hosting tĩnh sẽ không có blog/quản trị/duyệt khung. Khi tách tên miền, cấu hình reverse proxy/API cùng origin và allowlist theo `server/README.md`. Manifest Sites gốc được giữ nguyên, không tạo site thay thế.
+Chưa gắn `hunghienhoa.com/admin`, DNS/HTTPS hoặc database cloud. Website có API mới cần host Node/API tương thích; đưa riêng `dist` lên hosting tĩnh sẽ không có blog/quản trị/duyệt khung. Khi tách tên miền, cấu hình reverse proxy/API cùng origin và allowlist theo `server/README.md`. Manifest Sites gốc được giữ nguyên, không tạo site thay thế.
 
 Bộ định giờ chỉ chạy khi máy chủ hoạt động; nếu máy chủ tắt, bản quá hạn bị xóa ngay khi chạy lại trước khi phục vụ. Không đưa database bản chờ vào sao lưu/đồng bộ ngoài.
 

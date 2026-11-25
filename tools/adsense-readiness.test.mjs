@@ -10,15 +10,17 @@ import {articleHtml,publicHtml,pageContext,publicRedirect,POLICY_PATHS} from '..
 const ad='google.com, pub-1643127618182542, DIRECT, f08c47fec0942fa0\n';
 assert.equal(fs.readFileSync('dist/ads.txt','utf8').replaceAll('\r\n','\n'),ad);
 for(const [source,target] of [
- ['http://www.hunghienhoa.com/blog/?bai=published','https://blog.hunghienhoa.com/?bai=published'],
- ['http://hunghienhoa.com/photobooth/shoot/?frame=one','https://photobooth.hunghienhoa.com/shoot?frame=one'],
- ['http://blog.hunghienhoa.com/?bai=published','https://blog.hunghienhoa.com/?bai=published'],
- ['https://photobooth.hunghienhoa.com/shoot.html','https://photobooth.hunghienhoa.com/shoot'],
+ ['http://www.hunghienhoa.com/blog/?bai=published','https://hunghienhoa.com/blog/?bai=published'],
+ ['http://hunghienhoa.com/photobooth/shoot/?frame=one','https://hunghienhoa.com/photobooth/shoot?frame=one'],
+ ['https://blog.hunghienhoa.com/?bai=published','https://hunghienhoa.com/blog/?bai=published'],
+ ['https://photobooth.hunghienhoa.com/shoot.html','https://hunghienhoa.com/photobooth/shoot'],
  ['https://blog.hunghienhoa.com/ads.txt','https://hunghienhoa.com/ads.txt'],
  ['https://photobooth.hunghienhoa.com/ads.txt','https://hunghienhoa.com/ads.txt'],
+ ['https://hunghienhoa.com/blog/index.html','https://hunghienhoa.com/blog/'],
+ ['https://hunghienhoa.com/blog','https://hunghienhoa.com/blog/'],
  ['https://hunghienhoa.com/chinh-sach-rieng-tu.html','https://hunghienhoa.com/chinh-sach-rieng-tu']
 ])assert.equal(publicRedirect(source)?.href,target);
-for(const url of ['http://127.0.0.1:4180/blog/','https://blog.hunghienhoa.com/','http://untrusted.test/'])assert.equal(publicRedirect(url),null);
+for(const url of ['http://127.0.0.1:4180/blog/','https://hunghienhoa.com/blog/','http://untrusted.test/'])assert.equal(publicRedirect(url),null);
 
 const content='## Tiêu đề riêng\n\n**Đậm** và *nghiêng*, `x < y`, [Nguồn](https://example.test/?a=1&b=2).\n\n1. Đầu\n2. Sau\n\n- Khác\n\n> Trích dẫn\n\n```html\n<script>alert("x")</script>\n  giữ thụt dòng $&\n```\n\n<script>unsafe()</script>\n[javascript](javascript:alert(1))';
 const rendered=articleHtml(content);
@@ -31,7 +33,7 @@ assert.ok(rendered.includes('rel="noopener noreferrer"')&&rendered.includes('a=1
 const post={id:'1',slug:'published',title:'PUBLIC-ARTICLE $& </title><script>bad()</script>',excerpt:'Mô tả riêng $& "quoted"',content,category:'Thiết kế',publishedAt:Date.UTC(2026,10,13),tags:['<script>bad</script>'],coverUrl:'/api/posts/1/cover.webp',status:'published'};
 const template=fs.readFileSync('dist/blog/index.html','utf8');
 const data={post:async slug=>slug==='published'?post:null,listing:async()=>[post,{...post,slug:'draft',title:'PRIVATE-DRAFT',status:'draft'}]};
-const url=new URL('https://blog.hunghienhoa.com/?bai=published');
+const url=new URL('https://hunghienhoa.com/blog/?bai=published');
 const page=await publicHtml(template,defaultSite,pageContext(url),url,data);
 assert.equal(page.status,200);
 assert.ok(page.body.includes('id="article-body"><h2>Tiêu đề riêng</h2>'));
@@ -43,8 +45,8 @@ assert.ok(!page.body.includes('<script>bad()'));
 const graph=JSON.parse(page.body.match(/type="application\/ld\+json">([\s\S]*?)<\/script>/)[1])['@graph'];
 const schema=graph.find(x=>x['@type']==='Article');
 assert.equal(schema.headline,post.title);assert.equal(schema.datePublished,'2026-11-13T00:00:00.000Z');
-assert.equal(schema.image[0],'https://blog.hunghienhoa.com/api/posts/1/cover.webp');
-const listing=await publicHtml(template,defaultSite,pageContext(new URL('https://blog.hunghienhoa.com/')),new URL('https://blog.hunghienhoa.com/'),data);
+assert.equal(schema.image[0],'https://hunghienhoa.com/api/posts/1/cover.webp');
+const listing=await publicHtml(template,defaultSite,pageContext(new URL('https://hunghienhoa.com/blog/')),new URL('https://hunghienhoa.com/blog/'),data);
 assert.ok(listing.body.includes('href="?bai=published"')&&!listing.body.includes('PRIVATE-DRAFT'));
 
 
@@ -80,11 +82,11 @@ globalThis.fetch=async input=>{const u=new URL(input);if(u.pathname.endsWith('/s
 try{
  await verify((url,o)=>worker.fetch(new Request(url,o),env),'https://hunghienhoa.com',null);
  for(const method of ['GET','HEAD']){
-  let r=await worker.fetch(new Request('https://blog.hunghienhoa.com/?bai=published',{method}),env);assert.equal(r.status,200);const body=await r.text();assert.ok(method==='HEAD'?body==='':body.includes('Tiêu đề riêng')&&body.includes('"@type":"Article"'));
-  r=await worker.fetch(new Request('https://blog.hunghienhoa.com/?bai=not-found',{method}),env);assert.equal(r.status,404);assert.match(r.headers.get('x-robots-tag'),/noindex/);if(method==='HEAD')assert.equal(await r.text(),'');
+  let r=await worker.fetch(new Request('https://hunghienhoa.com/blog/?bai=published',{method}),env);assert.equal(r.status,200);const body=await r.text();assert.ok(method==='HEAD'?body==='':body.includes('Tiêu đề riêng')&&body.includes('"@type":"Article"'));
+  r=await worker.fetch(new Request('https://hunghienhoa.com/blog/?bai=not-found',{method}),env);assert.equal(r.status,404);assert.match(r.headers.get('x-robots-tag'),/noindex/);if(method==='HEAD')assert.equal(await r.text(),'');
  }
- const root=await worker.fetch(new Request('https://hunghienhoa.com/'),env);const rootHtml=await root.text();assert.ok(rootHtml.includes('href="https://blog.hunghienhoa.com/"')&&!rootHtml.includes('latest-posts'));
- const shoot=await worker.fetch(new Request('https://photobooth.hunghienhoa.com/shoot'),env);assert.ok((await shoot.text()).includes('rel="canonical" href="https://photobooth.hunghienhoa.com/shoot"'));
- for(const source of ['http://hunghienhoa.com/','http://blog.hunghienhoa.com/?bai=published','http://www.hunghienhoa.com/photobooth/shoot/','https://blog.hunghienhoa.com/ads.txt']){const r=await worker.fetch(new Request(source),env);assert.equal(r.status,308);assert.equal(r.headers.get('location'),publicRedirect(source).href);}
+ const root=await worker.fetch(new Request('https://hunghienhoa.com/'),env);const rootHtml=await root.text();assert.ok(rootHtml.includes('href="/blog/"')&&!rootHtml.includes('latest-posts'));
+ const shoot=await worker.fetch(new Request('https://hunghienhoa.com/photobooth/shoot'),env);assert.ok((await shoot.text()).includes('rel="canonical" href="https://hunghienhoa.com/photobooth/shoot"'));
+ for(const source of ['http://hunghienhoa.com/','https://blog.hunghienhoa.com/?bai=published','http://www.hunghienhoa.com/photobooth/shoot/','https://blog.hunghienhoa.com/ads.txt']){const r=await worker.fetch(new Request(source),env);assert.equal(r.status,308);assert.equal(r.headers.get('location'),publicRedirect(source).href);}
 }finally{globalThis.fetch=originalFetch;}
-console.log('PASS: publisher ads.txt, one-hop subdomains/HTTPS, published-only SSR article/listing, escaped rich text/code/schema, metadata, HEAD/404, policies and narrow public robots rules.');
+console.log('PASS: publisher ads.txt, one-hop legacy subdomains/HTTPS, published-only SSR article/listing, escaped rich text/code/schema, metadata, HEAD/404, policies and narrow public robots rules.');

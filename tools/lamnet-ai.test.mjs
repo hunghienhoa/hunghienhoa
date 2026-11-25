@@ -107,7 +107,7 @@ test('server cục bộ và Worker: cùng API /api/lamnet/ai, ảnh trả về n
   } }) };
   let calls = 0;
   const env = { VISITS: visits, AI: { run: async () => { if (++calls > 1) throw new Error('5000: internal error'); return { image: jpeg.toString('base64') }; } } };
-  const request = (method, body) => new Request('https://lamnet.hunghienhoa.com/api/lamnet/ai', { method, headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': '203.0.113.9' }, body: body && JSON.stringify(body) });
+  const request = (method, body) => new Request('https://hunghienhoa.com/api/lamnet/ai', { method, headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': '203.0.113.9' }, body: body && JSON.stringify(body) });
   assert.deepEqual(await (await worker.fetch(request('GET'), env)).json(), { remaining: 3, enabled: true });
   let response = await worker.fetch(request('POST', enhance), env);
   assert.deepEqual([response.status, response.headers.get('content-type'), response.headers.get('x-lamnet-remaining')], [200, 'image/jpeg', '2']);

@@ -1,0 +1,91 @@
+/* Giao diện 2026 — lớp phủ dùng chung cho mọi trang công khai, nạp sau cùng.
+   Tham khảo bố cục: thanh điều hướng dạng viên nổi (navbar.gallery), hero có lời mời + hai nút + điểm nổi bật (supahero.io),
+   footer nhiều cột với chữ ký lớn (footer.design). Giữ tông giấy kem / xanh tím / vàng; màu lấy từ biến --cream, --blue, --yellow
+   nên vẫn theo màu Hùng chỉnh trong trang quản trị. Không đổi cơ chế: chỉ đổi cách hiển thị các lớp sẵn có. */
+:root{
+  --hh-ink:var(--blue,#303487);--hh-paper:var(--cream,#fbf2e3);--hh-sun:var(--yellow,#ffdc38);--hh-coral:#ec6550;
+  --hh-card:color-mix(in srgb,var(--cream,#fbf2e3) 55%,#fff);
+  --hh-hair:color-mix(in srgb,var(--blue,#303487) 16%,transparent);
+  --hh-soft:color-mix(in srgb,var(--blue,#303487) 7%,transparent);
+  --hh-shadow:0 1px 0 color-mix(in srgb,var(--blue,#303487) 6%,transparent),0 26px 50px -30px color-mix(in srgb,var(--blue,#303487) 55%,transparent);
+  --hh-shadow-sm:0 1px 0 color-mix(in srgb,var(--blue,#303487) 6%,transparent),0 12px 26px -18px color-mix(in srgb,var(--blue,#303487) 60%,transparent);
+  /* Màu đảo cho footer tối: tính ở gốc để footer đổi được --blue/--cream mà vẫn theo màu tùy chỉnh. */
+  --hh-footer-bg:var(--blue,#303487);--hh-footer-fg:var(--cream,#fbf2e3)
+}
+html{scroll-padding-top:96px}
+body{background-color:var(--cream);background-image:radial-gradient(color-mix(in srgb,var(--blue) 15%,transparent) 1px,transparent 1.5px);background-size:24px 24px;background-attachment:scroll}
+
+/* ---------- Thanh điều hướng: viên nổi ---------- */
+.sitebar{position:sticky;top:0;z-index:60;padding:12px clamp(10px,2vw,20px) 0;background:transparent;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;pointer-events:none}
+.sitebar-in{pointer-events:auto;position:relative;width:min(1180px,100%);min-height:62px;margin:0 auto;padding:7px 8px 7px 22px;gap:10px;border:1px solid var(--hh-hair);border-radius:999px;background:color-mix(in srgb,var(--hh-card) 84%,transparent);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);box-shadow:var(--hh-shadow-sm)}
+.sitebar-brand{rotate:0deg;font-size:24px;letter-spacing:-1.2px}
+.sitebar-brand small{opacity:.75}
+.sitebar-nav{gap:2px;font-size:14px}
+.sitebar-nav>:first-child{margin-left:auto}
+.sitebar-nav>a,.sitebar-projects>summary{min-height:44px;padding:0 15px;border-radius:999px;font-weight:600}
+.sitebar-nav>a:hover,.sitebar-projects>summary:hover,.sitebar-projects[open]>summary{background:var(--hh-soft)}
+.sitebar-nav>a[aria-current]{background:var(--hh-soft)}
+.sitebar-nav>.sitebar-home{width:44px;border-radius:50%}
+.sitebar-nav>.sitebar-cta{margin-left:auto;padding:0 20px;border-radius:999px;background:var(--blue);color:var(--cream);rotate:0deg;font-weight:800;letter-spacing:0}
+.sitebar-nav>.sitebar-cta:hover{background:var(--blue);box-shadow:0 10px 20px -12px var(--blue);translate:0 -1px}
+.sitebar-tag{border-radius:999px;rotate:0deg}
+.sitebar-list{top:calc(100% + 12px);width:300px;padding:8px;border:1px solid var(--hh-hair);border-radius:22px;background:var(--hh-card);box-shadow:var(--hh-shadow)}
+.sitebar-list a{border-radius:14px;padding:11px 14px}
+.sitebar-list a:hover,.sitebar-list a[aria-current]{background:color-mix(in srgb,var(--yellow) 40%,transparent)}
+.sitebar-lang{min-height:44px;border-color:var(--hh-hair);border-radius:999px;padding:0 10px}
+.sitebar-lang span{border-radius:999px;padding:5px 7px}
+.sitebar-toggle{width:46px;height:46px;border-color:var(--hh-hair);border-radius:50%;font-size:20px}
+@media(max-width:900px){
+  .sitebar-in{min-height:58px;padding:6px 6px 6px 18px}
+  .sitebar-nav{left:clamp(10px,2vw,20px);right:clamp(10px,2vw,20px);top:calc(100% + 8px);padding:10px;border:1px solid var(--hh-hair);border-radius:24px;background:var(--hh-card);box-shadow:var(--hh-shadow);pointer-events:auto}
+  .sitebar-nav>:first-child{margin-left:0}
+  .sitebar-nav>a,.sitebar-projects>summary{border-top:0;border-radius:14px;padding:0 14px}
+  .sitebar-nav>.sitebar-home{width:100%;border-radius:14px;padding:0 14px}
+  .sitebar-nav>.sitebar-cta{margin:8px 0 0}
+  .sitebar-list{width:100%;padding:0 0 4px 10px;border:0;box-shadow:none;background:none}
+  .sitebar-static .sitebar-nav{left:auto;right:auto;padding:0;border:0;box-shadow:none;background:none}
+  .sitebar-static .sitebar-list{width:min(300px,calc(100vw - 32px));padding:8px;border:1px solid var(--hh-hair);background:var(--hh-card);box-shadow:var(--hh-shadow)}
+}
+
+/* ---------- Nút và nhãn dùng chung ---------- */
+.section-head .eyebrow,.completed-copy>.eyebrow{display:inline-flex;align-items:center;gap:8px;width:max-content;max-width:100%;padding:7px 13px;border:1px solid var(--hh-hair);border-radius:999px;background:color-mix(in srgb,var(--hh-card) 70%,transparent);letter-spacing:1.6px;line-height:1.3}
+.section-head .eyebrow::before{content:'';flex:none;width:7px;height:7px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 2px var(--blue)}
+.filters button{border:1px solid var(--hh-hair);border-radius:999px}
+.text-link{border-radius:2px}
+
+/* ---------- Footer tối, nhiều cột, chữ ký lớn ---------- */
+footer.unified-footer,footer.policy-footer{
+  --blue:var(--hh-footer-fg);--cream:var(--hh-footer-bg);
+  --hh-hair:color-mix(in srgb,var(--hh-footer-fg) 20%,transparent);--hh-soft:color-mix(in srgb,var(--hh-footer-fg) 9%,transparent);--hh-card:color-mix(in srgb,var(--hh-footer-fg) 8%,transparent);
+  position:relative;display:block;width:auto;max-width:none;margin:72px 0 0;padding:8px clamp(20px,5vw,64px) 0;overflow:hidden;border:0;border-radius:40px 40px 0 0;background:var(--hh-footer-bg);color:var(--hh-footer-fg)}
+footer.unified-footer>*,footer.policy-footer>*{width:min(1240px,100%);margin-inline:auto}
+.unified-footer .contact.section,.unified-footer .page-social{border-top:0;padding-top:48px}
+.unified-footer .contact-button{border-radius:999px;rotate:0deg;transform:none;background:var(--yellow);color:var(--hh-footer-bg)}
+.unified-footer .social-link{border-color:var(--hh-hair);border-radius:16px;background:var(--hh-soft);color:var(--hh-footer-fg)}
+.unified-footer a.social-link:hover,.unified-footer button.social-link:hover{transform:none;translate:0 -2px;background:var(--yellow);color:var(--hh-footer-bg)}
+.unified-footer .social-icon{border-radius:6px}
+.unified-footer .ideas:after,.unified-footer h2 em:after{background:var(--yellow);opacity:.9}
+.footer-columns{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:32px;padding:44px 0;border-top:1px solid var(--hh-hair);border-bottom:1px solid var(--hh-hair)}
+.footer-logo{display:inline-block;font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1}
+.footer-logo span{color:var(--yellow)}
+.footer-about p{max-width:34ch;margin-top:14px;font-size:15px;line-height:1.6;opacity:.85}
+.footer-col{display:block;margin:0;gap:0;font-size:inherit;font-weight:inherit}
+.footer-col h2{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;opacity:.65}
+.footer-col ul{display:grid;gap:2px;margin:0;padding:0;list-style:none}
+.footer-col a{display:inline-flex;align-items:center;min-height:40px;font-size:15px;font-weight:600}
+.footer-col a:hover{color:var(--yellow);translate:3px 0}
+footer.unified-footer .footer-wish,footer.policy-footer .footer-wish{padding:28px 8px 6px;border:0;color:var(--hh-footer-fg)}
+footer .policy-links{padding:10px 0 0;opacity:.85}
+footer .policy-links a:hover{color:var(--yellow)}
+.footer-bottom{margin-top:18px}
+.footer-wordmark{margin:0;padding-top:.18em;font-size:clamp(46px,11.2vw,190px);font-weight:900;letter-spacing:-.055em;line-height:1.12;text-align:center;white-space:nowrap;color:transparent;background:linear-gradient(180deg,var(--yellow) 0%,color-mix(in srgb,var(--yellow) 55%,var(--hh-footer-bg)) 62%,var(--hh-footer-bg) 100%);-webkit-background-clip:text;background-clip:text;user-select:none}
+.footer-legal{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 20px;padding:16px 0 22px;border-top:1px solid var(--hh-hair);font-size:13px;font-weight:600}
+.footer-top{display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.footer-top:hover{color:var(--yellow)}
+footer.policy-footer .policy-art{display:none}
+@media(max-width:900px){.footer-columns{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-about{grid-column:1/-1}}
+@media(max-width:760px){
+  footer.unified-footer,footer.policy-footer{margin-top:48px;border-radius:28px 28px 0 0}
+  .footer-columns{gap:24px;padding:32px 0}
+}
+@media(max-width:420px){.footer-columns{grid-template-columns:minmax(0,1fr)}}

@@ -92,7 +92,7 @@ test('usage endpoint is admin-only and read-only; old counter storage is never a
   const env={SUPABASE_URL:'https://db.example.test',SUPABASE_PUBLISHABLE_KEY:'public',ADMIN_EMAIL:'owner@example.test',VISITS:{get:()=>{throw new Error('Manual snapshot storage must not be read');}}};
   let email=env.ADMIN_EMAIL;
   t.mock.method(globalThis,'fetch',async url=>String(url).includes('/auth/v1/user')?Response.json({email}):Response.json({}, {status:403}));
-  const url='https://admin.hunghienhoa.com/api/admin/usage',request=(method='GET')=>new Request(url,{method,headers:{Authorization:'Bearer test'}});
+  const url='https://hunghienhoa.com/api/admin/usage',request=(method='GET')=>new Request(url,{method,headers:{Authorization:'Bearer test'}});
   assert.equal((await worker.fetch(new Request(url),env)).status,401);
   email='outsider@example.test';assert.equal((await worker.fetch(request(),env)).status,403);email=env.ADMIN_EMAIL;
   const write=await worker.fetch(request('PUT'),env);assert.equal(write.status,405);assert.equal(write.headers.get('Allow'),'GET');

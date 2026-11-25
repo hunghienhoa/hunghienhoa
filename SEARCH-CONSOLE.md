@@ -17,9 +17,9 @@ Nếu tài sản đã được xác minh, giữ nguyên cách xác minh đang ho
 Trong tài sản Miền đã xác minh, vào **Lập chỉ mục → Sơ đồ trang web**, gửi lần lượt bốn địa chỉ:
 
 - `https://hunghienhoa.com/sitemap.xml`
-- `https://blog.hunghienhoa.com/sitemap.xml`
-- `https://photobooth.hunghienhoa.com/sitemap.xml`
-- `https://snap.hunghienhoa.com/sitemap.xml`
+- `https://hunghienhoa.com/blog/sitemap.xml`
+- `https://hunghienhoa.com/photobooth/sitemap.xml`
+- `https://hunghienhoa.com/snaptik/sitemap.xml`
 
 Các sitemap tự sinh từ nội dung công khai. Bài nháp, dữ liệu quản trị và liên kết tải file của Snap không được đưa vào. Không cần tạo sitemap thủ công hoặc khai báo ngày cập nhật giả.
 

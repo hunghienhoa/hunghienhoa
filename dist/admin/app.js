@@ -1,5 +1,4 @@
 const $ = selector => document.querySelector(selector);
-if (location.hostname === 'admin.hunghienhoa.com') $('header a[target="_blank"]').href = 'https://hunghienhoa.com/';
 const API = (window.HUNG_API_BASE || '').replace(/\/$/, '');
 const SUPABASE = window.HUNG_SUPABASE;
 const SESSION_KEY = 'hung_admin_session';

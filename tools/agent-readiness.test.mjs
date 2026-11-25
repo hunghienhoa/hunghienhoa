@@ -15,10 +15,10 @@ for(const [accept,expected] of [
   ['text/html;q=0,text/markdown;q=0,*/*;q=1',null],['application/json',null],['text/markdown;q=2',null],
   ['text/markdown;variant=unsupported',null],['text/markdown;charset=utf-8;q=0,text/markdown;q=1',null]
 ])assert.equal(representation(accept),expected,accept);
-assert.equal(pageContext(new URL('https://admin.hunghienhoa.com/')),null);
+assert.equal(pageContext(new URL('https://hunghienhoa.com/admin/')),null);
 const ctx=pageContext(new URL(ORIGINS.main+'/'));
 const fields=JSON.parse(fs.readFileSync('dist/content-fields.json','utf8'));
-const hero=fields.find(f=>f.page==='main'&&f.default==='Một hộp').key;
+const hero=fields.find(f=>f.page==='main'&&f.default==='Nhặt chuyện hay,').key;
 const privateKey=fields.find(f=>f.page==='admin').key;
 const site={...defaultSite,displayName:'Hùng Hiền Hòa </script><script>alert(1)</script>',pageTexts:{[hero]:'Hộp đã sửa trong admin',[privateKey]:'PRIVATE-ADMIN-MARKER'}};
 const html=decorateHtml(fs.readFileSync('dist/index.html','utf8'),site,ctx,new URL(ORIGINS.main));
@@ -105,16 +105,17 @@ globalThis.fetch=async input=>{
 try {
   await verify((url,options)=>worker.fetch(new Request(url,options),env),'https://hunghienhoa.com',null);
   for(const host of ['blog','photobooth']) {
-    for(const route of ['/','/index.md','/llms.txt','/agent-instructions.md','/robots.txt','/sitemap.xml']) {
-      const r=await worker.fetch(new Request(`https://${host}.hunghienhoa.com${route}`,{headers:{Accept:'text/markdown'}}),env);
+    for(const route of ['/','/index.md','/llms.txt','/agent-instructions.md','/sitemap.xml']) {
+      const r=await worker.fetch(new Request(`https://hunghienhoa.com/${host}${route}`,{headers:{Accept:'text/markdown'}}),env);
       assert.equal(r.status,200,host+route);assert.ok((await r.text()).length>20);
     }
   }
-  for(const slug of ['draft','not-found'])assert.equal((await worker.fetch(new Request('https://blog.hunghienhoa.com/?bai='+slug,{headers:{Accept:'text/markdown'}}),env)).status,404);
-  let r=await worker.fetch(new Request('https://admin.hunghienhoa.com/robots.txt'),env);assert.equal(await r.text(),'User-agent: *\nDisallow: /\n');
-  r=await worker.fetch(new Request('https://admin.hunghienhoa.com/llms.txt'),env);assert.equal(r.status,404);
+  for(const slug of ['draft','not-found'])assert.equal((await worker.fetch(new Request('https://hunghienhoa.com/blog/?bai='+slug,{headers:{Accept:'text/markdown'}}),env)).status,404);
+  let r=await worker.fetch(new Request('https://hunghienhoa.com/robots.txt'),env);assert.match(await r.text(),/Disallow: \/admin\n/);
+  r=await worker.fetch(new Request('https://hunghienhoa.com/sitemap.xml'),env);{const xml=await r.text();for(const loc of ['https://hunghienhoa.com/blog/','https://hunghienhoa.com/photobooth/shoot','https://hunghienhoa.com/snaptik/','https://hunghienhoa.com/lamnet/','https://hunghienhoa.com/blog/?bai=published'])assert.ok(xml.includes(`<loc>${loc}</loc>`),loc);assert.ok(!xml.includes('.hunghienhoa.com'));}
+  r=await worker.fetch(new Request('https://hunghienhoa.com/admin/llms.txt'),env);assert.equal(r.status,404);
 }finally{globalThis.fetch=originalFetch;}
 // lastmod theo lần sửa gần nhất (updated_at), không theo ngày đăng; ngày rỗng thì bỏ trống.
-{const xml=sitemap({origin:'https://blog.hunghienhoa.com',page:'blog'},[{slug:'sua',published_at:'2026-11-10T01:00:00Z',updated_at:'2026-11-18T01:00:00Z'},{slug:'cu',published_at:1762700000000},{slug:'rong',published_at:null}]);
- assert.ok(xml.includes('?bai=sua</loc><lastmod>2026-11-18</lastmod>')&&xml.includes('https://blog.hunghienhoa.com/</loc><lastmod>2026-11-18</lastmod>')&&xml.includes('?bai=rong</loc></url>'));}
+{const xml=sitemap({origin:'https://hunghienhoa.com/blog',page:'blog'},[{slug:'sua',published_at:'2026-11-10T01:00:00Z',updated_at:'2026-11-18T01:00:00Z'},{slug:'cu',published_at:1762700000000},{slug:'rong',published_at:null}]);
+ assert.ok(xml.includes('?bai=sua</loc><lastmod>2026-11-18</lastmod>')&&xml.includes('https://hunghienhoa.com/blog/</loc><lastmod>2026-11-18</lastmod>')&&xml.includes('?bai=rong</loc></url>'));}
 console.log('PASS: local + Worker Markdown/HTML negotiation, q-values/406/HEAD, meaningful404, llms format, XML sitemap, JSON-LD escaping, current admin content and draft/admin isolation.');

@@ -25,8 +25,7 @@ Các biến cấu hình:
 | `DATA_DIR` | Windows cục bộ: `%LOCALAPPDATA%/HungHienHoa/portfolio-data`, nằm ngoài thư mục OneDrive. Môi trường khác: `private-data` trong project. Luôn phải nằm ngoài `dist` và thư mục sao lưu/đồng bộ bản chờ. |
 | `NODE_ENV` | Đặt `production` khi triển khai để bật cookie Secure và khóa setup loopback |
 | `ADMIN_SETUP_TOKEN` | Token máy chủ cho lần thiết lập đầu khi public; không có giá trị mặc định |
-| `ALLOWED_ORIGINS` | Danh sách origin HTTP/HTTPS đầy đủ ngăn bằng dấu phẩy; không wildcard; ví dụ `https://admin.hunghienhoa.com,https://hunghienhoa.com` |
-| `ADMIN_HOST` | `admin.hunghienhoa.com`; host này phục vụ giao diện `dist/admin` ở gốc domain |
+| `ALLOWED_ORIGINS` | Danh sách origin HTTP/HTTPS đầy đủ ngăn bằng dấu phẩy; không wildcard; ví dụ `https://hunghienhoa.com/admin/,https://hunghienhoa.com` |
 
 Khi tách domain, giữ API quản trị cùng origin với trang admin qua reverse proxy để cookie hoạt động ổn định. API public hỗ trợ CORS theo allowlist; cấu hình `window.HUNG_API_BASE` ở frontend nếu cần. Không tin `X-Forwarded-For`; giới hạn tần suất hiện dùng IP socket, nên khi đặt sau proxy cần rà lại giới hạn theo hạ tầng trước khi public nhiều người dùng.
 

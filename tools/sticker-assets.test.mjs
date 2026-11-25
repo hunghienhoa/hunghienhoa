@@ -36,11 +36,11 @@ console.log('PASS: 48 transparent atlas cells, bounded payload, synced assets, d
 const main=fs.readFileSync('dist/index.html','utf8');
 assert.ok(!css.includes('.motion-illustration .illustration-wing'),'Do not override the original unfurl animation');
 
-for(const marker of ['sticker-09 about-star','sticker-33 contact-art','sticker-38 completed-star'])assert.ok(main.includes(marker));
+for(const marker of ['sticker-33 contact-art'])assert.ok(main.includes(marker));
 assert.ok(fs.readFileSync('dist/blog/index.html','utf8').includes('sticker-43 contact-card-art'));
 assert.ok(fs.readFileSync('dist/photobooth/index.html','utf8').includes('sticker-36 contact-card-art'));
 assert.ok(fs.readFileSync('dist/photobooth/shoot.html','utf8').includes('sticker-07 camera-empty-art'));
 
-const originalWork=main.slice(main.indexOf('<section class="work section"'),main.indexOf('<section class="about section"'));
-assert.ok(!originalWork.includes('art-sticker')&&!originalWork.includes('scene-props'));
-assert.equal((originalWork.match(/class="project-art material-scene scene-\d{2}"/g)||[]).length,6);
+// Trang chủ dạng blog: nhãn dán chỉ trang trí phần liên hệ, không chen vào thẻ bài viết hay công cụ.
+const homeContent=main.slice(main.indexOf('<main>'),main.indexOf('</main>'));
+assert.ok(homeContent.length>0&&!homeContent.includes('art-sticker'));

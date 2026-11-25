@@ -21,7 +21,6 @@ for (const sourceFile of sourceFiles.filter(file => /\.(html|css)$/.test(file)))
     for (const [, id] of source.matchAll(/href="#([^"]+)"/g)) assert.ok(source.includes(`id="${id}"`), `Missing anchor ${id} in ${sourceFile}`);
   }
 }
-assert.equal((html.match(/data-project="/g) || []).length, 6);
 for (const page of ['', 'blog/', 'photobooth/', 'admin/']) {
   const typography = fs.readFileSync(`dist/${page}style.css`, 'utf8');
   assert.ok(typography.includes("font-family:'Be Vietnam Pro'"));
@@ -31,11 +30,9 @@ for (const page of ['', 'blog/', 'photobooth/', 'admin/']) {
   }
 }
 assert.equal((html.match(/<h1\b/g) || []).length, 1);
-assert.ok(html.includes('concept-disclaimer'));
 assert.ok(css.includes('prefers-reduced-motion'));
-assert.ok(html.includes('<dialog'));
-console.log('PASS: assets, anchors, six concepts, JS syntax, dialog and reduced-motion support.');
-for (const id of ['photobooth-project','blog-project']) {
+console.log('PASS: assets, anchors, JS syntax and reduced-motion support.');
+for (const id of ['photobooth-project','snaptik-project','lamnet-project']) {
   const link = html.match(new RegExp('<a[^>]+id="'+id+'"[^>]*>'))[0];
   assert.ok(link.includes('target="_blank"') && link.includes('rel="noopener noreferrer"') && !link.includes('data-project-window'));
 }

@@ -2,7 +2,7 @@
 
 ## URL và giao thức
 
-Trên ba tên miền công khai `hunghienhoa.com`, `blog.hunghienhoa.com`, `photobooth.hunghienhoa.com`:
+Trên ba tên miền công khai `hunghienhoa.com`, `hunghienhoa.com/blog`, `hunghienhoa.com/photobooth`:
 
 - `/` và `/index.html`: GET/HEAD với `Accept: text/markdown` trả Markdown; `Accept: text/html` trả HTML. Tôn trọng trọng số `q`, wildcard, loại bị từ chối với `q=0`; trả 406 nếu không có định dạng phù hợp. Phản hồi có `Vary: Accept` và `Cache-Control: no-store`.
 - `/index.md`: bản Markdown trực tiếp. Blog hỗ trợ `?bai=slug` cho bài đã xuất bản.

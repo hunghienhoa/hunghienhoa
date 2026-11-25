@@ -5,7 +5,7 @@
 ```text
 GitHub (mã nguồn) → GitHub Actions (kiểm tra/build/deploy) ─┬→ Supabase (migration trong supabase/migrations)
                                                             └→ Cloudflare Worker
-Trình duyệt → hunghienhoa.com / các miền phụ → Supabase Auth + Postgres
+Trình duyệt → hunghienhoa.com (mọi mục theo đường dẫn) → Supabase Auth + Postgres
 ```
 
 GitHub chỉ giữ mã nguồn và kích hoạt bản triển khai; dữ liệu người dùng không đi qua GitHub. Ảnh chụp photobooth vẫn chỉ ở bộ nhớ trình duyệt. Khung chờ duyệt được gửi qua Worker tới Supabase, bị chặn ngay khi đủ một giờ và được Cron xóa vật lý mỗi phút; khung đã duyệt được giữ lại.
@@ -15,15 +15,15 @@ GitHub chỉ giữ mã nguồn và kích hoạt bản triển khai; dữ liệu 
 - GitHub: `https://github.com/hunghienhoa/hunghienhoa`, nhánh `main`.
 - Cloudflare Worker: `hunghienhoa`.
 - Trang chính đang chạy: https://hunghienhoa.com/.
-- Quản trị: https://admin.hunghienhoa.com/.
-- Blog: https://blog.hunghienhoa.com/.
-- Photobooth: https://photobooth.hunghienhoa.com/.
+- Quản trị: https://hunghienhoa.com/admin/.
+- Blog: https://hunghienhoa.com/blog/.
+- Photobooth: https://hunghienhoa.com/photobooth/.
 - `workers.dev` được tắt khi triển khai tên miền chính.
 - Supabase: dự án `hunghienhoa`, vùng Singapore (`ap-southeast-1`).
 
 ## Đổi nameserver tại Nhân Hòa
 
-Zone `hunghienhoa.com` đã **Active**. Cả bốn tên miền đã được gắn vào Worker và kiểm tra HTTPS thành công ngày 09/11/2026. Các bước bên dưới chỉ để đối chiếu khi quản lý tên miền, không cần thay lại cấu hình đang đúng.
+Zone `hunghienhoa.com` đã **Active**. Website chỉ còn một tên miền: mọi mục nằm dưới đường dẫn của `hunghienhoa.com`. Các bước bên dưới chỉ để đối chiếu khi quản lý tên miền.
 
 1. Đăng nhập trang quản lý tên miền của Nhân Hòa.
 2. Mở `hunghienhoa.com` → phần DNS/Nameserver.
@@ -31,19 +31,21 @@ Zone `hunghienhoa.com` đã **Active**. Cả bốn tên miền đã được g�
 4. Chỉ nhập hai nameserver Cloudflare:
    - `joel.ns.cloudflare.com`
    - `pat.ns.cloudflare.com`
-5. Lưu thay đổi. Không cần tạo A/CNAME cho bốn địa chỉ web ở Nhân Hòa.
+5. Lưu thay đổi. Không cần tạo A/CNAME ở Nhân Hòa.
 6. Chờ Cloudflare báo zone `Active`; việc cập nhật thường mất vài phút đến 24 giờ tùy nhà đăng ký.
 
-Bốn Custom Domain đã được khai báo trong `cloudflare.config.ts` của Worker `hunghienhoa`:
+`cloudflare.config.ts` chỉ khai báo hai Custom Domain: `hunghienhoa.com` và `www.hunghienhoa.com` (chuyển hướng 308 về `hunghienhoa.com`). Các mục nằm trong đường dẫn:
 
-| Tên miền | Nội dung |
+| Đường dẫn | Nội dung |
 | --- | --- |
-| `hunghienhoa.com` | Portfolio chính |
-| `admin.hunghienhoa.com` | Bảng quản trị |
-| `blog.hunghienhoa.com` | Blog |
-| `photobooth.hunghienhoa.com` | Hộp ảnh |
+| `hunghienhoa.com/` | Trang chủ: chia sẻ, công cụ và portfolio |
+| `hunghienhoa.com/blog/` | Góc tò mò (blog) |
+| `hunghienhoa.com/photobooth/` | Hộp Ảnh |
+| `hunghienhoa.com/snaptik/` | Snap (đường dẫn ngắn `/snap/` chuyển về đây) |
+| `hunghienhoa.com/lamnet/` | Làm Nét |
+| `hunghienhoa.com/admin/` | Bảng quản trị |
 
-Cloudflare tự tạo DNS và chứng chỉ TLS cho Custom Domain. `www.hunghienhoa.com` đã chuyển hướng 308 về `hunghienhoa.com`; các đường dẫn `/admin/`, `/blog/`, `/photobooth/` trên trang chính chuyển đến miền phụ tương ứng. Không thêm bản ghi A/CNAME thủ công trỏ sang IP hay dịch vụ khác.
+Các subdomain cũ (`admin.`, `blog.`, `photobooth.`, `snap.`, `lamnet.`) đã bỏ khỏi cấu hình. Lần triển khai tiếp theo, Cloudflare gỡ các Custom Domain này khỏi Worker; nếu DNS của chúng còn trong zone thì xóa bản ghi ở Cloudflare → DNS. Mã Worker vẫn chuyển hướng 308 các địa chỉ cũ về đường dẫn mới nếu yêu cầu còn tới được Worker (ví dụ qua Route thủ công), nên liên kết cũ không cần sửa tay.
 
 ## GitHub → Cloudflare tự triển khai
 
@@ -73,8 +75,8 @@ Mã nguồn không chứa mật khẩu mặc định. Hùng tự tạo tài kho�
 
 1. Mở Supabase Dashboard → dự án `hunghienhoa` → Authentication → Users.
 2. Chọn **Add user** và tạo user `hunghienhoa2110@gmail.com` với mật khẩu riêng từ 12 ký tự; bật xác nhận email cho user này.
-3. Vào Authentication → URL Configuration, đặt Site URL là `https://admin.hunghienhoa.com` và thêm cùng URL vào Redirect URLs.
-4. Mở https://admin.hunghienhoa.com/ và đăng nhập thử. Sau đó tắt **Allow new users to sign up**. RLS chỉ cấp quyền quản trị cho đúng email trên, nhưng tắt signup vẫn giảm tài khoản rác.
+3. Vào Authentication → URL Configuration, đặt Site URL là `https://hunghienhoa.com/admin/` và thêm cùng URL vào Redirect URLs.
+4. Mở https://hunghienhoa.com/admin/ và đăng nhập thử. Sau đó tắt **Allow new users to sign up**. RLS chỉ cấp quyền quản trị cho đúng email trên, nhưng tắt signup vẫn giảm tài khoản rác.
 
 Hùng đã xác nhận đăng nhập bằng tài khoản thật thành công sau bản sửa `95c4e6b`. Lần kiểm tra connector gần nhất bị từ chối quyền quản trị Supabase; quyền connector độc lập với đăng nhập admin của website. Không tạo user trực tiếp bằng SQL vào bảng `auth.users`.
 
@@ -97,7 +99,7 @@ Các migration Supabase nằm trong `supabase/migrations` và được GitHub Ac
 1. Sửa và kiểm tra trên máy.
 2. Commit rồi push nhánh `main` lên GitHub.
 3. Theo dõi GitHub Actions đến khi toàn bộ lượt chạy xanh. Nếu kiểm thử lỗi, website giữ nguyên bản production trước đó. Vẫn có thể chạy `npm run deploy` thủ công từ máy đã đăng nhập đúng Cloudflare khi cần.
-4. Thay đổi nội dung hằng ngày thực hiện tại `admin.hunghienhoa.com`; nội dung được lưu trực tiếp trong Supabase, không cần commit Git.
+4. Thay đổi nội dung hằng ngày thực hiện tại `hunghienhoa.com/admin`; nội dung được lưu trực tiếp trong Supabase, không cần commit Git.
 5. CSS/JS được tham chiếu kèm `?v=` được trình duyệt cache một năm (`immutable`). Khi sửa một tệp như vậy, tăng `v` ở mọi chỗ tham chiếu rồi chạy `node tools/asset-versions.mjs --write`; `npm run check` báo lỗi nếu nội dung đổi mà `v` giữ nguyên. Font cache 30 ngày, ảnh trong `assets` cache 1 ngày; HTML không cache.
 6. Worker giữ dữ liệu Supabase công khai tại máy chủ Cloudflare gần người xem: nội dung trang, danh sách và từng bài, danh sách khung 60 giây; ảnh bìa bài và ảnh khung đã duyệt 5 phút. Khi lưu trong admin, cache ở trung tâm dữ liệu đang dùng được xóa ngay; nơi khác tự cập nhật trong tối đa 60 giây (ảnh 5 phút). Ảnh `/api/media/` không cache để ảnh bị gỡ biến mất ngay.
 

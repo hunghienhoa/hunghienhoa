@@ -2,8 +2,8 @@
   {
     "key": "main-001",
     "page": "main",
-    "label": "Đến các dự án",
-    "default": "Đến các dự án"
+    "label": "Đến nội dung chính",
+    "default": "Đến nội dung chính"
   },
   {
     "key": "main-002",
@@ -62,14 +62,14 @@
   {
     "key": "main-011",
     "page": "main",
-    "label": "Một hộp",
-    "default": "Một hộp"
+    "label": "Nhặt chuyện hay,",
+    "default": "Nhặt chuyện hay,"
   },
   {
     "key": "main-012",
     "page": "main",
-    "label": "đầy ý tưởng.",
-    "default": "đầy ý tưởng."
+    "label": "chia sẻ mỗi ngày.",
+    "default": "chia sẻ mỗi ngày."
   },
   {
     "key": "main-013",
@@ -650,8 +650,8 @@
   {
     "key": "main-109",
     "page": "main",
-    "label": "04 / CHIẾC HỘP TIẾP THEO",
-    "default": "04 / CHIẾC HỘP TIẾP THEO"
+    "label": "CÙNG TRÒ CHUYỆN",
+    "default": "CÙNG TRÒ CHUYỆN"
   },
   {
     "key": "main-110",

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readdirSync } from 'node:fs';
 
-const hosts = ['hunghienhoa.com', 'admin.hunghienhoa.com', 'blog.hunghienhoa.com', 'photobooth.hunghienhoa.com', 'snap.hunghienhoa.com', 'lamnet.hunghienhoa.com'];
+const hosts = ['hunghienhoa.com', 'hunghienhoa.com/admin', 'hunghienhoa.com/blog', 'hunghienhoa.com/photobooth', 'hunghienhoa.com/snaptik', 'hunghienhoa.com/lamnet'];
 const files = readdirSync('dist', { recursive: true, withFileTypes: true }).filter(file => file.isFile() && /\.(css|js|mjs|webp|svg|woff2)$/.test(file.name) && !file.name.endsWith('.test.mjs'));
 const checks = hosts.map(host => ({ url: `https://${host}/`, type: /text\/html/ }));
 for (const file of files) {
@@ -25,17 +25,17 @@ for (let start = 0; start < checks.length; start += 6) {
 }
 for (const [url, target] of [
   ['https://www.hunghienhoa.com/', 'https://hunghienhoa.com/'],
-  ['https://hunghienhoa.com/blog/?bai=vui', 'https://blog.hunghienhoa.com/?bai=vui'],
-  ['https://hunghienhoa.com/photobooth/', 'https://photobooth.hunghienhoa.com/'],
-  ['https://hunghienhoa.com/admin/', 'https://admin.hunghienhoa.com/'],
-  ['https://hunghienhoa.com/snap/', 'https://snap.hunghienhoa.com/'],
-  ['https://hunghienhoa.com/lamnet/', 'https://lamnet.hunghienhoa.com/']
+  ['https://hunghienhoa.com/blog/?bai=vui', 'https://hunghienhoa.com/blog/?bai=vui'],
+  ['https://hunghienhoa.com/photobooth/', 'https://hunghienhoa.com/photobooth/'],
+  ['https://hunghienhoa.com/admin/', 'https://hunghienhoa.com/admin/'],
+  ['https://hunghienhoa.com/snap/', 'https://hunghienhoa.com/snaptik/'],
+  ['https://hunghienhoa.com/lamnet/', 'https://hunghienhoa.com/lamnet/']
 ]) {
   const response = await fetch(url, { redirect: 'manual', signal: AbortSignal.timeout(20000) });
   assert.equal(response.status, 308, url); assert.equal(response.headers.get('location'), target, url); await response.body?.cancel();
 }
 for (const path of ['session', 'site', 'posts', 'submissions', 'submissions/test/image.webp']) {
-  const response = await fetch(`https://admin.hunghienhoa.com/api/admin/${path}`, { signal: AbortSignal.timeout(20000) });
+  const response = await fetch(`https://hunghienhoa.com/admin/api/admin/${path}`, { signal: AbortSignal.timeout(20000) });
   assert.equal(response.status, 401, path); assert.equal(response.headers.get('cache-control'), 'no-store'); await response.body?.cancel();
 }
 console.log(`PASS: ${passed} trang/tài nguyên/API HTTPS; 6 chuyển hướng tên miền; 5 API quản trị chặn truy cập chưa đăng nhập.`);

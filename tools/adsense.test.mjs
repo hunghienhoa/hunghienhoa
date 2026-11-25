@@ -17,7 +17,7 @@ const admin=readFileSync('dist/admin/index.html','utf8');
 assert.ok(!admin.includes('adsbygoogle')&&!admin.includes(ADSENSE_CLIENT));
 assert.equal(adsenseHtml(admin,'nonce'),null);
 const main=readFileSync('dist/index.html','utf8');
-for(const id of ['photobooth-project','blog-project']) {
+for(const id of ['photobooth-project','snaptik-project','lamnet-project']) {
   const tag=main.match(new RegExp('<a[^>]+id="'+id+'"[^>]*>'))[0];
   assert.ok(tag.includes('target="_blank"')&&tag.includes('noopener noreferrer'));
 }

@@ -32,7 +32,7 @@ Vì bản chờ tự xóa sau 1 giờ và khung đã duyệt không giữ liên 
 | Tên | Dùng cho | Đổi ở đâu | Đổi xong cập nhật ở đâu |
 | --- | --- | --- | --- |
 | Mật khẩu database Supabase | Áp migration khi deploy | Supabase → Project Settings → Database → Reset database password | GitHub → repo → Settings → Secrets and variables → Actions → `SUPABASE_DB_URL` |
-| Mật khẩu admin website | Đăng nhập admin.hunghienhoa.com | Supabase → Authentication → Users → `hunghienhoa2110@gmail.com` → đặt lại mật khẩu | Không cần cập nhật nơi khác |
+| Mật khẩu admin website | Đăng nhập hunghienhoa.com/admin | Supabase → Authentication → Users → `hunghienhoa2110@gmail.com` → đặt lại mật khẩu | Không cần cập nhật nơi khác |
 | Khóa ký JWT Supabase | Phiên đăng nhập | Supabase → Project Settings → JWT Keys → xoay khóa (Rotate), **rồi thu hồi khóa cũ (Revoke)** | Không cần cập nhật code. Chỉ xoay thì token cũ vẫn được chấp nhận; thu hồi khóa cũ thì token cũ mới hết hiệu lực |
 | Secret key Supabase (`sb_secret_…`) | Code không dùng | Supabase → Project Settings → API Keys → thu hồi, tạo mới | Không cần |
 | Publishable key Supabase (`sb_publishable_…`) | Công khai theo thiết kế, RLS bảo vệ dữ liệu | Chỉ đổi khi bị lạm dụng | `cloudflare.config.ts` và `config.js` trong `dist`, rồi deploy |
@@ -99,12 +99,12 @@ Làm theo tình huống khớp nhất. Nhiều tình huống cùng lúc thì là
 **E. Website sập, bị tấn công dồn dập, lạm dụng Snap**
 
 - [ ] Cloudflare → tên miền `hunghienhoa.com` → Security: bật chế độ chống tấn công (Under Attack) hoặc thêm quy tắc chặn theo quốc gia/địa chỉ.
-- [ ] Snap đã có giới hạn 30 lượt/phút mỗi địa chỉ. Nếu vẫn quá tải thì tạm chặn đường dẫn `snap.hunghienhoa.com` bằng quy tắc WAF.
+- [ ] Snap đã có giới hạn 30 lượt/phút mỗi địa chỉ. Nếu vẫn quá tải thì tạm chặn đường dẫn `hunghienhoa.com/snaptik` bằng quy tắc WAF.
 - [ ] Spam bản đóng góp: tạm dừng nhận (SQL ở mục 4). Bản chờ tự xóa sau 1 giờ.
 
 **F. Nội dung vi phạm** (khung, bài viết vi phạm bản quyền hoặc trái pháp luật)
 
-- [ ] Gỡ hoặc ẩn trong admin.hunghienhoa.com.
+- [ ] Gỡ hoặc ẩn trong hunghienhoa.com/admin.
 - [ ] Trả lời người báo cáo theo trang [Báo cáo nội dung và bản quyền](https://hunghienhoa.com/bao-cao-ban-quyen).
 - [ ] Yêu cầu từ cơ quan có thẩm quyền: giữ lại văn bản yêu cầu, xử lý trong thời hạn được nêu.
 

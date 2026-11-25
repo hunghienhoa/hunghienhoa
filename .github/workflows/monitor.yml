@@ -30,15 +30,15 @@ jobs:
           }
           for url in \
             https://hunghienhoa.com/ \
-            https://blog.hunghienhoa.com/ \
-            https://photobooth.hunghienhoa.com/ \
-            https://photobooth.hunghienhoa.com/shoot \
-            https://snap.hunghienhoa.com/ \
-            https://lamnet.hunghienhoa.com/ \
-            https://admin.hunghienhoa.com/ \
+            https://hunghienhoa.com/blog/ \
+            https://hunghienhoa.com/photobooth/ \
+            https://hunghienhoa.com/photobooth/shoot \
+            https://hunghienhoa.com/snaptik/ \
+            https://hunghienhoa.com/lamnet/ \
+            https://hunghienhoa.com/admin/ \
             https://hunghienhoa.com/api/site \
             https://hunghienhoa.com/api/frames \
-            https://blog.hunghienhoa.com/sitemap.xml; do
+            https://hunghienhoa.com/blog/sitemap.xml; do
             check "$url"
           done
           # Gọi thẳng Supabase (bỏ qua cache Cloudflare) bằng publishable key công khai trong cloudflare.config.ts.

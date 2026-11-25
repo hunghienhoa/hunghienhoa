@@ -9,7 +9,7 @@ import {createApp} from '../server/server.mjs';
 import worker from '../worker/index.mjs';
 import {pageContext,publicRedirect,markdownPage} from '../server/agent-content.mjs';
 import {defaultSite} from '../server/validation.mjs';
-const url='https://www.tiktok.com/@hungvlog1992/video/7697962664923778325',base='https://snap.hunghienhoa.com';
+const url='https://www.tiktok.com/@hungvlog1992/video/7697962664923778325',base='https://hunghienhoa.com';
 const payload={code:0,data:{id:'7697962664923778325',title:'<script>unsafe()</script>',author:{nickname:'Hùng'},cover:'https://p19.tiktokcdn-us.com/cover.jpg',duration:61,play:'https://v16.tiktokcdn-us.com/video.mp4',hdplay:'https://v16.tiktokcdn-us.com/hd.mp4',music:'https://v16.tiktokcdn-us.com/audio.mp3',images:['https://p19.tiktokcdn-us.com/one.jpg'],size:1000}};
 const mp4=Buffer.concat([Buffer.from('000000206674797069736f6d','hex'),Buffer.alloc(30)]),jpeg=Buffer.from('ffd8ffe000104a46494600010100000100010000ffd9','hex');
 const request=(body={url},extra={})=>new Request(base+'/api/snaptik/resolve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),...extra});
@@ -68,7 +68,7 @@ test('shared edge cache serves other isolates, concurrent identical requests sha
 });
 test('a temporary failure tells the browser when to retry',async t=>{
  t.mock.method(globalThis,'setTimeout',fn=>{fn();return 0;});
- const request=()=>new Request('https://snap.hunghienhoa.com/api/snap/resolve',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://snap.hunghienhoa.com'},body:JSON.stringify({url})});
+ const request=()=>new Request('https://hunghienhoa.com/api/snap/resolve',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://hunghienhoa.com'},body:JSON.stringify({url})});
  const r=await snaptikRoute(request(),{fetcher:async()=>new Response('{}',{status:429}),store:null});
  assert.deepEqual([r.status,r.headers.get('retry-after'),(await r.json()).retryAfter],[429,'5',5]);
 });
@@ -85,5 +85,5 @@ test('Node and Worker share routes, no-store responses and rate protection',asyn
  const original=globalThis.fetch;globalThis.fetch=provider;
  try{const keys=[],env={SNAPTIK_LIMIT:{limit:async({key})=>{keys.push(key);return {success:true}}}};let r=await worker.fetch(request(),env);assert.equal(r.status,200);assert.match(keys[0],/^[a-f0-9]{64}$/);assert.equal(r.headers.get('cache-control'),'no-store');r=await worker.fetch(request(),{SNAPTIK_LIMIT:{limit:async()=>({success:false})}});assert.equal(r.status,429);}
  finally{globalThis.fetch=original;}
- assert.equal(publicRedirect('http://hunghienhoa.com/snaptik/').href,base+'/');assert.equal(pageContext(new URL(base)).page,'snaptik');assert.ok(markdownPage(defaultSite,{page:'snaptik',origin:base}).includes('TikWM'));
+ assert.equal(publicRedirect('http://hunghienhoa.com/snaptik/').href,base+'/snaptik/');assert.equal(publicRedirect('https://snap.hunghienhoa.com/').href,base+'/snaptik/');assert.equal(pageContext(new URL(base+'/snaptik/')).page,'snaptik');assert.ok(markdownPage(defaultSite,{page:'snaptik',origin:base+'/snaptik'}).includes('TikWM'));
 });

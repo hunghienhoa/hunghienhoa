@@ -181,9 +181,9 @@ await assert.rejects(vm.runInContext(`jpegBlob({toBlob(callback) { callback({typ
 let destination;
 context.URL = URL;
 context.document.body = {classList:{contains:name=>name==='booth-landing'}};
-context.window.location = {href:'https://photobooth.hunghienhoa.com/',assign:value=>{destination=value;}};
+context.window.location = {href:'https://hunghienhoa.com/photobooth/',assign:value=>{destination=value;}};
 vm.runInContext("selectDesign(frames.pink, 'Tiệm thư tình')",context);
-assert.equal(new URL(destination).pathname,'/shoot');
+assert.equal(new URL(destination).pathname,'/photobooth/shoot');
 const shared = JSON.parse(new URL(destination).searchParams.get('thietke'));
 assert.equal(shared.title,'TIỆM THƯ TÌNH');
 assert.ok(!JSON.stringify(shared).includes('PRIVATE-PHOTO'));

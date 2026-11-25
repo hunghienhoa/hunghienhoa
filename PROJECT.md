@@ -2,6 +2,10 @@
 
 Hướng dẫn GitHub, Supabase, Cloudflare và kết nối tên miền nằm trong [DEPLOYMENT.md](DEPLOYMENT.md).
 
+## Giao diện 2026: trang chủ dạng blog
+
+Trang chủ (`dist/index.html`) là blog chia sẻ kèm ba tiện ích: bài nổi bật ở hero, lưới bài mới có lọc chủ đề (`dist/app.js` đọc `/api/posts`), thẻ Hộp Ảnh, Snap Video, Làm Nét Ảnh, phần giới thiệu ngắn và footer liên hệ. Bố cục tham khảo supahero.io (hero), navbar.gallery (thanh điều hướng dạng viên nổi) và footer.design (footer tối nhiều cột, chữ ký lớn). `dist/theme.css` là lớp dùng chung cho mọi trang công khai (thanh điều hướng, footer); `dist/home.css` chỉ cho trang chủ. Màu vẫn lấy từ `--cream`, `--blue`, `--yellow` nên theo màu chỉnh trong admin. Phần portfolio cũ (hộp quà, sáu thẻ thiết kế, hộp chi tiết) đã bỏ khỏi trang chủ; các trường chữ cũ vẫn nằm trong `content-fields.json` để dữ liệu đã lưu trong admin không bị từ chối.
+
 Hồ sơ sáng tạo dùng HTML, CSS và JavaScript. Máy chủ Node.js 24+ với SQLite dùng cho bản cục bộ; bản online chạy Cloudflare Worker và Supabase. Toàn bộ giao diện dùng tiếng Việt, trừ tên riêng các nền tảng mạng xã hội và định dạng tệp.
 
 ## Dự án đã làm và Hộp Ảnh
@@ -10,7 +14,7 @@ Mục `#projects` có Hộp Ảnh và Góc tò mò, trang chia sẻ những đi�
 
 Hộp Ảnh mở bằng liên kết `#photobooth-project` trong cửa sổ riêng; nếu trình duyệt chặn cửa sổ bật lên, liên kết thông thường vẫn mở được trong thẻ mới. Luồng chụp bốn ảnh → chọn khung → tải về tham khảo cấu trúc Fotogram tại `https://www.fotogramstudios.com/`, dùng giao diện, nội dung và tài sản riêng theo phong cách hiện tại.
 
-`dist/photobooth/`, `dist/blog/` và `dist/admin/` chứa giao diện riêng, phông chữ và tài sản cần thiết. Cloudflare Worker phục vụ API cùng origin trên `hunghienhoa.com`, `admin.hunghienhoa.com`, `blog.hunghienhoa.com` và `photobooth.hunghienhoa.com`; HTTPS đã hoạt động, Hùng đã xác nhận đăng nhập admin thành công. Push `main` kích hoạt kiểm tra/build/triển khai bằng `.github/workflows/deploy.yml`; xem `DEPLOYMENT.md` để theo dõi GitHub Actions và quản lý khóa triển khai.
+`dist/photobooth/`, `dist/blog/` và `dist/admin/` chứa giao diện riêng, phông chữ và tài sản cần thiết. Cloudflare Worker phục vụ mọi mục và API cùng origin trên một tên miền `hunghienhoa.com` (`/blog/`, `/photobooth/`, `/snaptik/`, `/lamnet/`, `/admin/`; không dùng subdomain); HTTPS đã hoạt động, Hùng đã xác nhận đăng nhập admin thành công. Push `main` kích hoạt kiểm tra/build/triển khai bằng `.github/workflows/deploy.yml`; xem `DEPLOYMENT.md` để theo dõi GitHub Actions và quản lý khóa triển khai.
 
 Logo mạng xã hội hiện dùng ảnh chính thức tại `dist/assets/social/` thay cho ký tự mô phỏng. Xem nguồn trong `SOCIAL-LOGO-SOURCES.md`.
 
@@ -67,17 +71,17 @@ Khi máy đã có Playwright hoặc `@playwright/cli` và Chrome, chạy `node t
 
 ## Snap của Hùng
 
-Trang `https://snap.hunghienhoa.com/` (cục bộ: `/snaptik/`) tự nhận diện link TikTok, Instagram và Facebook. TikTok dùng TikWM; Instagram/Facebook đọc dữ liệu nhúng công khai trực tiếp từ nền tảng, không dùng tài khoản hoặc cookie. API Node và Worker dùng chung `server/snaptik.mjs`; chỉ truyền file từ các miền nguồn được cho phép, kiểm tra chữ ký định dạng và giới hạn mỗi file 200 MB. Không tạo kho video; ảnh tải qua giao diện chuyển thành JPEG trong bộ nhớ trình duyệt. Chỉ tải và sử dụng nội dung khi có quyền.
+Trang `https://hunghienhoa.com/snaptik/` (cục bộ: `/snaptik/`) tự nhận diện link TikTok, Instagram và Facebook. TikTok dùng TikWM; Instagram/Facebook đọc dữ liệu nhúng công khai trực tiếp từ nền tảng, không dùng tài khoản hoặc cookie. API Node và Worker dùng chung `server/snaptik.mjs`; chỉ truyền file từ các miền nguồn được cho phép, kiểm tra chữ ký định dạng và giới hạn mỗi file 200 MB. Không tạo kho video; ảnh tải qua giao diện chuyển thành JPEG trong bộ nhớ trình duyệt. Chỉ tải và sử dụng nội dung khi có quyền.
 
 Không cần khóa API riêng. Nguồn TikWM có thể thay đổi, gián đoạn hoặc giới hạn truy cập; không cam kết mọi bài đều tải được. Worker giới hạn tần suất bằng binding `SNAPTIK_LIMIT`, máy chủ cục bộ dùng bộ giới hạn hiện có.
 
-Chạy `node --test tools/snaptik.test.mjs` để kiểm tra luồng và đầu vào; `node tools/browser-snaptik.mjs` kiểm tra Chrome ở 320/390/768/1440 px bằng nguồn giả lập. Đặt `SITE_URL=https://snap.hunghienhoa.com` để kiểm tra trang thật bằng liên kết mẫu. Bộ trình duyệt không tải toàn bộ video lớn; thử việc lưu file trên thiết bị thật riêng.
+Chạy `node --test tools/snaptik.test.mjs` để kiểm tra luồng và đầu vào; `node tools/browser-snaptik.mjs` kiểm tra Chrome ở 320/390/768/1440 px bằng nguồn giả lập. Đặt `SITE_URL=https://hunghienhoa.com/snaptik/` để kiểm tra trang thật bằng liên kết mẫu. Bộ trình duyệt không tải toàn bộ video lớn; thử việc lưu file trên thiết bị thật riêng.
 
 ## Tên website và liên kết trên Google
 
 HTML trả từ máy chủ có `WebSite` với tên và URL chuẩn của từng tên miền công khai, `og:site_name`, một canonical và quan hệ giữa portfolio với ba dự án. Trang chính dùng các liên kết HTML trực tiếp tới Hộp Ảnh, Góc tò mò và Snap; sitemap riêng được công bố trong robots.txt của từng miền.
 
-Google tự quyết định sitelinks và cách nhóm tên miền phụ; mã đánh dấu không bảo đảm bố cục như ảnh mẫu hoặc thời gian xuất hiện. Quản trị viên có thể gửi sitemap và yêu cầu thu thập lại URL trong Search Console đã xác minh. Xem [sitelinks](https://developers.google.com/search/docs/appearance/sitelinks) và [tên website](https://developers.google.com/search/docs/appearance/site-names).
+Google tự quyết định sitelinks; mã đánh dấu không bảo đảm bố cục như ảnh mẫu hoặc thời gian xuất hiện. Quản trị viên có thể gửi sitemap và yêu cầu thu thập lại URL trong Search Console đã xác minh. Xem [sitelinks](https://developers.google.com/search/docs/appearance/sitelinks) và [tên website](https://developers.google.com/search/docs/appearance/site-names).
 
 ## Skill và plugin cho Claude Code
 
@@ -90,7 +94,7 @@ Khai báo ở phạm vi dự án, áp dụng cho mọi phiên mở repo này (cl
 
 ## Làm Nét
 
-Trang `https://lamnet.hunghienhoa.com/` (cục bộ: `/lamnet/`) làm nét và phóng to ảnh 4 lần bằng Real-ESRGAN `realesr-general-x4v3` chạy trong trình duyệt qua ONNX Runtime Web 1.22.0 (WebGPU nếu máy có GPU thật, nếu không thì WebAssembly nhiều luồng trong luồng phụ). Ảnh chỉ nằm trong bộ nhớ trang, tải về JPEG, xóa khi rời trang hoặc sau một giờ.
+Trang `https://hunghienhoa.com/lamnet/` (cục bộ: `/lamnet/`) làm nét và phóng to ảnh 4 lần bằng Real-ESRGAN `realesr-general-x4v3` chạy trong trình duyệt qua ONNX Runtime Web 1.22.0 (WebGPU nếu máy có GPU thật, nếu không thì WebAssembly nhiều luồng trong luồng phụ). Ảnh chỉ nằm trong bộ nhớ trang, tải về JPEG, xóa khi rời trang hoặc sau một giờ.
 
 - `dist/lamnet/core.mjs`: giới hạn kích thước (WebGPU 1024×1024, CPU 1024×768), chia ô 256px kèm viền 12px, đổi ảnh ↔ tensor, làm nét thêm sau AI (unsharp mask, chọn Tự nhiên / Nét / Rất nét). Test: `tools/lamnet.test.mjs`.
 - `dist/lamnet/models/realesr-general-x4v3.onnx` dựng lại bằng `python tools/build-lamnet-model.py realesr-general-x4v3.pth` (cần numpy, onnx, onnxruntime; không cần PyTorch). Script tự đối chiếu với bản tính numpy.
