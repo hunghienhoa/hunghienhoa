@@ -47,10 +47,30 @@ test('short network chunks still yield a valid file',async()=>{
  const chunked=async(i,o)=>String(i).includes('/api/')?provider(i,o):new Response(new ReadableStream({start(c){for(const byte of mp4)c.enqueue(Uint8Array.of(byte));c.close();}}));
  const r=await snaptikRoute(file(),{fetcher:chunked});assert.deepEqual(Buffer.from(await r.arrayBuffer()),mp4);
 });
-test('the source rate limit retries once and stays a 429 if still busy',async()=>{
- let calls=0;const once=async()=>Response.json(++calls===1?{code:-1,msg:'Free Api Limit: 1 request/second.'}:payload);
- assert.equal((await resolveVideo(url,once)).id,payload.data.id);assert.equal(calls,2);
- calls=0;await assert.rejects(()=>resolveVideo(url,async()=>{calls++;return Response.json({code:-1,msg:'Free Api Limit: 1 request/second.'});}),{status:429});assert.equal(calls,2);
+test('the source rate limit is retried with backoff and stays a retryable 429 if still busy',async t=>{
+ t.mock.method(globalThis,'setTimeout',fn=>{fn();return 0;});
+ let calls=0;const once=async()=>Response.json(++calls<3?{code:-1,msg:'Free Api Limit: 1 request/second.'}:payload);
+ assert.equal((await resolveVideo(url,once,null)).id,payload.data.id);assert.equal(calls,3);
+ calls=0;await assert.rejects(()=>resolveVideo(url,async()=>{calls++;return Response.json({code:-1,msg:'Free Api Limit: 1 request/second.'});},null),{status:429,retryAfter:5});assert.equal(calls,3);
+});
+function fakeStore(){const map=new Map();return {map,match:async request=>map.has(request.url)?new Response(map.get(request.url)):undefined,put:async(request,response)=>{map.set(request.url,await response.text());}};}
+test('shared edge cache serves other isolates, concurrent identical requests share one call, a busy source is not hammered',async t=>{
+ t.mock.method(globalThis,'setTimeout',fn=>{fn();return 0;});
+ const store=fakeStore();let calls=0;const fetcher=async()=>{calls++;await new Promise(r=>queueMicrotask(r));return Response.json(payload)};
+ const [a,b]=await Promise.all([resolveVideo(url,fetcher,store),resolveVideo(url,fetcher,store)]);
+ assert.deepEqual([a.id,b.id,calls],[payload.data.id,payload.data.id,1],'yêu cầu trùng chỉ gọi nguồn một lần');
+ const other=async()=>{throw Error('không được gọi: đã có trong bộ nhớ đệm dùng chung')};
+ assert.equal((await resolveVideo(url,other,store)).id,payload.data.id);
+ const busyStore=fakeStore();let hits=0;const busy=async()=>{hits++;return new Response('{}',{status:429});};
+ await assert.rejects(()=>resolveVideo(url,busy,busyStore),{status:429});const first=hits;
+ await assert.rejects(()=>resolveVideo(url+'?x=1',busy,busyStore),{status:429});
+ assert.equal(hits,first,'nguồn vừa báo bận thì trả lời ngay, không gọi dồn');
+});
+test('a temporary failure tells the browser when to retry',async t=>{
+ t.mock.method(globalThis,'setTimeout',fn=>{fn();return 0;});
+ const request=()=>new Request('https://snap.hunghienhoa.com/api/snap/resolve',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://snap.hunghienhoa.com'},body:JSON.stringify({url})});
+ const r=await snaptikRoute(request(),{fetcher:async()=>new Response('{}',{status:429}),store:null});
+ assert.deepEqual([r.status,r.headers.get('retry-after'),(await r.json()).retryAfter],[429,'5',5]);
 });
 test('metadata is reused briefly for download clicks, then refreshed',async t=>{
  let calls=0;const fetcher=async()=>{calls++;return Response.json(payload)};

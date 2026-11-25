@@ -23,8 +23,17 @@ function show(data){
 form.addEventListener('submit',async event=>{
  event.preventDefault();let url;try{url=socialURL(input.value).url;}catch(e){message(e.message,true);input.focus();return;}
  controller?.abort();controller=new AbortController();const current=++sequence;$('#resolve').disabled=true;$('#resolve span').textContent='Đang tìm video…';result.hidden=true;message('Đang lấy thông tin từ liên kết. Bạn chờ một chút nhé.');
- try{const response=await fetch('/api/snap/resolve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url}),signal:controller.signal});const data=await response.json();if(current!==sequence)return;if(!response.ok)throw Error(data.error||'Chưa lấy được nội dung.');show(data);message('Đã có kết quả. Chọn file muốn tải bên dưới.');}
+ let again=false;
+ try{for(let attempt=0;;attempt++){
+  const response=await fetch('/api/snap/resolve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url}),signal:controller.signal});const data=await response.json().catch(()=>({}));if(current!==sequence)return;
+  if(response.ok){again=false;show(data);message('Đã có kết quả. Chọn file muốn tải bên dưới.');break;}
+  again=Boolean(data.retryAfter);
+  if(!again||attempt>=2)throw Error((data.error||'Chưa lấy được nội dung.')+(again?' Bấm “Thử lại” sau ít giây.':''));
+  // Lỗi tạm thời (nguồn bận): đếm ngược rồi tự thử lại, tối đa 2 lần.
+  for(let left=Math.max(2,Math.min(10,Number(data.retryAfter)||4));left>0;left--){message(`${data.error} Tự thử lại sau ${left} giây…`);await new Promise(resolve=>setTimeout(resolve,1000));if(current!==sequence)return;}
+  message('Đang thử lại…');
+ }}
  catch(e){if(current===sequence&&e.name!=='AbortError')message(e.message||'Kết nối đang gián đoạn. Hãy thử lại.',true);}
- finally{if(current===sequence){$('#resolve').disabled=false;$('#resolve span').textContent='Lấy liên kết tải';}}
+ finally{if(current===sequence){$('#resolve').disabled=false;$('#resolve span').textContent=again?'Thử lại':'Lấy liên kết tải';}}
 });
 window.addEventListener('pagehide',()=>{controller?.abort();input.value='';$('#formats').replaceChildren();$('#image-downloads').replaceChildren();$('#cover').removeAttribute('src');});

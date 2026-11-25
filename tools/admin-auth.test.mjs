@@ -46,7 +46,7 @@ test('quản trị loopback dùng cookie/CSRF cục bộ và không gửi mật 
 });
 
 test('tài khoản online bị từ chối không giữ lại token', async () => {
-  const app = admin('admin.hunghienhoa.com', path => path.startsWith('https://database.example.test')
+  const app = admin('admin.hunghienhoa.com', path => String(path).startsWith('https://database.example.test/')
     ? Response.json({ access_token: 'test-access', refresh_token: 'test-refresh', expires_in: 3600 })
     : Response.json({ error: 'Tài khoản chưa có quyền quản trị.' }, { status: 403 }));
   await new Promise(resolve => setImmediate(resolve));
@@ -86,7 +86,7 @@ test('ảnh chờ duyệt được tải bằng Bearer token rồi giải phóng
 
 test('các yêu cầu đồng thời chỉ đổi token một lần và không khôi phục phiên đã đăng xuất', async () => {
   let finishRefresh;
-  const app = admin('admin.hunghienhoa.com', path => path.startsWith('https://database.example.test')
+  const app = admin('admin.hunghienhoa.com', path => String(path).startsWith('https://database.example.test/')
     ? new Promise(resolve => { finishRefresh = resolve; }) : Response.json({ ok: true }));
   await new Promise(resolve => setImmediate(resolve));
   vm.runInContext("saveSession({ access_token: 'old-access', refresh_token: 'old-refresh', expires_at: Date.now() })", app.context);

@@ -36,7 +36,7 @@ for(const host of hosts) {
     if(route==='/llms.txt') {
       assert.match(body,/^# .+\n\n> /);assert.ok(body.includes('When to use this'));
       for(const [,url]of body.matchAll(/\]\((https:\/\/[^)]+)\)/g))links.add(url);
-      assert.ok(!body.includes('admin.hunghienhoa.com'));
+      assert.ok(!/(^|[^a-z0-9.-])admin\.hunghienhoa\.com([^a-z0-9-]|$)/i.test(body));
     }
     if(route==='/sitemap.xml') {
       const parse=spawnSync('python',['-c',"import sys,json,xml.etree.ElementTree as E; r=E.fromstring(sys.stdin.read()); assert r.tag=='{http://www.sitemaps.org/schemas/sitemap/0.9}urlset'; print(json.dumps([n.text for n in r.findall('{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]))"],{input:body,encoding:'utf8'});

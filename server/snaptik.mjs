@@ -2,7 +2,13 @@ import {socialURL} from '../dist/snaptik/core.mjs';
 const MAX_FILE=200*1024*1024;
 const results=new WeakMap();
 const roots=['tiktokcdn.com','tiktokcdn-us.com','tiktokcdn-eu.com','tiktok.com','muscdn.com','byteoversea.com','ibytedtos.com','tikwm.com','fbcdn.net','cdninstagram.com'];
-const error=(status,message)=>Object.assign(new Error(message),{status});
+const error=(status,message,retryAfter)=>Object.assign(new Error(message),{status,retryAfter});
+// Cache API của Cloudflare dùng chung giữa mọi isolate (Node không có caches nên bỏ qua). Lỗi bộ nhớ đệm không làm hỏng yêu cầu.
+const RESULT_TTL=900,BUSY_TTL=5;
+const edgeStore=()=>{try{return typeof caches!=='undefined'?caches.default:null;}catch{return null;}};
+const edgeKey=name=>new Request('https://snap-cache.invalid/v1/'+encodeURIComponent(name));
+async function edgeGet(store,name){try{const hit=await store?.match(edgeKey(name));return hit?await hit.json():null;}catch{return null;}}
+async function edgePut(store,name,value,ttl){try{await store?.put(edgeKey(name),new Response(JSON.stringify(value),{headers:{'Cache-Control':'public, max-age='+ttl}}));}catch{}}
 export function mediaURL(value) {
  if(typeof value!=='string'||!value||value.length>12000||!/^(?:https:\/\/|\/(?!\/))/.test(value))return null;
  let url;try{url=new URL(value,'https://www.tikwm.com');}catch{return null;}
@@ -17,15 +23,19 @@ async function limitedText(response,max=262144) {
  return new TextDecoder().decode(bytes);
 }
 async function limitedJSON(response){const text=await limitedText(response);try{return JSON.parse(text);}catch{throw error(502,'Nguồn video đang trả kết quả chưa hợp lệ.');}}
-async function resolveTikTok(url,fetcher) {
+const BUSY='Nguồn video đang bận. Trang sẽ tự thử lại, bạn chờ một chút nhé.';
+async function resolveTikTok(url,fetcher,store) {
  let response,result;
- for(let attempt=0;attempt<2;attempt++){
+ // Nguồn vừa báo bận cách đây vài giây thì không gọi dồn thêm, trả lời ngay để người dùng thử lại sau.
+ if(await edgeGet(store,'tikwm-busy'))throw error(429,BUSY,BUSY_TTL);
+ const delays=[1200,2500],busy=async()=>{await edgePut(store,'tikwm-busy',1,BUSY_TTL);return error(429,BUSY,BUSY_TTL);};
+ for(let attempt=0;attempt<=delays.length;attempt++){
  try{response=await fetcher('https://www.tikwm.com/api/',{method:'POST',headers:{Accept:'application/json'},body:new URLSearchParams({url,hd:'1'}),signal:AbortSignal.timeout(25000),redirect:'manual'});}
- catch{throw error(504,'Nguồn video phản hồi chậm. Hãy thử lại sau một chút.');}
- if(response.status===429){await response.body?.cancel();if(!attempt){await new Promise(resolve=>setTimeout(resolve,1100));continue;}throw error(429,'Nguồn video đang bận. Bạn chờ một chút rồi thử lại nhé.');}
- if(!response.ok){await response.body?.cancel();throw error(502,'Chưa kết nối được nguồn video. Hãy thử lại sau.');}
+ catch{throw error(504,'Nguồn video phản hồi chậm. Trang sẽ tự thử lại, bạn chờ một chút nhé.',3);}
+ if(response.status===429){await response.body?.cancel();if(attempt<delays.length){await new Promise(resolve=>setTimeout(resolve,delays[attempt]));continue;}throw await busy();}
+ if(!response.ok){await response.body?.cancel();throw error(502,'Chưa kết nối được nguồn video. Hãy thử lại sau.',4);}
  result=await limitedJSON(response);
- if(result.code!==0&&/limit|frequen|too many|busy/i.test(result.msg||'')){if(!attempt){await new Promise(resolve=>setTimeout(resolve,1100));continue;}throw error(429,'Nguồn video đang bận. Bạn chờ một chút rồi thử lại nhé.');}
+ if(result.code!==0&&/limit|frequen|too many|busy/i.test(result.msg||'')){if(attempt<delays.length){await new Promise(resolve=>setTimeout(resolve,delays[attempt]));continue;}throw await busy();}
  break;
  }
  const d=result?.data;
@@ -81,7 +91,7 @@ async function resolveMeta({platform,url},fetcher){
    const nodes=root?.edge_sidecar_to_children?.edges?.map(e=>e?.node)||[root];
    if(nodes.some(v=>v&&(v.is_video===true?mediaURL(v.video_url):mediaURL(v.display_url))))break;
   }
-  if(!root)throw error(503,'Instagram tạm thời chưa cung cấp dữ liệu tải cho liên kết này. Bạn thử lại sau một chút nhé.');
+  if(!root)throw error(503,'Instagram tạm thời chưa cung cấp dữ liệu tải cho liên kết này. Bạn thử lại sau một chút nhé.',5);
   id=String(root.id||code);const nodes=root.edge_sidecar_to_children?.edges?.map(e=>e?.node)||[root];
   for(const node of nodes.slice(0,50)){if(!node)continue;const source=mediaURL(node.video_url);if(node.is_video===true){if(source)formats.push({kind:formats.length?'video-'+formats.length:'video',label:'Video MP4'+(nodes.length>1?' · '+(formats.length+1):''),size:0,source});}else{const image=mediaURL(node.display_url);if(image)images.push(image);}}
  }else{
@@ -100,7 +110,7 @@ async function resolveMeta({platform,url},fetcher){
    details||=await metaPage('https://www.facebook.com/reel/'+id,fetcher);
    root=videoFrom(details.html);
   }
-  if(!root)throw error(503,'Facebook tạm thời chưa cung cấp dữ liệu tải cho liên kết này. Bạn thử lại sau một chút nhé.');
+  if(!root)throw error(503,'Facebook tạm thời chưa cung cấp dữ liệu tải cho liên kết này. Bạn thử lại sau một chút nhé.',5);
   details||=await metaPage(url,fetcher).catch(()=>null);
   for(const [kind,key,label]of [['video','sd_src','Video MP4'],['hd','hd_src','Video chất lượng cao']]){const source=mediaURL(root[key]);if(source&&(kind!=='hd'||source!==mediaURL(root.sd_src)))formats.push({kind,label,size:0,source});}
  }
@@ -109,11 +119,20 @@ async function resolveMeta({platform,url},fetcher){
  const html=details?.html||page.html;
  return {platform,id,url,title:String(caption||metaTag(html,'og:description')||metaTag(html,'og:title')||'Một chút hay từ '+(platform==='instagram'?'Instagram':'Facebook')).slice(0,2000),author:String(root.owner?.full_name||root.owner?.username||'').slice(0,150),duration:Number(root.video_duration)||0,cover:mediaURL(root.display_url||metaTag(html,'og:image'))||images[0]||null,formats,images};
 }
-export async function resolveVideo(value,fetcher=fetch){
+// Ba lớp giảm số lần gọi nguồn: bộ nhớ trong isolate (60 giây), Cache API dùng chung (15 phút) và gộp các yêu cầu trùng đang chạy.
+export async function resolveVideo(value,fetcher=fetch,store=edgeStore()){
  let selected;try{selected=socialURL(value);}catch(e){throw error(400,e.message);}
- let cache=results.get(fetcher);if(!cache){cache=new Map();results.set(fetcher,cache);}const saved=cache.get(selected.url);if(saved&&saved.until>Date.now())return saved.data;
- const data=selected.platform==='tiktok'?await resolveTikTok(selected.url,fetcher):await resolveMeta(selected,fetcher);
- cache.set(selected.url,{until:Date.now()+60000,data});if(cache.size>32)cache.delete(cache.keys().next().value);return data;
+ let state=results.get(fetcher);if(!state){state={cache:new Map(),flight:new Map()};results.set(fetcher,state);}
+ const {cache,flight}=state,saved=cache.get(selected.url);if(saved&&saved.until>Date.now())return saved.data;
+ if(flight.has(selected.url))return flight.get(selected.url);
+ const work=(async()=>{
+  const shared=await edgeGet(store,'r:'+selected.url);
+  const data=shared||(selected.platform==='tiktok'?await resolveTikTok(selected.url,fetcher,store):await resolveMeta(selected,fetcher));
+  if(!shared)await edgePut(store,'r:'+selected.url,data,RESULT_TTL);
+  cache.set(selected.url,{until:Date.now()+60000,data});if(cache.size>32)cache.delete(cache.keys().next().value);
+  return data;
+ })().finally(()=>flight.delete(selected.url));
+ flight.set(selected.url,work);return work;
 }
 export function publicVideo(data) {return {...data,formats:data.formats.map(({source,...format})=>format),images:undefined,imageCount:data.images.length};}
 async function openFile(source,kind,id,fetcher) {
@@ -144,7 +163,7 @@ async function openFile(source,kind,id,fetcher) {
  const length=response.headers.get('content-length');if(length)headers['Content-Length']=length;
  return new Response(stream,{headers});
 }
-export async function snaptikRoute(request,{fetcher=fetch}={}) {
+export async function snaptikRoute(request,{fetcher=fetch,store=edgeStore()}={}) {
  const url=new URL(request.url),route=url.pathname.replace(/^\/api\/snap\//,'/api/snaptik/'),file=route==='/api/snaptik/file';
  const origin=request.headers.get('origin');
  if(origin&&origin!==url.origin)throw error(403,'Nguồn yêu cầu chưa được cho phép.');
@@ -152,7 +171,7 @@ export async function snaptikRoute(request,{fetcher=fetch}={}) {
   try {
   const kind=url.searchParams.get('kind'),index=url.searchParams.get('index');
   if(!/^(?:video(?:-\d{1,2})?|hd|audio|image)$/.test(kind||'')||kind==='image'&&!/^\d{1,2}$/.test(index||''))throw error(400,'Kiểu file chưa hợp lệ.');
-  const data=await resolveVideo(url.searchParams.get('url'),fetcher),source=kind==='image'?data.images[Number(index)]:data.formats.find(f=>f.kind===kind)?.source;
+  const data=await resolveVideo(url.searchParams.get('url'),fetcher,store),source=kind==='image'?data.images[Number(index)]:data.formats.find(f=>f.kind===kind)?.source;
   if(!source)throw error(404,'Bài này chưa có định dạng được chọn.');
   return await openFile(source,kind,data.id,fetcher);
   }catch(e){
@@ -165,6 +184,12 @@ export async function snaptikRoute(request,{fetcher=fetch}={}) {
  if(route!=='/api/snaptik/resolve'||request.method!=='POST')throw error(405,'Hãy dán liên kết trên trang Snap để lấy video.');
  if(!request.headers.get('content-type')?.startsWith('application/json'))throw error(415,'Yêu cầu cần dùng định dạng JSON.');
  const body=await limitedJSON(request).catch(()=>{throw error(400,'Nội dung yêu cầu chưa hợp lệ.');});if(!body||typeof body!=='object'||Array.isArray(body)||Object.keys(body).some(k=>k!=='url'))throw error(400,'Yêu cầu chưa hợp lệ.');
- const data=await resolveVideo(body.url,fetcher);
- return Response.json(publicVideo(data),{headers:{'Cache-Control':'no-store','X-Robots-Tag':'noindex'}});
+ try{
+  const data=await resolveVideo(body.url,fetcher,store);
+  return Response.json(publicVideo(data),{headers:{'Cache-Control':'no-store','X-Robots-Tag':'noindex'}});
+ }catch(e){
+  // Lỗi tạm thời: báo số giây nên thử lại để trình duyệt tự thử lại, không biến thành lỗi máy chủ chung.
+  if(e.retryAfter)return Response.json({error:e.message,retryAfter:e.retryAfter},{status:e.status,headers:{'Retry-After':String(e.retryAfter),'Cache-Control':'no-store','X-Robots-Tag':'noindex'}});
+  throw e;
+ }
 }

@@ -29,7 +29,7 @@ for(const page of ['dist/index.html','dist/blog/index.html','dist/photobooth/ind
   const html=readFileSync(page,'utf8');
   for(const name of policies) assert.ok(html.includes(`https://hunghienhoa.com/${name}`));
   assert.ok(html.indexOf('aria-label="Chính sách website"')>html.indexOf('<p class="footer-wish"'));
-  assert.ok(!html.includes('pagead2.googlesyndication.com'));
+  assert.ok(!/pagead2\.googlesyndication\.com/.test(html));
 }
 for(const name of policies) {
  const html=readFileSync(`dist/${name}.html`,'utf8');
