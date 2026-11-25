@@ -30,7 +30,7 @@ test('all Cloudflare metrics and project/repo aggregates are automatic; failures
     if(target.includes('/rpc/')) {assert.equal(options.headers.Authorization,'Bearer admin-test');return Response.json(target.includes('storage')?0:524288000);}
     if(target.includes('/actions/artifacts')) return Response.json({total_count:1,artifacts:[{size_in_bytes:1048576,expired:false}]});
     if(target.includes('/actions/cache/usage')) return Response.json({active_caches_size_in_bytes:1048576});
-    if(target.includes('api.github.com')) return Response.json({size:10240});
+    if(new URL(target).hostname==='api.github.com') return Response.json({size:10240});
     assert.equal(options.headers.Authorization,'Bearer secret-test');
     const body=JSON.parse(options.body);assert.ok(['2026-11-11T00:00:00Z','2026-11-01T00:00:00Z'].includes(body.variables.start));
     return Response.json({data:{viewer:{accounts:[{workersInvocationsAdaptive:[{sum:{requests:80000}}],durableObjectsInvocationsAdaptiveGroups:[{sum:{requests:100}}],durableObjectsPeriodicGroups:[{sum:{rowsRead:200,rowsWritten:50}}],durableObjectsSqlStorageGroups:[{max:{storedBytes:1048576}}]}]}}});

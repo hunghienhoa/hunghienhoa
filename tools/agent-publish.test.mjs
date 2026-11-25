@@ -21,4 +21,7 @@ test('đăng bài tự động: Authorization Bearer được chuyển thành he
   const limit = await send('Bearer ma-bi-mat');
   assert.deepEqual([limit.status, (await limit.json()).error], [400, 'Không đăng được bài: daily limit reached']);
   assert.equal((await worker.fetch(new Request('https://blog.hunghienhoa.com/api/agent/publish'), env)).status, 405);
+  const keys = [];
+  const limited = await worker.fetch(new Request('https://blog.hunghienhoa.com/api/agent/publish', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer x', 'CF-Connecting-IP': '203.0.113.7' }, body: '{}' }), { ...env, SNAPTIK_LIMIT: { limit: async ({ key }) => { keys.push(key); return { success: false }; } } });
+  assert.deepEqual([limited.status, keys], [429, ['agent:203.0.113.7']], 'bị giới hạn tần suất thì không gọi Supabase');
 });

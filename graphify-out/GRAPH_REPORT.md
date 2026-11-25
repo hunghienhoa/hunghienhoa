@@ -1,7 +1,7 @@
 # Graph Report - hunghienhoa  (2026-11-25)
 
 ## Corpus Check
-- 128 files · ~94,357 words
+- 129 files · ~94,506 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 18 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d7115010`
+- Built from commit: `b2100a08`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -111,12 +111,12 @@
   INCIDENT-RESPONSE.md → worker/visits.mjs
 - `Làm Nét` --references--> `VisitCounter`  [INFERRED]
   PROJECT.md → worker/visits.mjs
-- `provider()` --calls--> `mediaURL()`  [EXTRACTED]
-  tools/snaptik.test.mjs → server/snaptik.mjs
-- `publicApi()` --calls--> `snaptikRoute()`  [EXTRACTED]
-  worker/index.mjs → server/snaptik.mjs
-- `adminApi()` --calls--> `usageReport()`  [EXTRACTED]
-  worker/index.mjs → server/usage.mjs
+- `withSecurity()` --calls--> `publicHtml()`  [EXTRACTED]
+  worker/index.mjs → server/agent-content.mjs
+- `readJson()` --calls--> `fail()`  [EXTRACTED]
+  worker/index.mjs → server/validation.mjs
+- `rest()` --calls--> `fail()`  [EXTRACTED]
+  worker/index.mjs → server/validation.mjs
 
 ## Import Cycles
 - None detected.
@@ -394,16 +394,16 @@ Nodes (8): ADSENSE_CLIENT, adsenseHtml(), admin, booth, main, policies, notFound
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `VisitCounter` connect `server.mjs` to `index.mjs`, `Quy trình ứng phó sự cố`?**
-  _High betweenness centrality (0.069) - this node is a cross-community bridge._
+  _High betweenness centrality (0.053) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `handle()` (e.g. with `frameData()` and `pendingData()`) actually correct?**
   _`handle()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `validate-findings.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.05750658472344162 - nodes in this community are weakly interconnected._
-- **Why does `Hướng dẫn mã nguồn — Hùng Hiền Hòa` connect `Hướng dẫn mã nguồn — Hùng Hiền Hòa` to `server.mjs`, `README.md`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **Why does `Dữ liệu cá nhân website đang giữ` connect `Quy trình ứng phó sự cố` to `server.mjs`?**
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.0670807453416149 - nodes in this community are weakly interconnected._
-- **Why does `Làm Nét` connect `server.mjs` to `Hướng dẫn mã nguồn — Hùng Hiền Hòa`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+- **Why does `Quy trình ứng phó sự cố` connect `Quy trình ứng phó sự cố` to `3. Sáu bước`, `README.md`?**
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Should `agent-content.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06715063520871144 - nodes in this community are weakly interconnected._

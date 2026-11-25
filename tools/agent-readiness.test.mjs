@@ -65,7 +65,7 @@ async function verify(request,base,blogPrefix='/blog') {
   r=await get('/','text/markdown','HEAD');assert.equal(r.status,200);assert.equal(await r.text(),'');assert.match(r.headers.get('content-type'),/^text\/markdown/);
   for(const route of ['/index.md','/agent-instructions.md']) {r=await get(route);assert.equal(r.status,200);assert.match(r.headers.get('content-type'),/^text\/markdown/);assert.ok((await r.text()).length>100);}
   r=await get('/llms.txt');body=await r.text();assert.equal(r.status,200);assert.match(r.headers.get('content-type'),/^text\/plain/);
-  assert.match(body,/^# .+\n\n> /);assert.ok(body.includes('When to use this'));assert.ok(!body.includes('admin.hunghienhoa.com'));
+  assert.match(body,/^# .+\n\n> /);assert.ok(body.includes('When to use this'));assert.ok(!/(^|[^a-z0-9.-])admin\.hunghienhoa\.com([^a-z0-9-]|$)/i.test(body));
   for(const section of body.split(/^## /m).slice(1))assert.match(section,/- \[[^\]]+\]\(https:\/\/[^)]+\): /);
   r=await get('/robots.txt');body=await r.text();assert.equal(r.status,200);assert.ok(body.includes('User-agent: *')&&body.includes('Disallow: /api/')&&body.includes('Sitemap: '));
   r=await get('/sitemap.xml');body=await r.text();assert.equal(r.status,200);assert.match(r.headers.get('content-type'),/^application\/xml/);

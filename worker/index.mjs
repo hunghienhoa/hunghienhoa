@@ -257,6 +257,8 @@ async function publicApi(request, env, route, ctx) {
     if (request.method !== 'POST') fail(405, 'Phương thức chưa được hỗ trợ.');
     const token = bearer(request);
     if (!token) fail(401, 'Thiếu mã đăng bài.');
+    // Chặn thử mã dồn dập: mỗi địa chỉ tối đa 30 lần/phút (cùng cơ chế giới hạn đang dùng cho Snap).
+    if (env.SNAPTIK_LIMIT && !(await env.SNAPTIK_LIMIT.limit({ key: 'agent:' + (request.headers.get('CF-Connecting-IP') || 'unknown') })).success) fail(429, 'Bạn thao tác hơi nhanh. Hãy chờ một phút rồi thử lại nhé.');
     const body = await readJson(request, 1800000);
     const response = await fetch(new URL('/rest/v1/rpc/agent_publish_post', env.SUPABASE_URL), { method: 'POST', headers: { apikey: env.SUPABASE_PUBLISHABLE_KEY, 'x-agent-token': token, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_post: body }) });
     const result = await response.json().catch(() => null);

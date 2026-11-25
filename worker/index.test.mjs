@@ -19,7 +19,7 @@ test('gửi email sau khi lưu bản chờ; lỗi email không làm mất đóng
   blocked=true;assert.equal((await submit()).status,429);assert.equal(saved,1);blocked=false;
   assert.equal(messages.length,1);
   assert.equal(messages[0].to,'hunghienhoa2110@gmail.com');
-  assert.match(messages[0].text,/https:\/\/admin.hunghienhoa.com/);
+  assert.match(messages[0].text,/https:\/\/admin\.hunghienhoa\.com/);
   assert.ok(!JSON.stringify(messages[0]).includes('private@example.invalid'));
   assert.ok(!JSON.stringify(messages[0]).includes('imageDataUrl'));
   failEmail=true; assert.equal((await submit()).status,201);
