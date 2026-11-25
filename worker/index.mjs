@@ -14,7 +14,9 @@ const POSTS_SELECT = 'id,slug,title,excerpt,content,category,tags,status,is_samp
 const FRAME_SELECT = 'id,name,author_name,author_link,design,created_at';
 const SUBMISSION_SELECT = 'id,name,author_name,author_contact,author_link,design,created_at,expires_at';
 
-const HSTS = 'max-age=31536000';
+// shortcut: chưa thêm 'preload' vì khó gỡ khỏi danh sách trình duyệt; thêm khi chủ trang chắc chắn muốn.
+const HSTS = 'max-age=63072000; includeSubDomains';
+const PERMISSIONS = 'accelerometer=(), autoplay=(), bluetooth=(), camera=(self), display-capture=(), geolocation=(), gyroscope=(), hid=(), magnetometer=(), microphone=(), midi=(), payment=(), serial=(), usb=(), interest-cohort=()';
 const DEV_ONLY = /(?:^|\/)README\.md$|\.test\.mjs$/i;
 const VERSIONED_CACHE = 'public, max-age=31536000, immutable';
 const FONT_CACHE = 'public, max-age=2592000';
@@ -22,7 +24,7 @@ const IMAGE_CACHE = 'public, max-age=86400';
 // Làm Nét chạy WebAssembly (cả trong luồng phụ) nên mọi phản hồi của tên miền này cần 'wasm-unsafe-eval';
 // COOP/COEP bật crossOriginIsolated để WebAssembly dùng nhiều luồng khi máy không có WebGPU.
 const LAMNET_HOST = 'lamnet.hunghienhoa.com';
-const LAMNET_CSP = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'";
+const LAMNET_CSP = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests";
 
 // Static files referenced with ?v= are renamed by bumping v, so they can be cached for a year.
 function staticCache(url) {
@@ -74,8 +76,11 @@ function json(value, status = 200) {
 async function withSecurity(response, env, metadata, head=false) {
   const headers = new Headers(response.headers);
   let body = response.body,status=response.status;
-  headers.set('Content-Security-Policy', `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' ${env.SUPABASE_URL}; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'`);
-  headers.set('Permissions-Policy', 'camera=(self), microphone=(), geolocation=()');
+  headers.set('Content-Security-Policy', `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' ${env.SUPABASE_URL}; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests`);
+  headers.set('Permissions-Policy', PERMISSIONS);
+  headers.set('Cross-Origin-Opener-Policy', 'same-origin');
+  headers.set('Cross-Origin-Resource-Policy', 'same-site');
+  headers.set('X-Permitted-Cross-Domain-Policies', 'none');
   headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   headers.set('X-Content-Type-Options', 'nosniff');
   headers.set('X-Frame-Options', 'DENY');
