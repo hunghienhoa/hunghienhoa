@@ -34,7 +34,7 @@
   "32": "asset-versions.mjs",
   "33": "build-ui-symbols.py",
   "34": "check.cjs",
-  "35": "ref_node_fs",
+  "35": "ref_node_assert",
   "36": "browser-audit.mjs",
   "37": "Nội dung dành cho agent và công cụ tìm kiếm",
   "38": "Kiểm tra toàn bộ website — 10/11/2026",
@@ -49,7 +49,7 @@
   "47": "Việt hóa và Hộp Ảnh — 09/11/2026",
   "48": "Kiểm tra bản sticker và mobile — 09/11/2026",
   "49": "Máy chủ nội dung và quản trị",
-  "50": "ref_node_fs",
+  "50": "material-cards.test.mjs",
   "51": "AGENTS.md",
   "52": "Phông chữ website",
   "53": "Chất liệu và chuyển động tham khảo GIF",
@@ -79,9 +79,7 @@
   "77": "Security Policy",
   "78": "browser-material-cards.mjs",
   "79": "server.test.mjs",
-  "80": "dashboard.test.mjs",
+  "80": "server.mjs",
   "81": "browser-adsense-readiness.mjs",
-  "82": "usage.mjs",
-  "83": "adsense.test.mjs",
-  "84": "http-smoke.mjs"
+  "83": "adsense.test.mjs"
 }

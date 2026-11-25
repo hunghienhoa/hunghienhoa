@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1795155362.8966358,
-    "seen": 1795155652.7929688,
-    "ast_hash": "6623e714c63f07c8e09d845fdf515991",
+    "mtime": 1795613240.9062338,
+    "seen": 1795613278.328919,
+    "ast_hash": "44e396579bb0a24ab9f184011973742e",
     "semantic_hash": ""
   },
   "server/adsense.mjs": {
@@ -384,9 +384,9 @@
     "semantic_hash": ""
   },
   "worker/index.mjs": {
-    "mtime": 1795161542.5621235,
-    "seen": 1795161679.3574014,
-    "ast_hash": "a5b90cd8557be6a2e7252dbac71f464d",
+    "mtime": 1795613229.8507893,
+    "seen": 1795613278.3299441,
+    "ast_hash": "47c27066ea9773980ee61c43709daa5f",
     "semantic_hash": ""
   },
   "worker/index.test.mjs": {
@@ -1833,6 +1833,12 @@
     "mtime": 1795161644.6063957,
     "seen": 1795161679.3570616,
     "ast_hash": "3cabfc4afa6ea7342eaab21ccad5a725",
+    "semantic_hash": ""
+  },
+  "tools/agent-publish.test.mjs": {
+    "mtime": 1795613240.9021869,
+    "seen": 1795613278.3291972,
+    "ast_hash": "224fdf748002a421d54744f0f529ef07",
     "semantic_hash": ""
   },
   "package-lock.json": {
