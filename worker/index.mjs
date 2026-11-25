@@ -251,6 +251,19 @@ async function publicApi(request, env, route, ctx) {
     if(!(await env.SNAPTIK_LIMIT.limit({key})).success)fail(429,'Bạn thao tác hơi nhanh. Hãy chờ một phút rồi thử lại nhé.');
     return snaptikRoute(request);
   }
+  // Đăng bài tự động hằng ngày: phiên tự chạy gửi bài kèm mã bí mật trong Authorization; Worker chuyển sang hàm
+  // agent_publish_post của Supabase (hàm tự kiểm tra mã, giới hạn 2 bài/ngày và định dạng bài).
+  if (route === '/api/agent/publish') {
+    if (request.method !== 'POST') fail(405, 'Phương thức chưa được hỗ trợ.');
+    const token = bearer(request);
+    if (!token) fail(401, 'Thiếu mã đăng bài.');
+    const body = await readJson(request, 1800000);
+    const response = await fetch(new URL('/rest/v1/rpc/agent_publish_post', env.SUPABASE_URL), { method: 'POST', headers: { apikey: env.SUPABASE_PUBLISHABLE_KEY, 'x-agent-token': token, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_post: body }) });
+    const result = await response.json().catch(() => null);
+    if (!response.ok) fail(response.status === 400 ? 400 : response.status === 401 || response.status === 403 ? 401 : 502, response.status === 401 || response.status === 403 ? 'Mã đăng bài chưa đúng.' : `Không đăng được bài: ${String(result?.message || 'lỗi không rõ').slice(0, 120)}`);
+    await purge(postKeys(result?.slug));
+    return json(result, 201);
+  }
   if (route === '/api/lamnet/ai') {
     if (!env.VISITS) fail(503, 'Chưa kiểm tra được lượt dùng AI. Hãy thử lại sau.');
     const key=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contributionDay(Date.now())+':'+(request.headers.get('CF-Connecting-IP')||'unknown')))),byte=>byte.toString(16).padStart(2,'0')).join('');
