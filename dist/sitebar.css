@@ -1,7 +1,7 @@
 /* Thanh trên cùng dùng chung cho mọi trang: dính đầu trang, gọn, có menu Dự án; điện thoại gom thành nút ☰.
    Thuộc tính đặt tường minh để không dính luật header/nav riêng của từng trang. */
 html{scroll-padding-top:84px}
-.sitebar{position:sticky;top:0;z-index:60;display:block;height:auto;min-height:0;margin:0;padding:0;gap:0;background:rgba(251,242,227,.93);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--blue,#303487);box-shadow:none}
+.sitebar{position:sticky;top:0;width:100%;max-width:none;z-index:60;display:block;height:auto;min-height:0;margin:0;padding:0;gap:0;background:rgba(251,242,227,.93);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--blue,#303487);box-shadow:none}
 .sitebar *{box-sizing:border-box}
 .sitebar-in{display:flex;align-items:center;gap:18px;width:min(1200px,100%);min-height:68px;margin:0 auto;padding:6px clamp(16px,4vw,32px)}
 .sitebar-brand{display:block;flex:none;color:var(--blue,#303487);font-size:26px;font-weight:900;line-height:1;letter-spacing:-1.4px;text-decoration:none;rotate:-3deg}

@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795618080.14467,
-    "seen": 1795618136.8603811,
-    "ast_hash": "464ce5e3b9ae3da74c6002546030091c",
+    "mtime": 1795623170.5669692,
+    "seen": 1795623184.7687628,
+    "ast_hash": "193ee60fed9ba42ec992cd2332be1947",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -378,9 +378,9 @@
     "semantic_hash": ""
   },
   "tools/viewport.test.mjs": {
-    "mtime": 1795083553.7365046,
-    "seen": 1795132450.548248,
-    "ast_hash": "6d1d2ff695b2020285b3a40894fe79c5",
+    "mtime": 1795623170.498969,
+    "seen": 1795623184.7694767,
+    "ast_hash": "911b8cfb22667d57c9924647cc7d9e77",
     "semantic_hash": ""
   },
   "worker/index.mjs": {

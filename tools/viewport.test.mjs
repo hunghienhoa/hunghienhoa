@@ -43,3 +43,8 @@ for(const page of ['dist/index.html','dist/blog/index.html','dist/photobooth/ind
 }
 assert.ok(!readability.includes('.parcel')&&!readability.includes('.carton')&&!readability.includes('.id-card'),'Không đổi cỡ chữ trong hình minh họa');
 console.log('PASS: readability floor stylesheet shared, loaded last on nine public pages, illustrations untouched.');
+
+// Thanh trên cùng: subdomain blog/photobooth chỉ thấy file trong thư mục của mình, nên cần bản sao giống bản gốc và nạp bằng đường dẫn tương đối.
+for(const f of ['sitebar.css','sitebar.js'])for(const folder of ['dist/blog','dist/photobooth'])assert.equal(fs.readFileSync(`${folder}/${f}`,'utf8'),fs.readFileSync(`dist/${f}`,'utf8'),`${folder}/${f} phải giống dist/${f}`);
+for(const page of ['dist/blog/index.html','dist/photobooth/index.html','dist/photobooth/shoot.html'])assert.ok(!/\.\.\/sitebar\./.test(fs.readFileSync(page,'utf8')),`${page} phải nạp sitebar cạnh trang`);
+assert.match(fs.readFileSync('dist/sitebar.css','utf8'),/\.sitebar\{[^}]*max-width:none/,'.sitebar không bị giới hạn bề rộng bởi header cũ');
