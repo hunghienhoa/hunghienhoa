@@ -160,7 +160,11 @@ test('HSTS, nén HTML theo Accept-Encoding và cache dài cho tệp có ?v=', as
  const env={ASSETS:{fetch:async request=>{const path=new URL(request.url).pathname;if(!assets.has(path))return new Response(null,{status:404});return new Response(assets.get(path),{headers:{'Content-Type':types[path.slice(path.lastIndexOf('.'))]||'text/html','Cache-Control':'public, max-age=0, must-revalidate'}});}}};
  const get=(path,headers={})=>worker.fetch(new Request('https://admin.hunghienhoa.com'+path,{headers}),env);
  const html=await get('/',{'Accept-Encoding':'gzip, deflate, br, zstd'});
- assert.equal(html.headers.get('Strict-Transport-Security'),'max-age=31536000');
+ assert.equal(html.headers.get('Strict-Transport-Security'),'max-age=63072000; includeSubDomains');
+ assert.equal(html.headers.get('Cross-Origin-Opener-Policy'),'same-origin');
+ assert.equal(html.headers.get('Cross-Origin-Resource-Policy'),'same-site');
+ assert.match(html.headers.get('Content-Security-Policy'),/upgrade-insecure-requests/);
+ assert.match(html.headers.get('Permissions-Policy'),/payment=\(\)/);
  assert.equal(html.headers.get('Content-Encoding'),'br');
  assert.match(html.headers.get('Vary'),/Accept-Encoding/);
  assert.match(html.headers.get('Cache-Control'),/no-transform/);
@@ -189,7 +193,7 @@ test('trang không tồn tại trả trang 404 tiếng Việt; favicon.ico chuy�
  const icon=await worker.fetch(new Request('https://snap.hunghienhoa.com/favicon.ico'),env);
  assert.equal(icon.status,301);
  assert.equal(icon.headers.get('Location'),'https://snap.hunghienhoa.com/assets/star.svg');
- assert.equal(icon.headers.get('Strict-Transport-Security'),'max-age=31536000');
+ assert.equal(icon.headers.get('Strict-Transport-Security'),'max-age=63072000; includeSubDomains');
 });
 
 test('dữ liệu Supabase được cache tại edge; admin lưu thì xóa đúng khóa; ảnh media riêng không cache', async t => {
