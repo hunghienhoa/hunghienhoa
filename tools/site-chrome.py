@@ -12,7 +12,7 @@ PAGES = {
     'index.html': ('main', '', [('#bai-viet', 'Bài viết', ''), ('#cong-cu', 'Công cụ', ''), ('#ve-hung', 'Về mình', '')], '#contact'),
     'blog/index.html': ('blog', 'Góc tò mò', [('#bai-viet', 'Bài viết', ' id="list-nav"'), ('#ve-goc-nho', 'Về góc nhỏ', '')], '#contact'),
     'photobooth/index.html': ('photobooth', 'Hộp Ảnh', [('shoot', 'Phòng chụp', ''), ('#khung-cong-dong', 'Khung ảnh', ''), ('#cach-choi', 'Cách chơi', ''), ('#rieng-tu', 'Riêng tư', '')], '#contact'),
-    'photobooth/shoot.html': ('photobooth', 'Hộp Ảnh', [('./', 'Về Hộp Ảnh', '')], '#contact'),
+    'photobooth/shoot.html': ('photobooth', 'Hộp Ảnh', [('./', 'Về Hộp Ảnh', '')], '/#contact'),
     'snaptik/index.html': ('snaptik', 'Snap Video', [('#cach-dung', 'Cách dùng', ''), ('#rieng-tu', 'Riêng tư', '')], '#contact'),
     'lamnet/index.html': ('lamnet', 'Làm Nét', [('#cach-dung', 'Cách dùng', ''), ('#rieng-tu', 'Riêng tư', '')], '#contact'),
     'chinh-sach-rieng-tu.html': (None, '', [], '#contact'),
@@ -123,6 +123,7 @@ def place_ribbon(name, source):
 
 
 import sys
+NO_FOOTER = {'photobooth/shoot.html'}
 only = set(sys.argv[1:])
 for name in RIBBONS:
     if only and name not in only:
@@ -138,9 +139,13 @@ for name, (section, app, links, cta) in PAGES.items():
     new_footer = footer()
     old_header = re.search(r'<header class="sitebar[^"]*">.*?</header>', source, re.S)
     old_footer = re.search(r'<footer class="(?:site-footer|unified-footer|policy-footer)[^"]*">.*?</footer>', source, re.S)
-    assert old_header and old_footer, name
+    assert old_header and (old_footer or name in NO_FOOTER), name
     source = source[:old_header.start()] + keep_edits(old_header.group(0), new_header) + source[old_header.end():]
     old_footer = re.search(r'<footer class="(?:site-footer|unified-footer|policy-footer)[^"]*">.*?</footer>', source, re.S)
-    source = source[:old_footer.start()] + keep_edits(old_footer.group(0), new_footer) + source[old_footer.end():]
+    if name in NO_FOOTER:
+        # Phòng chụp là màn làm việc toàn màn hình: không có chân trang, nút Kết nối dẫn về trang chủ.
+        if old_footer: source = source[:old_footer.start()] + source[old_footer.end():]
+    else:
+        source = source[:old_footer.start()] + keep_edits(old_footer.group(0), new_footer) + source[old_footer.end():]
     path.write_text(source, encoding='utf-8')
 print(f'PASS: thanh điều hướng và footer chung cho {len(PAGES)} trang.')

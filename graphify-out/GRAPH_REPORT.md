@@ -1,7 +1,7 @@
 # Graph Report - hunghienhoa  (2026-11-26)
 
 ## Corpus Check
-- 118 files · ~91,255 words
+- 118 files · ~91,344 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 17 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e7ce5e9f`
+- Built from commit: `63775127`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -105,16 +105,16 @@
 10. `agentRoute()` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Làm Nét` --references--> `VisitCounter`  [INFERRED]
-  PROJECT.md → worker/visits.mjs
 - `Dữ liệu cá nhân website đang giữ` --references--> `VisitCounter`  [INFERRED]
   INCIDENT-RESPONSE.md → worker/visits.mjs
-- `handle()` --calls--> `pageContext()`  [EXTRACTED]
-  worker/index.mjs → server/agent-content.mjs
-- `handle()` --calls--> `representation()`  [EXTRACTED]
-  worker/index.mjs → server/agent-content.mjs
-- `withSecurity()` --calls--> `publicHtml()`  [EXTRACTED]
-  worker/index.mjs → server/agent-content.mjs
+- `Làm Nét` --references--> `VisitCounter`  [INFERRED]
+  PROJECT.md → worker/visits.mjs
+- `adminApi()` --calls--> `usageReport()`  [EXTRACTED]
+  worker/index.mjs → server/usage.mjs
+- `adminApi()` --calls--> `fail()`  [EXTRACTED]
+  worker/index.mjs → server/validation.mjs
+- `adminApi()` --calls--> `mediaAsset()`  [EXTRACTED]
+  worker/index.mjs → server/validation.mjs
 
 ## Import Cycles
 - None detected.
@@ -380,16 +380,16 @@ Nodes (4): admin(), pages, SAME, sandbox
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `VisitCounter` connect `dashboard.test.mjs` to `Hướng dẫn mã nguồn — Hùng Hiền Hòa`, `index.mjs`, `lamnet-ai.test.mjs`, `Quy trình ứng phó sự cố`?**
-  _High betweenness centrality (0.064) - this node is a cross-community bridge._
+  _High betweenness centrality (0.076) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `handle()` (e.g. with `frameData()` and `pendingData()`) actually correct?**
   _`handle()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `validate-findings.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
-- **Why does `Quy trình ứng phó sự cố` connect `Quy trình ứng phó sự cố` to `3. Sáu bước`, `README.md`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **Why does `Hướng dẫn mã nguồn — Hùng Hiền Hòa` connect `Hướng dẫn mã nguồn — Hùng Hiền Hòa` to `README.md`?**
+  _High betweenness centrality (0.054) - this node is a cross-community bridge._
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.0670807453416149 - nodes in this community are weakly interconnected._
-- **Why does `Dữ liệu cá nhân website đang giữ` connect `Quy trình ứng phó sự cố` to `dashboard.test.mjs`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+- **Why does `Làm Nét` connect `Hướng dẫn mã nguồn — Hùng Hiền Hòa` to `dashboard.test.mjs`?**
+  _High betweenness centrality (0.053) - this node is a cross-community bridge._
 - **Should `agent-content.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06428988895382817 - nodes in this community are weakly interconnected._

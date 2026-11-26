@@ -28,7 +28,8 @@ const policies=['chinh-sach-rieng-tu','dieu-khoan-su-dung','bao-cao-ban-quyen','
 for(const page of ['dist/index.html','dist/blog/index.html','dist/photobooth/index.html','dist/photobooth/shoot.html',...policies.map(name=>`dist/${name}.html`)]) {
   const html=readFileSync(page,'utf8');
   for(const name of policies) assert.ok(html.includes(`https://hunghienhoa.com/${name}`));
-  assert.ok(html.indexOf('aria-label="Chính sách website"')>html.indexOf('id="contact"')&&html.indexOf('aria-label="Chính sách website"')<html.indexOf('<p class="footer-wish"'));
+  if(page.endsWith('shoot.html'))assert.ok(html.includes('<nav class="studio-legal" aria-label="Chính sách website">')); // phòng chụp không có chân trang
+  else assert.ok(html.indexOf('aria-label="Chính sách website"')>html.indexOf('id="contact"')&&html.indexOf('aria-label="Chính sách website"')<html.indexOf('<p class="footer-wish"'));
   assert.ok(!/pagead2\.googlesyndication\.com/.test(html));
 }
 for(const name of policies) {
