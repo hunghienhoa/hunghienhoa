@@ -241,3 +241,35 @@ legend{margin-bottom:14px;font-size:14px;font-weight:800}
   .shoot-page .capture-actions{grid-template-columns:minmax(0,1fr) 48px 48px}
   .countdown{font-size:80px}
 }
+/* Điện thoại: khung cộng đồng 2 cột, các bước dạng hàng gọn, bớt khoảng trống. */
+@media(max-width:640px){
+  .booth-hero{padding-bottom:28px}
+  .booth-hero h1{font-size:clamp(38px,10.6vw,50px)}
+  .booth-hero-art{min-height:300px}
+  .frame-showcase,.community,.how-to{padding-top:56px}
+  .showcase-heading h2,.privacy h2{font-size:clamp(30px,8.6vw,38px)}
+  .showcase-card{width:132px}
+  .community-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .community-card{padding:8px;border-radius:18px}
+  .community-card img{height:170px;padding:6px;border-radius:12px}
+  .community-card b{margin-top:8px;font-size:14px}
+  .community-card p{font-size:12px}
+  .community-invite{padding:18px;gap:12px;border-radius:24px}
+  .community-invite>p{font-size:15px}
+  .community-invite .btn{width:100%}
+  .how-grid{gap:10px}
+  .how-grid article{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:14px;padding:16px;border-radius:22px}
+  .how-grid article>span{grid-row:span 2;width:40px;height:40px;font-size:17px}
+  .how-grid h3{margin-top:0;font-size:18px}
+  .how-grid p{margin-top:4px;font-size:14px}
+  .privacy{margin-top:56px;padding:22px;border-radius:26px}
+  .studio>.steps{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .studio>.steps li{flex:none;font-size:13px}
+}
+@media(max-width:640px){
+  .print-preview{padding:14px;border-radius:18px}
+  .print-preview canvas{width:min(46vw,150px)}
+  .selected-frame{font-size:16px}
+  .studio .head{margin-bottom:18px}
+  .studio .head>p{font-size:14px}
+}

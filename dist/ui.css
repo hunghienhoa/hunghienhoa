@@ -198,9 +198,35 @@ a.social-link:hover,button.social-link:hover{translate:0 -2px;background:var(--y
   .footer-columns{gap:24px;padding:32px 0;margin-top:40px}
   .head>.btn{width:100%}
 }
-@media(max-width:420px){.footer-columns{grid-template-columns:minmax(0,1fr)}}
 .not-found-links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:26px}
 .not-found-links .btn{margin:0}
 body>.sitebar-lang{position:fixed;top:16px;right:16px;z-index:70;background:var(--hh-card)}
 main{overflow-x:clip}
 [tabindex="-1"]:focus{outline:none}
+/* Điện thoại: footer gọn — mạng xã hội thành lưới 2 cột, liên kết thành 3 cột nhỏ, chính sách 2 cột. */
+@media(max-width:640px){
+  .site-footer{margin-top:64px;padding-top:40px}
+  .footer-contact h2{font-size:clamp(32px,9vw,40px)}
+  .footer-contact-grid{gap:22px;margin-top:22px}
+  .contact-postcard{gap:10px}
+  .contact-email{font-size:19px}
+  .contact-phone{font-size:16px}
+  .contact-postcard p{font-size:14px}
+  .contact-button{width:100%}
+  .social-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .social-link{min-height:46px;gap:8px;padding:8px 12px;border-radius:14px;font-size:13px}
+  .social-link>span{display:none}
+  .social-link small{font-size:12px}
+  .social-icon{width:22px;height:22px}
+  .footer-columns{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 12px;margin-top:32px;padding:26px 0}
+  .footer-about{grid-column:1/-1}
+  .footer-logo{font-size:34px}
+  .footer-about p{margin-top:8px;font-size:14px}
+  .footer-col h2{margin-bottom:6px;font-size:11px;letter-spacing:1.4px}
+  .footer-col a{min-height:36px;font-size:14px;line-height:1.3}
+  .footer-wish{padding:22px 4px 4px;font-size:16px}
+  .policy-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px;padding-top:8px;font-size:12px;text-align:left}
+  .policy-links a{min-height:40px;line-height:1.35}
+  .footer-bottom{margin-top:8px}
+  .footer-legal{font-size:12px;padding:12px 0 18px}
+}
