@@ -54,7 +54,7 @@ def footer():
     policies = [('chinh-sach-rieng-tu', 'Riêng tư'), ('dieu-khoan-su-dung', 'Điều khoản'), ('bao-cao-ban-quyen', 'Bản quyền'), ('cookie-va-quang-cao', 'Cookie')]
     return ('<footer class="site-footer">'
             '<section class="footer-cta" id="contact" aria-labelledby="contact-title">'
-            '<div class="footer-cta-copy"><span class="eyebrow">Cùng trò chuyện</span><h2 id="contact-title">Có ý tưởng? <em>Gửi một lời chào.</em></h2>'
+            '<div class="footer-cta-copy"><span class="eyebrow">Cùng trò chuyện</span><h2 id="contact-title">Có ý tưởng hay? <em>Nhắn Hùng nhé.</em></h2>'
             '<p>Trao đổi dự án, chia sẻ ý tưởng hay đơn giản là chào nhau một tiếng.</p></div>'
             '<div class="footer-cta-actions"><a class="btn btn-sun contact-button" href="mailto:hunghienhoa2110@gmail.com?subject=Ch%C3%A0o%20H%C3%B9ng">Gửi email cho Hùng <span aria-hidden="true">↗</span></a>'
             '<div class="footer-cta-lines"><a class="contact-email" id="contact-email" href="mailto:hunghienhoa2110@gmail.com">hunghienhoa2110@gmail.com</a><a class="contact-phone" href="tel:+84898298886">0898.29.8886</a></div>'

@@ -1,18 +1,18 @@
 {
-  "admin/app.js?v=2026-5": "836787fc5db614b3",
+  "admin/app.js?v=2026-6": "77d69460f3787e71",
   "admin/editor.js?v=media-3": "cfc4d2e3211119b2",
   "admin/media.js?v=1": "1727dce15c0aee2d",
-  "admin/style.css?v=2026-7": "120f3d7786a010c3",
+  "admin/style.css?v=2026-8": "62fd980a9c948dc3",
   "admin/usage.js?v=github-billing-5": "0695bbebdc9055a2",
   "app.js?v=9": "4ca6d29fac22c65b",
-  "blog/app.js?v=media-5": "338cc8019d7bb695",
+  "blog/app.js?v=media-6": "3785e39ad36a795a",
   "blog/config.js?v=1": "07d64f1f6e0cbc5d",
   "blog/core.mjs?v=media-3": "8c10e3a7b3fffb13",
   "blog/style.css?v=blog-2026-6": "faa2f7cdb8c87ba2",
   "contact.js?v=4": "00853788ffb74974",
   "home.css?v=8": "d15c3f8ef75ad669",
-  "i18n-en.js?v=7": "09b8ca534ef31a18",
-  "i18n.js?v=7": "ba9c00673edad5fa",
+  "i18n-en.js?v=8": "acc49a0f58d659a8",
+  "i18n.js?v=8": "758c50e9332a775b",
   "lamnet/app.js?v=9": "d28f99363a7f7daf",
   "lamnet/core.mjs?v=3": "247a6722e22afc6c",
   "lamnet/style.css?v=8": "97c7edb6a09e5c87",
@@ -28,5 +28,5 @@
   "snaptik/app.js?v=snap-4": "37a44e89af00b8fc",
   "snaptik/style.css?v=snap-7": "bb44d2d42a3b1364",
   "tools.css?v=4": "9455dc05320615de",
-  "ui.css?v=13": "d83653d4c2ecfb60"
+  "ui.css?v=18": "e3285eeacf1f100d"
 }

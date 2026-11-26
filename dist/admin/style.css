@@ -2,12 +2,14 @@
 .admin-page{background-image:none}
 .admin-page>header{position:sticky;top:12px;z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;width:min(1400px,calc(100% - 24px));margin:12px auto 0;padding:8px 10px 8px 22px;border:1px solid var(--hh-hair);border-radius:999px;background:color-mix(in srgb,var(--hh-card) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:var(--hh-shadow-sm)}
 .save-badge{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 14px;border-radius:999px;background:var(--hh-soft);font-size:13px;font-weight:500;white-space:nowrap}
-.save-badge::before{content:'';width:9px;height:9px;border-radius:50%;background:var(--hh-hair)}
-.save-badge[data-state=saved]::before{background:#2f9e6a}
-.save-badge[data-state=saving]::before,.save-badge[data-state=dirty]::before{background:var(--yellow);box-shadow:0 0 0 2px var(--blue)}
+.save-badge::before{content:'';flex:none;width:9px;height:9px;border-radius:50%;background:#1f9d55;box-shadow:0 0 0 0 rgba(31,157,85,.55)}
+/* Xanh nhấp nháy = tự lưu đang bật; đỏ đứng yên = đang tắt hoặc lưu lỗi. */
+.save-badge:is([data-state=off],[data-state=error])::before{background:#e5484d;box-shadow:none;animation:none}
+.save-badge[data-state=off]{color:#9b2c2c}
+@keyframes save-blink{0%{opacity:1;box-shadow:0 0 0 0 rgba(31,157,85,.55)}50%{opacity:.35}70%{box-shadow:0 0 0 6px rgba(31,157,85,0)}100%{opacity:1;box-shadow:0 0 0 0 rgba(31,157,85,0)}}
+@media(prefers-reduced-motion:no-preference){.save-badge::before{animation:save-blink 1.6s ease-in-out infinite}.save-badge[data-state=saving]::before{animation-duration:.7s}}
 .save-badge[data-state=warn]{background:color-mix(in srgb,var(--yellow) 45%,transparent)}
 .save-badge[data-state=error]{background:color-mix(in srgb,var(--coral) 25%,transparent);color:#8b332c}
-.save-badge[data-state=error]::before{background:var(--coral)}
 .page-link{display:inline-flex;margin:0 16px 12px;font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .brand{display:inline-flex;align-items:baseline;gap:10px;font-size:26px;font-weight:800;letter-spacing:-1.2px}
 .brand span{padding:4px 10px;border-radius:999px;background:var(--yellow);font-size:11px;font-weight:700;letter-spacing:1px}

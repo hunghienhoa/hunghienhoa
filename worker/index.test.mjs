@@ -190,7 +190,7 @@ test('trang không tồn tại trả trang 404 tiếng Việt; favicon.ico chuy�
  assert.equal(missing.headers.get('X-Robots-Tag'),'noindex');
  assert.match(missing.headers.get('Cache-Control'),/no-store/);
  assert.ok(missing.headers.get('Content-Security-Policy').includes("default-src 'self'"));
- assert.match(await missing.text(),/Trang này <em>lạc mất<\/em> rồi/);
+ assert.match(await missing.text(),/Trang này <em>lạc mất rồi.<\/em>/);
  const image=await worker.fetch(new Request('https://hunghienhoa.com/blog/khong-co.webp',{headers:{Accept:'image/webp,*/*'}}),env);
  assert.equal(image.status,404);assert.equal(await image.text(),'');
  const icon=await worker.fetch(new Request('https://hunghienhoa.com/favicon.ico'),env);

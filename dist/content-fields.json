@@ -50,14 +50,14 @@
   {
     "key": "main-011",
     "page": "main",
-    "label": "Nhặt chuyện hay",
-    "default": "Nhặt chuyện hay"
+    "label": "Mỗi ngày",
+    "default": "Mỗi ngày"
   },
   {
     "key": "main-012",
     "page": "main",
-    "label": "chia sẻ mỗi ngày.",
-    "default": "chia sẻ mỗi ngày."
+    "label": "một chuyện hay.",
+    "default": "một chuyện hay."
   },
   {
     "key": "main-154",
@@ -86,14 +86,14 @@
   {
     "key": "main-165",
     "page": "main",
-    "label": "hôm nay?",
-    "default": "hôm nay?"
+    "label": "đọc gì nhỉ?",
+    "default": "đọc gì nhỉ?"
   },
   {
     "key": "main-166",
     "page": "main",
-    "label": "Đọc gì",
-    "default": "Đọc gì"
+    "label": "Hôm nay",
+    "default": "Hôm nay"
   },
   {
     "key": "main-167",
@@ -110,14 +110,14 @@
   {
     "key": "main-169",
     "page": "main",
-    "label": "dùng ngay.",
-    "default": "dùng ngay."
+    "label": "dùng miễn phí.",
+    "default": "dùng miễn phí."
   },
   {
     "key": "main-170",
     "page": "main",
-    "label": "Ba tiện ích,",
-    "default": "Ba tiện ích,"
+    "label": "Ba công cụ nhỏ,",
+    "default": "Ba công cụ nhỏ,"
   },
   {
     "key": "main-171",
@@ -302,14 +302,14 @@
   {
     "key": "main-242",
     "page": "main",
-    "label": "Gửi một lời chào.",
-    "default": "Gửi một lời chào."
+    "label": "Nhắn Hùng nhé.",
+    "default": "Nhắn Hùng nhé."
   },
   {
     "key": "main-110",
     "page": "main",
-    "label": "Có ý tưởng?",
-    "default": "Có ý tưởng?"
+    "label": "Có ý tưởng hay?",
+    "default": "Có ý tưởng hay?"
   },
   {
     "key": "main-203",
@@ -530,14 +530,14 @@
   {
     "key": "blog-026",
     "page": "blog",
-    "label": "Biết thêm một điều.",
-    "default": "Biết thêm một điều."
+    "label": "biết thêm điều hay.",
+    "default": "biết thêm điều hay."
   },
   {
     "key": "blog-027",
     "page": "blog",
-    "label": "Đọc một chút.",
-    "default": "Đọc một chút."
+    "label": "Đọc một chút,",
+    "default": "Đọc một chút,"
   },
   {
     "key": "blog-028",
@@ -578,14 +578,14 @@
   {
     "key": "blog-034",
     "page": "blog",
-    "label": "Vui thì kể.",
-    "default": "Vui thì kể."
+    "label": "thấy vui thì kể.",
+    "default": "thấy vui thì kể."
   },
   {
     "key": "blog-035",
     "page": "blog",
-    "label": "Hay thì giữ.",
-    "default": "Hay thì giữ."
+    "label": "Thấy hay thì giữ,",
+    "default": "Thấy hay thì giữ,"
   },
   {
     "key": "blog-036",
@@ -608,14 +608,14 @@
   {
     "key": "blog-086",
     "page": "blog",
-    "label": "Gửi một lời chào.",
-    "default": "Gửi một lời chào."
+    "label": "Nhắn Hùng nhé.",
+    "default": "Nhắn Hùng nhé."
   },
   {
     "key": "blog-040",
     "page": "blog",
-    "label": "Có ý tưởng?",
-    "default": "Có ý tưởng?"
+    "label": "Có ý tưởng hay?",
+    "default": "Có ý tưởng hay?"
   },
   {
     "key": "blog-044",
@@ -818,8 +818,14 @@
   {
     "key": "photobooth-010",
     "page": "photobooth",
-    "label": "dải kỷ niệm.",
-    "default": "dải kỷ niệm."
+    "label": "một dải kỷ niệm.",
+    "default": "một dải kỷ niệm."
+  },
+  {
+    "key": "photobooth-198",
+    "page": "photobooth",
+    "label": "Bốn khoảnh khắc,",
+    "default": "Bốn khoảnh khắc,"
   },
   {
     "key": "photobooth-122",
@@ -842,8 +848,8 @@
   {
     "key": "photobooth-015",
     "page": "photobooth",
-    "label": "lên hình?",
-    "default": "lên hình?"
+    "label": "lên hình chưa?",
+    "default": "lên hình chưa?"
   },
   {
     "key": "photobooth-016",
@@ -1010,14 +1016,14 @@
   {
     "key": "photobooth-053",
     "page": "photobooth",
-    "label": "Giữ lại một chút vui.",
-    "default": "Giữ lại một chút vui."
+    "label": "là có ảnh xinh.",
+    "default": "là có ảnh xinh."
   },
   {
     "key": "photobooth-054",
     "page": "photobooth",
-    "label": "Ba bước là xong.",
-    "default": "Ba bước là xong."
+    "label": "Chỉ ba bước",
+    "default": "Chỉ ba bước"
   },
   {
     "key": "photobooth-055",
@@ -1082,14 +1088,14 @@
   {
     "key": "photobooth-125",
     "page": "photobooth",
-    "label": "Niềm vui ở lại.",
-    "default": "Niềm vui ở lại."
+    "label": "thật hợp gu.",
+    "default": "thật hợp gu."
   },
   {
     "key": "photobooth-126",
     "page": "photobooth",
-    "label": "Khung xinh chạy ngang.",
-    "default": "Khung xinh chạy ngang."
+    "label": "Chọn một khung",
+    "default": "Chọn một khung"
   },
   {
     "key": "photobooth-127",
@@ -1160,14 +1166,14 @@
   {
     "key": "photobooth-048",
     "page": "photobooth",
-    "label": "mọi người.",
-    "default": "mọi người."
+    "label": "mọi người cùng góp.",
+    "default": "mọi người cùng góp."
   },
   {
     "key": "photobooth-049",
     "page": "photobooth",
-    "label": "Khung từ",
-    "default": "Khung từ"
+    "label": "Khung ảnh",
+    "default": "Khung ảnh"
   },
   {
     "key": "photobooth-050",
@@ -1190,14 +1196,14 @@
   {
     "key": "photobooth-065",
     "page": "photobooth",
-    "label": "Cứ yên tâm cười.",
-    "default": "Cứ yên tâm cười."
+    "label": "cứ yên tâm cười.",
+    "default": "cứ yên tâm cười."
   },
   {
     "key": "photobooth-066",
     "page": "photobooth",
-    "label": "Kỷ niệm riêng.",
-    "default": "Kỷ niệm riêng."
+    "label": "Ảnh là của bạn,",
+    "default": "Ảnh là của bạn,"
   },
   {
     "key": "photobooth-067",
@@ -1250,14 +1256,14 @@
   {
     "key": "photobooth-079",
     "page": "photobooth",
-    "label": "Chia sẻ một chút vui.",
-    "default": "Chia sẻ một chút vui."
+    "label": "Góp cùng Hùng nhé.",
+    "default": "Góp cùng Hùng nhé."
   },
   {
     "key": "photobooth-080",
     "page": "photobooth",
-    "label": "Đóng góp khung ảnh.",
-    "default": "Đóng góp khung ảnh."
+    "label": "Có khung ảnh đẹp?",
+    "default": "Có khung ảnh đẹp?"
   },
   {
     "key": "photobooth-081",
@@ -1454,14 +1460,14 @@
   {
     "key": "photobooth-197",
     "page": "photobooth",
-    "label": "Gửi một lời chào.",
-    "default": "Gửi một lời chào."
+    "label": "Nhắn Hùng nhé.",
+    "default": "Nhắn Hùng nhé."
   },
   {
     "key": "photobooth-151",
     "page": "photobooth",
-    "label": "Có ý tưởng?",
-    "default": "Có ý tưởng?"
+    "label": "Có ý tưởng hay?",
+    "default": "Có ý tưởng hay?"
   },
   {
     "key": "photobooth-155",
@@ -1652,14 +1658,14 @@
   {
     "key": "snaptik-010",
     "page": "snaptik",
-    "label": "để dành xem lại.",
-    "default": "để dành xem lại."
+    "label": "Lưu về xem sau.",
+    "default": "Lưu về xem sau."
   },
   {
     "key": "snaptik-011",
     "page": "snaptik",
-    "label": "Video hay,",
-    "default": "Video hay,"
+    "label": "Gặp video hay?",
+    "default": "Gặp video hay?"
   },
   {
     "key": "snaptik-012",
@@ -1736,14 +1742,14 @@
   {
     "key": "snaptik-024",
     "page": "snaptik",
-    "label": "Lưu một chút hay.",
-    "default": "Lưu một chút hay."
+    "label": "thế là xong.",
+    "default": "thế là xong."
   },
   {
     "key": "snaptik-025",
     "page": "snaptik",
-    "label": "Dán link. Chọn file.",
-    "default": "Dán link. Chọn file."
+    "label": "Dán link, chọn định dạng,",
+    "default": "Dán link, chọn định dạng,"
   },
   {
     "key": "snaptik-026",
@@ -1808,14 +1814,14 @@
   {
     "key": "snaptik-036",
     "page": "snaptik",
-    "label": "giữ sự tôn trọng.",
-    "default": "giữ sự tôn trọng."
+    "label": "nhớ ghi nguồn nhé.",
+    "default": "nhớ ghi nguồn nhé."
   },
   {
     "key": "snaptik-037",
     "page": "snaptik",
-    "label": "Giữ video,",
-    "default": "Giữ video,"
+    "label": "Tải về để xem,",
+    "default": "Tải về để xem,"
   },
   {
     "key": "snaptik-038",
@@ -1844,14 +1850,14 @@
   {
     "key": "snaptik-042",
     "page": "snaptik",
-    "label": "đang tò mò.",
-    "default": "đang tò mò."
+    "label": "đang thắc mắc.",
+    "default": "đang thắc mắc."
   },
   {
     "key": "snaptik-043",
     "page": "snaptik",
-    "label": "Bạn có thể",
-    "default": "Bạn có thể"
+    "label": "Có thể bạn",
+    "default": "Có thể bạn"
   },
   {
     "key": "snaptik-044",
@@ -1910,14 +1916,14 @@
   {
     "key": "snaptik-081",
     "page": "snaptik",
-    "label": "Gửi một lời chào.",
-    "default": "Gửi một lời chào."
+    "label": "Nhắn Hùng nhé.",
+    "default": "Nhắn Hùng nhé."
   },
   {
     "key": "snaptik-054",
     "page": "snaptik",
-    "label": "Có ý tưởng?",
-    "default": "Có ý tưởng?"
+    "label": "Có ý tưởng hay?",
+    "default": "Có ý tưởng hay?"
   },
   {
     "key": "snaptik-055",
@@ -2108,8 +2114,8 @@
   {
     "key": "lamnet-010",
     "page": "lamnet",
-    "label": "Làm nét một chút.",
-    "default": "Làm nét một chút."
+    "label": "Làm nét ngay.",
+    "default": "Làm nét ngay."
   },
   {
     "key": "lamnet-011",
@@ -2270,14 +2276,14 @@
   {
     "key": "lamnet-037",
     "page": "lamnet",
-    "label": "Tải về bản rõ hơn.",
-    "default": "Tải về bản rõ hơn."
+    "label": "tải về bản nét hơn.",
+    "default": "tải về bản nét hơn."
   },
   {
     "key": "lamnet-038",
     "page": "lamnet",
-    "label": "Chọn ảnh. Đợi một chút.",
-    "default": "Chọn ảnh. Đợi một chút."
+    "label": "Chọn ảnh, đợi giây lát,",
+    "default": "Chọn ảnh, đợi giây lát,"
   },
   {
     "key": "lamnet-039",
@@ -2342,14 +2348,14 @@
   {
     "key": "lamnet-049",
     "page": "lamnet",
-    "label": "trên máy bạn.",
-    "default": "trên máy bạn."
+    "label": "không rời khỏi máy.",
+    "default": "không rời khỏi máy."
   },
   {
     "key": "lamnet-050",
     "page": "lamnet",
-    "label": "Ảnh ở yên",
-    "default": "Ảnh ở yên"
+    "label": "Ảnh của bạn",
+    "default": "Ảnh của bạn"
   },
   {
     "key": "lamnet-051",
@@ -2378,14 +2384,14 @@
   {
     "key": "lamnet-055",
     "page": "lamnet",
-    "label": "đang tò mò.",
-    "default": "đang tò mò."
+    "label": "đang thắc mắc.",
+    "default": "đang thắc mắc."
   },
   {
     "key": "lamnet-056",
     "page": "lamnet",
-    "label": "Bạn có thể",
-    "default": "Bạn có thể"
+    "label": "Có thể bạn",
+    "default": "Có thể bạn"
   },
   {
     "key": "lamnet-057",
@@ -2456,14 +2462,14 @@
   {
     "key": "lamnet-096",
     "page": "lamnet",
-    "label": "Gửi một lời chào.",
-    "default": "Gửi một lời chào."
+    "label": "Nhắn Hùng nhé.",
+    "default": "Nhắn Hùng nhé."
   },
   {
     "key": "lamnet-069",
     "page": "lamnet",
-    "label": "Có ý tưởng?",
-    "default": "Có ý tưởng?"
+    "label": "Có ý tưởng hay?",
+    "default": "Có ý tưởng hay?"
   },
   {
     "key": "lamnet-070",
@@ -2702,14 +2708,14 @@
   {
     "key": "admin-016",
     "page": "admin",
-    "label": "nhiều ý tưởng.",
-    "default": "nhiều ý tưởng."
+    "label": "hôm nay thế nào?",
+    "default": "hôm nay thế nào?"
   },
   {
     "key": "admin-017",
     "page": "admin",
-    "label": "Góc nhỏ,",
-    "default": "Góc nhỏ,"
+    "label": "Chào Hùng,",
+    "default": "Chào Hùng,"
   },
   {
     "key": "admin-018",
@@ -2750,14 +2756,14 @@
   {
     "key": "admin-024",
     "page": "admin",
-    "label": "Hùng duyệt.",
-    "default": "Hùng duyệt."
+    "label": "đang chờ duyệt.",
+    "default": "đang chờ duyệt."
   },
   {
     "key": "admin-025",
     "page": "admin",
-    "label": "Chờ",
-    "default": "Chờ"
+    "label": "Khung mới",
+    "default": "Khung mới"
   },
   {
     "key": "admin-026",
@@ -2774,8 +2780,8 @@
   {
     "key": "admin-028",
     "page": "admin",
-    "label": "khung ảnh.",
-    "default": "khung ảnh."
+    "label": "khung đã duyệt.",
+    "default": "khung đã duyệt."
   },
   {
     "key": "admin-029",
@@ -2798,8 +2804,8 @@
   {
     "key": "admin-032",
     "page": "admin",
-    "label": "Góc",
-    "default": "Góc"
+    "label": "Viết và sửa",
+    "default": "Viết và sửa"
   },
   {
     "key": "admin-033",
@@ -2888,8 +2894,8 @@
   {
     "key": "admin-057",
     "page": "admin",
-    "label": "& hạn mức.",
-    "default": "& hạn mức."
+    "label": "và hạn mức.",
+    "default": "và hạn mức."
   },
   {
     "key": "admin-058",
@@ -2924,14 +2930,14 @@
   {
     "key": "admin-044",
     "page": "admin",
-    "label": "trang web.",
-    "default": "trang web."
+    "label": "trên mọi trang.",
+    "default": "trên mọi trang."
   },
   {
     "key": "admin-045",
     "page": "admin",
-    "label": "Nội dung",
-    "default": "Nội dung"
+    "label": "Sửa chữ",
+    "default": "Sửa chữ"
   },
   {
     "key": "admin-054",

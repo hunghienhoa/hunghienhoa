@@ -222,7 +222,7 @@ try {
   const missing = await fetch(origin + '/khong-co-trang-nay', { headers: { Accept: 'text/html' } });
   assert.equal(missing.status, 404);
   assert.equal(missing.headers.get('x-robots-tag'), 'noindex');
-  assert.match(await missing.text(), /Trang này <em>lạc mất<\/em> rồi/);
+  assert.match(await missing.text(), /Trang này <em>lạc mất rồi.<\/em>/);
   const missingApi = await fetch(origin + '/api/khong-co', { headers: { Accept: 'text/html' } });
   assert.equal(missingApi.status, 404);
   assert.match(missingApi.headers.get('content-type'), /application\/json/);

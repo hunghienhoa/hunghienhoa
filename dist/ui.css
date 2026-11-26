@@ -252,21 +252,22 @@ body>.topic-band{margin-top:0}
 p,li,figcaption{text-wrap:pretty}
 .footer-cta-copy p{margin-top:20px}
 @media(max-width:640px){.eyebrow{gap:7px;padding:6px 12px;font-size:11px;letter-spacing:1.1px}}
-/* Lockup tiêu đề (2026-11): dòng chữ nhỏ Be Vietnam Pro nằm lệch, đè lên cụm Playfair nghiêng cỡ lớn màu chữ chính (không quầng sáng),
-   giống cách bố trí chữ trên bìa video. Áp cho mọi h1/h2 có <em> ở trang công khai (trừ hộp thoại và trang quản trị). */
-html body:not(.admin-page) :is(h1,h2):has(>em):not(dialog *){
-  --lk-small:clamp(20px,2vw,28px);--lk-big:2.35em;--lk-color:var(--blue);--lk-halo:var(--cream);
+/* Lockup tiêu đề (2026-11): dòng chữ nhỏ Be Vietnam Pro nằm lệch, chìm nhẹ dưới cụm Playfair nghiêng cỡ lớn màu vàng đậm, không viền, không bóng,
+   giống cách bố trí chữ trên bìa video. Áp cho mọi h1/h2 có <em> ở mọi trang, kể cả trang quản trị (trừ hộp thoại). */
+html:root body :is(h1,h2):has(>em):not(dialog *){
+  --lk-small:clamp(20px,2vw,28px);--lk-big:2.35em;--lk-color:#f0b400;
   position:relative;isolation:isolate;font-size:var(--lk-small);font-weight:700;line-height:1.15;letter-spacing:-.025em;
-  text-indent:1.4em;text-shadow:0 0 .12em var(--lk-halo),0 0 .4em var(--lk-halo)}
-html body:not(.admin-page) h1:has(>em):not(dialog *){--lk-small:clamp(22px,2.5vw,34px);--lk-big:2.25em}
-html body:not(.admin-page) :is(h1,h2):not(dialog *)>em{
-  position:relative;z-index:-1;display:block;margin:-.24em 0 .14em;padding:0 .04em 0 0;text-indent:0;
+  text-indent:1.4em;text-shadow:none}
+html:root body h1:has(>em):not(dialog *){--lk-small:clamp(22px,2.5vw,34px);--lk-big:2.25em}
+html:root body :is(h1,h2):not(dialog *)>em{
+  position:relative;z-index:1;display:block;margin:-.07em 0 .14em;padding:0 .04em 0 0;text-indent:0;
   font-size:var(--lk-big);font-weight:600;line-height:.98;letter-spacing:-.02em;color:var(--lk-color);
-  background:none;text-shadow:none;text-wrap:balance}
-html body:not(.admin-page) :is(h1,h2):has(>em):not(dialog *) br{display:none}
-html body:not(.admin-page) .footer-cta h2:has(>em){--lk-color:var(--yellow);--lk-halo:var(--blue)}
-html body:not(.admin-page) .not-found h1>em{margin-bottom:-.1em}
+  background:none;text-shadow:none;-webkit-text-stroke:0;text-wrap:balance}
+html:root body :is(h1,h2):has(>em):not(dialog *) br{display:none}
+html:root body .footer-cta h2:has(>em){--lk-color:var(--yellow)}
+html:root body .tool-hero h1:has(>em){max-width:none}
+html:root body.admin-page :is(h1,h2):has(>em):not(dialog *){--lk-small:clamp(18px,1.6vw,24px);--lk-big:2.2em}
 @media(max-width:640px){
-  html body:not(.admin-page) :is(h1,h2):has(>em):not(dialog *){--lk-small:clamp(18px,5vw,22px);--lk-big:2.25em;text-indent:1em}
-  html body:not(.admin-page) h1:has(>em):not(dialog *){--lk-small:clamp(20px,5.6vw,24px);--lk-big:2.3em}
+  html:root body :is(h1,h2):has(>em):not(dialog *){--lk-small:clamp(18px,5vw,22px);--lk-big:2.25em;text-indent:1em}
+  html:root body h1:has(>em):not(dialog *){--lk-small:clamp(20px,5.6vw,24px);--lk-big:2.3em}
 }
