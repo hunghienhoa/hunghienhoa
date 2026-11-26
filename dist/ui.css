@@ -209,7 +209,7 @@ html,body{overflow-x:clip}
 main:has(>.topic-band:last-child)+.site-footer{margin-top:clamp(40px,5vw,64px)}
 main>.topic-band:last-child{margin-bottom:0}
 body>.topic-band{margin-top:0}
-@media(prefers-reduced-motion:no-preference){.band-track{animation:band-run 40s linear infinite}}
+@media(prefers-reduced-motion:no-preference){.band-track{animation:band-run 90s linear infinite}}
 @keyframes band-run{to{transform:translateX(-50%)}}
 [tabindex="-1"]:focus{outline:none}
 /* Điện thoại: footer gọn — thẻ liên hệ một cột, icon tròn một hàng, liên kết 2 cột, chính sách thành hàng ngang. */
