@@ -385,3 +385,20 @@ window.addEventListener('pagehide', showAuth);
 window.addEventListener('pageshow', event => { if (event.persisted) initialize(); });
 setInterval(async () => { if (!LOCAL && !session) return; try { const data = await api('/api/admin/session'); if (!data.authenticated) await initialize(); } catch { saveSession(null); showAuth(); } }, 60000);
 initialize();
+
+// Thanh trên cùng của trang quản trị: vuốt xuống thì ẩn, vuốt lên thì hiện lại (giống các trang công khai).
+(() => {
+  const bar = document.querySelector('.admin-page>header');
+  if (!bar || typeof window.addEventListener !== 'function' || typeof requestAnimationFrame !== 'function') return;
+  let lastY = window.scrollY || 0, ticking = false;
+  const update = () => {
+    ticking = false;
+    const y = Math.max(0, window.scrollY || 0), delta = y - lastY;
+    if (y < 80 || bar.contains(document.activeElement)) bar.classList.remove('is-hidden');
+    else if (delta > 6) bar.classList.add('is-hidden');
+    else if (delta < -6) bar.classList.remove('is-hidden');
+    if (Math.abs(delta) > 6 || y < 80) lastY = y;
+  };
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, {passive: true});
+  bar.addEventListener('focusin', () => bar.classList.remove('is-hidden'));
+})();

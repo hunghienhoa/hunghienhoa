@@ -105,6 +105,8 @@ details.faq-item>p{padding:0 0 18px;max-width:70ch}
 
 /* ---------- Thanh điều hướng viên nổi ---------- */
 .sitebar{position:sticky;top:0;z-index:60;padding:12px clamp(10px,2vw,20px) 0;pointer-events:none}
+.sitebar.is-hidden{translate:0 calc(-100% - 16px)}
+@media(prefers-reduced-motion:no-preference){.sitebar{transition:translate .32s cubic-bezier(.2,.7,.2,1)}}
 .sitebar-in{pointer-events:auto;position:relative;display:flex;align-items:center;gap:10px;width:min(1180px,100%);min-height:62px;margin:0 auto;padding:7px 8px 7px 22px;border:1px solid var(--hh-hair);border-radius:999px;background:color-mix(in srgb,var(--hh-card) 84%,transparent);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);box-shadow:var(--hh-shadow-sm)}
 .sitebar-brand{display:inline-flex;align-items:baseline;gap:0;flex:none;font-size:24px;font-weight:800;letter-spacing:-1.2px;line-height:1}
 .sitebar-brand>span{color:var(--yellow);text-shadow:0 0 1px var(--blue)}
@@ -243,3 +245,10 @@ body>.topic-band{margin-top:0}
   .footer-top{min-height:36px}
 }
 .topic-band+.site-footer{margin-top:clamp(40px,5vw,64px)}
+/* Căn chỉnh chữ 2026-11: nhãn cạnh logo nằm giữa, chấm eyebrow theo dòng đầu, tránh chữ mồ côi. */
+.sitebar-brand small{align-self:center}
+.eyebrow{line-height:1.3;text-align:left}
+.eyebrow::before{align-self:flex-start;margin-top:calc((1.3em - 7px) / 2)}
+p,li,figcaption{text-wrap:pretty}
+.footer-cta-copy p{margin-top:20px}
+@media(max-width:640px){.eyebrow{gap:7px;padding:6px 12px;font-size:11px;letter-spacing:1.1px}}

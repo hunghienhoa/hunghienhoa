@@ -190,3 +190,7 @@
   .about-cta{grid-column:1/-1;width:100%}
 }
 .topic-band+.home-section{padding-top:clamp(48px,6vw,84px)}
+/* Căn chỉnh 2026-11 */
+.hero-proof{padding-left:2px}
+@media(max-width:640px){.about-copy .eyebrow{align-self:center}}
+@media(max-width:640px){.tool-cta{text-decoration:none}}
