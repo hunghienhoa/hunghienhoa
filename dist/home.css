@@ -192,3 +192,16 @@
 .hero-proof{padding-left:2px}
 @media(max-width:640px){.about-copy .eyebrow{align-self:center}}
 @media(max-width:640px){.tool-cta{text-decoration:none}}
+/* Bố cục trang chủ trên điện thoại (2026-11c): đầu trang gọn, hai nút cạnh nhau, nút xem tất cả nhỏ, tiêu đề bài tối đa 3 dòng. */
+.post-media:not(.no-cover){background:color-mix(in srgb,var(--blue) 8%,#fff)}
+@media(max-width:640px){
+  .home-hero{padding-top:18px;padding-bottom:30px;gap:22px}
+  .home-hero h1{margin-top:18px}
+  .hero-lead{margin-top:14px!important;font-size:16px;line-height:1.6}
+  .hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+  .hero-actions .btn{min-height:50px;padding:0 12px;font-size:15px}
+  .hero-proof{margin-top:18px;gap:8px 16px;font-size:13px}
+  .home-head>.btn{width:auto;min-height:42px;padding:0 18px;font-size:14px}
+  .post-title{display:-webkit-box;overflow:hidden;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+  .post-media{width:104px;min-height:104px}
+}
