@@ -11,8 +11,8 @@
   "blog/style.css?v=blog-2026-4": "3efb6e7237e336fd",
   "contact.js?v=4": "00853788ffb74974",
   "home.css?v=5": "2cd78ccf847ccd8f",
-  "i18n-en.js?v=6": "5b4ee40b14ce204f",
-  "i18n.js?v=6": "0083cb35300ec383",
+  "i18n-en.js?v=7": "09b8ca534ef31a18",
+  "i18n.js?v=7": "ba9c00673edad5fa",
   "lamnet/app.js?v=9": "d28f99363a7f7daf",
   "lamnet/core.mjs?v=3": "247a6722e22afc6c",
   "lamnet/style.css?v=7": "811f645e0bcd397c",
@@ -22,11 +22,11 @@
   "photobooth/core.mjs?v=4": "bbdfdbf7cc5491e3",
   "photobooth/design.mjs?v=5": "16c9f3c93ae6357a",
   "photobooth/shoot.js?v=2": "927a79acb15f7bf1",
-  "photobooth/style.css?v=2026-5": "fb9ea0b9ae636d95",
+  "photobooth/style.css?v=2026-6": "e608557b8306008d",
   "site-content.js?v=5": "da5014fb19f37e6a",
   "sitebar.js?v=4": "b09465e911861743",
   "snaptik/app.js?v=snap-4": "37a44e89af00b8fc",
   "snaptik/style.css?v=snap-6": "b44d24efc2630dff",
   "tools.css?v=3": "6b622125772b9c98",
-  "ui.css?v=7": "60da03975c305305"
+  "ui.css?v=8": "262de09678a08d21"
 }

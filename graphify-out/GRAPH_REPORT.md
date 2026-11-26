@@ -1,7 +1,7 @@
 # Graph Report - hunghienhoa  (2026-11-26)
 
 ## Corpus Check
-- 118 files · ~90,643 words
+- 118 files · ~90,670 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 17 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8c6e8cdf`
+- Built from commit: `d9618545`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -110,11 +110,11 @@
   INCIDENT-RESPONSE.md → worker/visits.mjs
 - `Làm Nét` --references--> `VisitCounter`  [INFERRED]
   PROJECT.md → worker/visits.mjs
-- `adminApi()` --calls--> `mediaAsset()`  [EXTRACTED]
-  worker/index.mjs → server/validation.mjs
 - `adminApi()` --calls--> `fail()`  [EXTRACTED]
   worker/index.mjs → server/validation.mjs
-- `handle()` --calls--> `fail()`  [EXTRACTED]
+- `adminApi()` --calls--> `mediaAsset()`  [EXTRACTED]
+  worker/index.mjs → server/validation.mjs
+- `adminApi()` --calls--> `post()`  [EXTRACTED]
   worker/index.mjs → server/validation.mjs
 
 ## Import Cycles
@@ -385,16 +385,16 @@ Nodes (11): admin(), checks, files, sections, app, html, report, results (+3 mor
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `VisitCounter` connect `worker/visits.mjs` to `index.mjs`, `Quy trình ứng phó sự cố`, `dashboard.test.mjs`?**
-  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+  _High betweenness centrality (0.072) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `handle()` (e.g. with `frameData()` and `pendingData()`) actually correct?**
   _`handle()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `index.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.1110204081632653 - nodes in this community are weakly interconnected._
-- **Why does `Làm Nét` connect `worker/visits.mjs` to `Hướng dẫn mã nguồn — Hùng Hiền Hòa`?**
-  _High betweenness centrality (0.042) - this node is a cross-community bridge._
+- **Why does `Hướng dẫn mã nguồn — Hùng Hiền Hòa` connect `Hướng dẫn mã nguồn — Hùng Hiền Hòa` to `worker/visits.mjs`, `README.md`?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Should `validate-findings.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
-- **Why does `Hướng dẫn mã nguồn — Hùng Hiền Hòa` connect `Hướng dẫn mã nguồn — Hùng Hiền Hòa` to `worker/visits.mjs`, `README.md`?**
-  _High betweenness centrality (0.042) - this node is a cross-community bridge._
+- **Why does `Làm Nét` connect `worker/visits.mjs` to `Hướng dẫn mã nguồn — Hùng Hiền Hòa`?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06559356136820925 - nodes in this community are weakly interconnected._

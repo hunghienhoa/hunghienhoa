@@ -85,17 +85,18 @@ def keep_edits(old, new):
 # Dải băng chủ đề (mọi trang công khai, trừ admin): chữ in Be Vietnam Pro, nghiêng nhẹ, chạy ngang.
 # Mỗi trang một bộ chữ hợp nội dung; vị trí đặt: (kiểu, mốc) — 'after' chèn sau mốc, 'before' chèn trước mốc.
 RIBBONS = {
-    'index.html': (['Sáng tạo', 'Hình ảnh', 'Cuộc sống', 'Công cụ nhỏ'], 'after', '<section class="home-hero"', ''),
-    'blog/index.html': (['Nhặt ý tưởng', 'Giữ sự tò mò', 'Kể chuyện hay', 'Đọc một chút, vui thêm một chút'], 'after', '<section class="blog-hero', 'ribbon-shell '),
-    'photobooth/index.html': (['CHỤP MỘT CHÚT VUI', 'GIỮ MỘT CHÚT NHỚ', 'CỨ LÀ CHÍNH MÌNH', 'BỐN TẤM ẢNH, CẢ RỔ KỶ NIỆM'], 'after', '<section class="booth-hero', ''),
-    'photobooth/shoot.html': (['CƯỜI LÊN, HÔM NAY ĐẸP LẮM', 'GIỮ MỘT CHÚT NHỚ', 'CỨ LÀ CHÍNH MÌNH', 'BỐN TẤM ẢNH, CẢ RỔ KỶ NIỆM'], 'before', '</main>', ''),
-    'snaptik/index.html': (['NHẶT MỘT CHÚT HAY', 'ĐỂ DÀNH MỘT CHÚT VUI', 'GIỮ NGUỒN · TÔN TRỌNG TÁC GIẢ'], 'before', '<section id="cach-dung"', ''),
-    'lamnet/index.html': (['RÕ HƠN MỘT CHÚT', 'PHÓNG TO 4 LẦN', 'ẢNH Ở YÊN TRÊN MÁY BẠN'], 'before', '<section id="cach-dung"', ''),
-    'chinh-sach-rieng-tu.html': (['Minh bạch', 'Tôn trọng quyền riêng tư', 'Nói rõ từng điều'], 'before', '<footer class="site-footer">', ''),
-    'dieu-khoan-su-dung.html': (['Minh bạch', 'Tôn trọng quyền riêng tư', 'Nói rõ từng điều'], 'before', '<footer class="site-footer">', ''),
-    'bao-cao-ban-quyen.html': (['Minh bạch', 'Tôn trọng quyền riêng tư', 'Nói rõ từng điều'], 'before', '<footer class="site-footer">', ''),
-    'cookie-va-quang-cao.html': (['Minh bạch', 'Tôn trọng quyền riêng tư', 'Nói rõ từng điều'], 'before', '<footer class="site-footer">', ''),
-    '404.html': (['Lạc đường một chút', 'Quay lại trang chủ nhé'], 'before', '</body>', ''),
+    'index.html': (['Chia sẻ điều hay mỗi ngày', 'Tò mò là khởi đầu', 'Công cụ nhỏ, tiện lợi to', 'Đọc một chút, vui cả ngày'], 'after', '<section class="home-hero"', ''),
+    'blog/index.html': (['Mỗi trang một chuyện nhỏ', 'Hay thì giữ, vui thì kể', 'Đọc chậm, nghĩ sâu', 'Cứ tò mò thêm chút nữa'], 'after', '<section class="blog-hero', 'ribbon-shell '),
+    'photobooth/index.html': (['Cười lên nào', 'Bốn tấm, một kỷ niệm', 'Chụp vui, giữ lâu', 'Cứ là chính mình'], 'after', '<section class="booth-hero', ''),
+    # Phòng chụp là nơi làm việc: không đặt dải băng để khỏi rối mắt.
+    'photobooth/shoot.html': ([], 'before', '</main>', ''),
+    'snaptik/index.html': (['Gặp video hay, giữ lại ngay', 'Dán link là xong', 'Nhớ ghi nguồn tác giả'], 'before', '<section id="cach-dung"', ''),
+    'lamnet/index.html': (['Ảnh mờ hóa ảnh rõ', 'Phóng to gấp 4 lần', 'Ảnh ở yên trên máy bạn'], 'before', '<section id="cach-dung"', ''),
+    'chinh-sach-rieng-tu.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
+    'dieu-khoan-su-dung.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
+    'bao-cao-ban-quyen.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
+    'cookie-va-quang-cao.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
+    '404.html': (['Ơ, lạc mất rồi', 'Về trang chủ nhé'], 'before', '</body>', ''),
 }
 BAND_RE = re.compile(r'<div class="(?:ribbon-shell )?topic-band"[^>]*>.*?(?:</div><!--/band-->|</div></div>)', re.S)
 
@@ -110,6 +111,8 @@ def ribbon(items, extra_class=''):
 def place_ribbon(name, source):
     items, mode, anchor, extra = RIBBONS[name]
     source = BAND_RE.sub('', source)
+    if not items:
+        return source
     band = ribbon(items, extra)
     if mode == 'after':
         start = source.index(anchor)
