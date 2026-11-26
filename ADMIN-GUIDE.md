@@ -3,10 +3,15 @@
 Đăng nhập [hunghienhoa.com/admin](https://hunghienhoa.com/admin/) bằng tài khoản quản trị hiện có.
 
 - **Tổng quan**: số bài/khung và lượt xem tổng, hôm nay, 7 ngày, 30 ngày. Có phân chia Trang chính, Blog, Photobooth và biểu đồ từng ngày. Nhấn “Làm mới số liệu” để cập nhật.
-- **Nội dung web**: sửa thông tin chung, rồi dùng “Tùy chỉnh cả bốn trang” để tìm và sửa từng đoạn chữ, đổi màu nền/chữ/nhấn hoặc thay liên kết mạng xã hội. Nội dung được chia theo trang. “Khôi phục chữ gốc” đặt lại một mục; nhấn “Lưu tùy chỉnh toàn trang” mới lưu thay đổi.
-- **Bài viết**, **Khung chờ duyệt**, **Thư viện khung**: tiếp tục quản lý nội dung như trước. Chức năng chụp, đăng nhập, bố cục và mã nguồn được quản lý trong GitHub; trình sửa nội dung không thực thi HTML/JavaScript tùy ý.
+- **Nội dung web**: sửa thông tin chung, rồi dùng “Chỉnh chữ trên mọi trang” để tìm và sửa từng đoạn chữ của **Trang chủ, Góc tò mò (Blog), Hộp Ảnh, Snap Video, Làm Nét** (cả thanh điều hướng và footer của từng trang), đổi màu nền/chữ/nhấn, ảnh đại diện mục Về Hùng hoặc liên kết mạng xã hội. Mỗi nhóm có liên kết “Mở trang này” để xem ngay. “Khôi phục chữ gốc” đặt lại một mục.
+- **Bài viết**, **Khung chờ duyệt**, **Thư viện khung**: viết, sửa, xuất bản bài; duyệt và quản lý khung. Chức năng chụp, đăng nhập, bố cục và mã nguồn được quản lý trong GitHub; trình sửa nội dung không thực thi HTML/JavaScript tùy ý.
 
-Sau khi lưu, tải lại trang công khai để xem. Việc sửa chữ không làm mất ảnh, nhãn dán hoặc hành vi của nút/liên kết. Bài blog vẫn dùng trình biên tập bài riêng; khung dùng xưởng thiết kế và thư viện.
+## Tự lưu và lên web ngay
+
+- Sửa xong một ô, ngừng gõ khoảng **1,5 giây** là tự lưu. Huy hiệu ở thanh trên cùng cho biết trạng thái: “Có thay đổi, sắp tự lưu…”, “Đang lưu…”, “Đã lưu HH:MM · đã lên web”, hoặc báo lỗi nếu chưa lưu được. Nút Lưu vẫn dùng được khi muốn lưu ngay.
+- Khi lưu, máy chủ xóa bộ nhớ đệm nên trang công khai hiện nội dung mới ở lần tải tiếp theo (không cần chờ).
+- **Bài viết mới** chỉ tự lưu khi đã điền đủ tiêu đề, tóm tắt, chuyên mục và nội dung. Mặc định là **Bản nháp** (chưa hiện trên web); chọn **Xuất bản** thì bài lên web ngay. Bài đã xuất bản sửa tới đâu cập nhật trên web tới đó. Tự lưu không tạo bài trùng và không làm mất chữ đang gõ.
+- Còn thay đổi chưa lưu mà đóng tab thì trình duyệt sẽ hỏi lại.
 
 ## Ý nghĩa số liệu
 

@@ -82,8 +82,50 @@ def keep_edits(old, new):
     return re.sub(r'(<(?:a|span|p|h2|small|em|b)\b[^>]*>)([^<]+)<', attach, new)
 
 
+# Dải băng chủ đề (mọi trang công khai, trừ admin): chữ in Be Vietnam Pro, nghiêng nhẹ, chạy ngang.
+# Mỗi trang một bộ chữ hợp nội dung; vị trí đặt: (kiểu, mốc) — 'after' chèn sau mốc, 'before' chèn trước mốc.
+RIBBONS = {
+    'index.html': (['Sáng tạo', 'Hình ảnh', 'Cuộc sống', 'Công cụ nhỏ'], 'after', '<section class="home-hero"', ''),
+    'blog/index.html': (['Nhặt ý tưởng', 'Giữ sự tò mò', 'Kể chuyện hay', 'Đọc một chút, vui thêm một chút'], 'after', '<section class="blog-hero', 'ribbon-shell '),
+    'photobooth/index.html': (['CHỤP MỘT CHÚT VUI', 'GIỮ MỘT CHÚT NHỚ', 'CỨ LÀ CHÍNH MÌNH', 'BỐN TẤM ẢNH, CẢ RỔ KỶ NIỆM'], 'after', '<section class="booth-hero', ''),
+    'photobooth/shoot.html': (['CƯỜI LÊN, HÔM NAY ĐẸP LẮM', 'GIỮ MỘT CHÚT NHỚ', 'CỨ LÀ CHÍNH MÌNH', 'BỐN TẤM ẢNH, CẢ RỔ KỶ NIỆM'], 'before', '</main>', ''),
+    'snaptik/index.html': (['NHẶT MỘT CHÚT HAY', 'ĐỂ DÀNH MỘT CHÚT VUI', 'GIỮ NGUỒN · TÔN TRỌNG TÁC GIẢ'], 'before', '<section id="cach-dung"', ''),
+    'lamnet/index.html': (['RÕ HƠN MỘT CHÚT', 'PHÓNG TO 4 LẦN', 'ẢNH Ở YÊN TRÊN MÁY BẠN'], 'before', '<section id="cach-dung"', ''),
+    'chinh-sach-rieng-tu.html': (['Minh bạch', 'Tôn trọng quyền riêng tư', 'Nói rõ từng điều'], 'before', '<footer class="site-footer">', ''),
+    'dieu-khoan-su-dung.html': (['Minh bạch', 'Tôn trọng quyền riêng tư', 'Nói rõ từng điều'], 'before', '<footer class="site-footer">', ''),
+    'bao-cao-ban-quyen.html': (['Minh bạch', 'Tôn trọng quyền riêng tư', 'Nói rõ từng điều'], 'before', '<footer class="site-footer">', ''),
+    'cookie-va-quang-cao.html': (['Minh bạch', 'Tôn trọng quyền riêng tư', 'Nói rõ từng điều'], 'before', '<footer class="site-footer">', ''),
+    '404.html': (['Lạc đường một chút', 'Quay lại trang chủ nhé'], 'before', '</body>', ''),
+}
+BAND_RE = re.compile(r'<div class="(?:ribbon-shell )?topic-band"[^>]*>.*?(?:</div><!--/band-->|</div></div>)', re.S)
+
+
+def ribbon(items, extra_class=''):
+    """Hai nhóm giống nhau, mỗi nhóm rộng ít nhất một màn hình, để chạy vòng liền mạch trên mọi độ rộng."""
+    group = ''.join(f'<span>{item}</span><i>✳</i>' for item in items * 2)
+    return (f'<div class="{extra_class}topic-band" aria-hidden="true"><div class="band-track">'
+            f'<div class="band-group">{group}</div><div class="band-group">{group}</div></div></div><!--/band-->')
+
+
+def place_ribbon(name, source):
+    items, mode, anchor, extra = RIBBONS[name]
+    source = BAND_RE.sub('', source)
+    band = ribbon(items, extra)
+    if mode == 'after':
+        start = source.index(anchor)
+        end = source.index('</section>', start) + len('</section>')
+        return source[:end] + '\n' + band + source[end:]
+    position = source.index(anchor)
+    return source[:position] + band + '\n' + source[position:]
+
+
 import sys
 only = set(sys.argv[1:])
+for name in RIBBONS:
+    if only and name not in only:
+        continue
+    path = DIST / name
+    path.write_text(place_ribbon(name, path.read_text(encoding='utf-8')), encoding='utf-8')
 for name, (section, app, links, cta) in PAGES.items():
     if only and name not in only:
         continue

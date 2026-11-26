@@ -202,23 +202,30 @@ $('#post-cover').addEventListener('change', async event => {
       canvas.width = Math.max(1, Math.round(image.naturalWidth * scale)); canvas.height = Math.max(1, Math.round(image.naturalHeight * scale)); canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
       const normalized = canvas.toDataURL('image/webp', .86);
       if (!normalized.startsWith('data:image/webp;') || normalized.length > 1350000) throw new Error('Chưa chuyển được ảnh bìa thành WebP dưới 1 MB. Hãy chọn ảnh nhỏ hơn.');
-      coverData = normalized; $('#cover-preview').src = coverData; $('#cover-preview').hidden = false; message($('#post-status'), 'Ảnh bìa đã chuyển thành WebP. Chỉ được lưu khi Hùng bấm lưu bài viết.');
+      coverData = normalized; $('#cover-preview').src = coverData; $('#cover-preview').hidden = false; message($('#post-status'), 'Ảnh bìa đã chuyển thành WebP, sẽ được lưu cùng bài viết.'); $('#post-form').dispatchEvent(new Event('input'));
     } finally { URL.revokeObjectURL(url); }
   } catch (error) { event.target.value = ''; message($('#post-status'), error.message, true); }
 });
 $('#post-form').addEventListener('submit', async event => {
-  event.preventDefault(); const form = event.currentTarget, button = $('#save-post'); button.disabled = true; message($('#post-status'));
+  // Bấm Lưu: lưu và nạp lại form từ máy chủ. Tự lưu (form.dataset.autosave): chỉ cập nhật id và danh sách,
+  // không đặt lại form để chữ Hùng đang gõ không bị mất.
+  event.preventDefault(); const form = event.currentTarget, button = $('#save-post'), auto = form.dataset.autosave === '1'; button.disabled = true; if (!auto) message($('#post-status'));
   try {
     const values = Object.fromEntries(new FormData(form)); const id = values.id; delete values.id;
     values.tags = String(values.tags || '').split(',').map(tag => tag.trim()).filter(Boolean); values.isSample = form.elements.isSample.checked;
     if (coverData !== undefined) values.coverDataUrl = coverData;
     const response = await api('/api/admin/posts' + (id ? '/' + encodeURIComponent(id) : ''), { method: id ? 'PUT' : 'POST', body: JSON.stringify(values) });
-    await loadAll(); if (response.post) editPost(response.post); message($('#post-status'), values.status === 'published' ? 'Đã lưu và xuất bản bài viết.' : 'Đã lưu bản nháp. Bài chưa xuất hiện trên trang công khai.');
+    if (auto) {
+      if (response.post?.id) form.elements.id.value = response.post.id;
+      coverData = undefined;
+      const postData = await api('/api/admin/posts'); posts = postData.posts; renderPosts(); renderStats();
+    } else { await loadAll(); if (response.post) editPost(response.post); }
+    message($('#post-status'), values.status === 'published' ? `Đã lưu lúc ${clock()} và cập nhật ngay trên web.` : `Đã lưu bản nháp lúc ${clock()}. Chọn Xuất bản để bài hiện trên web.`);
   } catch (error) { message($('#post-status'), error.message, true); } finally { button.disabled = false; }
 });
 $('#site-form').addEventListener('submit', async event => {
   event.preventDefault(); const button = $('#save-site'); button.disabled = true;
-  try { currentSettings = await api('/api/admin/site', { method: 'PUT', body: JSON.stringify({...currentSettings,...Object.fromEntries(new FormData(event.currentTarget))}) }); message($('#site-status'), 'Đã lưu nội dung. Tải lại trang công khai để xem thay đổi.'); } catch (error) { message($('#site-status'), error.message, true); } finally { button.disabled = false; }
+  try { currentSettings = await api('/api/admin/site', { method: 'PUT', body: JSON.stringify({...currentSettings,...Object.fromEntries(new FormData(event.currentTarget))}) }); message($('#site-status'), `Đã lưu lúc ${clock()} và cập nhật ngay trên web.`); } catch (error) { message($('#site-status'), error.message, true); } finally { button.disabled = false; }
 });
 async function loadAnalytics() {
   try {
@@ -252,17 +259,19 @@ async function loadCustomization(settings) {
     input.type='file';input.accept='image/png,image/jpeg,image/webp';input.dataset.imageKey=key;input.dataset.imageUrl=settings.pageImages?.[key]||'';
     preview.alt=name;preview.hidden=!input.dataset.imageUrl;if(input.dataset.imageUrl)preview.src=input.dataset.imageUrl;
     const version=authVersion;
-    input.addEventListener('change',async()=>{const file=input.files[0];if(!file)return;input.disabled=true;$('#save-customization').disabled=true;try{const asset=await uploadAdminImage(file,'site');if(version!==authVersion || !input.isConnected)return;input.dataset.imageUrl=asset.url;preview.hidden=false;setImage(preview,asset.previewUrl);note.textContent='Ảnh đã chọn. Bấm Lưu tùy chỉnh toàn trang để áp dụng.';}catch(error){if(version===authVersion)note.textContent=error.message;}finally{input.disabled=false;$('#save-customization').disabled=!!document.querySelector('[data-image-key]:disabled');input.value='';}});
-    const reset=action('Khôi phục hình gốc',async()=>{input.dataset.imageUrl='';preview.hidden=true;preview.removeAttribute('src');note.textContent='Bấm Lưu tùy chỉnh toàn trang để khôi phục.';});
+    input.addEventListener('change',async()=>{const file=input.files[0];if(!file)return;input.disabled=true;$('#save-customization').disabled=true;try{const asset=await uploadAdminImage(file,'site');if(version!==authVersion || !input.isConnected)return;input.dataset.imageUrl=asset.url;preview.hidden=false;setImage(preview,asset.previewUrl);note.textContent='Ảnh đã chọn, đang tự lưu…';$('#customize-form').dispatchEvent(new Event('input'));}catch(error){if(version===authVersion)note.textContent=error.message;}finally{input.disabled=false;$('#save-customization').disabled=!!document.querySelector('[data-image-key]:disabled');input.value='';}});
+    const reset=action('Khôi phục hình gốc',async()=>{input.dataset.imageUrl='';preview.hidden=true;preview.removeAttribute('src');note.textContent='Đang khôi phục ảnh gốc…';$('#customize-form').dispatchEvent(new Event('input'));});
     label.append(input,preview,note,reset);imageGrid.append(label);
   }
   container.append(images);
-  for(const [page,name] of Object.entries({main:'Trang chính',blog:'Blog',photobooth:'Photobooth',snaptik:'Snap',admin:'Quản trị'})) {
+  for(const [page,name] of Object.entries({main:'Trang chủ',blog:'Góc tò mò (Blog)',photobooth:'Hộp Ảnh',snaptik:'Snap Video',lamnet:'Làm Nét',admin:'Trang quản trị'})) {
     const group=make('details');group.append(make('summary',name));
+    const pageUrl={main:'/',blog:'/blog/',photobooth:'/photobooth/',snaptik:'/snaptik/',lamnet:'/lamnet/'}[page];
+    if(pageUrl){const open=make('a','Mở trang này trong thẻ mới ↗','page-link');open.href=pageUrl;open.target='_blank';open.rel='noopener';group.append(open);}
     const grid=make('div',undefined,'field-grid');group.append(grid);
     for(const field of contentFields.filter(field=>field.page===page)) {
       const label=make('label',field.label,'custom-field'),input=make('textarea');input.rows=2;input.maxLength=3000;input.dataset.textKey=field.key;input.value=settings.pageTexts?.[field.key] ?? field.default;
-      const reset=action('Khôi phục chữ gốc',async()=>{input.value=field.default;});label.append(input,reset);grid.append(label);
+      const reset=action('Khôi phục chữ gốc',async()=>{input.value=field.default;input.dispatchEvent(new Event('input',{bubbles:true}));});label.append(input,reset);grid.append(label);
     }
     container.append(group);
   }
@@ -294,9 +303,49 @@ $('#customize-form').addEventListener('submit',async event=>{
     for(const input of document.querySelectorAll('[data-social]'))socials[input.dataset.social]=input.value.trim();
     for(const input of document.querySelectorAll('[data-theme]'))theme[input.dataset.theme]=input.value;
     currentSettings=await api('/api/admin/site',{method:'PUT',body:JSON.stringify({...currentSettings,pageTexts,pageImages,socials,theme})});
-    message($('#customize-status'),'Đã lưu tùy chỉnh. Tải lại trang tương ứng để xem thay đổi.');
+    message($('#customize-status'),`Đã lưu lúc ${clock()} và cập nhật ngay trên web.`);
   }catch(error){message($('#customize-status'),error.message,true);}finally{button.disabled=false;}
 });
+/* ---------- Tự lưu ----------
+   Sau khi ngừng gõ/chọn 1,5 giây, form được lưu như khi bấm nút Lưu: nội dung trang, màu, mạng xã hội, thông tin chung
+   và bài viết. Máy chủ xóa cache ngay khi lưu nên trang công khai hiện nội dung mới ở lần tải tiếp theo.
+   Bài mới chỉ tự lưu khi đã đủ các ô bắt buộc (mặc định là bản nháp, chưa hiện trên web cho tới khi chọn Xuất bản). */
+function clock() { return new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); }
+// Chỉ bật tự lưu khi trình duyệt có đủ API (bộ kiểm thử chạy app.js trong môi trường DOM rút gọn).
+if (typeof MutationObserver === 'function') {
+  const saveBadge = make('span', 'Tự lưu đang bật', 'save-badge');
+  saveBadge.setAttribute('role', 'status'); saveBadge.dataset.state = 'idle';
+  document.querySelector('.admin-page>header')?.insertBefore(saveBadge, $('#logout'));
+  function badge(state, text) { saveBadge.dataset.state = state; saveBadge.textContent = text; }
+  const autosaveForms = [['#customize-form', '#save-customization', '#customize-status'], ['#site-form', '#save-site', '#site-status'], ['#post-form', '#save-post', '#post-status']];
+  const pending = new Map();
+  function waitIdle(button) { return new Promise(resolve => { if (!button.disabled) return resolve(); const observer = new MutationObserver(() => { if (!button.disabled) { observer.disconnect(); resolve(); } }); observer.observe(button, { attributes: true, attributeFilter: ['disabled'] }); }); }
+  async function autosave(form, button, status) {
+    pending.delete(form);
+    if ($('#workspace').hidden) return;
+    if (!form.checkValidity()) { badge('warn', 'Chưa tự lưu: còn ô bắt buộc trống'); return; }
+    await waitIdle(button);
+    badge('saving', 'Đang lưu…');
+    form.dataset.autosave = '1';
+    form.requestSubmit(button);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    await waitIdle(button);
+    delete form.dataset.autosave;
+    if ($(status).classList.contains('error')) badge('error', 'Lưu chưa được: ' + $(status).textContent);
+    else if (!pending.size) badge('saved', `Đã lưu ${clock()} · đã lên web`);
+  }
+  for (const [formSelector, buttonSelector, statusSelector] of autosaveForms) {
+    const form = $(formSelector), button = $(buttonSelector);
+    const queue = event => {
+      if (event.target.type === 'search' || event.target.id === 'editor-columns' || event.target.type === 'file') return;
+      clearTimeout(pending.get(form)); badge('dirty', 'Có thay đổi, sắp tự lưu…');
+      pending.set(form, setTimeout(() => autosave(form, button, statusSelector), 1500));
+    };
+    form.addEventListener('input', queue); form.addEventListener('change', queue);
+    form.addEventListener('submit', () => { clearTimeout(pending.get(form)); pending.delete(form); });
+  }
+  window.addEventListener('beforeunload', event => { if (pending.size) { event.preventDefault(); event.returnValue = ''; } });
+}
 window.addEventListener('pagehide', showAuth);
 window.addEventListener('pageshow', event => { if (event.persisted) initialize(); });
 setInterval(async () => { if (!LOCAL && !session) return; try { const data = await api('/api/admin/session'); if (!data.authenticated) await initialize(); } catch { saveSession(null); showAuth(); } }, 60000);

@@ -37,10 +37,10 @@ class Slots(HTMLParser):
             key=f'{self.page}-{self.next:03d}';self.next+=1
             self.edits.append((node['pos']+len(node['raw'])-1,f' data-edit="{key}"'))
         fields.append({'key':key,'page':self.page,'label':value[:100],'default':value})
-for page,folder in [('main',root),('blog',root/'blog'),('photobooth',root/'photobooth'),('admin',root/'admin')]:
+for page,folder in [('main',root),('blog',root/'blog'),('photobooth',root/'photobooth'),('snaptik',root/'snaptik'),('lamnet',root/'lamnet'),('admin',root/'admin')]:
     path=folder/'index.html';source=path.read_text(encoding='utf-8');parser=Slots(source,page);parser.feed(source)
     for pos,addition in sorted(parser.edits,reverse=True):source=source[:pos]+addition+source[pos:]
     path.write_text(source,encoding='utf-8')
 for folder in [root,root/'admin']:(folder/'content-fields.json').write_text(json.dumps(fields,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 assert len({f['key'] for f in fields})==len(fields)
-print(f'PASS: {len(fields)} validated text slots across four pages.')
+print(f'PASS: {len(fields)} validated text slots across six pages.')

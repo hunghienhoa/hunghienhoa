@@ -41,11 +41,6 @@
 .hero-feature-more{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:800}
 
 /* Dải chủ đề */
-/* Dải băng chủ đề: Be Vietnam Pro chữ in, nghiêng nhẹ -2°; kéo rộng hơn màn hình để hai mép không lộ khi nghiêng. */
-.topic-band{overflow:hidden;margin:clamp(12px,2vw,24px) -4vw;border-block:4px solid var(--yellow);background:var(--blue);color:var(--cream);rotate:-2deg}
-.topic-band>div{display:flex;align-items:center;gap:26px;width:max-content;padding:13px 0}
-.topic-band span{font-size:clamp(17px,1.8vw,24px);font-weight:800;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
-.topic-band i{color:var(--yellow);font-style:normal;font-size:20px}
 
 /* Đầu mục */
 .home-section{padding-top:clamp(64px,8vw,112px)}
@@ -121,9 +116,7 @@
 @media(prefers-reduced-motion:no-preference){
   .btn,.post-link,.tool-card,.hero-feature,.hero-announce{transition:translate .2s,rotate .3s,border-color .2s,background-color .2s,box-shadow .2s}
   .post-skeleton{animation:hh-shimmer 1.4s linear infinite}
-  .topic-band>div{animation:hh-band 36s linear infinite}
 }
-@keyframes hh-band{to{transform:translateX(-50%)}}
 @keyframes hh-float{50%{translate:0 -8px}}
 @media(max-width:1000px){
   .home-hero{grid-template-columns:minmax(0,1fr);gap:24px}

@@ -134,7 +134,7 @@ export function siteSettings(value) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(result.email) || !/^[+\d\s().-]{7,40}$/.test(result.phone)) fail(400, 'Email hoặc số điện thoại chưa hợp lệ.');
   // Ô chữ của giao diện cũ (đúng dạng khóa nhưng không còn trên trang) được bỏ qua để dữ liệu đã lưu vẫn hợp lệ.
   const fieldKeys = contentFields.map(field => field.key);
-  const retired = key => /^(?:main|blog|photobooth|admin|snaptik)-[a-z0-9-]+$/.test(key) && !fieldKeys.includes(key);
+  const retired = key => /^(?:main|blog|photobooth|admin|snaptik|lamnet)-[a-z0-9-]+$/.test(key) && !fieldKeys.includes(key);
   const pageTexts = object(value.pageTexts) ? Object.fromEntries(Object.entries(value.pageTexts).filter(([key]) => !retired(key))) : value.pageTexts ?? {};
   keys(pageTexts, fieldKeys);
   result.pageTexts = Object.fromEntries(Object.entries(pageTexts).map(([key,value]) => [key,text(value,3000,false,true)]));
