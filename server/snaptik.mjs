@@ -1,7 +1,7 @@
 import {socialURL} from '../dist/snaptik/core.mjs';
 const MAX_FILE=200*1024*1024;
 const results=new WeakMap();
-const roots=['tiktokcdn.com','tiktokcdn-us.com','tiktokcdn-eu.com','tiktok.com','muscdn.com','byteoversea.com','ibytedtos.com','tikwm.com','fbcdn.net','cdninstagram.com'];
+const roots=['tiktokcdn.com','tiktokcdn-us.com','tiktokcdn-eu.com','tiktok.com','tiktokv.com','tiktokv.us','muscdn.com','byteoversea.com','ibytedtos.com','tikwm.com','fbcdn.net','cdninstagram.com'];
 const error=(status,message,retryAfter)=>Object.assign(new Error(message),{status,retryAfter});
 // Cache API của Cloudflare dùng chung giữa mọi isolate (Node không có caches nên bỏ qua). Lỗi bộ nhớ đệm không làm hỏng yêu cầu.
 const RESULT_TTL=900,BUSY_TTL=5;
@@ -24,7 +24,55 @@ async function limitedText(response,max=262144) {
 }
 async function limitedJSON(response){const text=await limitedText(response);try{return JSON.parse(text);}catch{throw error(502,'Nguồn video đang trả kết quả chưa hợp lệ.');}}
 const BUSY='Nguồn video đang bận. Trang sẽ tự thử lại, bạn chờ một chút nhé.';
+// Lấy trực tiếp từ trang TikTok như yt-dlp: đọc JSON nhúng (__UNIVERSAL_DATA_FOR_REHYDRATION__ hoặc SIGI_STATE),
+// giữ cookie phiên mà TikTok cấp cho trang để tải file từ CDN. Không chạy JavaScript của trang, không cần đăng nhập.
+const BROWSER='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+const TIKTOK_HOSTS=['tiktok.com','www.tiktok.com','m.tiktok.com','vm.tiktok.com','vt.tiktok.com'];
+function keepCookies(jar,response){
+ const list=typeof response.headers.getSetCookie==='function'?response.headers.getSetCookie():[response.headers.get('set-cookie')].filter(Boolean);
+ for(const line of list){const pair=String(line).split(';')[0].trim(),at=pair.indexOf('=');if(at>0&&at<64&&pair.length<4096&&/^[\w.-]+$/.test(pair.slice(0,at))&&!/[\s,;]/.test(pair.slice(at+1)))jar.set(pair.slice(0,at),pair.slice(at+1));if(jar.size>24)break;}
+}
+const cookieHeader=jar=>[...jar].map(([k,v])=>k+'='+v).join('; ');
+export function tiktokItem(html){
+ const block=id=>html.match(new RegExp('<script[^>]*id="'+id+'"[^>]*>([\\s\\S]*?)</script>'))?.[1];
+ let item;
+ try{const data=JSON.parse(block('__UNIVERSAL_DATA_FOR_REHYDRATION__')||'null');const detail=data?.__DEFAULT_SCOPE__?.['webapp.video-detail'];
+  if(detail?.statusCode&&detail.statusCode!==0)return {unavailable:true};item=detail?.itemInfo?.itemStruct;}catch{}
+ if(!item){try{const sigi=JSON.parse(block('SIGI_STATE')||'null');item=Object.values(sigi?.ItemModule||{})[0];}catch{}}
+ return item&&/^\d{15,22}$/.test(String(item.id))?item:null;
+}
+async function tiktokDirect(url,fetcher){
+ const jar=new Map();let page=url,html;
+ for(let hop=0;hop<5;hop++){
+  const r=await fetcher(page,{headers:{'User-Agent':BROWSER,Accept:'text/html,application/xhtml+xml',
+   'Accept-Language':'vi-VN,vi;q=0.9,en;q=0.8',...(jar.size?{Cookie:cookieHeader(jar)}:{})},redirect:'manual',signal:AbortSignal.timeout(15000)});
+  keepCookies(jar,r);
+  if([301,302,303,307,308].includes(r.status)){await r.body?.cancel();const next=new URL(r.headers.get('location')||'',page);
+   if(next.protocol!=='https:'||!TIKTOK_HOSTS.includes(next.hostname))throw error(502,'TikTok chuyển hướng tới địa chỉ lạ.');page=next.href;continue;}
+  if(!r.ok||!/text\/html/.test(r.headers.get('content-type')||'')){await r.body?.cancel();throw error(502,'Trang TikTok chưa trả nội dung.');}
+  html=await limitedText(r,4194304);break;
+ }
+ const item=html&&tiktokItem(html);
+ if(!item||item.unavailable)throw error(404,'TikTok chưa trả dữ liệu cho bài này.');
+ const v=item.video||{},formats=[],seen=new Set();
+ const add=(kind,label,source,size=0)=>{source=mediaURL(source);if(source&&!seen.has(source)){seen.add(source);formats.push({kind,label,size,source});}};
+ const rates=(Array.isArray(v.bitrateInfo)?v.bitrateInfo:[]).filter(b=>b?.PlayAddr?.UrlList?.length).sort((a,b)=>(b.Bitrate||0)-(a.Bitrate||0));
+ add('video','Video MP4',v.playAddr||rates.at(-1)?.PlayAddr?.UrlList?.[0],Number(rates.at(-1)?.PlayAddr?.DataSize)||0);
+ if(rates[0])add('hd','Video chất lượng cao',rates[0].PlayAddr.UrlList[0],Number(rates[0].PlayAddr.DataSize)||0);
+ if(!formats.length)add('video','Video MP4',v.downloadAddr);
+ add('audio','Âm thanh',item.music?.playUrl);
+ const images=(item.imagePost?.images||[]).slice(0,50).map(i=>mediaURL(i?.imageURL?.urlList?.[0])).filter(Boolean);
+ if(!formats.some(f=>f.kind!=='audio')&&!images.length)throw error(404,'Bài này chưa có file phù hợp để tải.');
+ const author=item.author&&typeof item.author==='object'?item.author.nickname||item.author.uniqueId:item.author;
+ return {platform:'tiktok',id:String(item.id),url,title:typeof item.desc==='string'&&item.desc?item.desc.slice(0,2000):'Một video từ TikTok',author:typeof author==='string'?author.slice(0,150):'',
+  cover:mediaURL(v.cover||v.originCover||images[0]),duration:Number(v.duration)||0,formats,images,headers:{Cookie:cookieHeader(jar),Referer:'https://www.tiktok.com/','User-Agent':BROWSER}};
+}
 async function resolveTikTok(url,fetcher,store) {
+ // Ưu tiên trang TikTok; chỉ khi trang chưa trả dữ liệu mới dùng TikWM làm dự phòng.
+ try{return await tiktokDirect(url,fetcher);}catch{}
+ return resolveTikwm(url,fetcher,store);
+}
+async function resolveTikwm(url,fetcher,store) {
  let response,result;
  // Nguồn vừa báo bận cách đây vài giây thì không gọi dồn thêm, trả lời ngay để người dùng thử lại sau.
  if(await edgeGet(store,'tikwm-busy'))throw error(429,BUSY,BUSY_TTL);
@@ -134,11 +182,11 @@ export async function resolveVideo(value,fetcher=fetch,store=edgeStore()){
  })().finally(()=>flight.delete(selected.url));
  flight.set(selected.url,work);return work;
 }
-export function publicVideo(data) {return {...data,formats:data.formats.map(({source,...format})=>format),images:undefined,imageCount:data.images.length};}
-async function openFile(source,kind,id,fetcher) {
+export function publicVideo(data) {return {...data,headers:undefined,formats:data.formats.map(({source,...format})=>format),images:undefined,imageCount:data.images.length};}
+async function openFile(source,kind,id,fetcher,sourceHeaders) {
  let response,url=source;
  for(let redirects=0;redirects<=3;redirects++){
-  response=await fetcher(url,{redirect:'manual',signal:AbortSignal.timeout(600000)});
+  response=await fetcher(url,{redirect:'manual',signal:AbortSignal.timeout(600000),...(sourceHeaders?{headers:sourceHeaders}:{})});
   if(![301,302,303,307,308].includes(response.status))break;
   const location=response.headers.get('location');await response.body?.cancel();
   try{url=location&&mediaURL(new URL(location,url).href);}catch{url=null;}if(!url||redirects===3)throw error(502,'Đường dẫn tải đã thay đổi. Hãy lấy lại liên kết.');
@@ -173,7 +221,7 @@ export async function snaptikRoute(request,{fetcher=fetch,store=edgeStore()}={})
   if(!/^(?:video(?:-\d{1,2})?|hd|audio|image)$/.test(kind||'')||kind==='image'&&!/^\d{1,2}$/.test(index||''))throw error(400,'Kiểu file chưa hợp lệ.');
   const data=await resolveVideo(url.searchParams.get('url'),fetcher,store),source=kind==='image'?data.images[Number(index)]:data.formats.find(f=>f.kind===kind)?.source;
   if(!source)throw error(404,'Bài này chưa có định dạng được chọn.');
-  return await openFile(source,kind,data.id,fetcher);
+  return await openFile(source,kind,data.id,fetcher,data.headers);
   }catch(e){
    if(!request.headers.get('accept')?.includes('text/html'))throw e;
    const text=String(e.message).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
