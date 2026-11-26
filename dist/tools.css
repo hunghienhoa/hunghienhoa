@@ -1,6 +1,6 @@
 /* Phần dùng chung của các trang công cụ (Snap Video, Làm Nét, Hộp Ảnh): hero căn giữa, các bước, riêng tư, hỏi đáp. */
 .tool-hero{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;padding-top:clamp(40px,6vw,88px);text-align:center}
-.tool-hero::before{content:'';position:absolute;z-index:-1;top:-90px;bottom:0;left:50%;width:100vw;translate:-50% 0;pointer-events:none;background:radial-gradient(30% 50% at 24% 30%,color-mix(in srgb,var(--yellow) 50%,transparent),transparent 72%),radial-gradient(28% 50% at 76% 36%,color-mix(in srgb,var(--lilac) 36%,transparent),transparent 72%)}
+.tool-hero::before{content:'';position:absolute;z-index:-1;top:-90px;bottom:0;left:50%;width:100vw;translate:-50% 0;pointer-events:none;background:radial-gradient(30% 50% at 24% 30%,color-mix(in srgb,var(--yellow) 50%,transparent),transparent 72%),radial-gradient(28% 50% at 76% 36%,color-mix(in srgb,var(--blue) 12%,transparent),transparent 72%)}
 .tool-hero h1{max-width:18ch;font-size:var(--fs-display);line-height:1.1;letter-spacing:-.035em}
 .tool-hero h1 em{display:inline-block;padding:0 .06em;background:linear-gradient(transparent 76%,var(--yellow) 76% 91%,transparent 91%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .tool-hero .lead{max-width:52ch;margin-top:20px}

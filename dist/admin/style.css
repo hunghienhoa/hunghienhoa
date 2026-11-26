@@ -62,7 +62,7 @@ h1 em{display:inline-block;background:linear-gradient(transparent 76%,var(--yell
 #traffic-pages p{margin:0;padding:12px;border-radius:14px;background:var(--hh-soft);font-size:13px}
 .traffic-chart{display:flex;align-items:flex-end;gap:8px;overflow-x:auto;padding:20px 0}
 .traffic-column{flex:0 0 46px;font-size:12px;text-align:center}
-.traffic-column>div{min-height:2px;border-radius:8px 8px 2px 2px;background:linear-gradient(var(--lilac),var(--blue))}
+.traffic-column>div{min-height:2px;border-radius:8px 8px 2px 2px;background:linear-gradient(color-mix(in srgb,var(--blue) 45%,#fff),var(--blue))}
 .traffic-column small,.traffic-column span{display:block;margin-top:6px}
 #traffic-note{font-size:13px;opacity:.85}
 
