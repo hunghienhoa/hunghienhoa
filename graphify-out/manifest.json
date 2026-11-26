@@ -102,9 +102,9 @@
     "semantic_hash": ""
   },
   "server/snaptik.mjs": {
-    "mtime": 1795731054.7456503,
-    "seen": 1795731149.42364,
-    "ast_hash": "611c1c80d8706f3793b3a4fee3c7cb34",
+    "mtime": 1795731283.6676044,
+    "seen": 1795731289.8929691,
+    "ast_hash": "0d3762755663a2af4c50ee4be08452f1",
     "semantic_hash": ""
   },
   "server/usage.mjs": {
