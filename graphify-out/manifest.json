@@ -54,9 +54,9 @@
     "semantic_hash": ""
   },
   "check.cjs": {
-    "mtime": 1795652117.3419697,
-    "seen": 1795652334.962154,
-    "ast_hash": "3f9b97043a2d10d8009a981fa8b9999c",
+    "mtime": 1795692539.4102979,
+    "seen": 1795692576.1917732,
+    "ast_hash": "3960132e68891b52b1b258f9a74be54a",
     "semantic_hash": ""
   },
   "cloudflare.config.ts": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795680626.6435916,
-    "seen": 1795692220.3903663,
-    "ast_hash": "5ab7344059ebb0b5c77a1a7904cf8cd0",
+    "mtime": 1795692546.3198717,
+    "seen": 1795692576.192088,
+    "ast_hash": "23c1ecc1c7442d3b1c7968f9a4073717",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -504,9 +504,9 @@
     "semantic_hash": ""
   },
   "FONT-SOURCES.md": {
-    "mtime": 1795629611.5931666,
-    "seen": 1795630718.8048573,
-    "ast_hash": "e747695aff20fe5d6aa1075429bc9ac7",
+    "mtime": 1795692539.4119816,
+    "seen": 1795692576.1930587,
+    "ast_hash": "fea43072ba5405786cd388b7cd569dec",
     "semantic_hash": ""
   },
   "FRAME-SOURCES.md": {
@@ -522,9 +522,9 @@
     "semantic_hash": ""
   },
   "PROJECT.md": {
-    "mtime": 1795678830.6912177,
-    "seen": 1795678833.2084332,
-    "ast_hash": "f8b2f90a804db10ab2a6136968959627",
+    "mtime": 1795692539.4143314,
+    "seen": 1795692576.1931036,
+    "ast_hash": "dbb05a1ea647f573fa085bc6b7af9531",
     "semantic_hash": ""
   },
   "README.md": {

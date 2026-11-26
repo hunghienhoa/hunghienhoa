@@ -1,18 +1,18 @@
 /* Snap Video: ô dán liên kết và thẻ kết quả tải. Phần chung nằm ở /ui.css và /tools.css. */
 .download-form{width:min(820px,100%);margin-top:36px;padding:clamp(18px,3vw,26px);text-align:left}
-.download-form>label{display:block;margin-bottom:12px;font-size:15px;font-weight:800}
+.download-form>label{display:block;margin-bottom:12px;font-size:15px;font-weight:600}
 .input-row{display:flex;gap:10px;align-items:stretch}
 .input-shell{position:relative;display:flex;align-items:center;flex:1;min-width:0;border:1.5px solid var(--hh-hair);border-radius:999px;background:#fff}
 .input-shell:focus-within{border-color:var(--blue);box-shadow:0 0 0 4px color-mix(in srgb,var(--yellow) 60%,transparent)}
 .input-shell input{flex:1;min-width:0;min-height:56px;padding:0 8px 0 22px;border:0;border-radius:999px;background:transparent;box-shadow:none}
 .input-shell input:focus{box-shadow:none}
-#paste{flex:none;min-height:42px;margin-right:7px;padding:0 16px;border-radius:999px;background:var(--hh-soft);font-size:14px;font-weight:800}
+#paste{flex:none;min-height:42px;margin-right:7px;padding:0 16px;border-radius:999px;background:var(--hh-soft);font-size:14px;font-weight:600}
 #paste:hover{background:var(--yellow)}
 #clear{flex:none;width:40px;height:40px;margin-right:4px;border-radius:50%;font-size:22px}
 #clear:hover{background:var(--hh-soft)}
 #resolve{flex:none;min-height:60px;padding:0 26px}
 #resolve svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-#platform{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:5px 12px;border-radius:999px;background:var(--hh-soft);font-size:13px;font-weight:800}
+#platform{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:5px 12px;border-radius:999px;background:var(--hh-soft);font-size:13px;font-weight:600}
 #url-help{margin-top:8px;font-size:14px;opacity:.8}
 #status:not(:empty){margin-top:12px;padding:12px 16px;border-radius:14px;background:color-mix(in srgb,var(--mint) 30%,transparent);font-weight:600}
 #status[data-error=true]{background:color-mix(in srgb,var(--coral) 22%,transparent)}
@@ -20,15 +20,15 @@
 .result-paper{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:clamp(18px,3vw,36px);width:min(980px,100%);margin:0 auto;padding:16px}
 .result-cover{position:relative;overflow:hidden;aspect-ratio:9/12;border-radius:22px;background:var(--hh-soft)}
 .result-cover img{width:100%;height:100%;object-fit:cover}
-#duration:not(:empty){position:absolute;right:12px;bottom:12px;padding:4px 10px;border-radius:999px;background:var(--blue);color:var(--cream);font-size:13px;font-weight:800}
+#duration:not(:empty){position:absolute;right:12px;bottom:12px;padding:4px 10px;border-radius:999px;background:var(--blue);color:var(--cream);font-size:13px;font-weight:600}
 .result-copy{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:12px 8px}
 .result-copy .eyebrow{margin:0}
-#author{font-size:14px;font-weight:700;opacity:.8}
-#result-title{font-size:clamp(22px,2.6vw,30px);font-weight:800;overflow-wrap:anywhere}
+#author{font-size:14px;font-weight:500;opacity:.8}
+#result-title{font-size:clamp(22px,2.6vw,30px);font-weight:700;overflow-wrap:anywhere}
 .quality-note,.download-tip{font-size:14px;opacity:.8}
 .formats,.image-downloads{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;width:100%}
-.formats a,.image-downloads button{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:54px;padding:0 18px;border-radius:999px;background:var(--blue);color:var(--cream);font-weight:800}
-.formats a small{font-weight:600;opacity:.8}
+.formats a,.image-downloads button{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:54px;padding:0 18px;border-radius:999px;background:var(--blue);color:var(--cream);font-weight:600}
+.formats a small{font-weight:500;opacity:.8}
 .image-downloads button{background:var(--hh-soft);color:var(--blue)}
 .formats a:hover,.image-downloads button:hover{background:var(--yellow);color:var(--blue)}
 @media(max-width:700px){

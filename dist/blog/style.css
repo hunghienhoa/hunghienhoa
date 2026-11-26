@@ -7,10 +7,10 @@
 .blog-hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
 .blog-hero-art{position:relative;justify-self:center;width:min(380px,100%)}
 .note-card{display:flex;flex-direction:column;gap:16px;padding:30px;border-radius:30px;background:var(--blue);color:var(--cream);box-shadow:16px 18px 0 var(--yellow);rotate:3deg}
-.note-card small{font-size:12px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--yellow)}
+.note-card small{font-size:12px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--yellow)}
 .note-card b{font-size:clamp(22px,2.2vw,28px);line-height:1.3;letter-spacing:-.015em}
 .note-card em{font-style:normal;color:var(--yellow)}
-.note-card span{font-size:15px;font-weight:600;opacity:.85}
+.note-card span{font-size:15px;font-weight:500;opacity:.85}
 .blog-hero-art img{position:absolute;top:-30px;right:-20px;width:84px;rotate:12deg}
 
 /* Tìm kiếm & lọc */
@@ -20,12 +20,12 @@
 .search-form input:focus{box-shadow:none}
 .filter-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}
 .categories{display:flex;flex-wrap:wrap;gap:8px}
-.categories button{min-height:44px;padding:0 16px;border:1px solid var(--hh-hair);border-radius:999px;background:var(--hh-card);font-size:14px;font-weight:700}
+.categories button{min-height:44px;padding:0 16px;border:1px solid var(--hh-hair);border-radius:999px;background:var(--hh-card);font-size:14px;font-weight:600}
 .categories button[aria-pressed=true]{border-color:var(--blue);background:var(--blue);color:var(--cream)}
 .categories .more-categories{border-style:dashed}
-#result-count{font-size:14px;font-weight:700;opacity:.75}
+#result-count{font-size:14px;font-weight:500;opacity:.75}
 .feed-message{display:grid;justify-items:start;gap:8px;padding:28px;margin-bottom:24px}
-.feed-message h3{font-size:22px;font-weight:800}
+.feed-message h3{font-size:22px;font-weight:700}
 
 /* Bài nổi bật & lưới bài */
 #featured{margin-bottom:22px}
@@ -34,7 +34,7 @@
 .featured-copy .eyebrow{margin:0}
 .featured-copy h2{font-size:clamp(26px,2.8vw,38px);line-height:1.18;letter-spacing:-.025em}
 .featured-copy p{font-size:17px;opacity:.88}
-.read-link,.card-read{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:800}
+.read-link,.card-read{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:600}
 .post-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 .post-card{display:flex;flex-direction:column;padding:12px 12px 22px;border:1px solid var(--hh-hair);border-radius:28px;background:var(--hh-card);box-shadow:var(--hh-shadow-sm)}
 .post-copy{display:flex;flex-direction:column;flex:1;gap:10px;padding:18px 10px 0}
@@ -42,7 +42,7 @@
 .post-copy p{display:-webkit-box;overflow:hidden;-webkit-line-clamp:3;-webkit-box-orient:vertical;opacity:.85}
 .card-read{margin-top:auto;padding-top:4px}
 .featured-card:hover,.post-card:hover{translate:0 -4px;border-color:var(--blue);box-shadow:var(--hh-shadow)}
-.post-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:12px;font-weight:700;opacity:.85}
+.post-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:12px;font-weight:500;opacity:.85}
 .category-label{padding:3px 10px;border-radius:999px;background:var(--hh-soft)}
 .sample-label{padding:3px 10px;border-radius:999px;background:color-mix(in srgb,var(--yellow) 60%,transparent)}
 .post-art{position:relative;display:grid;place-items:center;aspect-ratio:16/10;overflow:hidden;border-radius:20px;background:var(--yellow)}
@@ -50,17 +50,17 @@
 .post-art.art-1{background:color-mix(in srgb,var(--lilac) 50%,var(--cream))}
 .post-art.art-2{background:color-mix(in srgb,var(--mint) 48%,var(--cream))}
 .art-paper{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(62%,220px);padding:18px 16px;border-radius:16px;background:var(--cream);box-shadow:0 14px 24px -16px rgba(0,0,0,.4);rotate:-4deg;text-align:center}
-.art-paper span{font-size:11px;font-weight:800;letter-spacing:1.4px}
+.art-paper span{font-size:11px;font-weight:600;letter-spacing:1.4px}
 .art-paper img{width:44px}
-.art-paper b{font-size:14px;font-weight:800;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}
-.art-number{position:absolute;right:14px;bottom:8px;font-size:34px;font-weight:900;line-height:1;letter-spacing:-.03em;opacity:.45}
+.art-paper b{font-size:14px;font-weight:600;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}
+.art-number{position:absolute;right:14px;bottom:8px;font-size:34px;font-weight:800;line-height:1;letter-spacing:-.03em;opacity:.45}
 .post-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .post-art.has-cover .art-paper,.post-art.has-cover .art-number{display:none}
 .more-posts{display:flex;margin:28px auto 0}
 
 /* Trang đọc */
 .reader{width:min(820px,100%);padding-top:clamp(32px,5vw,64px)}
-.back-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:700}
+.back-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:600}
 .back-link:hover{text-decoration:underline}
 .reader-message:not(:empty){margin-top:16px;padding:16px 20px;border-radius:18px;background:var(--hh-soft)}
 #article{margin-top:20px}
@@ -79,16 +79,16 @@
 .article-image img{width:100%;border-radius:22px}
 .article-image figcaption{margin-top:8px;font-size:14px;opacity:.8;text-align:center}
 .article-code{overflow:hidden;border-radius:18px;background:var(--blue);color:var(--cream)}
-.code-bar{padding:10px 16px;border-bottom:1px solid color-mix(in srgb,var(--cream) 18%,transparent);font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.code-bar{padding:10px 16px;border-bottom:1px solid color-mix(in srgb,var(--cream) 18%,transparent);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
 .article-code pre{margin:0;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
 .article-code code{padding:0;background:none}
 .article-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}
-.article-tags span{padding:6px 12px;border-radius:999px;background:var(--hh-soft);font-size:13px;font-weight:700}
+.article-tags span{padding:6px 12px;border-radius:999px;background:var(--hh-soft);font-size:13px;font-weight:600}
 .reader-end{margin-top:32px}
 
 /* Về góc nhỏ */
 .about-blog{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:center;padding:clamp(24px,4vw,48px)}
-.about-blog-note{margin-top:14px;font-size:16px;font-weight:700}
+.about-blog-note{margin-top:14px;font-size:16px;font-weight:600}
 @media(prefers-reduced-motion:no-preference){.featured-card,.post-card{transition:translate .2s,border-color .2s,box-shadow .2s}}
 @media(max-width:1000px){.blog-hero{grid-template-columns:minmax(0,1fr)}.blog-hero-art{margin-top:16px}.post-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.featured-card{grid-template-columns:minmax(0,1fr)}.featured-copy{padding:4px 10px 10px}}
 @media(max-width:640px){.post-grid,.about-blog{grid-template-columns:minmax(0,1fr)}.blog-hero-actions .btn{flex:1 1 100%}.search-form{width:100%}}
