@@ -19,7 +19,7 @@ for(const host of hosts) {
       const websites=data['@graph'].filter(item=>item['@type']==='WebSite');assert.equal(websites.length,1);assert.equal(websites[0].url,base+'/');assert.ok(websites[0].name);
       assert.equal((body.match(/rel="canonical"/g)||[]).length,1);assert.equal((body.match(/property="og:site_name"/g)||[]).length,1);
       assert.ok(!body.includes('name="keywords"'));assert.ok(body.includes('name="robots" content="max-image-preview:large"'));
-      if(host==='hunghienhoa.com')for(const project of ['photobooth','blog','snap'])assert.ok(body.includes(`href="https://${project}.hunghienhoa.com/"`));
+      if(host==='hunghienhoa.com')for(const project of ['photobooth','blog','snaptik','lamnet'])assert.ok(body.includes(`href="/${project}/"`));
       assert.ok(body.includes('rel="canonical"')&&body.includes('rel="alternate"'));
     }
     passed++;
@@ -30,7 +30,7 @@ for(const host of hosts) {
   }
   assert.equal((await get(base+'/','application/json')).response.status,406);passed++;
   const head=await get(base+'/','text/markdown','HEAD');assert.equal(head.response.status,200);assert.match(head.response.headers.get('content-type'),/^text\/markdown/);assert.equal(head.body,'');passed++;
-  for(const [route,mime] of [['/index.md','text/markdown'],['/llms.txt','text/plain'],['/agent-instructions.md','text/markdown'],['/robots.txt','text/plain'],['/sitemap.xml','application/xml']]) {
+  for(const [route,mime] of [['/index.md','text/markdown'],['/llms.txt','text/plain'],['/agent-instructions.md','text/markdown'],...(host==='hunghienhoa.com'?[['/robots.txt','text/plain']]:[]),['/sitemap.xml','application/xml']]) {
     const {response,body}=await get(base+route);
     assert.equal(response.status,200,base+route);assert.ok(response.headers.get('content-type').startsWith(mime));assert.ok(body.length>20);
     if(route==='/llms.txt') {
@@ -41,7 +41,7 @@ for(const host of hosts) {
     if(route==='/sitemap.xml') {
       const parse=spawnSync('python',['-c',"import sys,json,xml.etree.ElementTree as E; r=E.fromstring(sys.stdin.read()); assert r.tag=='{http://www.sitemaps.org/schemas/sitemap/0.9}urlset'; print(json.dumps([n.text for n in r.findall('{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]))"],{input:body,encoding:'utf8'});
       assert.equal(parse.status,0,parse.stderr);const urls=JSON.parse(parse.stdout);assert.ok(urls.length>0&&urls.length<=50000);
-      for(const url of urls){assert.equal(new URL(url).hostname,host);assert.ok(!url.includes('/api/')&&!url.includes('admin.'));links.add(url);}
+      for(const url of urls){assert.equal(new URL(url).hostname,'hunghienhoa.com');assert.ok(url.startsWith(base+'/'),url);assert.ok(!url.includes('/api/')&&!url.includes('admin.'));links.add(url);}
     }
     if(route==='/robots.txt')assert.ok(body.includes('Disallow: /api/')&&body.includes('Sitemap: '+base+'/sitemap.xml'));
     passed++;
@@ -50,7 +50,7 @@ for(const host of hosts) {
 for(const url of links) {
   const {response,body}=await get(url,'text/markdown');assert.equal(response.status,200,url);assert.ok(body.length>20,url);passed++;
 }
-const adminRobots=await get('https://hunghienhoa.com/admin/robots.txt');assert.equal(adminRobots.response.status,200);assert.equal(adminRobots.body,'User-agent: *\nDisallow: /\n');passed++;
+const rootRobots=await get('https://hunghienhoa.com/robots.txt');assert.equal(rootRobots.response.status,200);assert.ok(rootRobots.body.includes('Disallow: /admin'));passed++;
 for(const route of ['/llms.txt','/sitemap.xml','/agent-instructions.md','/index.md']){assert.equal((await get('https://hunghienhoa.com/admin'+route)).response.status,404);passed++;}
-for(const route of ['site','posts','submissions','analytics']){const {response}=await get('https://hunghienhoa.com/admin/api/admin/'+route,'text/markdown');assert.equal(response.status,401);assert.match(response.headers.get('content-type'),/application\/json/);passed++;}
+for(const route of ['site','posts','submissions','analytics']){const {response}=await get('https://hunghienhoa.com/api/admin/'+route,'text/markdown');assert.equal(response.status,401);assert.match(response.headers.get('content-type'),/application\/json/);passed++;}
 console.log(`PASS: ${passed} kiểm tra trực tiếp — Markdown/HTML/q/406/HEAD/404, JSON-LD, mọi endpoint máy đọc, liên kết llms/sitemap và phân quyền admin.`);

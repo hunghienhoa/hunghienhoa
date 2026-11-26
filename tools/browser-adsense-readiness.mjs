@@ -9,7 +9,7 @@ let app,directory,base=process.env.SITE_URL?.replace(/\/$/,'');
 if(!base){
  directory=fs.mkdtempSync(path.join(os.tmpdir(),'hung-adsense-browser-'));
  app=createApp({port:0,dataDir:directory});await app.listen();
- const publicPosts=(await (await fetch('https://hunghienhoa.com/blog/api/posts')).json()).posts;
+ const publicPosts=(await (await fetch('https://hunghienhoa.com/api/posts')).json()).posts;
  app.db.prepare('DELETE FROM posts').run();
  for(const p of publicPosts){const cover=p.coverUrl?Buffer.from(await (await fetch(new URL(p.coverUrl,'https://hunghienhoa.com/blog/'))).arrayBuffer()):null;
   app.db.prepare('INSERT INTO posts(id,slug,title,excerpt,content,category,tags,status,is_sample,cover,created_at,published_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)').run(p.id,p.slug,p.title,p.excerpt,p.content,p.category,JSON.stringify(p.tags),'published',0,cover,p.publishedAt,p.publishedAt);
