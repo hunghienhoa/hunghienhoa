@@ -10,7 +10,7 @@ class Slots(HTMLParser):
         self.source,self.page=source,page
         self.lines=[0]
         for line in source.splitlines(keepends=True):self.lines.append(self.lines[-1]+len(line))
-        self.stack=[];self.edits=[]
+        self.stack=[];self.edits=[];self.cuts=[]
         self.next=max([int(x) for x in re.findall(fr'data-edit="{page}-(\d+)"',source)]+[0])+1
     def handle_starttag(self,tag,attrs):
         attrs=dict(attrs)
@@ -31,15 +31,21 @@ class Slots(HTMLParser):
         if tag not in eligible or len(node['texts'])!=1 or not any(n['tag']=='body' for n in lineage):return
         if any(n['tag'] in {'script','style','select'} or n['attrs'].get('id') in excluded or n['attrs'].get('aria-hidden')=='true' for n in lineage):return
         value=node['texts'][0].strip()
-        if not value or len(value)>3000:return
         key=node['attrs'].get('data-edit')
+        if not re.search(r'\w',value) or len(value)>3000:
+            # Dấu chấm trang trí, mũi tên… không phải chữ cần sửa: bỏ ô cũ nếu có.
+            if key:
+                raw=node['raw'];attr=f' data-edit="{key}"'
+                if attr in raw:self.cuts.append((node['pos']+raw.index(attr),len(attr)))
+            return
         if not key:
             key=f'{self.page}-{self.next:03d}';self.next+=1
             self.edits.append((node['pos']+len(node['raw'])-1,f' data-edit="{key}"'))
         fields.append({'key':key,'page':self.page,'label':value[:100],'default':value})
 for page,folder in [('main',root),('blog',root/'blog'),('photobooth',root/'photobooth'),('snaptik',root/'snaptik'),('lamnet',root/'lamnet'),('admin',root/'admin')]:
     path=folder/'index.html';source=path.read_text(encoding='utf-8');parser=Slots(source,page);parser.feed(source)
-    for pos,addition in sorted(parser.edits,reverse=True):source=source[:pos]+addition+source[pos:]
+    changes=[(pos,addition,0) for pos,addition in parser.edits]+[(pos,'',size) for pos,size in parser.cuts]
+    for pos,addition,size in sorted(changes,reverse=True):source=source[:pos]+addition+source[pos+size:]
     path.write_text(source,encoding='utf-8')
 for folder in [root,root/'admin']:(folder/'content-fields.json').write_text(json.dumps(fields,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 assert len({f['key'] for f in fields})==len(fields)
