@@ -8,9 +8,9 @@
   "blog/app.js?v=media-5": "338cc8019d7bb695",
   "blog/config.js?v=1": "07d64f1f6e0cbc5d",
   "blog/core.mjs?v=media-3": "8c10e3a7b3fffb13",
-  "blog/style.css?v=blog-2026-1": "a9057d7e284c1063",
+  "blog/style.css?v=blog-2026-2": "608bde6d4ce6c980",
   "contact.js?v=4": "00853788ffb74974",
-  "home.css?v=2": "29b6873dee93ce7d",
+  "home.css?v=3": "3128828648bb03d2",
   "i18n-en.js?v=3": "b7e240c8bc86d2ab",
   "i18n.js?v=3": "24e9f3ae298fccb5",
   "lamnet/app.js?v=9": "d28f99363a7f7daf",
@@ -22,11 +22,11 @@
   "photobooth/core.mjs?v=4": "bbdfdbf7cc5491e3",
   "photobooth/design.mjs?v=5": "16c9f3c93ae6357a",
   "photobooth/shoot.js?v=2": "927a79acb15f7bf1",
-  "photobooth/style.css?v=2026-1": "0b8c2a74da300eed",
+  "photobooth/style.css?v=2026-2": "6d61ab8bf4c0a8f7",
   "site-content.js?v=5": "da5014fb19f37e6a",
   "sitebar.js?v=3": "89770dfe2dfa3fa1",
   "snaptik/app.js?v=snap-4": "37a44e89af00b8fc",
   "snaptik/style.css?v=snap-6": "b44d24efc2630dff",
-  "tools.css?v=1": "e2fd00a8c4a66f5b",
-  "ui.css?v=1": "8b50656e83fe4c67"
+  "tools.css?v=2": "e11ef27973911e36",
+  "ui.css?v=2": "c259bd48eb2144f2"
 }

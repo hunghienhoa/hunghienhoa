@@ -97,3 +97,32 @@
 @media(prefers-reduced-motion:no-preference){.featured-card,.post-card{transition:translate .2s,border-color .2s,box-shadow .2s}}
 @media(max-width:1000px){.blog-hero{grid-template-columns:minmax(0,1fr)}.blog-hero-art{margin-top:16px}.post-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.featured-card{grid-template-columns:minmax(0,1fr)}.featured-copy{padding:4px 10px 10px}}
 @media(max-width:640px){.post-grid,.about-blog{grid-template-columns:minmax(0,1fr)}.blog-hero-actions .btn{flex:1 1 100%}.search-form{width:100%}}
+/* Điện thoại: thẻ bài dạng hàng ngang gọn, bài nổi bật thấp hơn, chủ đề cuộn ngang. */
+@media(max-width:640px){
+  .blog-hero{padding-bottom:36px}
+  .blog-hero h1{font-size:clamp(40px,11vw,52px)}
+  .blog-hero-art{width:min(300px,86%)}
+  .note-card{padding:22px;border-radius:24px}
+  .note-card b{font-size:22px}
+  .categories{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(var(--gutter)*-1);padding-inline:var(--gutter)}
+  .categories::-webkit-scrollbar{display:none}
+  .categories button{flex:none;min-height:40px}
+  .post-grid{gap:12px}
+  .post-card{flex-direction:row;align-items:stretch;gap:14px;padding:10px;border-radius:22px}
+  .post-card .post-art{flex:none;width:96px;min-height:96px;aspect-ratio:auto;border-radius:16px}
+  .post-card .art-paper{width:70%;padding:8px 6px;gap:4px;border-radius:10px}
+  .post-card .art-paper span,.post-card .art-paper b{display:none}
+  .post-card .art-paper img{width:28px}
+  .post-card .art-number{font-size:22px;right:8px;bottom:4px}
+  .post-copy{gap:6px;padding:2px 4px 2px 0}
+  .post-copy h3{font-size:17px}
+  .post-copy p{-webkit-line-clamp:2;font-size:14px;line-height:1.5}
+  .post-card .card-read{display:none}
+  .post-meta{font-size:11px;gap:4px 8px}
+  .featured-card{padding:10px;border-radius:26px}
+  .featured-card .post-art{aspect-ratio:16/9;border-radius:18px}
+  .featured-copy h2{font-size:24px}
+  .featured-copy p{display:-webkit-box;overflow:hidden;-webkit-line-clamp:3;-webkit-box-orient:vertical;font-size:15px}
+  .article-body{font-size:17px}
+  .about-blog{padding:22px;border-radius:26px}
+}

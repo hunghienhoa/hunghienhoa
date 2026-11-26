@@ -141,7 +141,7 @@
   .about-cta{grid-column:1/-1;justify-self:start}
 }
 @media(max-width:640px){
-  .home-hero h1{font-size:clamp(42px,12vw,58px)}
+  .home-hero h1{font-size:clamp(38px,10.6vw,50px)}
   .hero-lead{font-size:17px}
   .hero-actions .btn{flex:1 1 100%}
   .home-hero-visual{padding:26px 6px 30px}
@@ -155,3 +155,56 @@
 @keyframes hh-shimmer{to{background-position:-200% 0}}
 .home-head h2 em,.about-copy h2 em{display:inline-block}
 .about-avatar.has-custom-image{overflow:hidden}.about-avatar.has-custom-image>.custom-page-image{position:static;width:100%;height:100%;border-radius:50%;object-fit:cover}
+/* Điện thoại: thẻ dạng hàng ngang gọn (ảnh nhỏ bên trái, chữ bên phải) thay vì thẻ cao chiếm trọn màn hình. */
+@media(max-width:640px){
+  .home-section{padding-top:56px}
+  .home-head{margin-bottom:20px}
+  .home-head h2{font-size:clamp(32px,9vw,40px)}
+  .home-head>p{font-size:15px}
+  .topic-filters{margin:-4px 0 16px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(var(--gutter)*-1);padding-inline:var(--gutter)}
+  .topic-filters::-webkit-scrollbar{display:none}
+  .topic-filters button{flex:none;min-height:40px}
+  .home-posts,.tool-grid{gap:12px}
+  .post-link{flex-direction:row;align-items:stretch;gap:14px;padding:10px;border-radius:22px}
+  .post-media{flex:none;width:96px;min-height:96px;aspect-ratio:auto;border-radius:16px}
+  .post-initial{font-size:46px}
+  .post-body{gap:6px;padding:2px 4px 2px 0}
+  .post-meta-line{font-size:11px;gap:4px 8px}
+  .post-meta-line>span:nth-child(3){display:none}
+  .post-title{font-size:17px;line-height:1.3}
+  .post-excerpt{-webkit-line-clamp:2;font-size:14px;line-height:1.5}
+  .post-more{display:none}
+  .post-skeleton{min-height:116px;border-radius:22px}
+  .tool-card{flex-direction:row;align-items:center;gap:14px;padding:10px;border-radius:24px}
+  .tool-visual{flex:none;width:96px;height:96px;border-radius:18px}
+  .photo-flash,.snap-link,.snap-bar{display:none}
+  .photo-strip{width:46px;gap:4px;padding:5px 5px 12px}
+  .snap-phone{width:52px;height:84px;padding:6px;border-width:4px;border-radius:14px}
+  .snap-play{width:28px;height:28px;margin:auto;font-size:11px}
+  .sharp-pane{inset:16px 14px;border-width:3px;border-radius:10px}
+  .sharp-pane .sun{width:16px;height:16px}
+  .sharp-knob{width:28px;height:28px;font-size:11px;border-width:2px}
+  .tool-body{gap:4px;padding:2px 4px 2px 0}
+  .tool-kicker{font-size:11px;letter-spacing:1px}
+  .tool-body>b{font-size:21px}
+  .tool-text{display:-webkit-box;overflow:hidden;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:14px;line-height:1.5}
+  .tool-points{display:none}
+  .tool-cta{min-height:0;margin-top:2px;padding:0;background:none;color:var(--blue);font-size:14px;justify-content:flex-start;gap:6px;text-decoration:underline;text-underline-offset:3px}
+  .tool-card:hover .tool-cta{background:none}
+  .hero-feature{padding:12px 12px 18px;border-radius:26px}
+  .hero-feature-tag{top:22px;left:22px}
+  .hero-feature-media{aspect-ratio:16/9;border-radius:18px}
+  .hero-feature-title{font-size:20px}
+  .hero-chip{min-height:38px;padding:0 12px 0 6px;font-size:13px}
+  .hero-chip img{width:24px;height:24px}
+  .about-card{grid-template-columns:72px minmax(0,1fr);gap:14px 16px;padding:20px;border-radius:28px}
+  .about-avatar{width:72px;height:72px;font-size:26px;box-shadow:0 0 0 4px var(--cream),0 0 0 5px var(--hh-hair)}
+  .about-avatar img{width:28px;right:-6px;bottom:-4px}
+  .about-copy{display:contents}
+  .about-copy .eyebrow{grid-column:2;align-self:end;margin:0}
+  .about-copy h2{grid-column:1/-1;font-size:28px}
+  .about-copy p,.about-tags{grid-column:1/-1}
+  .about-copy p{margin-top:0!important;font-size:15px}
+  .about-tags{margin-top:0}
+  .about-cta{grid-column:1/-1;width:100%}
+}
