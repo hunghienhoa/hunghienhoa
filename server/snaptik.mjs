@@ -57,7 +57,10 @@ async function tiktokDirect(url,fetcher){
  const v=item.video||{},formats=[],seen=new Set();
  const add=(kind,label,source,size=0)=>{source=mediaURL(source);if(source&&!seen.has(source)){seen.add(source);formats.push({kind,label,size,source});}};
  const rates=(Array.isArray(v.bitrateInfo)?v.bitrateInfo:[]).filter(b=>b?.PlayAddr?.UrlList?.length).sort((a,b)=>(b.Bitrate||0)-(a.Bitrate||0));
- add('video','Video MP4',v.playAddr||rates.at(-1)?.PlayAddr?.UrlList?.[0],Number(rates.at(-1)?.PlayAddr?.DataSize)||0);
+ // Dung lượng chỉ ghi khi chắc chắn thuộc đúng đường dẫn đó (playAddr có thể là bản khác với các mức bitrate).
+ const sizeOf=src=>Number(rates.find(b=>b.PlayAddr.UrlList.includes(src))?.PlayAddr?.DataSize)||0;
+ const basic=v.playAddr||rates.at(-1)?.PlayAddr?.UrlList?.[0];
+ add('video','Video MP4',basic,sizeOf(basic));
  if(rates[0])add('hd','Video chất lượng cao',rates[0].PlayAddr.UrlList[0],Number(rates[0].PlayAddr.DataSize)||0);
  if(!formats.length)add('video','Video MP4',v.downloadAddr);
  add('audio','Âm thanh',item.music?.playUrl);
