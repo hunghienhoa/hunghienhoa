@@ -2,7 +2,7 @@ import contentFields from '../dist/content-fields.json' with { type: 'json' };
 import {FRAME_CATEGORIES} from '../dist/photobooth/design.mjs';
 export const HOUR = 60 * 60 * 1000;
 export const MAX_IMAGE_BYTES = 1024 * 1024;
-export const siteImageKeys=['about','project-0','project-1','project-2','project-3','project-4','project-5'];
+export const siteImageKeys=['about'];
 export function mediaAsset(value) {
   keys(value,['scope','imageDataUrl']);
   if(!['site','post'].includes(value.scope)) fail(400,'Nhóm ảnh chưa hợp lệ.');
@@ -132,11 +132,16 @@ export function siteSettings(value) {
     blogTitle: text(value.blogTitle, 100, true), blogIntro: text(value.blogIntro, 400, true, true)
   };
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(result.email) || !/^[+\d\s().-]{7,40}$/.test(result.phone)) fail(400, 'Email hoặc số điện thoại chưa hợp lệ.');
-  const pageTexts = value.pageTexts ?? {};
-  keys(pageTexts, contentFields.map(field => field.key));
+  // Ô chữ của giao diện cũ (đúng dạng khóa nhưng không còn trên trang) được bỏ qua để dữ liệu đã lưu vẫn hợp lệ.
+  const fieldKeys = contentFields.map(field => field.key);
+  const retired = key => /^(?:main|blog|photobooth|admin|snaptik)-[a-z0-9-]+$/.test(key) && !fieldKeys.includes(key);
+  const pageTexts = object(value.pageTexts) ? Object.fromEntries(Object.entries(value.pageTexts).filter(([key]) => !retired(key))) : value.pageTexts ?? {};
+  keys(pageTexts, fieldKeys);
   result.pageTexts = Object.fromEntries(Object.entries(pageTexts).map(([key,value]) => [key,text(value,3000,false,true)]));
-  keys(value.pageImages ?? {},siteImageKeys);
-  result.pageImages={...value.pageImages};
+  // Ảnh dự án của portfolio cũ (project-0…5) không còn chỗ hiển thị nên được bỏ qua.
+  const pageImages = object(value.pageImages) ? Object.fromEntries(Object.entries(value.pageImages).filter(([key]) => !/^project-[0-5]$/.test(key))) : value.pageImages ?? {};
+  keys(pageImages,siteImageKeys);
+  result.pageImages={...pageImages};
   for(const url of Object.values(result.pageImages)) if(typeof url!=='string' || !/^\/api\/media\/[a-f0-9-]{36}\.webp$/.test(url)) fail(400,'Đường dẫn ảnh trang web chưa hợp lệ.');
   if (value.theme!==undefined) keys(value.theme,Object.keys(defaultSite.theme));
   result.theme = {...defaultSite.theme,...value.theme};

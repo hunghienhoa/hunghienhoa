@@ -154,3 +154,4 @@
 }
 @keyframes hh-shimmer{to{background-position:-200% 0}}
 .home-head h2 em,.about-copy h2 em{display:inline-block}
+.about-avatar.has-custom-image{overflow:hidden}.about-avatar.has-custom-image>.custom-page-image{position:static;width:100%;height:100%;border-radius:50%;object-fit:cover}

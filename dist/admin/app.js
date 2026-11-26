@@ -245,9 +245,9 @@ async function loadCustomization(settings) {
   const socialNames={facebook:'Facebook',instagram:'Instagram',threads:'Threads',tiktok:'TikTok',zalo:'Zalo',youtube:'YouTube',wechat:'Mã WeChat'};
   for(const [key,value] of Object.entries(defaults)) {const label=make('label',socialNames[key]),input=make('input');input.type=key==='wechat'?'text':'url';input.required=true;input.maxLength=key==='wechat'?80:500;input.dataset.social=key;input.value=settings.socials?.[key] || value;label.append(input);global.append(label);}
   container.append(global);
-  const images=make('details');images.append(make('summary','Ảnh trang chính — giới thiệu và dự án'));
+  const images=make('details');images.append(make('summary','Ảnh trang chính — ảnh đại diện'));
   const imageGrid=make('div',undefined,'field-grid');images.append(imageGrid);
-  for(const [key,name] of Object.entries({about:'Ảnh giới thiệu về Hùng','project-0':'01 — Nhận diện thương hiệu','project-1':'02 — Chiến dịch truyền thông','project-2':'03 — Thiết kế sự kiện','project-3':'04 — Thiết kế ấn phẩm','project-4':'05 — Thiết kế bao bì','project-5':'06 — Minh họa'})) {
+  for(const [key,name] of Object.entries({about:'Ảnh đại diện ở mục Về Hùng'})) {
     const label=make('label',name,'custom-field media-field'),input=make('input'),preview=make('img'),note=make('p');
     input.type='file';input.accept='image/png,image/jpeg,image/webp';input.dataset.imageKey=key;input.dataset.imageUrl=settings.pageImages?.[key]||'';
     preview.alt=name;preview.hidden=!input.dataset.imageUrl;if(input.dataset.imageUrl)preview.src=input.dataset.imageUrl;

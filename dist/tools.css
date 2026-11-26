@@ -1,0 +1,20 @@
+/* Phần dùng chung của các trang công cụ (Snap Video, Làm Nét, Hộp Ảnh): hero căn giữa, các bước, riêng tư, hỏi đáp. */
+.tool-hero{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;padding-top:clamp(40px,6vw,88px);text-align:center}
+.tool-hero::before{content:'';position:absolute;z-index:-1;top:-90px;bottom:0;left:50%;width:100vw;translate:-50% 0;pointer-events:none;background:radial-gradient(30% 50% at 24% 30%,color-mix(in srgb,var(--yellow) 50%,transparent),transparent 72%),radial-gradient(28% 50% at 76% 36%,color-mix(in srgb,var(--lilac) 36%,transparent),transparent 72%)}
+.tool-hero h1{max-width:18ch;font-size:clamp(44px,6.4vw,88px);font-weight:800;line-height:1.08;letter-spacing:-.045em}
+.tool-hero h1 em{display:inline-block;padding:0 .06em;font-size:1.05em;background:linear-gradient(transparent 74%,var(--yellow) 74% 90%,transparent 90%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.tool-hero .lead{max-width:52ch;margin-top:20px}
+.tool-hero .pill-list{justify-content:center;margin-top:24px}
+.tool-panel{width:min(880px,100%);margin-top:36px;padding:clamp(18px,3vw,28px);text-align:left}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:0;padding:0;list-style:none}
+.steps>li{padding:28px}
+.steps>li>span{display:inline-grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--yellow);font-family:var(--accent);font-style:italic;font-weight:600;font-size:20px}
+.steps h3{margin-top:18px;font-size:22px;font-weight:800}
+.steps p{margin-top:8px;opacity:.88}
+.privacy-card{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(20px,4vw,56px);padding:clamp(24px,4vw,48px)}
+.privacy-copy{display:grid;gap:14px;font-size:16px;line-height:1.7}
+.privacy-copy a{text-decoration:underline;text-underline-offset:3px}
+.faq-list{width:min(880px,100%);border-top:1px solid var(--hh-hair)}
+.link-arrow{display:inline-flex;align-items:center;gap:6px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.notice{margin-top:16px;padding:14px 18px;border-radius:16px;background:color-mix(in srgb,var(--yellow) 45%,transparent);font-weight:600}
+@media(max-width:900px){.steps{grid-template-columns:minmax(0,1fr)}.privacy-card{grid-template-columns:minmax(0,1fr)}}

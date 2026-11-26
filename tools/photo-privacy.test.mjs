@@ -194,10 +194,10 @@ assert.equal(new URL(destination).searchParams.has('thietke'),false);
 assert.ok(html.includes('Bắt đầu chụp') && html.includes('Đóng góp khung của bạn'));
 assert.equal([...html.matchAll(/data-showcase="/g)].length,16);
 assert.match(html,/class="showcase-group" aria-hidden="true" inert/);
-assert.ok(!shootHtml.includes('data-showcase=') && !shootHtml.includes('landing.css'));
-const landingCss=fs.readFileSync('dist/photobooth/landing.css','utf8');
+assert.ok(!shootHtml.includes('data-showcase='));
+const landingCss=fs.readFileSync('dist/photobooth/style.css','utf8');
 assert.match(landingCss,/translateX\(-50%\)/);
-assert.match(landingCss,/prefers-reduced-motion:reduce/);
+assert.match(landingCss,/prefers-reduced-motion:no-preference\)\{\.showcase-track\{animation/,'Khung chạy ngang chỉ chuyển động khi người dùng không tắt hiệu ứng');
 assert.match(landingCss,/:focus-within/);
 
 showcaseButtons[0].listeners.click();

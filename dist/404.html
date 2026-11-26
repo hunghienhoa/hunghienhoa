@@ -1,44 +1,27 @@
 <!doctype html>
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#fbf2e3">
 <title>Không tìm thấy trang — Hùng Hiền Hòa</title>
 <link rel="icon" href="/assets/star.svg" type="image/svg+xml">
-<style>
-@font-face{font-family:'Be Vietnam Pro';src:url('/fonts/BeVietnamPro-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
-@font-face{font-family:'Be Vietnam Pro';src:url('/fonts/BeVietnamPro-Black.woff2') format('woff2');font-weight:900;font-display:swap}
-@font-face{font-family:'Playfair Display';src:url('/fonts/PlayfairDisplay-SemiBoldItalic.woff2') format('woff2');font-weight:600;font-style:italic;font-display:swap}
-:root{--cream:#fbf2e3;--blue:#303487;--yellow:#ffdc38;--line:#aebcd38c}
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;display:grid;place-items:center;padding:40px 16px;color:var(--blue);background-color:var(--cream);background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;font-family:'Be Vietnam Pro',Arial,sans-serif;font-weight:500}
-main{max-width:620px;width:100%;text-align:left}
-.label{display:inline-block;background:var(--yellow);padding:8px 13px;font-size:13px;font-weight:900;letter-spacing:1px;transform:rotate(-3deg)}
-h1{margin:28px 0 0;font-size:clamp(56px,12vw,104px);line-height:1.26;letter-spacing:-4px;font-weight:900}
-h1 em{font-family:'Playfair Display',Georgia,serif;font-weight:600;font-style:italic;letter-spacing:-2px;display:inline-block;transform:rotate(-1.5deg);padding-bottom:.16em;border-bottom:8px solid var(--yellow)}
-p{font-size:17px;line-height:1.6;margin:26px 0 0}
-nav{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-nav a{color:var(--blue);text-decoration:none;font-weight:900;font-size:14px;padding:13px 18px;border:2px solid var(--blue);min-height:44px;display:inline-flex;align-items:center}
-nav a:first-child{background:var(--blue);color:var(--cream)}
-a:focus-visible{outline:3px solid #ec6550;outline-offset:4px}
-img{width:72px;height:72px;display:block;margin-left:auto;transform:rotate(12deg)}
-</style>
-<script src="/i18n.js?v=2"></script>
+<link rel="stylesheet" href="/ui.css?v=1">
+<script src="/i18n.js?v=3"></script>
 </head>
 <body>
-<main>
-<img src="/assets/star.svg" alt="" width="72" height="72">
-<span class="label">LỖI 404</span>
+<main class="not-found">
+<div>
+<b aria-hidden="true">404</b>
 <h1>Trang này <em>lạc mất</em> rồi.</h1>
 <p>Đường dẫn có thể đã đổi hoặc gõ chưa đúng. Bạn thử quay lại một trong các góc dưới đây nhé.</p>
-<nav aria-label="Các trang chính">
-<a href="https://hunghienhoa.com/">Trang chính</a>
-<a href="/blog/">Blog</a>
-<a href="/photobooth/">Hộp Ảnh</a>
-<a href="/snaptik/">Snap</a>
+<nav class="not-found-links" aria-label="Các trang chính">
+<a class="btn btn-primary" href="/">Trang chính</a>
+<a class="btn btn-ghost" href="/blog/">Blog</a>
+<a class="btn btn-ghost" href="/photobooth/">Hộp Ảnh</a>
+<a class="btn btn-ghost" href="/snaptik/">Snap</a>
 </nav>
+</div>
 </main>
 </body>
 </html>

@@ -7,44 +7,24 @@ for (const page of pages) {
   assert.ok(!/user-scalable\s*=\s*no|maximum-scale\s*=\s*1(?:\.0)?\b/i.test(html), `${page} khóa phóng to`);
   assert.ok(!html.includes('viewport.js'), `${page} còn nạp script chặn phóng to`);
 }
-for (const path of ['dist','dist/blog','dist/photobooth','dist/admin']) {
-  assert.ok(!fs.existsSync(`${path}/viewport.js`));
-  const css = fs.readFileSync(`${path}/viewport.css`,'utf8');
-  assert.ok(!/touch-action:\s*pan-x pan-y/.test(css), `${path}/viewport.css chặn pinch`);
-  assert.match(css, /input,textarea,select\{font-size:16px!important\}/);
-  assert.equal(css, fs.readFileSync('dist/viewport.css','utf8'));
-  assert.match(fs.readFileSync(`${path}/index.html`,'utf8'), /viewport\.css\?v=3/);
-}
+const ui = fs.readFileSync('dist/ui.css', 'utf8');
+assert.ok(!/touch-action:\s*pan-x pan-y/.test(ui), 'ui.css chặn pinch');
+assert.match(ui, /input\[type=text\][^{]*\{[^}]*font-size:16px/, 'Ô nhập 16px để iOS không tự phóng to');
 console.log('PASS: pinch and browser zoom allowed on every page; inputs stay 16px so iOS does not auto-zoom.');
 
-for(const folder of ['dist','dist/blog','dist/photobooth','dist/admin']) {
- const html=fs.readFileSync(`${folder}/index.html`,'utf8');
- assert.equal((html.match(/<footer\b/g)||[]).length,1);
- if(folder!=='dist/admin') assert.match(html,/<p class="footer-wish"[^>]*>[^<]+<\/p><nav class="policy-links"[^>]*>.*?<\/nav><div class="footer-bottom">.*?<\/div><\/div><\/footer>\n?<\/body>/);
- if(folder!=='dist/admin') assert.ok(!html.includes('footer-meta'));
- else {assert.ok(html.indexOf('footer-meta')>html.indexOf('<footer'));assert.ok(!html.includes('class="footer-wish"'));}
- assert.equal(fs.readFileSync(`${folder}/footer.css`,'utf8'),fs.readFileSync('dist/footer.css','utf8'));
+// Giao diện 2026: một tên miền, một bộ giao diện dùng chung /ui.css, thanh điều hướng và footer sinh từ tools/site-chrome.py.
+const publicPages = ['dist/index.html', 'dist/blog/index.html', 'dist/photobooth/index.html', 'dist/photobooth/shoot.html', 'dist/snaptik/index.html', 'dist/lamnet/index.html', 'dist/chinh-sach-rieng-tu.html', 'dist/dieu-khoan-su-dung.html', 'dist/bao-cao-ban-quyen.html', 'dist/cookie-va-quang-cao.html'];
+for (const page of publicPages) {
+  const html = fs.readFileSync(page, 'utf8');
+  assert.match(html, /<link rel="stylesheet" href="\/ui\.css\?v=\d+">/, `${page} phải nạp /ui.css`);
+  assert.equal((html.match(/<header class="sitebar">/g) || []).length, 1, `${page} cần đúng một thanh điều hướng`);
+  assert.equal((html.match(/<footer\b/g) || []).length, 1, `${page} cần đúng một footer`);
+  assert.match(html, /<footer class="site-footer">.*<p class="footer-wish"[^>]*>[^<]+<\/p><nav class="policy-links"[^>]*>.*?<\/nav><div class="footer-bottom">.*?<\/footer>/s, `${page} footer sai thứ tự`);
+  assert.ok(html.includes('id="contact"') && html.includes('id="wechat-copy"'), `${page} thiếu phần liên hệ`);
+  for (const old of ['sitebar.css', 'footer.css', 'readability.css', 'mobile-compact.css', 'viewport.css', 'decorative-stickers.css', 'theme.css']) assert.ok(!html.includes(old), `${page} còn nạp ${old}`);
 }
-
-const compact=fs.readFileSync('dist/mobile-compact.css','utf8');
-for(const folder of ['dist','dist/blog','dist/photobooth','dist/admin']){
- assert.equal(fs.readFileSync(`${folder}/mobile-compact.css`,'utf8'),compact);
- assert.match(fs.readFileSync(`${folder}/index.html`,'utf8'),/mobile-compact.css\?v=1/);
-}
-assert.match(fs.readFileSync('dist/photobooth/shoot.html','utf8'),/mobile-compact.css\?v=1/);
-assert.ok(compact.includes('@media(max-width:760px)') && compact.includes('min-height:44px'));
-
-// Mức sàn cỡ chữ: một bản readability.css dùng chung, nạp sau cùng ở mọi trang công khai.
-const readability=fs.readFileSync('dist/readability.css','utf8');
-for(const folder of ['dist/blog','dist/photobooth'])assert.equal(fs.readFileSync(`${folder}/readability.css`,'utf8'),readability);
-for(const page of ['dist/index.html','dist/blog/index.html','dist/photobooth/index.html','dist/photobooth/shoot.html','dist/snaptik/index.html','dist/lamnet/index.html','dist/chinh-sach-rieng-tu.html','dist/dieu-khoan-su-dung.html','dist/bao-cao-ban-quyen.html','dist/cookie-va-quang-cao.html']){
- const head=fs.readFileSync(page,'utf8').split('</head>')[0];
- assert.match(head,/readability\.css\?v=\d+"><\/head>|readability\.css\?v=\d+">$/,`${page} phải nạp readability.css sau cùng`);
-}
-assert.ok(!readability.includes('.parcel')&&!readability.includes('.carton')&&!readability.includes('.id-card'),'Không đổi cỡ chữ trong hình minh họa');
-console.log('PASS: readability floor stylesheet shared, loaded last on nine public pages, illustrations untouched.');
-
-// Thanh trên cùng: subdomain blog/photobooth chỉ thấy file trong thư mục của mình, nên cần bản sao giống bản gốc và nạp bằng đường dẫn tương đối.
-for(const f of ['sitebar.css','sitebar.js','i18n.js','i18n-en.js'])for(const folder of ['dist/blog','dist/photobooth'])assert.equal(fs.readFileSync(`${folder}/${f}`,'utf8'),fs.readFileSync(`dist/${f}`,'utf8'),`${folder}/${f} phải giống dist/${f}`);
-for(const page of ['dist/blog/index.html','dist/photobooth/index.html','dist/photobooth/shoot.html'])assert.ok(!/\.\.\/sitebar\./.test(fs.readFileSync(page,'utf8')),`${page} phải nạp sitebar cạnh trang`);
-assert.match(fs.readFileSync('dist/sitebar.css','utf8'),/\.sitebar\{[^}]*max-width:none/,'.sitebar không bị giới hạn bề rộng bởi header cũ');
+const admin = fs.readFileSync('dist/admin/index.html', 'utf8');
+assert.ok(admin.indexOf('footer-meta') > admin.indexOf('<footer') && !admin.includes('class="footer-wish"'));
+// Một tên miền nên không còn bản sao giao diện trong từng thư mục.
+for (const folder of ['dist/blog', 'dist/photobooth', 'dist/admin']) for (const file of ['sitebar.css', 'sitebar.js', 'i18n.js', 'i18n-en.js', 'footer.css', 'contact.css', 'page-customization.js', 'fonts']) assert.ok(!fs.existsSync(`${folder}/${file}`), `${folder}/${file} là bản sao cũ`);
+console.log('PASS: shared /ui.css, one generated nav and footer per public page, no per-folder copies.');
