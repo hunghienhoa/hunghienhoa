@@ -6,7 +6,7 @@ import { pageForVisit } from '../server/visits.mjs';
 import { AI_BODY_LIMIT, parseAiRequest, quotaMessage, runAi } from '../server/lamnet-ai.mjs';
 import { adsenseHtml } from '../server/adsense.mjs';
 import {snaptikRoute} from '../server/snaptik.mjs';
-import {agentRoute,pageContext,representation,markdown404,publicHtml,publicRedirect} from '../server/agent-content.mjs';
+import {agentRoute,pageContext,representation,markdown404,publicHtml,publicRedirect,ADMIN_HOST} from '../server/agent-content.mjs';
 export { VisitCounter } from './visits.mjs';
 
 const API_LIMIT = 1600000;
@@ -344,8 +344,8 @@ async function notifyFrameSubmission(env, id, expires) {
   await env.FRAME_EMAIL.send({
     to: 'hunghienhoa2110@gmail.com', from: 'thongbao@hunghienhoa.com',
     subject: 'Hộp Ảnh: có khung mới chờ Hùng duyệt',
-    text: `Có một khung ảnh mới chờ duyệt.\nMã bản chờ: ${id}\nHết hạn: ${expires.toLocaleString('vi-VN', {timeZone:'Asia/Ho_Chi_Minh'})}\nVào duyệt: https://hunghienhoa.com/admin/\nBản chờ tự xóa sau một giờ nếu chưa được duyệt.`,
-    html: `<p>Có một khung ảnh mới chờ Hùng duyệt.</p><p><a href="https://hunghienhoa.com/admin/">Mở trang quản trị để xem và duyệt</a></p><p>Bản chờ tự xóa sau một giờ nếu chưa được duyệt.</p>`
+    text: `Có một khung ảnh mới chờ duyệt.\nMã bản chờ: ${id}\nHết hạn: ${expires.toLocaleString('vi-VN', {timeZone:'Asia/Ho_Chi_Minh'})}\nVào duyệt: https://admin.hunghienhoa.com/\nBản chờ tự xóa sau một giờ nếu chưa được duyệt.`,
+    html: `<p>Có một khung ảnh mới chờ Hùng duyệt.</p><p><a href="https://admin.hunghienhoa.com/">Mở trang quản trị để xem và duyệt</a></p><p>Bản chờ tự xóa sau một giờ nếu chưa được duyệt.</p>`
   });
   console.info('frame_notification_sent');
 }
@@ -460,11 +460,14 @@ async function adminApi(request, env, route) {
   fail(404, 'Không tìm thấy chức năng quản trị.');
 }
 
+const ADMIN_FILES = new Set(['/', '/index.html', '/app.js', '/config.js', '/editor.js', '/media.js', '/usage.js', '/style.css', '/content-fields.json']);
 function assetRequest(request) {
   const url = new URL(request.url);
   const redirect=publicRedirect(url);
   if(redirect)return Response.redirect(redirect.href,308);
-  // Mọi mục nằm trong thư mục cùng tên của dist; không còn ánh xạ subdomain.
+  // Các trang công khai nằm trong thư mục cùng tên của dist. Trên admin.hunghienhoa.com, trang và tệp riêng của
+  // quản trị lấy từ dist/admin; tài nguyên dùng chung (/ui.css, /fonts, /assets, …) và /api giữ nguyên ở gốc.
+  if (url.hostname === ADMIN_HOST && ADMIN_FILES.has(url.pathname)) url.pathname = '/admin' + (url.pathname === '/index.html' ? '/' : url.pathname);
   return new Request(url, request);
 }
 

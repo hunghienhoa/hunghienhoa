@@ -15,7 +15,7 @@ for(const [accept,expected] of [
   ['text/html;q=0,text/markdown;q=0,*/*;q=1',null],['application/json',null],['text/markdown;q=2',null],
   ['text/markdown;variant=unsupported',null],['text/markdown;charset=utf-8;q=0,text/markdown;q=1',null]
 ])assert.equal(representation(accept),expected,accept);
-assert.equal(pageContext(new URL('https://hunghienhoa.com/admin/')),null);
+assert.equal(pageContext(new URL('https://hunghienhoa.com/admin/')),null);assert.equal(pageContext(new URL('https://admin.hunghienhoa.com/')),null);
 const ctx=pageContext(new URL(ORIGINS.main+'/'));
 const fields=JSON.parse(fs.readFileSync('dist/content-fields.json','utf8'));
 const hero=fields.find(f=>f.page==='main'&&f.default==='Nhặt chuyện hay').key;
@@ -113,7 +113,8 @@ try {
   for(const slug of ['draft','not-found'])assert.equal((await worker.fetch(new Request('https://hunghienhoa.com/blog/?bai='+slug,{headers:{Accept:'text/markdown'}}),env)).status,404);
   let r=await worker.fetch(new Request('https://hunghienhoa.com/robots.txt'),env);assert.match(await r.text(),/Disallow: \/admin\n/);
   r=await worker.fetch(new Request('https://hunghienhoa.com/sitemap.xml'),env);{const xml=await r.text();for(const loc of ['https://hunghienhoa.com/blog/','https://hunghienhoa.com/photobooth/shoot','https://hunghienhoa.com/snaptik/','https://hunghienhoa.com/lamnet/','https://hunghienhoa.com/blog/?bai=published'])assert.ok(xml.includes(`<loc>${loc}</loc>`),loc);assert.ok(!xml.includes('.hunghienhoa.com'));}
-  r=await worker.fetch(new Request('https://hunghienhoa.com/admin/llms.txt'),env);assert.equal(r.status,404);
+  r=await worker.fetch(new Request('https://admin.hunghienhoa.com/llms.txt'),env);assert.equal(r.status,404);
+  r=await worker.fetch(new Request('https://admin.hunghienhoa.com/robots.txt'),env);assert.equal(await r.text(),'User-agent: *\nDisallow: /\n');
 }finally{globalThis.fetch=originalFetch;}
 // lastmod theo lần sửa gần nhất (updated_at), không theo ngày đăng; ngày rỗng thì bỏ trống.
 {const xml=sitemap({origin:'https://hunghienhoa.com/blog',page:'blog'},[{slug:'sua',published_at:'2026-11-10T01:00:00Z',updated_at:'2026-11-18T01:00:00Z'},{slug:'cu',published_at:1762700000000},{slug:'rong',published_at:null}]);

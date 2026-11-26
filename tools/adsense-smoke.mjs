@@ -34,5 +34,5 @@ for(const method of ['GET','HEAD'])for(const accept of ['text/html','text/markdo
 for(const path of POLICY_PATHS){const {r,body}=await get(main+path);assert.equal(r.status,200);assert.ok(body.includes('rel="canonical" href="'+main+path+'"'));checks++;}
 {const {r,body}=await get(main+'/robots.txt');assert.equal(r.status,200);assert.ok(body.includes('Allow: /api/posts/')&&body.includes('Disallow: /api/'));checks++;}
 ({r,body}=await get(photo+'/shoot'));assert.equal(r.status,200);assert.ok(body.includes('rel="canonical" href="'+photo+'/shoot"')&&body.includes('id="studio-title"'));checks++;
-({r,body}=await get('https://hunghienhoa.com/admin/'));assert.equal(r.status,200);assert.ok(!body.includes('google-adsense-account')&&!body.includes('adsbygoogle.js'));checks++;
+({r,body}=await get('https://admin.hunghienhoa.com/'));assert.equal(r.status,200);assert.ok(!body.includes('google-adsense-account')&&!body.includes('adsbygoogle.js'));checks++;
 console.log(`PASS: ${checks} AdSense technical endpoint checks, ${posts.length} complete published articles; ads remain disabled.`);

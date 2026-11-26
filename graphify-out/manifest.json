@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "cloudflare.config.ts": {
-    "mtime": 1795629805.6591744,
-    "seen": 1795630718.8047626,
-    "ast_hash": "f39d56c0658ac7cd103d0de309e32e42",
+    "mtime": 1795678734.1738975,
+    "seen": 1795678833.2065072,
+    "ast_hash": "0d603b1dad48b25dc03b2ff73f73016d",
     "semantic_hash": ""
   },
   "package.json": {
@@ -78,9 +78,9 @@
     "semantic_hash": ""
   },
   "server/agent-content.mjs": {
-    "mtime": 1795675619.9235635,
-    "seen": 1795675726.4933922,
-    "ast_hash": "ee0bbcc7512cb6fadbb1762278e92bea",
+    "mtime": 1795678734.1723738,
+    "seen": 1795678833.2065544,
+    "ast_hash": "9253145915be04f67f2e10444819245b",
     "semantic_hash": ""
   },
   "server/contribution-limit.mjs": {
@@ -144,9 +144,9 @@
     "semantic_hash": ""
   },
   "tools/adsense-smoke.mjs": {
-    "mtime": 1795652510.1467955,
-    "seen": 1795673840.5501032,
-    "ast_hash": "d90e503e4d30b1d24046137c4f5e814e",
+    "mtime": 1795678799.2229757,
+    "seen": 1795678833.2068856,
+    "ast_hash": "4e79123c42ab2b5b2baf57936beedcbf",
     "semantic_hash": ""
   },
   "tools/adsense.test.mjs": {
@@ -156,21 +156,21 @@
     "semantic_hash": ""
   },
   "tools/agent-readiness.test.mjs": {
-    "mtime": 1795675619.9241686,
-    "seen": 1795675726.4937227,
-    "ast_hash": "17f473317b0ccc016bd450e8e7145d07",
+    "mtime": 1795678772.958144,
+    "seen": 1795678833.2069373,
+    "ast_hash": "a8152da64197fc1bcfdd652376089256",
     "semantic_hash": ""
   },
   "tools/agent-smoke.mjs": {
-    "mtime": 1795652510.1465738,
-    "seen": 1795673840.5501595,
-    "ast_hash": "42c2609dc515c2682dcb20014b800f31",
+    "mtime": 1795678799.2225387,
+    "seen": 1795678833.20694,
+    "ast_hash": "36befcd004bfbc3c6aed238f476ff36a",
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795678559.4223888,
-    "seen": 1795678602.6642015,
-    "ast_hash": "b1c2c73522ffc54f08d579a5976bd4b0",
+    "mtime": 1795678816.402404,
+    "seen": 1795678833.2069426,
+    "ast_hash": "04d717c60f498c1d30c28f338def3a98",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -240,9 +240,9 @@
     "semantic_hash": ""
   },
   "tools/cloud-smoke.mjs": {
-    "mtime": 1795652510.1462185,
-    "seen": 1795673840.5503423,
-    "ast_hash": "df01105fb6e22dab8f09a399648aaac2",
+    "mtime": 1795678816.3068814,
+    "seen": 1795678833.2072222,
+    "ast_hash": "596f23e0f6899c805381fa6e77366574",
     "semantic_hash": ""
   },
   "tools/convert-webp.py": {
@@ -330,15 +330,15 @@
     "semantic_hash": ""
   },
   "worker/index.mjs": {
-    "mtime": 1795629948.6627579,
-    "seen": 1795630718.804826,
-    "ast_hash": "96f9cf100550ea79380af440fe5820a4",
+    "mtime": 1795678734.1734066,
+    "seen": 1795678833.2076766,
+    "ast_hash": "8a237240bf75e1e4b4e4a9fc466c6172",
     "semantic_hash": ""
   },
   "worker/index.test.mjs": {
-    "mtime": 1795629895.5624542,
-    "seen": 1795630718.8048272,
-    "ast_hash": "2a752b87080260627b9a3a5cd0ac46aa",
+    "mtime": 1795678772.9573348,
+    "seen": 1795678833.2076793,
+    "ast_hash": "e76394ee4c88ca3ec4c8932c08169888",
     "semantic_hash": ""
   },
   "worker/usage-providers.mjs": {
@@ -456,9 +456,9 @@
     "semantic_hash": ""
   },
   "ADMIN-GUIDE.md": {
-    "mtime": 1795676854.0030777,
-    "seen": 1795676924.0024354,
-    "ast_hash": "d9812d1d1e19a04f4e0ac970adf8847a",
+    "mtime": 1795678816.308495,
+    "seen": 1795678833.208231,
+    "ast_hash": "9c0dd95a3dacd528a9bf8e82d205b368",
     "semantic_hash": ""
   },
   "ADSENSE.md": {
@@ -498,9 +498,9 @@
     "semantic_hash": ""
   },
   "DEPLOYMENT.md": {
-    "mtime": 1795629839.7593324,
-    "seen": 1795630718.8048563,
-    "ast_hash": "848507668383cc906d1ecce1621eaa8d",
+    "mtime": 1795678816.3079214,
+    "seen": 1795678833.2083528,
+    "ast_hash": "1963aaaa29136833a6725b2e735677d8",
     "semantic_hash": ""
   },
   "FONT-SOURCES.md": {
@@ -522,9 +522,9 @@
     "semantic_hash": ""
   },
   "PROJECT.md": {
-    "mtime": 1795675685.190466,
-    "seen": 1795675726.49554,
-    "ast_hash": "d384747ce86849cdb589b285f8d81419",
+    "mtime": 1795678830.6912177,
+    "seen": 1795678833.2084332,
+    "ast_hash": "f8b2f90a804db10ab2a6136968959627",
     "semantic_hash": ""
   },
   "README.md": {
@@ -1656,9 +1656,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/monitor.yml": {
-    "mtime": 1795629820.0829482,
-    "seen": 1795630718.8047574,
-    "ast_hash": "d67fa049be5bb2a8f71811c956b18d92",
+    "mtime": 1795678799.223883,
+    "seen": 1795678833.2064278,
+    "ast_hash": "a2e6b5ba3a0041abd26ec60b63f82069",
     "semantic_hash": ""
   },
   ".github/workflows/backup.yml": {

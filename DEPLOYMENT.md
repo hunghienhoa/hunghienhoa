@@ -15,7 +15,7 @@ GitHub chỉ giữ mã nguồn và kích hoạt bản triển khai; dữ liệu 
 - GitHub: `https://github.com/hunghienhoa/hunghienhoa`, nhánh `main`.
 - Cloudflare Worker: `hunghienhoa`.
 - Trang chính đang chạy: https://hunghienhoa.com/.
-- Quản trị: https://hunghienhoa.com/admin/.
+- Quản trị: https://admin.hunghienhoa.com/ (đường dẫn cũ hunghienhoa.com/admin/ tự chuyển sang).
 - Blog: https://hunghienhoa.com/blog/.
 - Photobooth: https://hunghienhoa.com/photobooth/.
 - `workers.dev` được tắt khi triển khai tên miền chính.
@@ -34,7 +34,7 @@ Zone `hunghienhoa.com` đã **Active**. Website chỉ còn một tên miền: m�
 5. Lưu thay đổi. Không cần tạo A/CNAME ở Nhân Hòa.
 6. Chờ Cloudflare báo zone `Active`; việc cập nhật thường mất vài phút đến 24 giờ tùy nhà đăng ký.
 
-`cloudflare.config.ts` chỉ khai báo hai Custom Domain: `hunghienhoa.com` và `www.hunghienhoa.com` (chuyển hướng 308 về `hunghienhoa.com`). Các mục nằm trong đường dẫn:
+`cloudflare.config.ts` khai báo ba Custom Domain: `hunghienhoa.com`, `www.hunghienhoa.com` (chuyển hướng 308 về `hunghienhoa.com`) và `admin.hunghienhoa.com` (riêng cho trang quản trị, phục vụ `dist/admin` ở gốc; `/api` và tài nguyên dùng chung như `/ui.css`, `/fonts`, `/assets` lấy từ gốc). Các trang công khai nằm trong đường dẫn:
 
 | Đường dẫn | Nội dung |
 | --- | --- |
@@ -43,9 +43,9 @@ Zone `hunghienhoa.com` đã **Active**. Website chỉ còn một tên miền: m�
 | `hunghienhoa.com/photobooth/` | Hộp Ảnh |
 | `hunghienhoa.com/snaptik/` | Snap (đường dẫn ngắn `/snap/` chuyển về đây) |
 | `hunghienhoa.com/lamnet/` | Làm Nét |
-| `hunghienhoa.com/admin/` | Bảng quản trị |
+| `admin.hunghienhoa.com` | Bảng quản trị (`hunghienhoa.com/admin/` chuyển 308 sang đây) |
 
-Các subdomain cũ (`admin.`, `blog.`, `photobooth.`, `snap.`, `lamnet.`) đã bỏ khỏi cấu hình. Lần triển khai tiếp theo, Cloudflare gỡ các Custom Domain này khỏi Worker; nếu DNS của chúng còn trong zone thì xóa bản ghi ở Cloudflare → DNS. Mã Worker vẫn chuyển hướng 308 các địa chỉ cũ về đường dẫn mới nếu yêu cầu còn tới được Worker (ví dụ qua Route thủ công), nên liên kết cũ không cần sửa tay.
+Các subdomain cũ của trang công khai (`blog.`, `photobooth.`, `snap.`, `lamnet.`) đã bỏ khỏi cấu hình. Lần triển khai tiếp theo, Cloudflare gỡ các Custom Domain này khỏi Worker; nếu DNS của chúng còn trong zone thì xóa bản ghi ở Cloudflare → DNS. Mã Worker vẫn chuyển hướng 308 các địa chỉ cũ về đường dẫn mới nếu yêu cầu còn tới được Worker (ví dụ qua Route thủ công), nên liên kết cũ không cần sửa tay.
 
 ## GitHub → Cloudflare tự triển khai
 
@@ -75,8 +75,8 @@ Mã nguồn không chứa mật khẩu mặc định. Hùng tự tạo tài kho�
 
 1. Mở Supabase Dashboard → dự án `hunghienhoa` → Authentication → Users.
 2. Chọn **Add user** và tạo user `hunghienhoa2110@gmail.com` với mật khẩu riêng từ 12 ký tự; bật xác nhận email cho user này.
-3. Vào Authentication → URL Configuration, đặt Site URL là `https://hunghienhoa.com/admin/` và thêm cùng URL vào Redirect URLs.
-4. Mở https://hunghienhoa.com/admin/ và đăng nhập thử. Sau đó tắt **Allow new users to sign up**. RLS chỉ cấp quyền quản trị cho đúng email trên, nhưng tắt signup vẫn giảm tài khoản rác.
+3. Vào Authentication → URL Configuration, đặt Site URL là `https://admin.hunghienhoa.com/` và thêm cùng URL vào Redirect URLs (đăng nhập bằng email + mật khẩu không cần chuyển hướng, cài đặt này dùng cho email xác nhận/đặt lại mật khẩu).
+4. Mở https://admin.hunghienhoa.com/ và đăng nhập thử. Sau đó tắt **Allow new users to sign up**. RLS chỉ cấp quyền quản trị cho đúng email trên, nhưng tắt signup vẫn giảm tài khoản rác.
 
 Hùng đã xác nhận đăng nhập bằng tài khoản thật thành công sau bản sửa `95c4e6b`. Lần kiểm tra connector gần nhất bị từ chối quyền quản trị Supabase; quyền connector độc lập với đăng nhập admin của website. Không tạo user trực tiếp bằng SQL vào bảng `auth.users`.
 
@@ -99,7 +99,7 @@ Các migration Supabase nằm trong `supabase/migrations` và được GitHub Ac
 1. Sửa và kiểm tra trên máy.
 2. Commit rồi push nhánh `main` lên GitHub.
 3. Theo dõi GitHub Actions đến khi toàn bộ lượt chạy xanh. Nếu kiểm thử lỗi, website giữ nguyên bản production trước đó. Vẫn có thể chạy `npm run deploy` thủ công từ máy đã đăng nhập đúng Cloudflare khi cần.
-4. Thay đổi nội dung hằng ngày thực hiện tại `hunghienhoa.com/admin`; nội dung được lưu trực tiếp trong Supabase, không cần commit Git.
+4. Thay đổi nội dung hằng ngày thực hiện tại `admin.hunghienhoa.com`; nội dung được lưu trực tiếp trong Supabase, không cần commit Git.
 5. CSS/JS được tham chiếu kèm `?v=` được trình duyệt cache một năm (`immutable`). Khi sửa một tệp như vậy, tăng `v` ở mọi chỗ tham chiếu rồi chạy `node tools/asset-versions.mjs --write`; `npm run check` báo lỗi nếu nội dung đổi mà `v` giữ nguyên. Font cache 30 ngày, ảnh trong `assets` cache 1 ngày; HTML không cache.
 6. Worker giữ dữ liệu Supabase công khai tại máy chủ Cloudflare gần người xem: nội dung trang, danh sách và từng bài, danh sách khung 60 giây; ảnh bìa bài và ảnh khung đã duyệt 5 phút. Khi lưu trong admin, cache ở trung tâm dữ liệu đang dùng được xóa ngay; nơi khác tự cập nhật trong tối đa 60 giây (ảnh 5 phút). Ảnh `/api/media/` không cache để ảnh bị gỡ biến mất ngay.
 

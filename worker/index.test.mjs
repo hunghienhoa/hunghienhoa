@@ -19,7 +19,7 @@ test('gửi email sau khi lưu bản chờ; lỗi email không làm mất đóng
   blocked=true;assert.equal((await submit()).status,429);assert.equal(saved,1);blocked=false;
   assert.equal(messages.length,1);
   assert.equal(messages[0].to,'hunghienhoa2110@gmail.com');
-  assert.match(messages[0].text,/https:\/\/hunghienhoa\.com\/admin\//);
+  assert.match(messages[0].text,/https:\/\/admin\.hunghienhoa\.com\//);
   assert.ok(!JSON.stringify(messages[0]).includes('private@example.invalid'));
   assert.ok(!JSON.stringify(messages[0]).includes('imageDataUrl'));
   failEmail=true; assert.equal((await submit()).status,201);
@@ -45,13 +45,16 @@ test('Làm Nét: tệp riêng trong /lamnet/, tệp dùng chung ở gốc; mọi
   assert.ok(!other.headers.get('Content-Security-Policy').includes('wasm-unsafe-eval') && !other.headers.has('Cross-Origin-Embedder-Policy'), 'Chỉ Làm Nét được nới CSP');
 });
 test('mỗi mục là một đường dẫn; subdomain cũ chuyển 308 về đường dẫn tương ứng', () => {
-  assert.equal(new URL(assetRequest(new Request('https://hunghienhoa.com/admin/')).url).pathname, '/admin/');
+  // Trang quản trị có subdomain riêng: admin.hunghienhoa.com lấy tệp từ dist/admin, tài nguyên dùng chung vẫn ở gốc.
+  for (const [path, mapped] of [['/', '/admin/'], ['/app.js?v=1', '/admin/app.js'], ['/style.css', '/admin/style.css'], ['/content-fields.json', '/admin/content-fields.json'], ['/ui.css?v=1', '/ui.css'], ['/fonts/BeVietnamPro-Bold.woff2', '/fonts/BeVietnamPro-Bold.woff2'], ['/api/admin/session', '/api/admin/session']])
+    assert.equal(new URL(assetRequest(new Request('https://admin.hunghienhoa.com' + path)).url).pathname, mapped, path);
+  assert.equal(assetRequest(new Request('https://admin.hunghienhoa.com/admin/')).headers.get('location'), 'https://admin.hunghienhoa.com/');
   assert.equal(new URL(assetRequest(new Request('https://hunghienhoa.com/blog/style.css')).url).pathname, '/blog/style.css');
   assert.equal(new URL(assetRequest(new Request('https://hunghienhoa.com/photobooth/assets/star.svg')).url).pathname, '/photobooth/assets/star.svg');
   assert.equal(new URL(assetRequest(new Request('https://hunghienhoa.com/photobooth/shoot')).url).pathname, '/photobooth/shoot');
   assert.equal(assetRequest(new Request('https://hunghienhoa.com/photobooth/shoot/')).headers.get('location'), 'https://hunghienhoa.com/photobooth/shoot');
   assert.equal(new URL(assetRequest(new Request('https://hunghienhoa.com/blog/?bai=vui')).url).pathname, '/blog/');
-  for (const [old, next] of [['https://blog.hunghienhoa.com/?bai=vui', 'https://hunghienhoa.com/blog/?bai=vui'], ['https://admin.hunghienhoa.com/', 'https://hunghienhoa.com/admin/'], ['https://photobooth.hunghienhoa.com/shoot', 'https://hunghienhoa.com/photobooth/shoot'], ['https://snap.hunghienhoa.com/?x=1', 'https://hunghienhoa.com/snaptik/?x=1'], ['https://hunghienhoa.com/snap/', 'https://hunghienhoa.com/snaptik/'], ['https://lamnet.hunghienhoa.com/style.css', 'https://hunghienhoa.com/lamnet/style.css']])
+  for (const [old, next] of [['https://blog.hunghienhoa.com/?bai=vui', 'https://hunghienhoa.com/blog/?bai=vui'], ['https://hunghienhoa.com/admin/', 'https://admin.hunghienhoa.com/'], ['https://hunghienhoa.com/admin', 'https://admin.hunghienhoa.com/'], ['https://www.hunghienhoa.com/admin/index.html', 'https://admin.hunghienhoa.com/'], ['https://photobooth.hunghienhoa.com/shoot', 'https://hunghienhoa.com/photobooth/shoot'], ['https://snap.hunghienhoa.com/?x=1', 'https://hunghienhoa.com/snaptik/?x=1'], ['https://hunghienhoa.com/snap/', 'https://hunghienhoa.com/snaptik/'], ['https://lamnet.hunghienhoa.com/style.css', 'https://hunghienhoa.com/lamnet/style.css']])
     assert.equal(assetRequest(new Request(old)).headers.get('location'), next, old);
   assert.equal(assetRequest(new Request('https://hunghienhoa.com/photobooth')).headers.get('location'), 'https://hunghienhoa.com/photobooth/');
   assert.equal(new URL(assetRequest(new Request('http://127.0.0.1:4180/blog/')).url).pathname, '/blog/');
@@ -141,7 +144,7 @@ test('lượt truy cập chỉ gửi mã băm, tải lại cùng trang không t�
 
 test('HTML giữ CSP và không cho tự chèn script thống kê', async () => {
  const env={ASSETS:{fetch:async()=>new Response('<!doctype html><title>Quản trị</title>',{headers:{'Content-Type':'text/html','Cache-Control':'public, max-age=0'}})}};
- const response=await worker.fetch(new Request('https://hunghienhoa.com/admin/'),env);
+ const response=await worker.fetch(new Request('https://admin.hunghienhoa.com/'),env);
  assert.equal(response.status,200);
  assert.match(response.headers.get('Cache-Control'),/no-transform/);
  assert.ok(response.headers.get('Content-Security-Policy').includes("script-src 'self'"));
@@ -152,13 +155,13 @@ test('HSTS, nén HTML theo Accept-Encoding và cache dài cho tệp có ?v=', as
  const assets=new Map([
   ['/admin/','<!doctype html><title>Quản trị</title>'],
   ['/admin/style.css','body{}'],
-  ['/admin/fonts/BeVietnamPro-Bold.woff2','wOF2'],
-  ['/admin/assets/star.svg','<svg/>'],
+  ['/fonts/BeVietnamPro-Bold.woff2','wOF2'],
+  ['/assets/star.svg','<svg/>'],
   ['/admin/config.js','x']
  ]);
  const types={'.css':'text/css','.woff2':'font/woff2','.svg':'image/svg+xml','.js':'text/javascript'};
  const env={ASSETS:{fetch:async request=>{const path=new URL(request.url).pathname;if(!assets.has(path))return new Response(null,{status:404});return new Response(assets.get(path),{headers:{'Content-Type':types[path.slice(path.lastIndexOf('.'))]||'text/html','Cache-Control':'public, max-age=0, must-revalidate'}});}}};
- const get=(path,headers={})=>worker.fetch(new Request('https://hunghienhoa.com/admin'+path,{headers}),env);
+ const get=(path,headers={})=>worker.fetch(new Request('https://admin.hunghienhoa.com'+path,{headers}),env);
  const html=await get('/',{'Accept-Encoding':'gzip, deflate, br, zstd'});
  assert.equal(html.headers.get('Strict-Transport-Security'),'max-age=63072000; includeSubDomains');
  assert.equal(html.headers.get('Cross-Origin-Opener-Policy'),'same-origin');
@@ -265,7 +268,7 @@ test('dữ liệu cache quá 60 giây vẫn trả ngay, làm mới phía sau cho
 
 test('README và file test trong dist không được phục vụ công khai', async () => {
  const env={ASSETS:{fetch:async request=>{const path=new URL(request.url).pathname;return path==='/404'?new Response('<!doctype html><title>404</title>',{headers:{'Content-Type':'text/html'}}):new Response('bí mật nội bộ',{headers:{'Content-Type':'text/plain'}});}}};
- for(const url of ['https://hunghienhoa.com/blog/README.md','https://hunghienhoa.com/admin/README.md','https://hunghienhoa.com/photobooth/core.test.mjs','https://hunghienhoa.com/photobooth/design.test.mjs','https://hunghienhoa.com/blog/readme.md']){
+ for(const url of ['https://hunghienhoa.com/blog/README.md','https://admin.hunghienhoa.com/README.md','https://hunghienhoa.com/photobooth/core.test.mjs','https://hunghienhoa.com/photobooth/design.test.mjs','https://hunghienhoa.com/blog/readme.md']){
   const response=await worker.fetch(new Request(url,{headers:{Accept:'text/html'}}),env);
   assert.equal(response.status,404,url);assert.ok(!(await response.text()).includes('bí mật nội bộ'),url);
  }

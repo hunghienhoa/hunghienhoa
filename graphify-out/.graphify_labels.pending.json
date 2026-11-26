@@ -14,7 +14,7 @@
   "12": "package.json",
   "13": "Security Audit",
   "14": "browser-usage-audit.mjs",
-  "15": "worker/visits.mjs",
+  "15": "browser-usage-audit.mjs",
   "16": "Cloud and Deployment Hunting",
   "17": "steps",
   "18": "release-backup.py",
@@ -31,7 +31,7 @@
   "29": "lamnet.test.mjs",
   "30": "HTTP-Protocol and Authentication Hunting",
   "31": "Supply Chain and Release Hunting",
-  "32": "asset-versions.mjs",
+  "32": "ref_node_fs",
   "33": "build-ui-symbols.py",
   "34": "check.cjs",
   "35": "agent-smoke.mjs",
@@ -77,8 +77,7 @@
   "75": "lamnet-ai.test.mjs",
   "76": "steps",
   "77": "Security Policy",
-  "78": "server.mjs",
+  "78": "cloud-smoke.mjs",
   "79": "server.test.mjs",
-  "80": "browser-adsense-readiness.mjs",
   "82": "ref_node_assert"
 }

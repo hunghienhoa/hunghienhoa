@@ -51,6 +51,7 @@ for(const url of links) {
   const {response,body}=await get(url,'text/markdown');assert.equal(response.status,200,url);assert.ok(body.length>20,url);passed++;
 }
 const rootRobots=await get('https://hunghienhoa.com/robots.txt');assert.equal(rootRobots.response.status,200);assert.ok(rootRobots.body.includes('Disallow: /admin'));passed++;
-for(const route of ['/llms.txt','/sitemap.xml','/agent-instructions.md','/index.md']){assert.equal((await get('https://hunghienhoa.com/admin'+route)).response.status,404);passed++;}
+for(const route of ['/llms.txt','/sitemap.xml','/agent-instructions.md','/index.md']){assert.equal((await get('https://admin.hunghienhoa.com'+route)).response.status,404);passed++;}
+const adminRobots=await get('https://admin.hunghienhoa.com/robots.txt');assert.equal(adminRobots.body,'User-agent: *\nDisallow: /\n');passed++;
 for(const route of ['site','posts','submissions','analytics']){const {response}=await get('https://hunghienhoa.com/api/admin/'+route,'text/markdown');assert.equal(response.status,401);assert.match(response.headers.get('content-type'),/application\/json/);passed++;}
 console.log(`PASS: ${passed} kiểm tra trực tiếp — Markdown/HTML/q/406/HEAD/404, JSON-LD, mọi endpoint máy đọc, liên kết llms/sitemap và phân quyền admin.`);
