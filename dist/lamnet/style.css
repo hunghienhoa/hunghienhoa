@@ -16,7 +16,7 @@
 .file-input{position:absolute;width:1px;height:1px;opacity:0}
 .dropzone .plus{display:grid;place-items:center;width:58px;height:58px;margin-bottom:8px;border-radius:50%;background:var(--blue);color:var(--yellow);font-size:30px;font-weight:600;box-shadow:0 0 0 8px color-mix(in srgb,var(--yellow) 55%,transparent)}
 .dropzone b{font-size:20px}
-.dropzone small{font-size:13px;opacity:.75}
+.dropzone small{font-size:13px;opacity:.9}
 .ready{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-radius:18px;background:var(--hh-soft)}
 .ready p{overflow-wrap:anywhere}
 .actions{display:flex;flex-wrap:wrap;gap:10px}

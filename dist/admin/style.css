@@ -209,7 +209,7 @@ textarea[name="content"]{font-size:15px;line-height:1.7}
 .post-main textarea[name="content"]{min-height:56vh}
 .post-side{position:sticky;top:96px;display:grid;gap:12px}
 .side-box{padding:18px;border:1px solid var(--hh-hair);border-radius:22px;background:var(--hh-card)}
-.side-box h2{margin-bottom:12px;font-size:13px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;opacity:.65}
+.side-box h2{margin-bottom:12px;font-size:13px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;opacity:.85}
 .side-box label{margin-bottom:14px}
 .side-box label:last-child,.side-box .check{margin-bottom:0}
 .post-publish #save-post{width:100%}

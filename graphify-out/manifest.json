@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795695711.4423525,
-    "seen": 1795695781.919905,
-    "ast_hash": "c8a3453c06e9d71dd1577b482389b72e",
+    "mtime": 1795696663.93825,
+    "seen": 1795696669.6337888,
+    "ast_hash": "56574ebba669fa59c64cf3ac41e31621",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
