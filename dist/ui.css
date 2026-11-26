@@ -254,22 +254,22 @@ p,li,figcaption{text-wrap:pretty}
 @media(max-width:640px){.eyebrow{gap:7px;padding:6px 12px;font-size:11px;letter-spacing:1.1px}}
 /* Lockup tiêu đề (2026-11): dòng chữ nhỏ Be Vietnam Pro nằm lệch, chìm nhẹ dưới cụm Playfair nghiêng cỡ lớn màu vàng đậm, không viền, không bóng,
    giống cách bố trí chữ trên bìa video. Áp cho mọi h1/h2 có <em> ở mọi trang, kể cả trang quản trị (trừ hộp thoại). */
-html:root body :is(h1,h2):has(>em):not(dialog *){
+html:root body:not(#lk) :is(h1,h2):has(>em):not(dialog *){
   --lk-small:clamp(20px,2vw,28px);--lk-big:2.35em;--lk-color:#f0b400;
   position:relative;isolation:isolate;font-size:var(--lk-small);font-weight:700;line-height:1.15;letter-spacing:-.025em;
   text-indent:1.4em;text-shadow:none}
-html:root body h1:has(>em):not(dialog *){--lk-small:clamp(22px,2.5vw,34px);--lk-big:2.25em}
-html:root body :is(h1,h2):not(dialog *)>em{
+html:root body:not(#lk) h1:has(>em):not(dialog *){--lk-small:clamp(22px,2.5vw,34px);--lk-big:2.25em}
+html:root body:not(#lk) :is(h1,h2):not(dialog *)>em{
   position:relative;z-index:1;display:block;margin:-.07em 0 .14em;padding:0 .04em 0 0;text-indent:0;
   font-size:var(--lk-big);font-weight:600;line-height:.98;letter-spacing:-.02em;color:var(--lk-color);
   background:none;text-shadow:none;-webkit-text-stroke:0;text-wrap:balance}
-html:root body :is(h1,h2):has(>em):not(dialog *) br{display:none}
-html:root body .footer-cta h2:has(>em){--lk-color:var(--yellow)}
-html:root body .tool-hero h1:has(>em){max-width:none}
-html:root body.admin-page :is(h1,h2):has(>em):not(dialog *){--lk-small:clamp(18px,1.6vw,24px);--lk-big:2.2em}
+html:root body:not(#lk) :is(h1,h2):has(>em):not(dialog *) br{display:none}
+html:root body:not(#lk) .footer-cta h2:has(>em){--lk-color:var(--yellow)}
+html:root body:not(#lk) .tool-hero h1:has(>em){max-width:none}
+html:root body.admin-page:not(#lk) :is(h1,h2):has(>em):not(dialog *){--lk-small:clamp(18px,1.6vw,24px);--lk-big:2.2em}
 @media(max-width:640px){
-  html:root body :is(h1,h2):has(>em):not(dialog *){--lk-small:clamp(18px,5vw,22px);--lk-big:2.25em;text-indent:1em}
-  html:root body h1:has(>em):not(dialog *){--lk-small:clamp(20px,5.6vw,24px);--lk-big:2.3em}
+  html:root body:not(#lk) :is(h1,h2):has(>em):not(dialog *){--lk-small:clamp(18px,5vw,22px);--lk-big:2.25em;text-indent:1em}
+  html:root body:not(#lk) h1:has(>em):not(dialog *){--lk-small:clamp(20px,5.6vw,24px);--lk-big:2.3em}
 }
 /* Nhãn & dấu đầu dòng (2026-11b): eyebrow nền vàng nhạt, chấm xanh đặc nhỏ, không viền; danh sách lợi ích dùng dấu tích. */
 .eyebrow{gap:8px;border:0;background:color-mix(in srgb,var(--yellow) 34%,transparent);white-space:nowrap}
@@ -278,7 +278,7 @@ html:root body.admin-page :is(h1,h2):has(>em):not(dialog *){--lk-small:clamp(18p
 .footer-cta .eyebrow::before{background:var(--yellow)}
 .footer-cta::before{display:none}
 :root ul:is(.hero-proof,.pill-list) li::before{width:18px;height:18px;box-shadow:none;background:var(--yellow) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M5 9.3l2.6 2.6L13 6.6' fill='none' stroke='%23303487' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat}
-html:root body :is(h1,h2):not(dialog *)>em{padding-left:.06em;margin-left:-.06em}
+html:root body:not(#lk) :is(h1,h2):not(dialog *)>em{padding-left:.06em;margin-left:-.06em}
 @media(max-width:640px){.eyebrow{white-space:normal}}
 /* Chân trang: nhịp đều giữa tiêu đề cột và các link. */
 .footer-col h2{margin-bottom:12px}
