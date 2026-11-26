@@ -6,7 +6,7 @@
     "default": "Đến nội dung chính"
   },
   {
-    "key": "main-232",
+    "key": "main-241",
     "page": "main",
     "label": ".",
     "default": "."
@@ -306,7 +306,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "main-233",
+    "key": "main-242",
     "page": "main",
     "label": "Gửi một lời chào.",
     "default": "Gửi một lời chào."
@@ -342,7 +342,7 @@
     "default": "0898.29.8886"
   },
   {
-    "key": "main-234",
+    "key": "main-243",
     "page": "main",
     "label": ".",
     "default": "."
@@ -468,7 +468,7 @@
     "default": "Đến nội dung chính"
   },
   {
-    "key": "blog-075",
+    "key": "blog-084",
     "page": "blog",
     "label": ".",
     "default": "."
@@ -484,6 +484,12 @@
     "page": "blog",
     "label": "hhh",
     "default": "hhh"
+  },
+  {
+    "key": "blog-085",
+    "page": "blog",
+    "label": "Trang chủ",
+    "default": "Trang chủ"
   },
   {
     "key": "blog-005",
@@ -532,12 +538,6 @@
     "page": "blog",
     "label": "Cùng đọc một chút",
     "default": "Cùng đọc một chút"
-  },
-  {
-    "key": "blog-024",
-    "page": "blog",
-    "label": "Thử công cụ",
-    "default": "Thử công cụ"
   },
   {
     "key": "blog-025",
@@ -624,7 +624,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "blog-076",
+    "key": "blog-086",
     "page": "blog",
     "label": "Gửi một lời chào.",
     "default": "Gửi một lời chào."
@@ -660,7 +660,7 @@
     "default": "0898.29.8886"
   },
   {
-    "key": "blog-077",
+    "key": "blog-087",
     "page": "blog",
     "label": ".",
     "default": "."
@@ -786,7 +786,7 @@
     "default": "Đến nội dung chính"
   },
   {
-    "key": "photobooth-186",
+    "key": "photobooth-195",
     "page": "photobooth",
     "label": ".",
     "default": "."
@@ -802,6 +802,12 @@
     "page": "photobooth",
     "label": "hhh",
     "default": "hhh"
+  },
+  {
+    "key": "photobooth-196",
+    "page": "photobooth",
+    "label": "Trang chủ",
+    "default": "Trang chủ"
   },
   {
     "key": "photobooth-106",
@@ -1500,7 +1506,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "photobooth-187",
+    "key": "photobooth-197",
     "page": "photobooth",
     "label": "Gửi một lời chào.",
     "default": "Gửi một lời chào."
@@ -1536,7 +1542,7 @@
     "default": "0898.29.8886"
   },
   {
-    "key": "photobooth-188",
+    "key": "photobooth-198",
     "page": "photobooth",
     "label": ".",
     "default": "."
