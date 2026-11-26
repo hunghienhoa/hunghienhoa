@@ -42,7 +42,7 @@
 .post-copy p{display:-webkit-box;overflow:hidden;-webkit-line-clamp:3;-webkit-box-orient:vertical;opacity:.85}
 .card-read{margin-top:auto;padding-top:4px}
 .featured-card:hover,.post-card:hover{translate:0 -4px;border-color:var(--blue);box-shadow:var(--hh-shadow)}
-.post-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:12px;font-weight:500;opacity:.85}
+.post-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:12px;font-weight:500;opacity:.95}
 .category-label{padding:3px 10px;border-radius:999px;background:var(--hh-soft)}
 .sample-label{padding:3px 10px;border-radius:999px;background:color-mix(in srgb,var(--yellow) 60%,transparent)}
 .post-art{position:relative;display:grid;place-items:center;aspect-ratio:16/10;overflow:hidden;border-radius:20px;background:var(--yellow)}
@@ -113,7 +113,7 @@
   .post-copy h3{font-size:16px}
   .post-copy p{-webkit-line-clamp:2;font-size:14px;line-height:1.5}
   .post-card .card-read{display:none}
-  .post-meta{font-size:11px;gap:4px 8px}
+  .post-meta{font-size:12px;gap:4px 8px}
   .featured-card{padding:10px;border-radius:26px}
   .featured-card .post-art{aspect-ratio:16/9;border-radius:18px}
   .featured-copy h2{font-size:22px}

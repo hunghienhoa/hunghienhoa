@@ -2654,8 +2654,8 @@
   {
     "key": "admin-008",
     "page": "admin",
-    "label": "BÀN LÀM VIỆC CỦA HÙNG",
-    "default": "BÀN LÀM VIỆC CỦA HÙNG"
+    "label": "BÀN LÀM VIỆC",
+    "default": "BÀN LÀM VIỆC"
   },
   {
     "key": "admin-009",

@@ -415,6 +415,20 @@ function renderFramePreviews() {
     button.querySelector('i').replaceChildren(preview);
   });
 }
+// Dải khung chạy ngang: mỗi nửa băng phải dài hơn màn hình (kể cả màn 2K/4K) để vòng lặp không hở khoảng trống.
+(function fillShowcase() {
+  const groups = [...document.querySelectorAll('.showcase-group')];
+  if (groups.length !== 2 || typeof window === 'undefined') return;
+  const originals = [...groups[0].children];
+  const cardWidth = (groups[0].getBoundingClientRect?.().width || originals.length * 190) / Math.max(1, originals.length);
+  const target = Math.max(window.innerWidth || 0, window.screen?.width || 0, 1440) + 400;
+  const copies = Math.max(0, Math.ceil(target / (cardWidth * originals.length)) - 1);
+  for (let round = 0; round < copies; round++) groups.forEach(group => originals.forEach(card => {
+    const clone = card.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true'); clone.tabIndex = -1;
+    group.append(clone);
+  }));
+})();
 document.querySelectorAll('[data-showcase]').forEach(button => button.addEventListener('click', () => {
   selectDesign(frames[button.dataset.showcase], button.textContent.trim());
 }));
