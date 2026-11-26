@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795693277.0878978,
-    "seen": 1795693336.6630177,
-    "ast_hash": "4b15f2e570a0e986ca3ff909c7b9d307",
+    "mtime": 1795693476.251905,
+    "seen": 1795693510.1578581,
+    "ast_hash": "80807b54ff295a2a8806888816b86415",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -522,9 +522,9 @@
     "semantic_hash": ""
   },
   "PROJECT.md": {
-    "mtime": 1795693335.9256902,
-    "seen": 1795693336.664073,
-    "ast_hash": "833281bfb77e499f486a99e8aaa37036",
+    "mtime": 1795693476.1719165,
+    "seen": 1795693510.1588502,
+    "ast_hash": "96eb58976f8f4f4cb02f5e5c3f41f1a7",
     "semantic_hash": ""
   },
   "README.md": {
