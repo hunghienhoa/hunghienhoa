@@ -216,3 +216,7 @@ textarea[name="content"]{font-size:15px;line-height:1.7}
 @media(max-width:1280px){.post-editor{grid-template-columns:minmax(0,1fr)}.post-side{position:static;grid-template-columns:repeat(2,minmax(0,1fr))}.post-publish{grid-column:1/-1}}
 @media(max-width:1100px){.content-layout{grid-template-columns:minmax(0,1fr)}.content-tabs{position:static;flex-direction:row;flex-wrap:wrap}.post-layout{grid-template-columns:minmax(0,1fr)}.posts-pane{position:static;max-height:320px}}
 @media(max-width:760px){.post-side{grid-template-columns:minmax(0,1fr)}.post-main{padding:16px}.post-main textarea[name="content"]{min-height:45vh}#customize-fields .field-grid{grid-template-columns:minmax(0,1fr)}}
+/* Thanh trên cùng ẩn khi vuốt xuống, hiện khi vuốt lên. */
+.admin-page>header.is-hidden{translate:0 calc(-100% - 24px)}
+@media(prefers-reduced-motion:no-preference){.admin-page>header{transition:translate .32s cubic-bezier(.2,.7,.2,1)}}
+.brand span{align-self:center}
