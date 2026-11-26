@@ -78,9 +78,9 @@
     "semantic_hash": ""
   },
   "server/agent-content.mjs": {
-    "mtime": 1795630588.8070636,
-    "seen": 1795630718.804766,
-    "ast_hash": "1e21b9b6e48d8a73b1c5e5a89106e9f1",
+    "mtime": 1795675619.9235635,
+    "seen": 1795675726.4933922,
+    "ast_hash": "ee0bbcc7512cb6fadbb1762278e92bea",
     "semantic_hash": ""
   },
   "server/contribution-limit.mjs": {
@@ -156,9 +156,9 @@
     "semantic_hash": ""
   },
   "tools/agent-readiness.test.mjs": {
-    "mtime": 1795630588.8074234,
-    "seen": 1795630718.804783,
-    "ast_hash": "3cf48b54b93698dd90092eea38f61bca",
+    "mtime": 1795675619.9241686,
+    "seen": 1795675726.4937227,
+    "ast_hash": "17f473317b0ccc016bd450e8e7145d07",
     "semantic_hash": ""
   },
   "tools/agent-smoke.mjs": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795675016.3569975,
-    "seen": 1795675069.6675062,
-    "ast_hash": "b9dfddc001fed2904b5976c6ab75f4d2",
+    "mtime": 1795675669.2690363,
+    "seen": 1795675726.4937496,
+    "ast_hash": "b9141a3a80a33cb1a5bb18a1ecbbb1d4",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -522,9 +522,9 @@
     "semantic_hash": ""
   },
   "PROJECT.md": {
-    "mtime": 1795652350.1896257,
-    "seen": 1795673840.5513222,
-    "ast_hash": "8b48e9c65e3d9b530ac1edb5bb2e5ee7",
+    "mtime": 1795675685.190466,
+    "seen": 1795675726.49554,
+    "ast_hash": "d384747ce86849cdb589b285f8d81419",
     "semantic_hash": ""
   },
   "README.md": {

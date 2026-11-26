@@ -1,20 +1,22 @@
 /* Góc tò mò (blog): hero, tìm kiếm, lọc chủ đề, bài nổi bật, lưới bài và trang đọc. Phần chung ở /ui.css. */
 .blog-hero{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:40px;align-items:center;padding-top:clamp(40px,6vw,88px);padding-bottom:clamp(40px,6vw,80px)}
 .blog-hero::before{content:'';position:absolute;z-index:-1;top:-90px;bottom:0;left:50%;width:100vw;translate:-50% 0;pointer-events:none;background:radial-gradient(30% 50% at 22% 40%,color-mix(in srgb,var(--yellow) 50%,transparent),transparent 72%),radial-gradient(28% 50% at 76% 46%,color-mix(in srgb,var(--lilac) 36%,transparent),transparent 72%)}
-.blog-hero h1{font-size:clamp(48px,6vw,88px);font-weight:800;line-height:1.08;letter-spacing:-.045em}
-.blog-hero h1 em{padding:0 .06em;font-size:1.05em;background:linear-gradient(transparent 74%,var(--yellow) 74% 90%,transparent 90%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.blog-hero h1{font-size:var(--fs-display);line-height:1.1;letter-spacing:-.035em}
+.blog-hero h1 em{padding:0 .06em;background:linear-gradient(transparent 76%,var(--yellow) 76% 91%,transparent 91%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .blog-hero .lead{max-width:46ch;margin-top:22px}
 .blog-hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
 .blog-hero-art{position:relative;justify-self:center;width:min(380px,100%)}
 .note-card{display:flex;flex-direction:column;gap:16px;padding:30px;border-radius:30px;background:var(--blue);color:var(--cream);box-shadow:16px 18px 0 var(--yellow);rotate:3deg}
 .note-card small{font-size:12px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--yellow)}
-.note-card b{font-size:clamp(26px,2.6vw,34px);line-height:1.22;letter-spacing:-.02em}
-.note-card span{font-family:var(--accent);font-style:italic;font-weight:600;font-size:18px}
+.note-card b{font-size:clamp(22px,2.2vw,28px);line-height:1.3;letter-spacing:-.015em}
+.note-card em{font-style:normal;color:var(--yellow)}
+.note-card span{font-size:15px;font-weight:600;opacity:.85}
 .blog-hero-art img{position:absolute;top:-30px;right:-20px;width:84px;rotate:12deg}
-.topic-band{overflow:hidden;background:var(--blue);color:var(--cream)}
-.topic-band>div{display:flex;align-items:center;gap:28px;width:max-content;padding:14px 0}
-.topic-band span{font-family:var(--accent);font-style:italic;font-weight:600;font-size:clamp(22px,2.6vw,32px);white-space:nowrap}
-.topic-band i{color:var(--yellow);font-style:normal;font-size:22px}
+/* Dải băng: Be Vietnam Pro chữ in, nghiêng nhẹ -2°, rộng hơn màn hình để hai mép không lộ. */
+.topic-band{overflow:hidden;margin:clamp(12px,2vw,24px) -4vw;border-block:4px solid var(--yellow);background:var(--blue);color:var(--cream);rotate:-2deg}
+.topic-band>div{display:flex;align-items:center;gap:26px;width:max-content;padding:13px 0}
+.topic-band span{font-size:clamp(17px,1.8vw,24px);font-weight:800;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+.topic-band i{color:var(--yellow);font-style:normal;font-size:20px}
 @media(prefers-reduced-motion:no-preference){.topic-band>div{animation:blog-band 40s linear infinite}}
 @keyframes blog-band{to{transform:translateX(-50%)}}
 
@@ -37,13 +39,13 @@
 .featured-card{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(18px,3vw,36px);align-items:center;padding:14px;border:1px solid var(--hh-hair);border-radius:32px;background:var(--hh-card);box-shadow:var(--hh-shadow-sm)}
 .featured-copy{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:16px 16px 16px 0}
 .featured-copy .eyebrow{margin:0}
-.featured-copy h2{font-size:clamp(28px,3.4vw,44px);font-weight:800;letter-spacing:-.035em}
+.featured-copy h2{font-size:clamp(26px,2.8vw,38px);line-height:1.18;letter-spacing:-.025em}
 .featured-copy p{font-size:17px;opacity:.88}
-.read-link,.card-read{display:inline-flex;align-items:center;gap:8px;font-family:var(--accent);font-style:italic;font-weight:600;font-size:19px}
+.read-link,.card-read{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:800}
 .post-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 .post-card{display:flex;flex-direction:column;padding:12px 12px 22px;border:1px solid var(--hh-hair);border-radius:28px;background:var(--hh-card);box-shadow:var(--hh-shadow-sm)}
 .post-copy{display:flex;flex-direction:column;flex:1;gap:10px;padding:18px 10px 0}
-.post-copy h3{font-size:21px;font-weight:800;line-height:1.3}
+.post-copy h3{font-size:var(--fs-h3);line-height:1.3}
 .post-copy p{display:-webkit-box;overflow:hidden;-webkit-line-clamp:3;-webkit-box-orient:vertical;opacity:.85}
 .card-read{margin-top:auto;padding-top:4px}
 .featured-card:hover,.post-card:hover{translate:0 -4px;border-color:var(--blue);box-shadow:var(--hh-shadow)}
@@ -57,8 +59,8 @@
 .art-paper{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(62%,220px);padding:18px 16px;border-radius:16px;background:var(--cream);box-shadow:0 14px 24px -16px rgba(0,0,0,.4);rotate:-4deg;text-align:center}
 .art-paper span{font-size:11px;font-weight:800;letter-spacing:1.4px}
 .art-paper img{width:44px}
-.art-paper b{font-family:var(--accent);font-style:italic;font-weight:600;font-size:18px;line-height:1.2}
-.art-number{position:absolute;right:14px;bottom:8px;font-family:var(--accent);font-style:italic;font-weight:600;font-size:40px;line-height:1;opacity:.55}
+.art-paper b{font-size:14px;font-weight:800;line-height:1.25;letter-spacing:.02em;text-transform:uppercase}
+.art-number{position:absolute;right:14px;bottom:8px;font-size:34px;font-weight:900;line-height:1;letter-spacing:-.03em;opacity:.45}
 .post-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .post-art.has-cover .art-paper,.post-art.has-cover .art-number{display:none}
 .more-posts{display:flex;margin:28px auto 0}
@@ -70,13 +72,13 @@
 .reader-message:not(:empty){margin-top:16px;padding:16px 20px;border-radius:18px;background:var(--hh-soft)}
 #article{margin-top:20px}
 .reader-meta .post-meta{font-size:13px}
-#reader-title{margin-top:16px;font-size:clamp(36px,5vw,62px);font-weight:800;letter-spacing:-.04em}
+#reader-title{margin-top:16px;font-size:var(--fs-title);line-height:1.15;letter-spacing:-.03em}
 .reader-excerpt{margin-top:16px;font-family:var(--accent);font-style:italic;font-weight:600;font-size:clamp(20px,2.2vw,24px);line-height:1.5}
 .reader-image{width:100%;margin-top:28px;border-radius:26px}
 .article-body{margin-top:32px;font-size:18px;line-height:1.8}
 .article-body>*+*{margin-top:18px}
-.article-body h2{margin-top:40px;font-size:clamp(26px,3vw,32px);font-weight:800}
-.article-body h3{margin-top:28px;font-size:22px;font-weight:800}
+.article-body h2{margin-top:40px;font-size:clamp(24px,2.6vw,30px)}
+.article-body h3{margin-top:28px;font-size:21px}
 .article-body a{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
 .article-body ul,.article-body ol{padding-left:1.3em}
 .article-body blockquote{padding:6px 0 6px 22px;border-left:4px solid var(--yellow);font-family:var(--accent);font-style:italic;font-weight:600;font-size:21px}
@@ -93,17 +95,17 @@
 
 /* Về góc nhỏ */
 .about-blog{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:center;padding:clamp(24px,4vw,48px)}
-.about-blog-note{margin-top:14px;font-family:var(--accent);font-style:italic;font-weight:600;font-size:20px}
+.about-blog-note{margin-top:14px;font-size:16px;font-weight:700}
 @media(prefers-reduced-motion:no-preference){.featured-card,.post-card{transition:translate .2s,border-color .2s,box-shadow .2s}}
 @media(max-width:1000px){.blog-hero{grid-template-columns:minmax(0,1fr)}.blog-hero-art{margin-top:16px}.post-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.featured-card{grid-template-columns:minmax(0,1fr)}.featured-copy{padding:4px 10px 10px}}
 @media(max-width:640px){.post-grid,.about-blog{grid-template-columns:minmax(0,1fr)}.blog-hero-actions .btn{flex:1 1 100%}.search-form{width:100%}}
 /* Điện thoại: thẻ bài dạng hàng ngang gọn, bài nổi bật thấp hơn, chủ đề cuộn ngang. */
 @media(max-width:640px){
   .blog-hero{padding-bottom:36px}
-  .blog-hero h1{font-size:clamp(40px,11vw,52px)}
+  .blog-hero h1{font-size:clamp(34px,9.6vw,44px)}
   .blog-hero-art{width:min(300px,86%)}
   .note-card{padding:22px;border-radius:24px}
-  .note-card b{font-size:22px}
+  .note-card b{font-size:20px}
   .categories{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(var(--gutter)*-1);padding-inline:var(--gutter)}
   .categories::-webkit-scrollbar{display:none}
   .categories button{flex:none;min-height:40px}
@@ -113,16 +115,17 @@
   .post-card .art-paper{width:70%;padding:8px 6px;gap:4px;border-radius:10px}
   .post-card .art-paper span,.post-card .art-paper b{display:none}
   .post-card .art-paper img{width:28px}
-  .post-card .art-number{font-size:22px;right:8px;bottom:4px}
+  .post-card .art-number{font-size:20px;right:8px;bottom:4px}
   .post-copy{gap:6px;padding:2px 4px 2px 0}
-  .post-copy h3{font-size:17px}
+  .post-copy h3{font-size:16px}
   .post-copy p{-webkit-line-clamp:2;font-size:14px;line-height:1.5}
   .post-card .card-read{display:none}
   .post-meta{font-size:11px;gap:4px 8px}
   .featured-card{padding:10px;border-radius:26px}
   .featured-card .post-art{aspect-ratio:16/9;border-radius:18px}
-  .featured-copy h2{font-size:24px}
+  .featured-copy h2{font-size:22px}
   .featured-copy p{display:-webkit-box;overflow:hidden;-webkit-line-clamp:3;-webkit-box-orient:vertical;font-size:15px}
   .article-body{font-size:17px}
   .about-blog{padding:22px;border-radius:26px}
 }
+.ribbon-shell+.feed{padding-top:clamp(48px,6vw,84px)}

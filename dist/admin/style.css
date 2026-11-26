@@ -3,7 +3,7 @@
 .admin-page>header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;padding:12px clamp(16px,3vw,32px);border-bottom:1px solid var(--hh-hair);background:color-mix(in srgb,var(--hh-card) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .brand{display:inline-flex;align-items:baseline;gap:10px;font-size:26px;font-weight:900;letter-spacing:-1.2px}
 .brand span{padding:4px 10px;border-radius:999px;background:var(--yellow);font-size:11px;font-weight:800;letter-spacing:1px}
-.header-note{font-family:var(--accent);font-style:italic;font-weight:600;font-size:16px;opacity:.8}
+.header-note{font-size:14px;font-weight:600;opacity:.75}
 .admin-page>header>a:last-of-type{margin-left:auto;display:inline-flex;align-items:center;min-height:42px;padding:0 16px;border:1px solid var(--hh-hair);border-radius:999px;font-size:14px;font-weight:700}
 #logout{min-height:42px;padding:0 16px;border-radius:999px;background:var(--blue);color:var(--cream);font-size:14px;font-weight:800}
 button.primary,.primary{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 24px;border-radius:999px;background:var(--blue);color:var(--cream);font-weight:800}
@@ -14,7 +14,7 @@ button.outline,.outline{display:inline-flex;align-items:center;justify-content:c
 .status{font-size:14px}
 .status:empty{display:none}
 .status.error{color:#a33a2c;font-weight:700}
-h1{font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-.04em}
+h1{font-size:clamp(30px,3.4vw,44px)}
 h1 em{display:inline-block;background:linear-gradient(transparent 76%,var(--yellow) 76% 90%,transparent 90%)}
 
 /* Đăng nhập */
