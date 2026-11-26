@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795674522.0569682,
-    "seen": 1795674560.6377776,
-    "ast_hash": "57a35c95053fb63bfcfae74a0f4c4c6c",
+    "mtime": 1795675016.3569975,
+    "seen": 1795675069.6675062,
+    "ast_hash": "b9dfddc001fed2904b5976c6ab75f4d2",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -324,9 +324,9 @@
     "semantic_hash": ""
   },
   "tools/viewport.test.mjs": {
-    "mtime": 1795674534.1802356,
-    "seen": 1795674560.6384172,
-    "ast_hash": "4f9f151a138285f8bea64ad55ad9b231",
+    "mtime": 1795675007.3280551,
+    "seen": 1795675069.6680474,
+    "ast_hash": "fe27373475da36f94ed7b79c173992d7",
     "semantic_hash": ""
   },
   "worker/index.mjs": {
@@ -1734,9 +1734,9 @@
     "semantic_hash": ""
   },
   "tools/site-chrome.py": {
-    "mtime": 1795674433.5924695,
-    "seen": 1795674560.6383452,
-    "ast_hash": "810389b82b067846eb9ae8fc79feb2b2",
+    "mtime": 1795675007.3273365,
+    "seen": 1795675069.6679864,
+    "ast_hash": "a04ea409581df318f5ee101835d55fb0",
     "semantic_hash": ""
   },
   "package-lock.json": {

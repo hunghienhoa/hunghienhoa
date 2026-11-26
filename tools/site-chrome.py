@@ -8,14 +8,6 @@ import re
 
 DIST = Path(__file__).resolve().parents[1] / 'dist'
 
-EXPLORE = [
-    ('/', 'Trang chủ', 'Blog chia sẻ và công cụ tiện ích', 'main'),
-    ('/blog/', 'Góc tò mò', 'Bài chia sẻ những điều nhỏ mà thú vị', 'blog'),
-    ('/photobooth/', 'Hộp Ảnh', 'Photobooth bốn khoảnh khắc', 'photobooth'),
-    ('/snaptik/', 'Snap Video', 'Tải video TikTok, Instagram, Facebook', 'snaptik'),
-    ('/lamnet/', 'Làm Nét Ảnh', 'Làm nét và tạo ảnh bằng AI', 'lamnet'),
-]
-
 PAGES = {
     'index.html': ('main', '', [('#bai-viet', 'Bài viết', ''), ('#cong-cu', 'Công cụ', ''), ('#ve-hung', 'Về mình', '')], '#contact'),
     'blog/index.html': ('blog', 'Góc tò mò', [('#bai-viet', 'Bài viết', ' id="list-nav"'), ('#ve-goc-nho', 'Về góc nhỏ', '')], '#contact'),
@@ -42,16 +34,14 @@ SOCIALS = [
 def header(section, app, links, cta):
     brand = '<a class="sitebar-brand" href="/" aria-label="Hùng Hiền Hòa, về trang chủ">hhh<span>.</span>' + (f'<small>{app}</small>' if app else '') + '</a>'
     nav = ''.join(f'<a href="{href}"{extra}>{label}</a>' for href, label, extra in links)
-    items = ''.join(f'<li><a href="{href}"{" aria-current=\"page\"" if key == section else ""}>{name}<small>{desc}</small></a></li>' for href, name, desc, key in EXPLORE)
     return ('<header class="sitebar"><div class="sitebar-in">' + brand +
             '<button class="sitebar-toggle" type="button" aria-expanded="false" aria-controls="sitebar-menu" aria-label="Mở menu"><span aria-hidden="true">☰</span></button>'
             '<nav class="sitebar-nav" id="sitebar-menu" aria-label="Điều hướng">' + nav +
-            f'<details class="sitebar-projects"><summary>Khám phá</summary><ul class="sitebar-list">{items}</ul></details>'
             f'<a class="sitebar-cta" href="{cta}">Kết nối <span aria-hidden="true">↗</span></a></nav></div></header>')
 
 
 def footer():
-    """Footer kiểu footer.design: thẻ mời liên hệ màu xanh có hàng icon tròn, nhóm liên kết nhãn ngắn trên nền giấy, chữ ký lớn cắt ở đáy."""
+    """Footer kiểu footer.design: thẻ mời liên hệ màu xanh có hàng icon tròn, nhóm liên kết nhãn ngắn trên nền giấy, hàng lời chúc và bản quyền ở cuối."""
     icon = lambda name, file: f'<img src="/assets/social/{file}" alt="" width="22" height="22" aria-hidden="true">'
     socials = ''.join(f'<li><a class="social-link" href="{url}" target="_blank" rel="noopener noreferrer" aria-label="{name} (mở trong thẻ mới)" title="{name}">{icon(name, file)}</a></li>' for name, url, file in SOCIALS[:5])
     socials += '<li><button class="social-link" type="button" id="wechat-copy" data-wechat-id="bqhtit" aria-label="Sao chép mã WeChat bqhtit" title="WeChat bqhtit">' + icon('WeChat', 'wechat.webp') + '</button></li>'
@@ -70,7 +60,7 @@ def footer():
             '<nav class="footer-col" aria-label="Công cụ"><h2>Công cụ</h2><ul><li><a href="/photobooth/">Hộp Ảnh</a></li><li><a href="/snaptik/">Snap Video</a></li><li><a href="/lamnet/">Làm Nét Ảnh</a></li></ul></nav>'
             '<nav class="footer-col policy-links" aria-label="Chính sách website"><h2>Chính sách</h2><ul>' + ''.join(f'<li><a href="https://hunghienhoa.com/{slug}">{label}</a></li>' for slug, label in policies) + '</ul></nav></div>'
             '<div class="footer-bottom"><div class="footer-legal"><span>© 2026 Hùng Hiền Hòa</span><p class="footer-wish">Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!</p><a class="footer-top" href="#">Về đầu trang <span aria-hidden="true">↑</span></a></div>'
-            '<p class="footer-wordmark" aria-hidden="true">Hùng Hiền Hòa</p></div>'
+            '</div>'
             '</footer>')
 
 

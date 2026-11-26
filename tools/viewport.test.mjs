@@ -19,8 +19,9 @@ for (const page of publicPages) {
   assert.match(html, /<link rel="stylesheet" href="\/ui\.css\?v=\d+">/, `${page} phải nạp /ui.css`);
   assert.equal((html.match(/<header class="sitebar">/g) || []).length, 1, `${page} cần đúng một thanh điều hướng`);
   assert.equal((html.match(/<footer\b/g) || []).length, 1, `${page} cần đúng một footer`);
-  assert.match(html, /<footer class="site-footer"><section class="footer-cta" id="contact".*?<\/section><div class="footer-main">.*?<nav class="footer-col policy-links" aria-label="Chính sách website">.*?<\/nav><\/div><div class="footer-bottom">.*?<p class="footer-wish"[^>]*>[^<]+<\/p>.*?<p class="footer-wordmark"[^>]*>[^<]+<\/p><\/div><\/footer>/s, `${page} footer sai thứ tự`);
+  assert.match(html, /<footer class="site-footer"><section class="footer-cta" id="contact".*?<\/section><div class="footer-main">.*?<nav class="footer-col policy-links" aria-label="Chính sách website">.*?<\/nav><\/div><div class="footer-bottom">.*?<p class="footer-wish"[^>]*>[^<]+<\/p>.*?<\/div><\/footer>/s, `${page} footer sai thứ tự`);
   assert.ok(html.includes('id="contact"') && html.includes('id="wechat-copy"'), `${page} thiếu phần liên hệ`);
+  assert.ok(!html.includes('sitebar-projects') && !html.includes('footer-wordmark'), `${page} còn menu Khám phá hoặc chữ ký lớn cũ`);
   for (const old of ['sitebar.css', 'footer.css', 'readability.css', 'mobile-compact.css', 'viewport.css', 'decorative-stickers.css', 'theme.css']) assert.ok(!html.includes(old), `${page} còn nạp ${old}`);
 }
 const admin = fs.readFileSync('dist/admin/index.html', 'utf8');
