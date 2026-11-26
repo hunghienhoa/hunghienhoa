@@ -34,6 +34,10 @@ SOCIALS = [
 def header(section, app, links, cta):
     brand = '<a class="sitebar-brand" href="/" aria-label="Hùng Hiền Hòa, về trang chủ">hhh<span>.</span>' + (f'<small>{app}</small>' if app else '') + '</a>'
     nav = ''.join(f'<a href="{href}"{extra}>{label}</a>' for href, label, extra in links)
+    # Trang con có liên kết "Trang chủ" đứng đầu (icon ngôi nhà + chữ) để quay về rõ ràng, không chỉ dựa vào logo.
+    if section != 'main':
+        nav = ('<a class="sitebar-home" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M10 20v-6h4v6"/></svg>Trang chủ</a>'
+               + ('<span class="sitebar-sep" aria-hidden="true"></span>' if links else '') + nav)
     return ('<header class="sitebar"><div class="sitebar-in">' + brand +
             '<button class="sitebar-toggle" type="button" aria-expanded="false" aria-controls="sitebar-menu" aria-label="Mở menu"><span aria-hidden="true">☰</span></button>'
             '<nav class="sitebar-nav" id="sitebar-menu" aria-label="Điều hướng">' + nav +
