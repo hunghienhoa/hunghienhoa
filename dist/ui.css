@@ -129,41 +129,41 @@ details.faq-item>p{padding:0 0 18px;max-width:70ch}
   .sitebar-lang{justify-content:center;margin:8px 0 0;min-height:48px}
 }
 
-/* ---------- Footer tối nhiều cột ---------- */
-.site-footer{--blue:var(--hh-footer-fg);--cream:var(--hh-footer-bg);--hh-hair:color-mix(in srgb,var(--hh-footer-fg) 20%,transparent);--hh-soft:color-mix(in srgb,var(--hh-footer-fg) 9%,transparent);--hh-card:color-mix(in srgb,var(--hh-footer-fg) 7%,transparent);position:relative;margin-top:clamp(72px,9vw,120px);padding:clamp(48px,6vw,80px) var(--gutter) 0;overflow:hidden;border-radius:40px 40px 0 0;background:var(--hh-footer-bg);color:var(--hh-footer-fg)}
+/* ---------- Footer (kiểu footer.design) ----------
+   Thẻ mời liên hệ màu xanh bo tròn, hàng icon mạng xã hội tròn; bên dưới là nhóm liên kết nhãn ngắn trên nền giấy;
+   cuối cùng là chữ ký "Hùng Hiền Hòa" thật lớn, cắt ở đáy trang. */
+.site-footer{position:relative;margin-top:clamp(72px,9vw,120px);padding:0 var(--gutter);overflow:hidden}
 .site-footer>*{width:min(var(--wrap),100%);margin-inline:auto}
-.footer-contact h2{font-size:clamp(40px,6vw,84px);font-weight:800;letter-spacing:-.045em}
-.footer-contact h2 em{color:var(--yellow)}
-.footer-contact-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(24px,4vw,56px);margin-top:36px}
-.contact-postcard{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
-.contact-email{font-size:clamp(20px,2.4vw,28px);font-weight:800;letter-spacing:-.02em;overflow-wrap:anywhere}
-.contact-phone{display:inline-flex;align-items:center;gap:12px;font-size:18px;font-weight:700}
-.contact-phone span{padding:3px 10px;border-radius:999px;background:var(--hh-soft);font-size:13px}
-.contact-postcard p{max-width:36ch;opacity:.85}
-.site-footer .btn-sun{color:var(--hh-footer-bg)}
-.social-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:0;list-style:none}
-.social-links li:last-child:nth-child(odd){grid-column:1/-1}
-.social-link{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:10px 14px;border:1px solid var(--hh-hair);border-radius:16px;background:var(--hh-soft);font-size:14px;font-weight:700;text-align:left}
-.social-link>span{margin-left:auto;font-size:18px}
-.social-link small{font-weight:500;opacity:.8}
-.social-icon{flex:none;width:26px;height:26px;border-radius:6px}
-a.social-link:hover,button.social-link:hover{translate:0 -2px;background:var(--yellow);color:var(--hh-footer-bg)}
-.social-note{min-height:1.6em;margin-top:8px;font-size:14px}
-.footer-columns{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:32px;margin-top:56px;padding:44px 0;border-top:1px solid var(--hh-hair);border-bottom:1px solid var(--hh-hair)}
-.footer-logo{display:inline-block;font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1}
-.footer-logo span{color:var(--yellow)}
-.footer-about p{max-width:34ch;margin-top:14px;font-size:15px;opacity:.85}
-.footer-col h2{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;opacity:.65}
-.footer-col ul{display:grid;gap:2px;margin:0;padding:0;list-style:none}
-.footer-col a{display:inline-flex;align-items:center;min-height:40px;font-size:15px;font-weight:600}
-.footer-col a:hover,.policy-links a:hover,.footer-top:hover{color:var(--yellow)}
-.footer-wish{padding:28px 8px 6px;font-family:var(--accent);font-style:italic;font-weight:600;font-size:clamp(17px,1.8vw,22px);text-align:center}
-.policy-links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 24px;padding:10px 0 0;font-size:13px;opacity:.85}
-.policy-links a{display:inline-flex;align-items:center;min-height:44px;text-decoration:underline;text-underline-offset:3px}
-.footer-bottom{margin-top:18px}
-.footer-wordmark{margin:0;padding-top:.18em;font-size:clamp(46px,11.2vw,190px);font-weight:900;letter-spacing:-.055em;line-height:1.12;text-align:center;white-space:nowrap;color:transparent;background:linear-gradient(180deg,var(--yellow) 0%,color-mix(in srgb,var(--yellow) 55%,var(--hh-footer-bg)) 62%,var(--hh-footer-bg) 100%);-webkit-background-clip:text;background-clip:text;user-select:none}
-.footer-legal{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 20px;padding:16px 0 22px;border-top:1px solid var(--hh-hair);font-size:13px;font-weight:600}
+.footer-cta{--blue:var(--hh-footer-fg);--cream:var(--hh-footer-bg);--hh-hair:color-mix(in srgb,var(--hh-footer-fg) 20%,transparent);--hh-soft:color-mix(in srgb,var(--hh-footer-fg) 10%,transparent);--hh-card:color-mix(in srgb,var(--hh-footer-fg) 7%,transparent);position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:end;padding:clamp(28px,5vw,56px);overflow:hidden;border-radius:36px;background:var(--hh-footer-bg);color:var(--hh-footer-fg);box-shadow:var(--hh-shadow)}
+.footer-cta::before{content:'';position:absolute;z-index:-1;right:-80px;top:-120px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--yellow) 38%,transparent),transparent 70%)}
+.footer-cta .eyebrow{margin-bottom:14px}
+.footer-cta h2{font-size:clamp(34px,5vw,68px);font-weight:800;line-height:1.08;letter-spacing:-.045em}
+.footer-cta h2 em{color:var(--yellow)}
+.footer-cta-copy p{max-width:40ch;margin-top:14px;font-size:16px;opacity:.85}
+.footer-cta-actions{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.footer-cta .contact-button{color:var(--hh-footer-bg)}
+.footer-cta-lines{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:15px;font-weight:700}
+.footer-cta-lines a{overflow-wrap:anywhere;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--hh-footer-fg) 35%,transparent);text-underline-offset:4px}
+.footer-cta-lines a:hover{color:var(--yellow)}
+.social-links{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.social-link{display:grid;place-items:center;width:46px;height:46px;border:1px solid var(--hh-hair);border-radius:50%;background:var(--hh-soft)}
+.social-link img{width:22px;height:22px;border-radius:5px}
+.social-link:hover{translate:0 -2px;background:var(--yellow);border-color:var(--yellow)}
+.social-note{min-height:0;font-size:14px}
+.social-note:empty{display:none}
+.footer-main{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:32px;padding:clamp(40px,5vw,64px) 0 clamp(28px,4vw,40px)}
+.footer-logo{display:inline-block;font-size:40px;font-weight:900;letter-spacing:-2px;line-height:1}
+.footer-logo span{color:var(--yellow);text-shadow:0 0 1px var(--blue)}
+.footer-about p{max-width:32ch;margin-top:12px;font-size:15px;opacity:.85}
+.footer-col h2{margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;opacity:.6}
+.footer-col ul{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.footer-col a{display:inline-flex;align-items:center;min-height:38px;font-size:15px;font-weight:600}
+.footer-col a:hover,.footer-top:hover{color:var(--coral)}
+.footer-bottom{position:relative}
+.footer-legal{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 24px;padding:16px 0;border-top:1px solid var(--hh-hair);font-size:13px;font-weight:600}
+.footer-wish{flex:1 1 280px;font-family:var(--accent);font-style:italic;font-weight:600;font-size:16px;text-align:center}
 .footer-top{display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.footer-wordmark{margin:0;padding-bottom:.04em;font-size:clamp(52px,12.4vw,210px);font-weight:900;line-height:1.2;letter-spacing:-.055em;text-align:center;white-space:nowrap;color:var(--blue);user-select:none}
 
 /* ---------- Trang chính sách & 404 ---------- */
 .doc{width:min(820px,100%);margin:0 auto;padding:clamp(40px,6vw,80px) var(--gutter) 0}
@@ -191,11 +191,8 @@ a.social-link:hover,button.social-link:hover{translate:0 -2px;background:var(--y
   .btn,.social-link,.footer-col a,.sitebar-nav>.sitebar-cta,.card{transition:translate .2s,background-color .2s,border-color .2s,box-shadow .2s,color .2s}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
-@media(max-width:900px){.footer-columns{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-about{grid-column:1/-1}.footer-contact-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:900px){.footer-main{grid-template-columns:repeat(3,minmax(0,1fr))}.footer-about{grid-column:1/-1}.footer-cta{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:640px){
-  .site-footer{border-radius:28px 28px 0 0}
-  .social-links{grid-template-columns:minmax(0,1fr)}
-  .footer-columns{gap:24px;padding:32px 0;margin-top:40px}
   .head>.btn{width:100%}
 }
 .not-found-links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:26px}
@@ -203,30 +200,26 @@ a.social-link:hover,button.social-link:hover{translate:0 -2px;background:var(--y
 body>.sitebar-lang{position:fixed;top:16px;right:16px;z-index:70;background:var(--hh-card)}
 main{overflow-x:clip}
 [tabindex="-1"]:focus{outline:none}
-/* Điện thoại: footer gọn — mạng xã hội thành lưới 2 cột, liên kết thành 3 cột nhỏ, chính sách 2 cột. */
+/* Điện thoại: footer gọn — thẻ liên hệ một cột, icon tròn một hàng, liên kết 2 cột, chính sách thành hàng ngang. */
 @media(max-width:640px){
-  .site-footer{margin-top:64px;padding-top:40px}
-  .footer-contact h2{font-size:clamp(32px,9vw,40px)}
-  .footer-contact-grid{gap:22px;margin-top:22px}
-  .contact-postcard{gap:10px}
-  .contact-email{font-size:19px}
-  .contact-phone{font-size:16px}
-  .contact-postcard p{font-size:14px}
-  .contact-button{width:100%}
-  .social-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .social-link{min-height:46px;gap:8px;padding:8px 12px;border-radius:14px;font-size:13px}
-  .social-link>span{display:none}
-  .social-link small{font-size:12px}
-  .social-icon{width:22px;height:22px}
-  .footer-columns{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 12px;margin-top:32px;padding:26px 0}
+  .site-footer{margin-top:56px;padding:0 12px}
+  .footer-cta{grid-template-columns:minmax(0,1fr);gap:22px;padding:28px 22px;border-radius:28px}
+  .footer-cta h2{font-size:clamp(30px,8.6vw,38px)}
+  .footer-cta-copy p{font-size:15px}
+  .footer-cta-actions{gap:14px}
+  .footer-cta .contact-button{width:100%}
+  .footer-cta-lines{font-size:14px}
+  .social-links{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;width:100%}
+  .social-link{width:100%;height:auto;aspect-ratio:1;max-width:46px;justify-self:center}
+  .social-link img{width:20px;height:20px}
+  .footer-main{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 16px;padding:32px 10px 20px}
   .footer-about{grid-column:1/-1}
   .footer-logo{font-size:34px}
-  .footer-about p{margin-top:8px;font-size:14px}
-  .footer-col h2{margin-bottom:6px;font-size:11px;letter-spacing:1.4px}
-  .footer-col a{min-height:36px;font-size:14px;line-height:1.3}
-  .footer-wish{padding:22px 4px 4px;font-size:16px}
-  .policy-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px;padding-top:8px;font-size:12px;text-align:left}
-  .policy-links a{min-height:40px;line-height:1.35}
-  .footer-bottom{margin-top:8px}
-  .footer-legal{font-size:12px;padding:12px 0 18px}
+  .footer-about p{font-size:14px}
+  .footer-col a{min-height:36px;font-size:15px}
+  .policy-links{grid-column:1/-1}
+  .policy-links ul{display:flex;flex-wrap:wrap;gap:0 18px}
+  .footer-legal{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding:14px 10px 6px;font-size:12px}
+  .footer-wish{grid-column:1/-1;order:-1;font-size:15px}
+  .footer-top{min-height:36px}
 }

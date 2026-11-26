@@ -150,9 +150,9 @@
     "semantic_hash": ""
   },
   "tools/adsense.test.mjs": {
-    "mtime": 1795652247.0396478,
-    "seen": 1795652334.9623435,
-    "ast_hash": "1a4815fd5dcd0ff9f411dc7474abe5b9",
+    "mtime": 1795674521.9544485,
+    "seen": 1795674560.6376872,
+    "ast_hash": "e890ec44c7e95c0a94558b8368b8eba7",
     "semantic_hash": ""
   },
   "tools/agent-readiness.test.mjs": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795673806.7409256,
-    "seen": 1795673840.5501614,
-    "ast_hash": "57ca2dc66e437d0b95770554cfc95950",
+    "mtime": 1795674522.0569682,
+    "seen": 1795674560.6377776,
+    "ast_hash": "57a35c95053fb63bfcfae74a0f4c4c6c",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -324,9 +324,9 @@
     "semantic_hash": ""
   },
   "tools/viewport.test.mjs": {
-    "mtime": 1795652237.9701662,
-    "seen": 1795652334.9628358,
-    "ast_hash": "544795877d5bc96ef01a121b0f32c1b2",
+    "mtime": 1795674534.1802356,
+    "seen": 1795674560.6384172,
+    "ast_hash": "4f9f151a138285f8bea64ad55ad9b231",
     "semantic_hash": ""
   },
   "worker/index.mjs": {
@@ -1734,9 +1734,9 @@
     "semantic_hash": ""
   },
   "tools/site-chrome.py": {
-    "mtime": 1795651811.9457467,
-    "seen": 1795652334.9627955,
-    "ast_hash": "9512099e655fc38cc3ffe2851d99067c",
+    "mtime": 1795674433.5924695,
+    "seen": 1795674560.6383452,
+    "ast_hash": "810389b82b067846eb9ae8fc79feb2b2",
     "semantic_hash": ""
   },
   "package-lock.json": {
