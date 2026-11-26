@@ -266,3 +266,10 @@ legend{margin-bottom:14px;font-size:14px;font-weight:800}
   .studio>.steps{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .studio>.steps li{flex:none;font-size:13px}
 }
+@media(max-width:640px){
+  .print-preview{padding:14px;border-radius:18px}
+  .print-preview canvas{width:min(46vw,150px)}
+  .selected-frame{font-size:16px}
+  .studio .head{margin-bottom:18px}
+  .studio .head>p{font-size:14px}
+}
