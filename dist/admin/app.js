@@ -128,6 +128,7 @@ function renderPosts() {
     const card = make('article', undefined, 'post-entry'); card.append(make('h3', post.title), make('p', `${post.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}${post.isSample ? ' · Bài viết mẫu' : ''}`));
     const controls = make('div', undefined, 'item-actions'); controls.append(action('Sửa bài', async () => { editPost(post); $('#post-form').scrollIntoView({ behavior: 'smooth', block: 'start' }); }), action('Xóa bài', async () => { if (!confirm(`Xóa hẳn bài “${post.title}”?`)) return; await api(`/api/admin/posts/${encodeURIComponent(post.id)}`, { method: 'DELETE' }); editPost(); await loadAll(); message($('#page-status'), 'Đã xóa bài viết.'); }, 'danger')); card.append(controls); return card;
   }));
+  if (typeof Event === 'function') $('#posts-filter')?.dispatchEvent?.(new Event('input'));
 }
 async function loadAll() {
   const version = authVersion;
@@ -278,9 +279,32 @@ async function loadCustomization(settings) {
     }
     container.append(group);
   }
-  for (const group of container.querySelectorAll('details')) group.addEventListener('toggle',()=>{
-    if(group.open) for(const other of container.querySelectorAll('details')) if(other!==group) other.open=false;
-  });
+  contentTabs();
+}
+/* Nội dung web dạng hai cột: bên trái chọn phần cần sửa (thông tin chung, màu, ảnh, từng trang),
+   bên phải chỉ hiện các ô của phần đó. Khi gõ tìm kiếm thì hiện mọi phần có kết quả. */
+let activeTab = 'basic';
+function contentGroups() {
+  const groups = [['basic', 'Thông tin chung', document.querySelector('.basic-settings')]];
+  [...document.querySelectorAll('#customize-fields>details')].forEach((group, index) => groups.push(['group-' + index, group.querySelector('summary')?.textContent || 'Nhóm ' + (index + 1), group]));
+  return groups;
+}
+function applyTabs() {
+  const groups = contentGroups();
+  if (!groups.some(([id]) => id === activeTab)) activeTab = 'basic';
+  for (const [id, , element] of groups) { if (!element) continue; element.hidden = id !== activeTab; element.open = true; }
+  $('#customize-form').hidden = activeTab === 'basic';
+  for (const button of document.querySelectorAll('#content-tabs button')) button.setAttribute('aria-pressed', String(button.dataset.tab === activeTab));
+}
+function contentTabs() {
+  const nav = $('#content-tabs');
+  if (!nav || typeof nav.replaceChildren !== 'function') return;
+  nav.replaceChildren(...contentGroups().map(([id, label]) => {
+    const button = make('button', label); button.type = 'button'; button.dataset.tab = id;
+    button.addEventListener('click', () => { activeTab = id; $('#customize-search').value = ''; for (const field of document.querySelectorAll('.custom-field')) field.hidden = false; applyTabs(); $('.content-panel')?.scrollIntoView({ block: 'nearest' }); });
+    return button;
+  }));
+  applyTabs();
 }
 $('#refresh-analytics').addEventListener('click',loadAnalytics);
 $('#editor-columns').addEventListener('change',event=>{
@@ -296,6 +320,14 @@ $('#customize-search').addEventListener('input',event=>{
     if(query && !group.hidden && !first) first=group;
   }
   if(first) first.open=true;
+});
+$('#customize-search').addEventListener('input',event=>{
+  if(event.target.value.trim()){$('.basic-settings').hidden=true;$('#customize-form').hidden=false;for(const button of document.querySelectorAll('#content-tabs button'))button.setAttribute('aria-pressed','false');}
+  else applyTabs();
+});
+$('#posts-filter')?.addEventListener('input',event=>{
+  const query=event.target.value.toLocaleLowerCase('vi-VN').trim();
+  for(const entry of document.querySelectorAll('#posts-list .post-entry'))entry.hidden=!!query&&!entry.textContent.toLocaleLowerCase('vi-VN').includes(query);
 });
 $('#customize-form').addEventListener('submit',async event=>{
   event.preventDefault();const button=$('#save-customization');button.disabled=true;

@@ -6,12 +6,6 @@
     "default": "Đến nội dung chính"
   },
   {
-    "key": "main-241",
-    "page": "main",
-    "label": ".",
-    "default": "."
-  },
-  {
     "key": "main-003",
     "page": "main",
     "label": "hhh",
@@ -342,12 +336,6 @@
     "default": "0898.29.8886"
   },
   {
-    "key": "main-243",
-    "page": "main",
-    "label": ".",
-    "default": "."
-  },
-  {
     "key": "main-212",
     "page": "main",
     "label": "hhh",
@@ -466,12 +454,6 @@
     "page": "blog",
     "label": "Đến nội dung chính",
     "default": "Đến nội dung chính"
-  },
-  {
-    "key": "blog-084",
-    "page": "blog",
-    "label": ".",
-    "default": "."
   },
   {
     "key": "blog-003",
@@ -660,12 +642,6 @@
     "default": "0898.29.8886"
   },
   {
-    "key": "blog-087",
-    "page": "blog",
-    "label": ".",
-    "default": "."
-  },
-  {
     "key": "blog-054",
     "page": "blog",
     "label": "hhh",
@@ -784,12 +760,6 @@
     "page": "photobooth",
     "label": "Đến nội dung chính",
     "default": "Đến nội dung chính"
-  },
-  {
-    "key": "photobooth-195",
-    "page": "photobooth",
-    "label": ".",
-    "default": "."
   },
   {
     "key": "photobooth-104",
@@ -930,18 +900,6 @@
     "default": "Lật gương"
   },
   {
-    "key": "photobooth-025",
-    "page": "photobooth",
-    "label": "↗",
-    "default": "↗"
-  },
-  {
-    "key": "photobooth-026",
-    "page": "photobooth",
-    "label": "＋",
-    "default": "＋"
-  },
-  {
     "key": "photobooth-027",
     "page": "photobooth",
     "label": "Chọn ảnh từ máy",
@@ -996,12 +954,6 @@
     "default": "Xem trước · Tệp tải về giữ nguyên tỷ lệ"
   },
   {
-    "key": "photobooth-036",
-    "page": "photobooth",
-    "label": "↓",
-    "default": "↓"
-  },
-  {
     "key": "photobooth-037",
     "page": "photobooth",
     "label": "THÊM CÁ TÍNH CỦA BẠN",
@@ -1018,12 +970,6 @@
     "page": "photobooth",
     "label": "Một khung ảnh.",
     "default": "Một khung ảnh."
-  },
-  {
-    "key": "photobooth-040",
-    "page": "photobooth",
-    "label": "✦",
-    "default": "✦"
   },
   {
     "key": "photobooth-041",
@@ -1542,12 +1488,6 @@
     "default": "0898.29.8886"
   },
   {
-    "key": "photobooth-198",
-    "page": "photobooth",
-    "label": ".",
-    "default": "."
-  },
-  {
     "key": "photobooth-165",
     "page": "photobooth",
     "label": "hhh",
@@ -1668,12 +1608,6 @@
     "default": "Đến nội dung chính"
   },
   {
-    "key": "snaptik-002",
-    "page": "snaptik",
-    "label": ".",
-    "default": "."
-  },
-  {
     "key": "snaptik-003",
     "page": "snaptik",
     "label": "Snap Video",
@@ -1686,7 +1620,7 @@
     "default": "hhh"
   },
   {
-    "key": "snaptik-005",
+    "key": "snaptik-080",
     "page": "snaptik",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -1974,7 +1908,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "snaptik-053",
+    "key": "snaptik-081",
     "page": "snaptik",
     "label": "Gửi một lời chào.",
     "default": "Gửi một lời chào."
@@ -2008,12 +1942,6 @@
     "page": "snaptik",
     "label": "0898.29.8886",
     "default": "0898.29.8886"
-  },
-  {
-    "key": "snaptik-059",
-    "page": "snaptik",
-    "label": ".",
-    "default": "."
   },
   {
     "key": "snaptik-060",
@@ -2136,12 +2064,6 @@
     "default": "Đến nội dung chính"
   },
   {
-    "key": "lamnet-002",
-    "page": "lamnet",
-    "label": ".",
-    "default": "."
-  },
-  {
     "key": "lamnet-003",
     "page": "lamnet",
     "label": "Làm Nét",
@@ -2154,7 +2076,7 @@
     "default": "hhh"
   },
   {
-    "key": "lamnet-005",
+    "key": "lamnet-095",
     "page": "lamnet",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -2532,7 +2454,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "lamnet-068",
+    "key": "lamnet-096",
     "page": "lamnet",
     "label": "Gửi một lời chào.",
     "default": "Gửi một lời chào."
@@ -2566,12 +2488,6 @@
     "page": "lamnet",
     "label": "0898.29.8886",
     "default": "0898.29.8886"
-  },
-  {
-    "key": "lamnet-074",
-    "page": "lamnet",
-    "label": ".",
-    "default": "."
   },
   {
     "key": "lamnet-075",
@@ -2892,16 +2808,34 @@
     "default": "Tiêu đề"
   },
   {
-    "key": "admin-034",
-    "page": "admin",
-    "label": "Đường dẫn ngắn",
-    "default": "Đường dẫn ngắn"
-  },
-  {
     "key": "admin-035",
     "page": "admin",
     "label": "Tóm tắt",
     "default": "Tóm tắt"
+  },
+  {
+    "key": "admin-040",
+    "page": "admin",
+    "label": "Nội dung",
+    "default": "Nội dung"
+  },
+  {
+    "key": "admin-062",
+    "page": "admin",
+    "label": "Xuất bản",
+    "default": "Xuất bản"
+  },
+  {
+    "key": "admin-041",
+    "page": "admin",
+    "label": "Trạng thái",
+    "default": "Trạng thái"
+  },
+  {
+    "key": "admin-063",
+    "page": "admin",
+    "label": "Phân loại",
+    "default": "Phân loại"
   },
   {
     "key": "admin-036",
@@ -2916,6 +2850,18 @@
     "default": "Thẻ, cách nhau bằng dấu phẩy"
   },
   {
+    "key": "admin-034",
+    "page": "admin",
+    "label": "Đường dẫn ngắn",
+    "default": "Đường dẫn ngắn"
+  },
+  {
+    "key": "admin-064",
+    "page": "admin",
+    "label": "Ảnh bìa",
+    "default": "Ảnh bìa"
+  },
+  {
     "key": "admin-038",
     "page": "admin",
     "label": "PNG, JPEG hoặc WebP; sẽ chuyển thành WebP.",
@@ -2926,18 +2872,6 @@
     "page": "admin",
     "label": "Ảnh bìa",
     "default": "Ảnh bìa"
-  },
-  {
-    "key": "admin-040",
-    "page": "admin",
-    "label": "Nội dung",
-    "default": "Nội dung"
-  },
-  {
-    "key": "admin-041",
-    "page": "admin",
-    "label": "Trạng thái",
-    "default": "Trạng thái"
   },
   {
     "key": "admin-042",

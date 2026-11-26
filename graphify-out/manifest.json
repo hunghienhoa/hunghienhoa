@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795678816.402404,
-    "seen": 1795678833.2069426,
-    "ast_hash": "04d717c60f498c1d30c28f338def3a98",
+    "mtime": 1795680626.6435916,
+    "seen": 1795692220.3903663,
+    "ast_hash": "5ab7344059ebb0b5c77a1a7904cf8cd0",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -228,9 +228,9 @@
     "semantic_hash": ""
   },
   "tools/build-content-fields.py": {
-    "mtime": 1795676745.2817388,
-    "seen": 1795676924.0015163,
-    "ast_hash": "007d26b9ca5cd62e55657442763b5e21",
+    "mtime": 1795680626.6435916,
+    "seen": 1795692220.390507,
+    "ast_hash": "87500013a89a9ec6e91a333718aab86b",
     "semantic_hash": ""
   },
   "tools/build-ui-symbols.py": {
