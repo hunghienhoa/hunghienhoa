@@ -1662,6 +1662,1032 @@
     "default": "Về đầu trang"
   },
   {
+    "key": "snaptik-001",
+    "page": "snaptik",
+    "label": "Đến nội dung chính",
+    "default": "Đến nội dung chính"
+  },
+  {
+    "key": "snaptik-002",
+    "page": "snaptik",
+    "label": ".",
+    "default": "."
+  },
+  {
+    "key": "snaptik-003",
+    "page": "snaptik",
+    "label": "Snap Video",
+    "default": "Snap Video"
+  },
+  {
+    "key": "snaptik-004",
+    "page": "snaptik",
+    "label": "hhh",
+    "default": "hhh"
+  },
+  {
+    "key": "snaptik-005",
+    "page": "snaptik",
+    "label": "Trang chủ",
+    "default": "Trang chủ"
+  },
+  {
+    "key": "snaptik-006",
+    "page": "snaptik",
+    "label": "Cách dùng",
+    "default": "Cách dùng"
+  },
+  {
+    "key": "snaptik-007",
+    "page": "snaptik",
+    "label": "Riêng tư",
+    "default": "Riêng tư"
+  },
+  {
+    "key": "snaptik-008",
+    "page": "snaptik",
+    "label": "Kết nối",
+    "default": "Kết nối"
+  },
+  {
+    "key": "snaptik-009",
+    "page": "snaptik",
+    "label": "Một liên kết · Một chút hay",
+    "default": "Một liên kết · Một chút hay"
+  },
+  {
+    "key": "snaptik-010",
+    "page": "snaptik",
+    "label": "để dành xem lại.",
+    "default": "để dành xem lại."
+  },
+  {
+    "key": "snaptik-011",
+    "page": "snaptik",
+    "label": "Video hay,",
+    "default": "Video hay,"
+  },
+  {
+    "key": "snaptik-012",
+    "page": "snaptik",
+    "label": "TikTok, Instagram hay Facebook. Dán link, chọn file và giữ lại điều hay.",
+    "default": "TikTok, Instagram hay Facebook. Dán link, chọn file và giữ lại điều hay."
+  },
+  {
+    "key": "snaptik-013",
+    "page": "snaptik",
+    "label": "Dán liên kết của bạn",
+    "default": "Dán liên kết của bạn"
+  },
+  {
+    "key": "snaptik-014",
+    "page": "snaptik",
+    "label": "Lấy liên kết tải",
+    "default": "Lấy liên kết tải"
+  },
+  {
+    "key": "snaptik-015",
+    "page": "snaptik",
+    "label": "Tự nhận diện nền tảng",
+    "default": "Tự nhận diện nền tảng"
+  },
+  {
+    "key": "snaptik-016",
+    "page": "snaptik",
+    "label": "Một link mỗi lần. Hỗ trợ bài viết, video và Reels công khai.",
+    "default": "Một link mỗi lần. Hỗ trợ bài viết, video và Reels công khai."
+  },
+  {
+    "key": "snaptik-017",
+    "page": "snaptik",
+    "label": "Bạn cần bật JavaScript để lấy liên kết và tải file.",
+    "default": "Bạn cần bật JavaScript để lấy liên kết và tải file."
+  },
+  {
+    "key": "snaptik-018",
+    "page": "snaptik",
+    "label": "ĐÃ TÌM THẤY MỘT CHÚT HAY",
+    "default": "ĐÃ TÌM THẤY MỘT CHÚT HAY"
+  },
+  {
+    "key": "snaptik-019",
+    "page": "snaptik",
+    "label": "Chất lượng và định dạng phụ thuộc file nguồn. Nội dung riêng tư hoặc đã xóa có thể không tải được.",
+    "default": "Chất lượng và định dạng phụ thuộc file nguồn. Nội dung riêng tư hoặc đã xóa có thể không tải được."
+  },
+  {
+    "key": "snaptik-020",
+    "page": "snaptik",
+    "label": "nền tảng gốc",
+    "default": "nền tảng gốc"
+  },
+  {
+    "key": "snaptik-021",
+    "page": "snaptik",
+    "label": "Xem bài gốc trên",
+    "default": "Xem bài gốc trên"
+  },
+  {
+    "key": "snaptik-022",
+    "page": "snaptik",
+    "label": "Trên iPhone, kiểm tra mục Tải về trong ứng dụng Tệp sau khi lưu.",
+    "default": "Trên iPhone, kiểm tra mục Tải về trong ứng dụng Tệp sau khi lưu."
+  },
+  {
+    "key": "snaptik-023",
+    "page": "snaptik",
+    "label": "Ba bước nhỏ",
+    "default": "Ba bước nhỏ"
+  },
+  {
+    "key": "snaptik-024",
+    "page": "snaptik",
+    "label": "Lưu một chút hay.",
+    "default": "Lưu một chút hay."
+  },
+  {
+    "key": "snaptik-025",
+    "page": "snaptik",
+    "label": "Dán link. Chọn file.",
+    "default": "Dán link. Chọn file."
+  },
+  {
+    "key": "snaptik-026",
+    "page": "snaptik",
+    "label": "01",
+    "default": "01"
+  },
+  {
+    "key": "snaptik-027",
+    "page": "snaptik",
+    "label": "Sao chép liên kết",
+    "default": "Sao chép liên kết"
+  },
+  {
+    "key": "snaptik-028",
+    "page": "snaptik",
+    "label": "Mở TikTok, Instagram hoặc Facebook. Chọn Chia sẻ rồi Sao chép liên kết.",
+    "default": "Mở TikTok, Instagram hoặc Facebook. Chọn Chia sẻ rồi Sao chép liên kết."
+  },
+  {
+    "key": "snaptik-029",
+    "page": "snaptik",
+    "label": "02",
+    "default": "02"
+  },
+  {
+    "key": "snaptik-030",
+    "page": "snaptik",
+    "label": "Chọn thứ muốn giữ",
+    "default": "Chọn thứ muốn giữ"
+  },
+  {
+    "key": "snaptik-031",
+    "page": "snaptik",
+    "label": "Dán link vào ô trên. Chọn video, âm thanh hoặc ảnh mà nguồn trả về.",
+    "default": "Dán link vào ô trên. Chọn video, âm thanh hoặc ảnh mà nguồn trả về."
+  },
+  {
+    "key": "snaptik-032",
+    "page": "snaptik",
+    "label": "03",
+    "default": "03"
+  },
+  {
+    "key": "snaptik-033",
+    "page": "snaptik",
+    "label": "Lưu về thiết bị",
+    "default": "Lưu về thiết bị"
+  },
+  {
+    "key": "snaptik-034",
+    "page": "snaptik",
+    "label": "Bấm tải file. Giữ lại nguồn và chỉ sử dụng nội dung khi bạn có quyền.",
+    "default": "Bấm tải file. Giữ lại nguồn và chỉ sử dụng nội dung khi bạn có quyền."
+  },
+  {
+    "key": "snaptik-035",
+    "page": "snaptik",
+    "label": "Một chút minh bạch",
+    "default": "Một chút minh bạch"
+  },
+  {
+    "key": "snaptik-036",
+    "page": "snaptik",
+    "label": "giữ sự tôn trọng.",
+    "default": "giữ sự tôn trọng."
+  },
+  {
+    "key": "snaptik-037",
+    "page": "snaptik",
+    "label": "Giữ video,",
+    "default": "Giữ video,"
+  },
+  {
+    "key": "snaptik-038",
+    "page": "snaptik",
+    "label": "Chỉ nhập bài công khai của bạn hoặc nội dung bạn được phép sử dụng. Việc tải về không tự cho phép đă",
+    "default": "Chỉ nhập bài công khai của bạn hoặc nội dung bạn được phép sử dụng. Việc tải về không tự cho phép đăng lại, chỉnh sửa hay khai thác thương mại."
+  },
+  {
+    "key": "snaptik-039",
+    "page": "snaptik",
+    "label": "TikWM",
+    "default": "TikWM"
+  },
+  {
+    "key": "snaptik-040",
+    "page": "snaptik",
+    "label": "Giới hạn mỗi file 200 MB. Nguồn bên ngoài có thể gián đoạn hoặc thay đổi. Dự án của Hùng hoạt động đ",
+    "default": "Giới hạn mỗi file 200 MB. Nguồn bên ngoài có thể gián đoạn hoặc thay đổi. Dự án của Hùng hoạt động độc lập, không liên kết với TikTok, Instagram, Facebook, SnapInsta, SnapSave hoặc snaptik.vn."
+  },
+  {
+    "key": "snaptik-041",
+    "page": "snaptik",
+    "label": "Hỏi nhanh một chút",
+    "default": "Hỏi nhanh một chút"
+  },
+  {
+    "key": "snaptik-042",
+    "page": "snaptik",
+    "label": "đang tò mò.",
+    "default": "đang tò mò."
+  },
+  {
+    "key": "snaptik-043",
+    "page": "snaptik",
+    "label": "Bạn có thể",
+    "default": "Bạn có thể"
+  },
+  {
+    "key": "snaptik-044",
+    "page": "snaptik",
+    "label": "Có tải được mọi video không?",
+    "default": "Có tải được mọi video không?"
+  },
+  {
+    "key": "snaptik-045",
+    "page": "snaptik",
+    "label": "Không. Bài cần còn công khai và có file mà nguồn phân tích hỗ trợ. Website không truy cập tài khoản ",
+    "default": "Không. Bài cần còn công khai và có file mà nguồn phân tích hỗ trợ. Website không truy cập tài khoản riêng tư và không yêu cầu cookie đăng nhập. Instagram hỗ trợ bài viết và Reels có dữ liệu nhúng công khai; story và video đang trực tiếp chưa được hỗ trợ."
+  },
+  {
+    "key": "snaptik-046",
+    "page": "snaptik",
+    "label": "Có video chất lượng cao hoặc không watermark không?",
+    "default": "Có video chất lượng cao hoặc không watermark không?"
+  },
+  {
+    "key": "snaptik-047",
+    "page": "snaptik",
+    "label": "Chỉ hiện những lựa chọn có trong kết quả của nguồn. Không nâng độ phân giải hay cam kết 4K. Chữ và d",
+    "default": "Chỉ hiện những lựa chọn có trong kết quả của nguồn. Không nâng độ phân giải hay cam kết 4K. Chữ và dấu tác giả đã nằm trong nội dung video có thể vẫn còn."
+  },
+  {
+    "key": "snaptik-048",
+    "page": "snaptik",
+    "label": "Tải âm thanh có luôn là MP3 không?",
+    "default": "Tải âm thanh có luôn là MP3 không?"
+  },
+  {
+    "key": "snaptik-049",
+    "page": "snaptik",
+    "label": "Không. File được giữ đúng định dạng nguồn, có thể là MP3 hoặc M4A. Bài ảnh có thể tải từng ảnh JPEG ",
+    "default": "Không. File được giữ đúng định dạng nguồn, có thể là MP3 hoặc M4A. Bài ảnh có thể tải từng ảnh JPEG khi nguồn hỗ trợ."
+  },
+  {
+    "key": "snaptik-050",
+    "page": "snaptik",
+    "label": "Tại sao đôi lúc không lấy được liên kết?",
+    "default": "Tại sao đôi lúc không lấy được liên kết?"
+  },
+  {
+    "key": "snaptik-051",
+    "page": "snaptik",
+    "label": "Bài có thể đã xóa, bị giới hạn truy cập, hoặc nguồn đang bận. Thử mở bài trên nền tảng gốc, sao chép",
+    "default": "Bài có thể đã xóa, bị giới hạn truy cập, hoặc nguồn đang bận. Thử mở bài trên nền tảng gốc, sao chép lại liên kết và chờ một chút trước khi thử lại."
+  },
+  {
+    "key": "snaptik-052",
+    "page": "snaptik",
+    "label": "Cùng trò chuyện",
+    "default": "Cùng trò chuyện"
+  },
+  {
+    "key": "snaptik-053",
+    "page": "snaptik",
+    "label": "Gửi một lời chào.",
+    "default": "Gửi một lời chào."
+  },
+  {
+    "key": "snaptik-054",
+    "page": "snaptik",
+    "label": "Có ý tưởng?",
+    "default": "Có ý tưởng?"
+  },
+  {
+    "key": "snaptik-055",
+    "page": "snaptik",
+    "label": "Trao đổi dự án, chia sẻ ý tưởng hay đơn giản là chào nhau một tiếng.",
+    "default": "Trao đổi dự án, chia sẻ ý tưởng hay đơn giản là chào nhau một tiếng."
+  },
+  {
+    "key": "snaptik-056",
+    "page": "snaptik",
+    "label": "Gửi email cho Hùng",
+    "default": "Gửi email cho Hùng"
+  },
+  {
+    "key": "snaptik-057",
+    "page": "snaptik",
+    "label": "hunghienhoa2110@gmail.com",
+    "default": "hunghienhoa2110@gmail.com"
+  },
+  {
+    "key": "snaptik-058",
+    "page": "snaptik",
+    "label": "0898.29.8886",
+    "default": "0898.29.8886"
+  },
+  {
+    "key": "snaptik-059",
+    "page": "snaptik",
+    "label": ".",
+    "default": "."
+  },
+  {
+    "key": "snaptik-060",
+    "page": "snaptik",
+    "label": "hhh",
+    "default": "hhh"
+  },
+  {
+    "key": "snaptik-061",
+    "page": "snaptik",
+    "label": "Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.",
+    "default": "Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích."
+  },
+  {
+    "key": "snaptik-062",
+    "page": "snaptik",
+    "label": "Khám phá",
+    "default": "Khám phá"
+  },
+  {
+    "key": "snaptik-063",
+    "page": "snaptik",
+    "label": "Trang chủ",
+    "default": "Trang chủ"
+  },
+  {
+    "key": "snaptik-064",
+    "page": "snaptik",
+    "label": "Góc tò mò",
+    "default": "Góc tò mò"
+  },
+  {
+    "key": "snaptik-065",
+    "page": "snaptik",
+    "label": "Về Hùng",
+    "default": "Về Hùng"
+  },
+  {
+    "key": "snaptik-066",
+    "page": "snaptik",
+    "label": "Liên hệ",
+    "default": "Liên hệ"
+  },
+  {
+    "key": "snaptik-067",
+    "page": "snaptik",
+    "label": "Công cụ",
+    "default": "Công cụ"
+  },
+  {
+    "key": "snaptik-068",
+    "page": "snaptik",
+    "label": "Hộp Ảnh",
+    "default": "Hộp Ảnh"
+  },
+  {
+    "key": "snaptik-069",
+    "page": "snaptik",
+    "label": "Snap Video",
+    "default": "Snap Video"
+  },
+  {
+    "key": "snaptik-070",
+    "page": "snaptik",
+    "label": "Làm Nét Ảnh",
+    "default": "Làm Nét Ảnh"
+  },
+  {
+    "key": "snaptik-071",
+    "page": "snaptik",
+    "label": "Chính sách",
+    "default": "Chính sách"
+  },
+  {
+    "key": "snaptik-072",
+    "page": "snaptik",
+    "label": "Riêng tư",
+    "default": "Riêng tư"
+  },
+  {
+    "key": "snaptik-073",
+    "page": "snaptik",
+    "label": "Điều khoản",
+    "default": "Điều khoản"
+  },
+  {
+    "key": "snaptik-074",
+    "page": "snaptik",
+    "label": "Bản quyền",
+    "default": "Bản quyền"
+  },
+  {
+    "key": "snaptik-075",
+    "page": "snaptik",
+    "label": "Cookie",
+    "default": "Cookie"
+  },
+  {
+    "key": "snaptik-076",
+    "page": "snaptik",
+    "label": "© 2026 Hùng Hiền Hòa",
+    "default": "© 2026 Hùng Hiền Hòa"
+  },
+  {
+    "key": "snaptik-077",
+    "page": "snaptik",
+    "label": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!",
+    "default": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!"
+  },
+  {
+    "key": "snaptik-078",
+    "page": "snaptik",
+    "label": "Về đầu trang",
+    "default": "Về đầu trang"
+  },
+  {
+    "key": "lamnet-001",
+    "page": "lamnet",
+    "label": "Đến nội dung chính",
+    "default": "Đến nội dung chính"
+  },
+  {
+    "key": "lamnet-002",
+    "page": "lamnet",
+    "label": ".",
+    "default": "."
+  },
+  {
+    "key": "lamnet-003",
+    "page": "lamnet",
+    "label": "Làm Nét",
+    "default": "Làm Nét"
+  },
+  {
+    "key": "lamnet-004",
+    "page": "lamnet",
+    "label": "hhh",
+    "default": "hhh"
+  },
+  {
+    "key": "lamnet-005",
+    "page": "lamnet",
+    "label": "Trang chủ",
+    "default": "Trang chủ"
+  },
+  {
+    "key": "lamnet-006",
+    "page": "lamnet",
+    "label": "Cách dùng",
+    "default": "Cách dùng"
+  },
+  {
+    "key": "lamnet-007",
+    "page": "lamnet",
+    "label": "Riêng tư",
+    "default": "Riêng tư"
+  },
+  {
+    "key": "lamnet-008",
+    "page": "lamnet",
+    "label": "Kết nối",
+    "default": "Kết nối"
+  },
+  {
+    "key": "lamnet-009",
+    "page": "lamnet",
+    "label": "Một tấm ảnh · Rõ hơn một chút",
+    "default": "Một tấm ảnh · Rõ hơn một chút"
+  },
+  {
+    "key": "lamnet-010",
+    "page": "lamnet",
+    "label": "Làm nét một chút.",
+    "default": "Làm nét một chút."
+  },
+  {
+    "key": "lamnet-011",
+    "page": "lamnet",
+    "label": "Ảnh hơi mờ?",
+    "default": "Ảnh hơi mờ?"
+  },
+  {
+    "key": "lamnet-012",
+    "page": "lamnet",
+    "label": "Ảnh nhỏ, ảnh cũ hay hơi nhòe. Làm nét ngay trên máy, hoặc nhờ AI đám mây làm nét và tạo ảnh mới.",
+    "default": "Ảnh nhỏ, ảnh cũ hay hơi nhòe. Làm nét ngay trên máy, hoặc nhờ AI đám mây làm nét và tạo ảnh mới."
+  },
+  {
+    "key": "lamnet-013",
+    "page": "lamnet",
+    "label": "Làm nét ảnh",
+    "default": "Làm nét ảnh"
+  },
+  {
+    "key": "lamnet-014",
+    "page": "lamnet",
+    "label": "Tạo ảnh mới",
+    "default": "Tạo ảnh mới"
+  },
+  {
+    "key": "lamnet-015",
+    "page": "lamnet",
+    "label": "Dùng",
+    "default": "Dùng"
+  },
+  {
+    "key": "lamnet-016",
+    "page": "lamnet",
+    "label": "Trên máy · miễn phí",
+    "default": "Trên máy · miễn phí"
+  },
+  {
+    "key": "lamnet-017",
+    "page": "lamnet",
+    "label": "AI đám mây",
+    "default": "AI đám mây"
+  },
+  {
+    "key": "lamnet-018",
+    "page": "lamnet",
+    "label": "Cloudflare",
+    "default": "Cloudflare"
+  },
+  {
+    "key": "lamnet-019",
+    "page": "lamnet",
+    "label": "Chọn một tấm ảnh",
+    "default": "Chọn một tấm ảnh"
+  },
+  {
+    "key": "lamnet-020",
+    "page": "lamnet",
+    "label": "Kéo thả vào đây hoặc bấm để chọn",
+    "default": "Kéo thả vào đây hoặc bấm để chọn"
+  },
+  {
+    "key": "lamnet-021",
+    "page": "lamnet",
+    "label": "JPG, PNG hoặc WebP · tối đa 25 MB",
+    "default": "JPG, PNG hoặc WebP · tối đa 25 MB"
+  },
+  {
+    "key": "lamnet-022",
+    "page": "lamnet",
+    "label": "Đã chọn",
+    "default": "Đã chọn"
+  },
+  {
+    "key": "lamnet-023",
+    "page": "lamnet",
+    "label": "Mô tả ảnh muốn tạo",
+    "default": "Mô tả ảnh muốn tạo"
+  },
+  {
+    "key": "lamnet-024",
+    "page": "lamnet",
+    "label": "Đang chuẩn bị AI…",
+    "default": "Đang chuẩn bị AI…"
+  },
+  {
+    "key": "lamnet-025",
+    "page": "lamnet",
+    "label": "Độ nét",
+    "default": "Độ nét"
+  },
+  {
+    "key": "lamnet-026",
+    "page": "lamnet",
+    "label": "Tự nhiên",
+    "default": "Tự nhiên"
+  },
+  {
+    "key": "lamnet-027",
+    "page": "lamnet",
+    "label": "Nét",
+    "default": "Nét"
+  },
+  {
+    "key": "lamnet-028",
+    "page": "lamnet",
+    "label": "Rất nét",
+    "default": "Rất nét"
+  },
+  {
+    "key": "lamnet-029",
+    "page": "lamnet",
+    "label": "Tải ảnh JPEG",
+    "default": "Tải ảnh JPEG"
+  },
+  {
+    "key": "lamnet-030",
+    "page": "lamnet",
+    "label": "AI đám mây?",
+    "default": "AI đám mây?"
+  },
+  {
+    "key": "lamnet-031",
+    "page": "lamnet",
+    "label": "Gửi ảnh lên",
+    "default": "Gửi ảnh lên"
+  },
+  {
+    "key": "lamnet-032",
+    "page": "lamnet",
+    "label": "Chính sách riêng tư",
+    "default": "Chính sách riêng tư"
+  },
+  {
+    "key": "lamnet-033",
+    "page": "lamnet",
+    "label": "Điều khoản sử dụng",
+    "default": "Điều khoản sử dụng"
+  },
+  {
+    "key": "lamnet-034",
+    "page": "lamnet",
+    "label": "Tôi đã đọc thông báo và đồng ý gửi ảnh này lên AI đám mây.",
+    "default": "Tôi đã đọc thông báo và đồng ý gửi ảnh này lên AI đám mây."
+  },
+  {
+    "key": "lamnet-035",
+    "page": "lamnet",
+    "label": "Bạn cần bật JavaScript để làm nét ảnh.",
+    "default": "Bạn cần bật JavaScript để làm nét ảnh."
+  },
+  {
+    "key": "lamnet-036",
+    "page": "lamnet",
+    "label": "Ba bước nhỏ",
+    "default": "Ba bước nhỏ"
+  },
+  {
+    "key": "lamnet-037",
+    "page": "lamnet",
+    "label": "Tải về bản rõ hơn.",
+    "default": "Tải về bản rõ hơn."
+  },
+  {
+    "key": "lamnet-038",
+    "page": "lamnet",
+    "label": "Chọn ảnh. Đợi một chút.",
+    "default": "Chọn ảnh. Đợi một chút."
+  },
+  {
+    "key": "lamnet-039",
+    "page": "lamnet",
+    "label": "01",
+    "default": "01"
+  },
+  {
+    "key": "lamnet-040",
+    "page": "lamnet",
+    "label": "Chọn AI và ảnh",
+    "default": "Chọn AI và ảnh"
+  },
+  {
+    "key": "lamnet-041",
+    "page": "lamnet",
+    "label": "Làm nét trên máy riêng tư nhất, hoặc chọn AI đám mây. Muốn ảnh mới thì chọn Tạo ảnh mới rồi viết mô ",
+    "default": "Làm nét trên máy riêng tư nhất, hoặc chọn AI đám mây. Muốn ảnh mới thì chọn Tạo ảnh mới rồi viết mô tả."
+  },
+  {
+    "key": "lamnet-042",
+    "page": "lamnet",
+    "label": "02",
+    "default": "02"
+  },
+  {
+    "key": "lamnet-043",
+    "page": "lamnet",
+    "label": "Đợi một chút",
+    "default": "Đợi một chút"
+  },
+  {
+    "key": "lamnet-044",
+    "page": "lamnet",
+    "label": "Làm nét trên máy lần đầu cần tải AI khoảng 27 MB. AI đám mây thường chỉ mất vài giây.",
+    "default": "Làm nét trên máy lần đầu cần tải AI khoảng 27 MB. AI đám mây thường chỉ mất vài giây."
+  },
+  {
+    "key": "lamnet-045",
+    "page": "lamnet",
+    "label": "03",
+    "default": "03"
+  },
+  {
+    "key": "lamnet-046",
+    "page": "lamnet",
+    "label": "Chọn độ nét, tải về",
+    "default": "Chọn độ nét, tải về"
+  },
+  {
+    "key": "lamnet-047",
+    "page": "lamnet",
+    "label": "Kéo thanh giữa ảnh để so sánh, chọn Tự nhiên, Nét hoặc Rất nét rồi tải ảnh JPEG.",
+    "default": "Kéo thanh giữa ảnh để so sánh, chọn Tự nhiên, Nét hoặc Rất nét rồi tải ảnh JPEG."
+  },
+  {
+    "key": "lamnet-048",
+    "page": "lamnet",
+    "label": "Một chút minh bạch",
+    "default": "Một chút minh bạch"
+  },
+  {
+    "key": "lamnet-049",
+    "page": "lamnet",
+    "label": "trên máy bạn.",
+    "default": "trên máy bạn."
+  },
+  {
+    "key": "lamnet-050",
+    "page": "lamnet",
+    "label": "Ảnh ở yên",
+    "default": "Ảnh ở yên"
+  },
+  {
+    "key": "lamnet-051",
+    "page": "lamnet",
+    "label": "Làm nét trên máy chạy ngay trong trình duyệt: ảnh không rời khỏi máy bạn. Đây là chế độ mặc định.",
+    "default": "Làm nét trên máy chạy ngay trong trình duyệt: ảnh không rời khỏi máy bạn. Đây là chế độ mặc định."
+  },
+  {
+    "key": "lamnet-052",
+    "page": "lamnet",
+    "label": "Khi bạn chọn AI đám mây và tích đồng ý, ảnh (hoặc mô tả ảnh muốn tạo) được gửi tới AI của Cloudflare",
+    "default": "Khi bạn chọn AI đám mây và tích đồng ý, ảnh (hoặc mô tả ảnh muốn tạo) được gửi tới AI của Cloudflare, nơi website đang chạy, để xử lý rồi trả kết quả về. Website không lưu ảnh, mô tả hay kết quả, chỉ đếm số lượt mỗi ngày bằng mã băm địa chỉ IP. Cloudflare không giữ lại và không dùng dữ liệu này để huấn luyện AI."
+  },
+  {
+    "key": "lamnet-053",
+    "page": "lamnet",
+    "label": "Ảnh và kết quả bị xóa khỏi trang khi bạn rời trang hoặc sau một giờ. AI đoán thêm chi tiết nên kết q",
+    "default": "Ảnh và kết quả bị xóa khỏi trang khi bạn rời trang hoặc sau một giờ. AI đoán thêm chi tiết nên kết quả có thể khác ảnh thật. Đừng dùng để làm giả giấy tờ, bằng chứng hay chỉnh ảnh của người khác khi chưa được phép."
+  },
+  {
+    "key": "lamnet-054",
+    "page": "lamnet",
+    "label": "Hỏi nhanh một chút",
+    "default": "Hỏi nhanh một chút"
+  },
+  {
+    "key": "lamnet-055",
+    "page": "lamnet",
+    "label": "đang tò mò.",
+    "default": "đang tò mò."
+  },
+  {
+    "key": "lamnet-056",
+    "page": "lamnet",
+    "label": "Bạn có thể",
+    "default": "Bạn có thể"
+  },
+  {
+    "key": "lamnet-057",
+    "page": "lamnet",
+    "label": "Ảnh có bị gửi đi đâu không?",
+    "default": "Ảnh có bị gửi đi đâu không?"
+  },
+  {
+    "key": "lamnet-058",
+    "page": "lamnet",
+    "label": "Với Làm nét trên máy thì không: ảnh được xử lý ngay trên máy bạn. Với AI đám mây, ảnh chỉ được gửi t",
+    "default": "Với Làm nét trên máy thì không: ảnh được xử lý ngay trên máy bạn. Với AI đám mây, ảnh chỉ được gửi tới Cloudflare sau khi bạn tích đồng ý, và không bị lưu lại."
+  },
+  {
+    "key": "lamnet-059",
+    "page": "lamnet",
+    "label": "AI đám mây khác gì làm nét trên máy?",
+    "default": "AI đám mây khác gì làm nét trên máy?"
+  },
+  {
+    "key": "lamnet-060",
+    "page": "lamnet",
+    "label": "AI đám mây vẽ lại ảnh ở khoảng 1024px nên hợp với ảnh rất nhỏ hoặc rất mờ, và tạo được ảnh mới từ mô",
+    "default": "AI đám mây vẽ lại ảnh ở khoảng 1024px nên hợp với ảnh rất nhỏ hoặc rất mờ, và tạo được ảnh mới từ mô tả. Đổi lại, nó có thể đổi chi tiết nhỏ như khuôn mặt hay chữ; ảnh chụp cần giữ đúng chi tiết thì nên làm nét trên máy. Mỗi người có 3 lượt mỗi ngày, website có giới hạn chung nên đôi lúc hết lượt sớm."
+  },
+  {
+    "key": "lamnet-061",
+    "page": "lamnet",
+    "label": "Vì sao lần đầu hơi lâu?",
+    "default": "Vì sao lần đầu hơi lâu?"
+  },
+  {
+    "key": "lamnet-062",
+    "page": "lamnet",
+    "label": "Lần đầu trình duyệt cần tải AI khoảng 27 MB. Những lần sau dùng lại bản đã lưu nên nhanh hơn. Máy tí",
+    "default": "Lần đầu trình duyệt cần tải AI khoảng 27 MB. Những lần sau dùng lại bản đã lưu nên nhanh hơn. Máy tính, điện thoại không có card đồ họa sẽ chậm hơn, khoảng nửa phút một ảnh."
+  },
+  {
+    "key": "lamnet-063",
+    "page": "lamnet",
+    "label": "Ảnh lớn có bị thu nhỏ không?",
+    "default": "Ảnh lớn có bị thu nhỏ không?"
+  },
+  {
+    "key": "lamnet-064",
+    "page": "lamnet",
+    "label": "Ảnh lớn hơn khoảng 1024px được thu về trước khi làm nét rồi phóng to 4 lần, kết quả tới 4096px. Vì v",
+    "default": "Ảnh lớn hơn khoảng 1024px được thu về trước khi làm nét rồi phóng to 4 lần, kết quả tới 4096px. Vì vậy ảnh nhỏ hoặc hơi mờ cho kết quả rõ rệt nhất."
+  },
+  {
+    "key": "lamnet-065",
+    "page": "lamnet",
+    "label": "Nên chọn độ nét nào?",
+    "default": "Nên chọn độ nét nào?"
+  },
+  {
+    "key": "lamnet-066",
+    "page": "lamnet",
+    "label": "Tự nhiên giữ gần ảnh gốc. Nét hợp với đa số ảnh. Rất nét làm viền rõ hơn nhưng có thể hơi gắt với ản",
+    "default": "Tự nhiên giữ gần ảnh gốc. Nét hợp với đa số ảnh. Rất nét làm viền rõ hơn nhưng có thể hơi gắt với ảnh chân dung."
+  },
+  {
+    "key": "lamnet-067",
+    "page": "lamnet",
+    "label": "Cùng trò chuyện",
+    "default": "Cùng trò chuyện"
+  },
+  {
+    "key": "lamnet-068",
+    "page": "lamnet",
+    "label": "Gửi một lời chào.",
+    "default": "Gửi một lời chào."
+  },
+  {
+    "key": "lamnet-069",
+    "page": "lamnet",
+    "label": "Có ý tưởng?",
+    "default": "Có ý tưởng?"
+  },
+  {
+    "key": "lamnet-070",
+    "page": "lamnet",
+    "label": "Trao đổi dự án, chia sẻ ý tưởng hay đơn giản là chào nhau một tiếng.",
+    "default": "Trao đổi dự án, chia sẻ ý tưởng hay đơn giản là chào nhau một tiếng."
+  },
+  {
+    "key": "lamnet-071",
+    "page": "lamnet",
+    "label": "Gửi email cho Hùng",
+    "default": "Gửi email cho Hùng"
+  },
+  {
+    "key": "lamnet-072",
+    "page": "lamnet",
+    "label": "hunghienhoa2110@gmail.com",
+    "default": "hunghienhoa2110@gmail.com"
+  },
+  {
+    "key": "lamnet-073",
+    "page": "lamnet",
+    "label": "0898.29.8886",
+    "default": "0898.29.8886"
+  },
+  {
+    "key": "lamnet-074",
+    "page": "lamnet",
+    "label": ".",
+    "default": "."
+  },
+  {
+    "key": "lamnet-075",
+    "page": "lamnet",
+    "label": "hhh",
+    "default": "hhh"
+  },
+  {
+    "key": "lamnet-076",
+    "page": "lamnet",
+    "label": "Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.",
+    "default": "Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích."
+  },
+  {
+    "key": "lamnet-077",
+    "page": "lamnet",
+    "label": "Khám phá",
+    "default": "Khám phá"
+  },
+  {
+    "key": "lamnet-078",
+    "page": "lamnet",
+    "label": "Trang chủ",
+    "default": "Trang chủ"
+  },
+  {
+    "key": "lamnet-079",
+    "page": "lamnet",
+    "label": "Góc tò mò",
+    "default": "Góc tò mò"
+  },
+  {
+    "key": "lamnet-080",
+    "page": "lamnet",
+    "label": "Về Hùng",
+    "default": "Về Hùng"
+  },
+  {
+    "key": "lamnet-081",
+    "page": "lamnet",
+    "label": "Liên hệ",
+    "default": "Liên hệ"
+  },
+  {
+    "key": "lamnet-082",
+    "page": "lamnet",
+    "label": "Công cụ",
+    "default": "Công cụ"
+  },
+  {
+    "key": "lamnet-083",
+    "page": "lamnet",
+    "label": "Hộp Ảnh",
+    "default": "Hộp Ảnh"
+  },
+  {
+    "key": "lamnet-084",
+    "page": "lamnet",
+    "label": "Snap Video",
+    "default": "Snap Video"
+  },
+  {
+    "key": "lamnet-085",
+    "page": "lamnet",
+    "label": "Làm Nét Ảnh",
+    "default": "Làm Nét Ảnh"
+  },
+  {
+    "key": "lamnet-086",
+    "page": "lamnet",
+    "label": "Chính sách",
+    "default": "Chính sách"
+  },
+  {
+    "key": "lamnet-087",
+    "page": "lamnet",
+    "label": "Riêng tư",
+    "default": "Riêng tư"
+  },
+  {
+    "key": "lamnet-088",
+    "page": "lamnet",
+    "label": "Điều khoản",
+    "default": "Điều khoản"
+  },
+  {
+    "key": "lamnet-089",
+    "page": "lamnet",
+    "label": "Bản quyền",
+    "default": "Bản quyền"
+  },
+  {
+    "key": "lamnet-090",
+    "page": "lamnet",
+    "label": "Cookie",
+    "default": "Cookie"
+  },
+  {
+    "key": "lamnet-091",
+    "page": "lamnet",
+    "label": "© 2026 Hùng Hiền Hòa",
+    "default": "© 2026 Hùng Hiền Hòa"
+  },
+  {
+    "key": "lamnet-092",
+    "page": "lamnet",
+    "label": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!",
+    "default": "Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!"
+  },
+  {
+    "key": "lamnet-093",
+    "page": "lamnet",
+    "label": "Về đầu trang",
+    "default": "Về đầu trang"
+  },
+  {
     "key": "admin-001",
     "page": "admin",
     "label": "GÓC QUẢN TRỊ",

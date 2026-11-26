@@ -12,13 +12,6 @@
 .note-card em{font-style:normal;color:var(--yellow)}
 .note-card span{font-size:15px;font-weight:600;opacity:.85}
 .blog-hero-art img{position:absolute;top:-30px;right:-20px;width:84px;rotate:12deg}
-/* Dải băng: Be Vietnam Pro chữ in, nghiêng nhẹ -2°, rộng hơn màn hình để hai mép không lộ. */
-.topic-band{overflow:hidden;margin:clamp(12px,2vw,24px) -4vw;border-block:4px solid var(--yellow);background:var(--blue);color:var(--cream);rotate:-2deg}
-.topic-band>div{display:flex;align-items:center;gap:26px;width:max-content;padding:13px 0}
-.topic-band span{font-size:clamp(17px,1.8vw,24px);font-weight:800;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
-.topic-band i{color:var(--yellow);font-style:normal;font-size:20px}
-@media(prefers-reduced-motion:no-preference){.topic-band>div{animation:blog-band 40s linear infinite}}
-@keyframes blog-band{to{transform:translateX(-50%)}}
 
 /* Tìm kiếm & lọc */
 .search-form{display:flex;align-items:center;gap:6px;width:min(440px,100%);padding:6px 6px 6px 18px;border:1.5px solid var(--hh-hair);border-radius:999px;background:#fff}

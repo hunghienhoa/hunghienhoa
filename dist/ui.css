@@ -198,7 +198,19 @@ details.faq-item>p{padding:0 0 18px;max-width:70ch}
 .not-found-links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:26px}
 .not-found-links .btn{margin:0}
 body>.sitebar-lang{position:fixed;top:16px;right:16px;z-index:70;background:var(--hh-card)}
-main{overflow-x:clip}
+html,body{overflow-x:clip}
+/* Dải băng chủ đề (mọi trang công khai trừ admin): Be Vietnam Pro chữ in, viền vàng, nghiêng -2°.
+   Rộng hơn màn hình để hai mép không lộ khi nghiêng; hai nhóm chữ giống nhau, mỗi nhóm ≥ một màn hình nên chạy vòng liền mạch. */
+.topic-band{overflow:hidden;margin:clamp(20px,3vw,36px) -4vw;border-block:4px solid var(--yellow);background:var(--blue);color:var(--cream);rotate:-2deg}
+.band-track{display:flex;width:max-content}
+.band-group{display:flex;flex:none;align-items:center;justify-content:space-around;gap:26px;min-width:108vw;padding:13px 13px}
+.topic-band span{font-size:clamp(16px,1.7vw,22px);font-weight:800;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+.topic-band i{color:var(--yellow);font-style:normal;font-size:18px}
+main:has(>.topic-band:last-child)+.site-footer{margin-top:clamp(40px,5vw,64px)}
+main>.topic-band:last-child{margin-bottom:0}
+body>.topic-band{margin-top:0}
+@media(prefers-reduced-motion:no-preference){.band-track{animation:band-run 40s linear infinite}}
+@keyframes band-run{to{transform:translateX(-50%)}}
 [tabindex="-1"]:focus{outline:none}
 /* Điện thoại: footer gọn — thẻ liên hệ một cột, icon tròn một hàng, liên kết 2 cột, chính sách thành hàng ngang. */
 @media(max-width:640px){
@@ -223,3 +235,4 @@ main{overflow-x:clip}
   .footer-wish{grid-column:1/-1;order:-1;font-size:15px}
   .footer-top{min-height:36px}
 }
+.topic-band+.site-footer{margin-top:clamp(40px,5vw,64px)}

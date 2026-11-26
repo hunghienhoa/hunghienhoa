@@ -114,9 +114,9 @@
     "semantic_hash": ""
   },
   "server/validation.mjs": {
-    "mtime": 1795652173.3345559,
-    "seen": 1795652334.9622772,
-    "ast_hash": "8511d64b53eb6dc9e8278fc04ac4d54d",
+    "mtime": 1795676745.282472,
+    "seen": 1795676924.001145,
+    "ast_hash": "9d3b807d3c4ae0ef2318e90dd48c872c",
     "semantic_hash": ""
   },
   "server/visits.mjs": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795676370.285078,
-    "seen": 1795676410.3095927,
-    "ast_hash": "e929a46184478d7cf1bbcfa231cfab34",
+    "mtime": 1795676873.9891078,
+    "seen": 1795676924.0013337,
+    "ast_hash": "92debbec74275e4721c73ea966678669",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -228,9 +228,9 @@
     "semantic_hash": ""
   },
   "tools/build-content-fields.py": {
-    "mtime": 1795652173.3335495,
-    "seen": 1795652334.962603,
-    "ast_hash": "a0d036d500b4231dabb5e48549379650",
+    "mtime": 1795676745.2817388,
+    "seen": 1795676924.0015163,
+    "ast_hash": "007d26b9ca5cd62e55657442763b5e21",
     "semantic_hash": ""
   },
   "tools/build-ui-symbols.py": {
@@ -456,9 +456,9 @@
     "semantic_hash": ""
   },
   "ADMIN-GUIDE.md": {
-    "mtime": 1795629820.0797167,
-    "seen": 1795630718.8048494,
-    "ast_hash": "79d4917769bc2cef571bd9d525ddaac6",
+    "mtime": 1795676854.0030777,
+    "seen": 1795676924.0024354,
+    "ast_hash": "d9812d1d1e19a04f4e0ac970adf8847a",
     "semantic_hash": ""
   },
   "ADSENSE.md": {
@@ -1734,9 +1734,21 @@
     "semantic_hash": ""
   },
   "tools/site-chrome.py": {
-    "mtime": 1795676351.9730237,
-    "seen": 1795676410.310178,
-    "ast_hash": "0769ac3de10470a68e7c3e980e31c51a",
+    "mtime": 1795676713.5194442,
+    "seen": 1795676924.0018713,
+    "ast_hash": "42de9a5479801d7d810f861752d0dba1",
+    "semantic_hash": ""
+  },
+  "shots/admin-overview.png": {
+    "mtime": 1795676890.973109,
+    "seen": 1795676924.0030575,
+    "ast_hash": "6c05e025276d64844ee0998ad2df581c",
+    "semantic_hash": ""
+  },
+  "shots/admin-settings.png": {
+    "mtime": 1795676893.157109,
+    "seen": 1795676924.0030591,
+    "ast_hash": "d9a426b6b1273075cd9be20fc9147784",
     "semantic_hash": ""
   },
   "package-lock.json": {

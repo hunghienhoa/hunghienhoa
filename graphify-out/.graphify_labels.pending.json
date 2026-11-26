@@ -34,7 +34,7 @@
   "32": "asset-versions.mjs",
   "33": "build-ui-symbols.py",
   "34": "check.cjs",
-  "35": "cloud-smoke.mjs",
+  "35": "agent-smoke.mjs",
   "36": "browser-audit.mjs",
   "37": "Nội dung dành cho agent và công cụ tìm kiếm",
   "38": "Kiểm tra toàn bộ website — 10/11/2026",
@@ -80,6 +80,5 @@
   "78": "server.mjs",
   "79": "server.test.mjs",
   "80": "browser-adsense-readiness.mjs",
-  "81": "http-smoke.mjs",
   "82": "ref_node_assert"
 }
