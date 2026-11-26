@@ -2,22 +2,35 @@ import fields from '../dist/content-fields.json' with {type:'json'};
 import {defaultSite} from './validation.mjs';
 import {articleBlocks,inlineTokens,safeCoverURL,readingMinutes} from '../dist/blog/core.mjs';
 
-// Mọi phần của website nằm trên một tên miền; mỗi mục là một đường dẫn gốc (không còn subdomain).
+// Các trang công khai nằm trên một tên miền, mỗi mục là một đường dẫn. Riêng trang quản trị có subdomain admin.hunghienhoa.com.
 export const SITE='https://hunghienhoa.com';
+export const ADMIN_HOST='admin.hunghienhoa.com';
 export const ORIGINS={main:SITE,blog:SITE+'/blog',photobooth:SITE+'/photobooth',snaptik:SITE+'/snaptik',lamnet:SITE+'/lamnet'};
-// Subdomain cũ chỉ còn để chuyển hướng 308 về đường dẫn tương ứng.
-const LEGACY_HOSTS={'admin.hunghienhoa.com':'/admin','blog.hunghienhoa.com':'/blog','photobooth.hunghienhoa.com':'/photobooth','snap.hunghienhoa.com':'/snaptik','lamnet.hunghienhoa.com':'/lamnet'};
+// Subdomain cũ của các trang công khai chỉ còn để chuyển hướng 308 về đường dẫn tương ứng.
+const LEGACY_HOSTS={'blog.hunghienhoa.com':'/blog','photobooth.hunghienhoa.com':'/photobooth','snap.hunghienhoa.com':'/snaptik','lamnet.hunghienhoa.com':'/lamnet'};
 export const POLICY_PATHS=['/chinh-sach-rieng-tu','/dieu-khoan-su-dung','/bao-cao-ban-quyen','/cookie-va-quang-cao'];
 export function publicRedirect(input) {
   const url=new URL(input);
+  // admin.hunghienhoa.com phục vụ thư mục dist/admin ở gốc; /admin/... trên subdomain thì gom về gốc.
+  if(url.hostname===ADMIN_HOST){
+    url.protocol='https:';
+    if(/^\/admin(?:\/|$)/.test(url.pathname))url.pathname=url.pathname.slice(6)||'/';
+    return url.href===new URL(input).href?null:url;
+  }
   if(!['hunghienhoa.com','www.hunghienhoa.com',...Object.keys(LEGACY_HOSTS)].includes(url.hostname))return null;
   url.protocol='https:';
+  // Trang quản trị trên tên miền chính chuyển sang subdomain riêng.
+  if(['hunghienhoa.com','www.hunghienhoa.com'].includes(url.hostname)&&/^\/admin(?:\/|$)/.test(url.pathname)&&!url.pathname.startsWith('/admin/api/')){
+    url.hostname=ADMIN_HOST;url.pathname=url.pathname.slice(6)||'/';
+    if(url.pathname==='/index.html')url.pathname='/';
+    return url;
+  }
   const legacy=LEGACY_HOSTS[url.hostname];
   if(legacy&&!['/ads.txt','/robots.txt'].includes(url.pathname)&&!url.pathname.startsWith('/api/'))url.pathname=legacy+url.pathname;
   url.hostname='hunghienhoa.com';
   if(/^\/snap(?:\/|$)/.test(url.pathname))url.pathname='/snaptik'+url.pathname.slice(5);
-  if(/^\/(?:admin|blog|photobooth|snaptik|lamnet)$/.test(url.pathname))url.pathname+='/';
-  if(!url.pathname.startsWith('/admin/')&&url.pathname.endsWith('/index.html'))url.pathname=url.pathname.slice(0,-10);
+  if(/^\/(?:blog|photobooth|snaptik|lamnet)$/.test(url.pathname))url.pathname+='/';
+  if(url.pathname.endsWith('/index.html'))url.pathname=url.pathname.slice(0,-10);
   if(['/photobooth/shoot/','/photobooth/shoot.html'].includes(url.pathname))url.pathname='/photobooth/shoot';
   if(POLICY_PATHS.some(p=>url.pathname===p+'.html'))url.pathname=url.pathname.slice(0,-5);
   return url.href===new URL(input).href?null:url;

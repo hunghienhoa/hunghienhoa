@@ -3,6 +3,9 @@ const API = (window.HUNG_API_BASE || '').replace(/\/$/, '');
 const SUPABASE = window.HUNG_SUPABASE;
 const SESSION_KEY = 'hung_admin_session';
 const LOCAL = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+// Trên admin.hunghienhoa.com, liên kết sang trang công khai phải trỏ về tên miền chính.
+const SITE = location.hostname === 'admin.hunghienhoa.com' ? 'https://hunghienhoa.com' : '';
+if (SITE) $('#site-link').href = SITE + '/';
 let session = LOCAL ? null : readSession(), csrfToken = '', needsSetup = false, posts = [], frames = [], submissions = [], coverData;
 let currentSettings = {}, contentFields = [];
 let refreshPromise, submissionExpiryTimer, authVersion = 0;
@@ -267,7 +270,7 @@ async function loadCustomization(settings) {
   for(const [page,name] of Object.entries({main:'Trang chủ',blog:'Góc tò mò (Blog)',photobooth:'Hộp Ảnh',snaptik:'Snap Video',lamnet:'Làm Nét',admin:'Trang quản trị'})) {
     const group=make('details');group.append(make('summary',name));
     const pageUrl={main:'/',blog:'/blog/',photobooth:'/photobooth/',snaptik:'/snaptik/',lamnet:'/lamnet/'}[page];
-    if(pageUrl){const open=make('a','Mở trang này trong thẻ mới ↗','page-link');open.href=pageUrl;open.target='_blank';open.rel='noopener';group.append(open);}
+    if(pageUrl){const open=make('a','Mở trang này trong thẻ mới ↗','page-link');open.href=SITE+pageUrl;open.target='_blank';open.rel='noopener';group.append(open);}
     const grid=make('div',undefined,'field-grid');group.append(grid);
     for(const field of contentFields.filter(field=>field.page===page)) {
       const label=make('label',field.label,'custom-field'),input=make('textarea');input.rows=2;input.maxLength=3000;input.dataset.textKey=field.key;input.value=settings.pageTexts?.[field.key] ?? field.default;
