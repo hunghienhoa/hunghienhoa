@@ -1,6 +1,6 @@
 /* Góc tò mò (blog): hero, tìm kiếm, lọc chủ đề, bài nổi bật, lưới bài và trang đọc. Phần chung ở /ui.css. */
 .blog-hero{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:40px;align-items:center;padding-top:clamp(40px,6vw,88px);padding-bottom:clamp(40px,6vw,80px)}
-.blog-hero::before{content:'';position:absolute;z-index:-1;top:-90px;bottom:0;left:50%;width:100vw;translate:-50% 0;pointer-events:none;background:radial-gradient(30% 50% at 22% 40%,color-mix(in srgb,var(--yellow) 50%,transparent),transparent 72%),radial-gradient(28% 50% at 76% 46%,color-mix(in srgb,var(--lilac) 36%,transparent),transparent 72%)}
+.blog-hero::before{content:'';position:absolute;z-index:-1;top:-90px;bottom:0;left:50%;width:100vw;translate:-50% 0;pointer-events:none;background:radial-gradient(30% 50% at 22% 40%,color-mix(in srgb,var(--yellow) 50%,transparent),transparent 72%),radial-gradient(28% 50% at 76% 46%,color-mix(in srgb,var(--blue) 12%,transparent),transparent 72%)}
 .blog-hero h1{font-size:var(--fs-display);line-height:1.1;letter-spacing:-.035em}
 .blog-hero h1 em{padding:0 .06em;background:linear-gradient(transparent 76%,var(--yellow) 76% 91%,transparent 91%);-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .blog-hero .lead{max-width:46ch;margin-top:22px}
@@ -47,8 +47,8 @@
 .sample-label{padding:3px 10px;border-radius:999px;background:color-mix(in srgb,var(--yellow) 60%,transparent)}
 .post-art{position:relative;display:grid;place-items:center;aspect-ratio:16/10;overflow:hidden;border-radius:20px;background:var(--yellow)}
 .featured-card .post-art{aspect-ratio:4/3;border-radius:24px}
-.post-art.art-1{background:color-mix(in srgb,var(--lilac) 50%,var(--cream))}
-.post-art.art-2{background:color-mix(in srgb,var(--mint) 48%,var(--cream))}
+.post-art.art-1{background:color-mix(in srgb,var(--blue) 16%,#fff)}
+.post-art.art-2{background:color-mix(in srgb,var(--yellow) 38%,var(--cream))}
 .art-paper{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(62%,220px);padding:18px 16px;border-radius:16px;background:var(--cream);box-shadow:0 14px 24px -16px rgba(0,0,0,.4);rotate:-4deg;text-align:center}
 .art-paper span{font-size:11px;font-weight:600;letter-spacing:1.4px}
 .art-paper img{width:44px}

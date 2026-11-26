@@ -9,7 +9,7 @@ legend{margin-bottom:14px;font-size:14px;font-weight:700}
 
 /* Hero trang giới thiệu */
 .booth-hero{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center;padding-top:clamp(40px,6vw,88px);padding-bottom:clamp(40px,6vw,72px)}
-.booth-hero::before{content:'';position:absolute;z-index:-1;top:-90px;bottom:0;left:50%;width:100vw;translate:-50% 0;pointer-events:none;background:radial-gradient(30% 50% at 22% 40%,color-mix(in srgb,var(--yellow) 50%,transparent),transparent 72%),radial-gradient(28% 50% at 78% 46%,color-mix(in srgb,#efb9c4 55%,transparent),transparent 72%)}
+.booth-hero::before{content:'';position:absolute;z-index:-1;top:-90px;bottom:0;left:50%;width:100vw;translate:-50% 0;pointer-events:none;background:radial-gradient(30% 50% at 22% 40%,color-mix(in srgb,var(--yellow) 50%,transparent),transparent 72%),radial-gradient(28% 50% at 78% 46%,color-mix(in srgb,var(--blue) 12%,transparent),transparent 72%)}
 .booth-hero h1{font-size:var(--fs-display);line-height:1.1;letter-spacing:-.035em}
 .booth-hero h1 em{display:inline-block;padding:0 .06em;background:linear-gradient(transparent 76%,var(--yellow) 76% 91%,transparent 91%)}
 .booth-hero .lead{max-width:44ch;margin-top:22px}
@@ -17,11 +17,11 @@ legend{margin-bottom:14px;font-size:14px;font-weight:700}
 .landing-promises{margin-top:24px}
 .booth-hero-art{position:relative;display:flex;justify-content:center;gap:22px;min-height:440px;padding-top:20px}
 .hero-strip{display:grid;align-content:start;gap:8px;width:156px;padding:12px 12px 16px;border-radius:10px;background:var(--blue);box-shadow:0 24px 40px -24px rgba(0,0,0,.45)}
-.hero-strip i{display:grid;place-items:center;height:72px;border-radius:6px;background:#f2d7e6}
-.hero-strip i:nth-child(2n){background:#d4dfb1}
+.hero-strip i{display:grid;place-items:center;height:72px;border-radius:6px;background:var(--cream)}
+.hero-strip i:nth-child(2n){background:color-mix(in srgb,var(--blue) 12%,#fff)}
 .hero-strip img{width:52px;height:52px}
 .hero-strip b{margin-top:6px;color:var(--cream);font-size:13px;letter-spacing:.6px;text-align:center}
-.strip-a{rotate:-8deg;margin-top:30px;background:#e8b9c9}
+.strip-a{rotate:-8deg;margin-top:30px;background:color-mix(in srgb,var(--yellow) 60%,var(--cream))}
 .strip-a b{color:var(--blue)}
 .strip-b{rotate:6deg}
 .hero-flash{position:absolute;top:0;right:8%;width:64px;height:64px;border-radius:50%;background:#fff;box-shadow:0 0 0 12px color-mix(in srgb,#fff 45%,transparent),0 0 0 26px color-mix(in srgb,#fff 18%,transparent)}
@@ -73,8 +73,8 @@ legend{margin-bottom:14px;font-size:14px;font-weight:700}
 .how-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 .how-grid article{padding:28px;border:1px solid var(--hh-hair);border-radius:28px;background:var(--hh-card);box-shadow:var(--hh-shadow-sm)}
 .how-grid article>span{display:inline-grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--yellow);font-size:16px;font-weight:600;letter-spacing:.02em}
-.how-grid article:nth-child(2)>span{background:color-mix(in srgb,var(--lilac) 60%,var(--cream))}
-.how-grid article:nth-child(3)>span{background:#efb9c4}
+.how-grid article:nth-child(2)>span{background:color-mix(in srgb,var(--blue) 18%,#fff)}
+.how-grid article:nth-child(3)>span{background:var(--blue);color:var(--cream)}
 .how-grid h3{margin-top:18px;font-size:var(--fs-h3)}
 .how-grid p{margin-top:8px;opacity:.88}
 .privacy{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,64px);margin-top:clamp(64px,8vw,112px);padding:clamp(24px,4vw,48px);border:1px solid var(--hh-hair);border-radius:32px;background:var(--hh-card)}
@@ -97,7 +97,7 @@ legend{margin-bottom:14px;font-size:14px;font-weight:700}
 .panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
 .panel-heading .eyebrow{margin:0}
 .camera-state,#photo-count{padding:5px 12px;border-radius:999px;background:var(--hh-soft);font-size:13px;font-weight:500;white-space:nowrap}
-.camera-stage{position:relative;display:grid;place-items:center;aspect-ratio:4/3;overflow:hidden;border-radius:22px;background:color-mix(in srgb,var(--lilac) 30%,var(--cream));background-image:radial-gradient(color-mix(in srgb,var(--blue) 14%,transparent) 1px,transparent 1.5px);background-size:20px 20px}
+.camera-stage{position:relative;display:grid;place-items:center;aspect-ratio:4/3;overflow:hidden;border-radius:22px;background:color-mix(in srgb,var(--blue) 9%,#fff);background-image:radial-gradient(color-mix(in srgb,var(--blue) 14%,transparent) 1px,transparent 1.5px);background-size:20px 20px}
 .camera-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .camera-stage video.mirrored{transform:scaleX(-1)}
 .camera-empty{position:relative;padding:20px;text-align:center}
@@ -119,7 +119,7 @@ legend{margin-bottom:14px;font-size:14px;font-weight:700}
 .upload-button{position:relative;cursor:pointer}
 .upload-button input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 .upload-button.disabled{opacity:.5;cursor:not-allowed}
-.upload-button:focus-within{outline:3px solid var(--coral);outline-offset:3px}
+.upload-button:focus-within{outline:3px solid var(--blue);outline-offset:3px}
 .camera-help{margin-top:14px;font-size:14px;opacity:.85}
 .photo-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
 .photo-slot{position:relative;min-width:0}
@@ -140,7 +140,7 @@ legend{margin-bottom:14px;font-size:14px;font-weight:700}
 .photo-effects button{min-height:40px;padding:0 14px;border:1px solid var(--hh-hair);border-radius:999px;background:#fff;font-size:13px;font-weight:600}
 .photo-effects button[aria-pressed=true]{border-color:var(--blue);background:var(--blue);color:var(--cream)}
 .photo-effects p{margin-top:12px;font-size:13px;opacity:.85}
-.print-preview{display:flex;justify-content:center;padding:22px;border-radius:22px;background:color-mix(in srgb,var(--blue) 8%,var(--cream))}
+.print-preview{display:flex;justify-content:center;padding:22px;border-radius:22px;background:color-mix(in srgb,var(--blue) 8%,#fff)}
 .print-preview canvas{width:min(100%,200px);height:auto;border-radius:6px;box-shadow:0 18px 30px -16px rgba(0,0,0,.4)}
 .print-preview.updated canvas{animation:print-in .35s ease-out}
 @keyframes print-in{from{translate:0 -6px;opacity:.7}to{translate:0;opacity:1}}
