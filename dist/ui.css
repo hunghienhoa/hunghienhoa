@@ -100,15 +100,8 @@ details.faq-item>p{padding:0 0 18px;max-width:70ch}
 .sitebar-brand small{margin-left:10px;padding:4px 10px;border-radius:999px;background:var(--hh-soft);font-size:12px;font-weight:800;letter-spacing:.2px}
 .sitebar-nav{display:flex;align-items:center;flex:1;gap:2px;font-size:14px}
 .sitebar-nav>:first-child{margin-left:auto}
-.sitebar-nav>a,.sitebar-projects>summary{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 15px;border-radius:999px;font-weight:600;white-space:nowrap;cursor:pointer;list-style:none}
-.sitebar-nav>a:hover,.sitebar-projects>summary:hover,.sitebar-projects[open]>summary,.sitebar-nav>a[aria-current]{background:var(--hh-soft)}
-.sitebar-projects{position:relative}
-.sitebar-projects>summary::-webkit-details-marker{display:none}
-.sitebar-projects>summary::after{content:'';width:7px;height:7px;margin:-3px 0 0 2px;border-right:2px solid;border-bottom:2px solid;rotate:45deg}
-.sitebar-list{position:absolute;right:0;top:calc(100% + 12px);z-index:2;width:300px;margin:0;padding:8px;list-style:none;border:1px solid var(--hh-hair);border-radius:22px;background:var(--hh-card);box-shadow:var(--hh-shadow)}
-.sitebar-list a{display:block;padding:11px 14px;border-radius:14px;font-size:14px;font-weight:700;line-height:1.35}
-.sitebar-list a small{display:block;margin-top:2px;font-size:12px;font-weight:500;opacity:.8}
-.sitebar-list a:hover,.sitebar-list a[aria-current]{background:color-mix(in srgb,var(--yellow) 40%,transparent)}
+.sitebar-nav>a{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 15px;border-radius:999px;font-weight:600;white-space:nowrap;cursor:pointer;list-style:none}
+.sitebar-nav>a:hover,.sitebar-nav>a[aria-current]{background:var(--hh-soft)}
 .sitebar-nav>.sitebar-cta{margin-left:auto;padding:0 20px;background:var(--blue);color:var(--cream);font-weight:800}
 .sitebar-nav>.sitebar-cta:hover{background:var(--blue);translate:0 -1px}
 .sitebar-lang{display:inline-flex;align-items:center;gap:3px;flex:none;min-height:44px;margin-left:4px;padding:0 10px;border:1px solid var(--hh-hair);border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.5px}
@@ -123,15 +116,14 @@ details.faq-item>p{padding:0 0 18px;max-width:70ch}
   .sitebar-nav{display:none;position:absolute;left:0;right:0;top:calc(100% + 8px);flex-direction:column;align-items:stretch;max-height:calc(100dvh - 96px);overflow:auto;padding:10px;border:1px solid var(--hh-hair);border-radius:24px;background:var(--hh-card);box-shadow:var(--hh-shadow)}
   .sitebar.open .sitebar-nav{display:flex}
   .sitebar-nav>:first-child{margin-left:0}
-  .sitebar-nav>a,.sitebar-projects>summary{width:100%;min-height:50px;padding:0 14px;border-radius:14px;font-size:16px;justify-content:space-between}
-  .sitebar-list{position:static;width:100%;padding:0 0 4px 10px;border:0;box-shadow:none;background:none}
+  .sitebar-nav>a{width:100%;min-height:50px;padding:0 14px;border-radius:14px;font-size:16px;justify-content:space-between}
   .sitebar-nav>.sitebar-cta{margin:8px 0 0;justify-content:center}
   .sitebar-lang{justify-content:center;margin:8px 0 0;min-height:48px}
 }
 
 /* ---------- Footer (kiểu footer.design) ----------
    Thẻ mời liên hệ màu xanh bo tròn, hàng icon mạng xã hội tròn; bên dưới là nhóm liên kết nhãn ngắn trên nền giấy;
-   cuối cùng là chữ ký "Hùng Hiền Hòa" thật lớn, cắt ở đáy trang. */
+   cuối cùng là hàng lời chúc, bản quyền và về đầu trang. */
 .site-footer{position:relative;margin-top:clamp(72px,9vw,120px);padding:0 var(--gutter);overflow:hidden}
 .site-footer>*{width:min(var(--wrap),100%);margin-inline:auto}
 .footer-cta{--blue:var(--hh-footer-fg);--cream:var(--hh-footer-bg);--hh-hair:color-mix(in srgb,var(--hh-footer-fg) 20%,transparent);--hh-soft:color-mix(in srgb,var(--hh-footer-fg) 10%,transparent);--hh-card:color-mix(in srgb,var(--hh-footer-fg) 7%,transparent);position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:end;padding:clamp(28px,5vw,56px);overflow:hidden;border-radius:36px;background:var(--hh-footer-bg);color:var(--hh-footer-fg);box-shadow:var(--hh-shadow)}
@@ -160,10 +152,9 @@ details.faq-item>p{padding:0 0 18px;max-width:70ch}
 .footer-col a{display:inline-flex;align-items:center;min-height:38px;font-size:15px;font-weight:600}
 .footer-col a:hover,.footer-top:hover{color:var(--coral)}
 .footer-bottom{position:relative}
-.footer-legal{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 24px;padding:16px 0;border-top:1px solid var(--hh-hair);font-size:13px;font-weight:600}
+.footer-legal{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 24px;padding:16px 0 28px;border-top:1px solid var(--hh-hair);font-size:13px;font-weight:600}
 .footer-wish{flex:1 1 280px;font-family:var(--accent);font-style:italic;font-weight:600;font-size:16px;text-align:center}
 .footer-top{display:inline-flex;align-items:center;gap:8px;min-height:44px}
-.footer-wordmark{margin:0;padding-bottom:.04em;font-size:clamp(52px,12.4vw,210px);font-weight:900;line-height:1.2;letter-spacing:-.055em;text-align:center;white-space:nowrap;color:var(--blue);user-select:none}
 
 /* ---------- Trang chính sách & 404 ---------- */
 .doc{width:min(820px,100%);margin:0 auto;padding:clamp(40px,6vw,80px) var(--gutter) 0}
