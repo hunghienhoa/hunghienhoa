@@ -9,7 +9,7 @@ const ctx = strip.getContext('2d');
 const nativeCanvasFilters = 'filter' in ctx;
 const frameFontsReady = Promise.all([
   document.fonts.load('700 20px "Be Vietnam Pro"', 'HỘP ẢNH CỦA BẠN'),
-  document.fonts.load('800 24px "Be Vietnam Pro"', 'Kỷ niệm'),
+  document.fonts.load('700 24px "Be Vietnam Pro"', 'Kỷ niệm'),
   document.fonts.load('italic 600 46px "Playfair Display"', 'Một chút hôm nay'),
   document.fonts.ready
 ]);

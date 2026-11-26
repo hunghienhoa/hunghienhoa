@@ -6,9 +6,9 @@ Từ 10/11/2026, toàn bộ portfolio, blog, photobooth và quản trị dùng *
 
 - Tác giả: Lâm Bảo, Tony Le, ViệtAnh Nguyễn.
 - Nguồn chính thức: [Google Fonts](https://github.com/google/fonts/tree/c13390277dfb1fcc7415d84ef7ef9cfc1e52f8c1/ofl/bevietnampro), bản chốt `c13390277dfb1fcc7415d84ef7ef9cfc1e52f8c1`.
-- Tệp gốc: `BeVietnamPro-Regular.ttf`, `Medium`, `SemiBold`, `Bold`, `ExtraBold`, `Black` — độ đậm 400/500/600/700/800/900.
+- Tệp gốc: `BeVietnamPro-Regular.ttf`, `Medium`, `SemiBold`, `Bold`, `ExtraBold`, `Black` — độ đậm 400/500/600/700/800/900; cùng `Italic` (400), `SemiBoldItalic` (600) và `BoldItalic` (700) lấy từ gói `@expo-google-fonts/be-vietnam-pro` 0.4.1 (bản Google Fonts), cắt đúng bộ ký tự của bản Regular bằng `fontTools.subset` rồi lưu WOFF2.
 - Chuyển nguyên bộ glyph TTF sang WOFF2 bằng FontTools/Brotli; không cắt bỏ chữ tiếng Việt, không đổi tên họ phông hoặc sửa hình dáng chữ.
-- Giấy phép SIL OFL 1.1 giữ trong `fonts/BeVietnamPro-OFL.txt` ở mỗi trang độc lập. Tổng sáu WOFF2 khoảng 241 KB mỗi bộ; trình duyệt chỉ tải độ đậm được dùng.
+- Giấy phép SIL OFL 1.1 giữ trong `fonts/BeVietnamPro-OFL.txt` ở mỗi trang độc lập. Tổng chín WOFF2 khoảng 355 KB mỗi bộ; trình duyệt chỉ tải độ đậm được dùng.
 
 ## Playfair Display
 
