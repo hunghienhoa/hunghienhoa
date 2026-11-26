@@ -8,7 +8,7 @@
 
 ## Tự lưu và lên web ngay
 
-- Sửa xong một ô, ngừng gõ khoảng **1,5 giây** là tự lưu. Huy hiệu ở thanh trên cùng cho biết trạng thái: “Có thay đổi, sắp tự lưu…”, “Đang lưu…”, “Đã lưu HH:MM · đã lên web”, hoặc báo lỗi nếu chưa lưu được. Nút Lưu vẫn dùng được khi muốn lưu ngay.
+- Sửa xong một ô, ngừng gõ khoảng **1,5 giây** là tự lưu. Huy hiệu ở thanh trên cùng cho biết trạng thái: “Có thay đổi, sắp tự lưu…”, “Đang lưu…”, “Đã lưu HH:MM · đã lên web”, hoặc báo lỗi nếu chưa lưu được. Chấm **xanh nhấp nháy** nghĩa là tự lưu đang bật; chấm **đỏ** là đang tắt (chưa đăng nhập, mất mạng) hoặc vừa lưu lỗi. Nút Lưu vẫn dùng được khi muốn lưu ngay.
 - Khi lưu, máy chủ xóa bộ nhớ đệm nên trang công khai hiện nội dung mới ở lần tải tiếp theo (không cần chờ).
 - **Bài viết mới** chỉ tự lưu khi đã điền đủ tiêu đề, tóm tắt, chuyên mục và nội dung. Mặc định là **Bản nháp** (chưa hiện trên web); chọn **Xuất bản** thì bài lên web ngay. Bài đã xuất bản sửa tới đâu cập nhật trên web tới đó. Tự lưu không tạo bài trùng và không làm mất chữ đang gõ.
 - Còn thay đổi chưa lưu mà đóng tab thì trình duyệt sẽ hỏi lại.

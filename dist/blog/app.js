@@ -251,7 +251,12 @@ $('#list-nav').href='./#bai-viet';
 getJSON('/api/site').then(site => {
   if (typeof site.blogTitle === 'string' && site.blogTitle.trim()) {
     blogName = site.blogTitle.trim().slice(0, 120);
-    $('#blog-title').textContent = blogName;
+    // Tiêu đề kiểu lockup: phần đầu chữ nhỏ, phần cuối ("của Hùng" hoặc hai chữ cuối) thành cụm nghiêng lớn.
+    const words = blogName.split(/\s+/), at = blogName.search(/\s(của|cùng|với)\s/i);
+    const head = at > 0 ? blogName.slice(0, at) : words.length > 2 ? words.slice(0, -2).join(' ') : '';
+    const tail = head ? blogName.slice(head.length).trim() : blogName;
+    const em = document.createElement('em'); em.textContent = tail;
+    $('#blog-title').replaceChildren(...(head ? [document.createTextNode(head + ' ')] : []), em);
     if ($('#reader').hidden) document.title = `${blogName} — Những điều thú vị`;
   }
   if (typeof site.blogIntro === 'string' && site.blogIntro.trim()) $('#blog-intro').textContent = site.blogIntro.trim().slice(0, 800);

@@ -53,14 +53,15 @@ assert.equal(status.textContent,'');await button.click();assert.equal(copied,'co
 denied=true;await button.click();assert.match(status.textContent,/Chưa sao chép/);
 
 // The footer brand was removed; loading settings must still update the intro and notify text overrides.
-const settingsNodes={ '#blog-title':{}, '#blog-intro':{}, '#reader':{hidden:true} }, settingsEvents=[];
+const settingsNodes={ '#blog-title':{replaceChildren(...nodes){this.parts=nodes.map(node=>node.textContent);this.textContent=this.parts.join('');}}, '#blog-intro':{}, '#reader':{hidden:true} }, settingsEvents=[];
 const settingsContext=vm.createContext({
   getJSON:async()=>({blogTitle:'Tên góc mới',blogIntro:'Lời giới thiệu mới'}),
-  $:selector=>settingsNodes[selector]||null,blogName:'Tên cũ',document:{title:''},
+  $:selector=>settingsNodes[selector]||null,blogName:'Tên cũ',document:{title:'',createElement:()=>({textContent:''}),createTextNode:value=>({textContent:value})},
   window:{dispatchEvent:event=>settingsEvents.push(event.type)},Event:class{constructor(type){this.type=type;}}
 });
 vm.runInContext(source.slice(source.indexOf("getJSON('/api/site').then"),source.indexOf('await loadPosts();')),settingsContext);
 await new Promise(resolve=>setImmediate(resolve));
 assert.equal(settingsNodes['#blog-title'].textContent,'Tên góc mới');
+assert.deepEqual(settingsNodes['#blog-title'].parts,['Tên ','góc mới']); // phần cuối thành cụm nghiêng lớn của tiêu đề lockup
 assert.equal(settingsNodes['#blog-intro'].textContent,'Lời giới thiệu mới');
 assert.equal(settingsEvents[0],'hung-content-ready');

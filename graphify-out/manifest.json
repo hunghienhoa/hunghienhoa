@@ -78,9 +78,9 @@
     "semantic_hash": ""
   },
   "server/agent-content.mjs": {
-    "mtime": 1795678734.1723738,
-    "seen": 1795678833.2065544,
-    "ast_hash": "9253145915be04f67f2e10444819245b",
+    "mtime": 1795695484.5869503,
+    "seen": 1795695781.9196885,
+    "ast_hash": "aee1aacf1cbf1af3028c2c9aeff3b3ec",
     "semantic_hash": ""
   },
   "server/contribution-limit.mjs": {
@@ -96,9 +96,9 @@
     "semantic_hash": ""
   },
   "server/server.test.mjs": {
-    "mtime": 1795629611.8957827,
-    "seen": 1795630718.8047707,
-    "ast_hash": "7fef491d022fb4b4c70c64974f637230",
+    "mtime": 1795695484.5920093,
+    "seen": 1795695781.9197369,
+    "ast_hash": "a11adb3ad044205facd1ecbc7e6abcde",
     "semantic_hash": ""
   },
   "server/snaptik.mjs": {
@@ -156,9 +156,9 @@
     "semantic_hash": ""
   },
   "tools/agent-readiness.test.mjs": {
-    "mtime": 1795678772.958144,
-    "seen": 1795678833.2069373,
-    "ast_hash": "a8152da64197fc1bcfdd652376089256",
+    "mtime": 1795695484.5907505,
+    "seen": 1795695781.9198892,
+    "ast_hash": "40886deba74afc8ba731dd4b1b8ce4e5",
     "semantic_hash": ""
   },
   "tools/agent-smoke.mjs": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795693476.251905,
-    "seen": 1795693510.1578581,
-    "ast_hash": "80807b54ff295a2a8806888816b86415",
+    "mtime": 1795695711.4423525,
+    "seen": 1795695781.919905,
+    "ast_hash": "c8a3453c06e9d71dd1577b482389b72e",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -336,9 +336,9 @@
     "semantic_hash": ""
   },
   "worker/index.test.mjs": {
-    "mtime": 1795678772.9573348,
-    "seen": 1795678833.2076793,
-    "ast_hash": "e76394ee4c88ca3ec4c8932c08169888",
+    "mtime": 1795695484.5940905,
+    "seen": 1795695781.9203448,
+    "ast_hash": "182b02fda7803e73e8c4989e295787c1",
     "semantic_hash": ""
   },
   "worker/usage-providers.mjs": {
@@ -456,9 +456,9 @@
     "semantic_hash": ""
   },
   "ADMIN-GUIDE.md": {
-    "mtime": 1795678816.308495,
-    "seen": 1795678833.208231,
-    "ast_hash": "9c0dd95a3dacd528a9bf8e82d205b368",
+    "mtime": 1795695780.37646,
+    "seen": 1795695781.920695,
+    "ast_hash": "47c6069f039e5a4282b1ac1c513d19ea",
     "semantic_hash": ""
   },
   "ADSENSE.md": {
@@ -522,9 +522,9 @@
     "semantic_hash": ""
   },
   "PROJECT.md": {
-    "mtime": 1795693476.1719165,
-    "seen": 1795693510.1588502,
-    "ast_hash": "96eb58976f8f4f4cb02f5e5c3f41f1a7",
+    "mtime": 1795695375.5374248,
+    "seen": 1795695781.92084,
+    "ast_hash": "406b51e90ceb63c909228403c170ddee",
     "semantic_hash": ""
   },
   "README.md": {
@@ -1734,9 +1734,9 @@
     "semantic_hash": ""
   },
   "tools/site-chrome.py": {
-    "mtime": 1795678548.7327237,
-    "seen": 1795678602.6646955,
-    "ast_hash": "df432e6ecabdee2b2e05277ff2ebef96",
+    "mtime": 1795695477.3274775,
+    "seen": 1795695781.9202697,
+    "ast_hash": "081083ecb4dcdaad2fb0ac976bda6b68",
     "semantic_hash": ""
   },
   "package-lock.json": {

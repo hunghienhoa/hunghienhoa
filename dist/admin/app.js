@@ -352,6 +352,14 @@ if (typeof MutationObserver === 'function') {
   saveBadge.setAttribute('role', 'status'); saveBadge.dataset.state = 'idle';
   document.querySelector('.admin-page>header')?.insertBefore(saveBadge, $('#logout'));
   function badge(state, text) { saveBadge.dataset.state = state; saveBadge.textContent = text; }
+  // Chấm trạng thái: xanh nhấp nháy khi tự lưu đang bật; đỏ khi tắt (chưa đăng nhập hoặc mất mạng) hay khi lưu lỗi.
+  function syncPower() {
+    const off = $('#workspace').hidden || navigator.onLine === false;
+    if (off) badge('off', $('#workspace').hidden ? 'Tự lưu đang tắt' : 'Mất mạng · tự lưu tạm tắt');
+    else if (saveBadge.dataset.state === 'off') badge('idle', 'Tự lưu đang bật');
+  }
+  new MutationObserver(syncPower).observe($('#workspace'), { attributes: true, attributeFilter: ['hidden'] });
+  addEventListener('online', syncPower); addEventListener('offline', syncPower); syncPower();
   const autosaveForms = [['#customize-form', '#save-customization', '#customize-status'], ['#site-form', '#save-site', '#site-status'], ['#post-form', '#save-post', '#post-status']];
   const pending = new Map();
   function waitIdle(button) { return new Promise(resolve => { if (!button.disabled) return resolve(); const observer = new MutationObserver(() => { if (!button.disabled) { observer.disconnect(); resolve(); } }); observer.observe(button, { attributes: true, attributeFilter: ['disabled'] }); }); }

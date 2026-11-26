@@ -1,17 +1,17 @@
 # Graph Report - hunghienhoa  (2026-11-26)
 
 ## Corpus Check
-- 118 files · ~91,034 words
+- 118 files · ~91,255 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 17 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
 ## Summary
-- 1056 nodes · 1850 edges · 81 communities (63 shown, 18 thin omitted)
+- 1056 nodes · 1849 edges · 81 communities (63 shown, 18 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 29 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `22805731`
+- Built from commit: `e7ce5e9f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -122,8 +122,8 @@
 ## Communities (81 total, 18 thin omitted)
 
 ### Community 0 - "index.mjs"
-Cohesion: 0.14
-Nodes (34): publicRedirect(), ADMIN_FILES, adminApi(), assetRequest(), bearer(), cachedImage(), cachedJson(), cacheKey() (+26 more)
+Cohesion: 0.17
+Nodes (33): publicRedirect(), ADMIN_FILES, adminApi(), assetRequest(), bearer(), cachedImage(), cachedJson(), cacheKey() (+25 more)
 
 ### Community 1 - "validate-findings.cjs"
 Cohesion: 0.06
@@ -330,8 +330,8 @@ Cohesion: 0.33
 Nodes (5): API admin, API public, Bảo mật và vòng đời, Nội dung dùng chung — hợp đồng giao tiếp, Snap (công khai, không cần tài khoản)
 
 ### Community 70 - "dashboard.test.mjs"
-Cohesion: 0.12
-Nodes (19): initContributionLimit(), initVisits(), pageForVisit(), recordVisit(), VISIT_PAGES, visitDay(), visitSummary(), colors (+11 more)
+Cohesion: 0.10
+Nodes (20): initContributionLimit(), initVisits(), pageForVisit(), recordVisit(), VISIT_PAGES, visitDay(), visitSummary(), colors (+12 more)
 
 ### Community 71 - "Kiểm tra triển khai hunghienhoa — 09/11/2026"
 Cohesion: 0.40
@@ -380,16 +380,16 @@ Nodes (4): admin(), pages, SAME, sandbox
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `VisitCounter` connect `dashboard.test.mjs` to `Hướng dẫn mã nguồn — Hùng Hiền Hòa`, `index.mjs`, `lamnet-ai.test.mjs`, `Quy trình ứng phó sự cố`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
+  _High betweenness centrality (0.064) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `handle()` (e.g. with `frameData()` and `pendingData()`) actually correct?**
   _`handle()` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **Should `index.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.13900134952766532 - nodes in this community are weakly interconnected._
-- **Why does `Hướng dẫn mã nguồn — Hùng Hiền Hòa` connect `Hướng dẫn mã nguồn — Hùng Hiền Hòa` to `README.md`?**
-  _High betweenness centrality (0.042) - this node is a cross-community bridge._
 - **Should `validate-findings.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
-- **Why does `Làm Nét` connect `Hướng dẫn mã nguồn — Hùng Hiền Hòa` to `dashboard.test.mjs`?**
-  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+- **Why does `Quy trình ứng phó sự cố` connect `Quy trình ứng phó sự cố` to `3. Sáu bước`, `README.md`?**
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.0670807453416149 - nodes in this community are weakly interconnected._
+- **Why does `Dữ liệu cá nhân website đang giữ` connect `Quy trình ứng phó sự cố` to `dashboard.test.mjs`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+- **Should `agent-content.mjs` be split into smaller, more focused modules?**
+  _Cohesion score 0.06428988895382817 - nodes in this community are weakly interconnected._
