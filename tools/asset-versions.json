@@ -11,8 +11,8 @@
   "blog/style.css?v=blog-2026-2": "608bde6d4ce6c980",
   "contact.js?v=4": "00853788ffb74974",
   "home.css?v=3": "3128828648bb03d2",
-  "i18n-en.js?v=3": "b7e240c8bc86d2ab",
-  "i18n.js?v=3": "24e9f3ae298fccb5",
+  "i18n-en.js?v=4": "ad4d459c655c8813",
+  "i18n.js?v=4": "5dbf3113e4b9961c",
   "lamnet/app.js?v=9": "d28f99363a7f7daf",
   "lamnet/core.mjs?v=3": "247a6722e22afc6c",
   "lamnet/style.css?v=7": "811f645e0bcd397c",
@@ -28,5 +28,5 @@
   "snaptik/app.js?v=snap-4": "37a44e89af00b8fc",
   "snaptik/style.css?v=snap-6": "b44d24efc2630dff",
   "tools.css?v=2": "e11ef27973911e36",
-  "ui.css?v=2": "c259bd48eb2144f2"
+  "ui.css?v=3": "beb1353be0fefddb"
 }
