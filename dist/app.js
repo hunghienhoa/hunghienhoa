@@ -74,7 +74,8 @@ document.documentElement.classList.add('js');
       const posts = Array.isArray(data?.posts) ? data.posts.filter(post => post && typeof post.slug === 'string' && /^[a-z0-9-]{1,120}$/.test(post.slug)) : [];
       if (!posts.length) return empty();
       showFeature(posts[0]);
-      const rest = (posts.length > 1 ? posts.slice(1) : posts).slice(0, 9);
+      // Trang chủ chỉ hiện 6 bài mới (sau bài nổi bật); xem thêm ở Góc tò mò.
+      const rest = (posts.length > 1 ? posts.slice(1) : posts).slice(0, 6);
       topics(rest);
       render(rest, '');
     })

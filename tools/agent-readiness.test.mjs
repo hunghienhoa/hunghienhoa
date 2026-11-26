@@ -18,7 +18,7 @@ for(const [accept,expected] of [
 assert.equal(pageContext(new URL('https://hunghienhoa.com/admin/')),null);
 const ctx=pageContext(new URL(ORIGINS.main+'/'));
 const fields=JSON.parse(fs.readFileSync('dist/content-fields.json','utf8'));
-const hero=fields.find(f=>f.page==='main'&&f.default==='Nhặt chuyện hay,').key;
+const hero=fields.find(f=>f.page==='main'&&f.default==='Nhặt chuyện hay').key;
 const privateKey=fields.find(f=>f.page==='admin').key;
 const site={...defaultSite,displayName:'Hùng Hiền Hòa </script><script>alert(1)</script>',pageTexts:{[hero]:'Hộp đã sửa trong admin',[privateKey]:'PRIVATE-ADMIN-MARKER'}};
 const html=decorateHtml(fs.readFileSync('dist/index.html','utf8'),site,ctx,new URL(ORIGINS.main));

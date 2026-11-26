@@ -10,8 +10,8 @@ legend{margin-bottom:14px;font-size:14px;font-weight:800}
 /* Hero trang giới thiệu */
 .booth-hero{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center;padding-top:clamp(40px,6vw,88px);padding-bottom:clamp(40px,6vw,72px)}
 .booth-hero::before{content:'';position:absolute;z-index:-1;top:-90px;bottom:0;left:50%;width:100vw;translate:-50% 0;pointer-events:none;background:radial-gradient(30% 50% at 22% 40%,color-mix(in srgb,var(--yellow) 50%,transparent),transparent 72%),radial-gradient(28% 50% at 78% 46%,color-mix(in srgb,#efb9c4 55%,transparent),transparent 72%)}
-.booth-hero h1{font-size:clamp(44px,5vw,76px);font-weight:800;line-height:1.08;letter-spacing:-.045em}
-.booth-hero h1 em{display:inline-block;padding:0 .06em;font-size:1.05em;background:linear-gradient(transparent 74%,var(--yellow) 74% 90%,transparent 90%)}
+.booth-hero h1{font-size:var(--fs-display);line-height:1.1;letter-spacing:-.035em}
+.booth-hero h1 em{display:inline-block;padding:0 .06em;background:linear-gradient(transparent 76%,var(--yellow) 76% 91%,transparent 91%)}
 .booth-hero .lead{max-width:44ch;margin-top:22px}
 .landing-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
 .landing-promises{margin-top:24px}
@@ -22,7 +22,7 @@ legend{margin-bottom:14px;font-size:14px;font-weight:800}
 .hero-strip img{width:52px;height:52px}
 .hero-strip b{margin-top:6px;color:var(--cream);font-size:13px;letter-spacing:.6px;text-align:center}
 .strip-a{rotate:-8deg;margin-top:30px;background:#e8b9c9}
-.strip-a b{color:var(--blue);font-family:var(--accent);font-style:italic;font-weight:600;font-size:16px;letter-spacing:0}
+.strip-a b{color:var(--blue)}
 .strip-b{rotate:6deg}
 .hero-flash{position:absolute;top:0;right:8%;width:64px;height:64px;border-radius:50%;background:#fff;box-shadow:0 0 0 12px color-mix(in srgb,#fff 45%,transparent),0 0 0 26px color-mix(in srgb,#fff 18%,transparent)}
 @media(prefers-reduced-motion:no-preference){.strip-a{animation:strip-sway 9s ease-in-out infinite}.strip-b{animation:strip-sway 11s ease-in-out -3s infinite reverse}}
@@ -31,8 +31,8 @@ legend{margin-bottom:14px;font-size:14px;font-weight:800}
 /* Khung chạy ngang */
 .frame-showcase{padding-top:clamp(64px,8vw,112px)}
 .showcase-heading{display:flex;flex-direction:column;align-items:flex-start}
-.showcase-heading h2{font-size:clamp(36px,4.6vw,62px);font-weight:800;letter-spacing:-.04em}
-.showcase-heading h2 em{display:inline-block;background:linear-gradient(transparent 76%,var(--yellow) 76% 90%,transparent 90%)}
+.showcase-heading h2{font-size:var(--fs-h2);line-height:1.12}
+.showcase-heading h2 em{display:inline-block;background:linear-gradient(transparent 78%,var(--yellow) 78% 92%,transparent 92%)}
 .showcase-heading p{max-width:52ch;margin:14px 0 20px}
 .showcase-window{margin-top:36px;padding:16px 0 28px;overflow:hidden;background:var(--blue)}
 .showcase-track{display:flex;width:max-content}
@@ -70,20 +70,20 @@ legend{margin-bottom:14px;font-size:14px;font-weight:800}
 .how-to .head>img{width:80px}
 .how-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
 .how-grid article{padding:28px;border:1px solid var(--hh-hair);border-radius:28px;background:var(--hh-card);box-shadow:var(--hh-shadow-sm)}
-.how-grid article>span{display:inline-grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--yellow);font-family:var(--accent);font-style:italic;font-weight:600;font-size:20px}
+.how-grid article>span{display:inline-grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--yellow);font-size:16px;font-weight:800;letter-spacing:.02em}
 .how-grid article:nth-child(2)>span{background:color-mix(in srgb,var(--lilac) 60%,var(--cream))}
 .how-grid article:nth-child(3)>span{background:#efb9c4}
-.how-grid h3{margin-top:18px;font-size:22px;font-weight:800}
+.how-grid h3{margin-top:18px;font-size:var(--fs-h3)}
 .how-grid p{margin-top:8px;opacity:.88}
 .privacy{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,64px);margin-top:clamp(64px,8vw,112px);padding:clamp(24px,4vw,48px);border:1px solid var(--hh-hair);border-radius:32px;background:var(--hh-card)}
-.privacy h2{font-size:clamp(34px,4vw,54px);font-weight:800;letter-spacing:-.04em}
+.privacy h2{font-size:var(--fs-h2);line-height:1.12}
 .privacy h2 em{display:inline-block;background:linear-gradient(transparent 76%,var(--yellow) 76% 90%,transparent 90%)}
 .privacy>div>p{max-width:46ch;margin-top:18px}
 .questions{border-top:1px solid var(--hh-hair)}
 
 /* ---------- Phòng chụp ---------- */
 .studio{padding-top:clamp(32px,5vw,64px)}
-.studio .head h1,.studio .head h2{font-size:clamp(34px,4.4vw,58px);font-weight:800;letter-spacing:-.04em}
+.studio .head h1,.studio .head h2{font-size:var(--fs-h2);line-height:1.12}
 .studio .head em{display:inline-block;background:linear-gradient(transparent 76%,var(--yellow) 76% 90%,transparent 90%)}
 .studio>.steps{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px;padding:0;list-style:none}
 .studio>.steps li{display:flex;align-items:center;gap:10px;min-height:46px;padding:0 16px 0 6px;border:1px solid var(--hh-hair);border-radius:999px;background:var(--hh-card);font-size:14px;font-weight:600;opacity:.7}
@@ -147,7 +147,7 @@ legend{margin-bottom:14px;font-size:14px;font-weight:800}
 #change-frame,.download-button{width:100%;margin-bottom:10px}
 .reset-button{display:flex;margin:0 auto}
 .editor{margin-top:20px}
-.editor h3{margin-top:4px;font-size:clamp(26px,3vw,34px);font-weight:800;letter-spacing:-.03em}
+.editor h3{margin-top:4px;font-size:clamp(24px,2.4vw,30px);font-weight:800;letter-spacing:-.02em}
 .creator-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:16px}
 .editor-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;margin-top:22px}
 .shoot-page .editor-grid{grid-template-columns:minmax(0,1fr)}
@@ -183,7 +183,7 @@ legend{margin-bottom:14px;font-size:14px;font-weight:800}
 /* ---------- Xưởng khung & đóng góp ---------- */
 #frame-creator{width:min(1080px,94vw);max-width:none;max-height:92dvh;overflow:auto}
 .creator-heading{position:sticky;top:-32px;z-index:3;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:12px 0 16px;border-bottom:1px solid var(--hh-hair);background:var(--hh-card)}
-.creator-heading h2{font-size:clamp(26px,3vw,40px);font-weight:800;letter-spacing:-.03em}
+.creator-heading h2{font-size:clamp(26px,2.8vw,36px)}
 .creator-heading .eyebrow{margin-bottom:10px}
 .creator-close{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--blue);color:var(--cream);font-size:24px}
 .creator-description{max-width:66ch;margin:16px 0}
@@ -244,10 +244,10 @@ legend{margin-bottom:14px;font-size:14px;font-weight:800}
 /* Điện thoại: khung cộng đồng 2 cột, các bước dạng hàng gọn, bớt khoảng trống. */
 @media(max-width:640px){
   .booth-hero{padding-bottom:28px}
-  .booth-hero h1{font-size:clamp(38px,10.6vw,50px)}
+  .booth-hero h1{font-size:clamp(34px,9.6vw,44px)}
   .booth-hero-art{min-height:300px}
   .frame-showcase,.community,.how-to{padding-top:56px}
-  .showcase-heading h2,.privacy h2{font-size:clamp(30px,8.6vw,38px)}
+  .showcase-heading h2,.privacy h2{font-size:clamp(28px,8vw,34px)}
   .showcase-card{width:132px}
   .community-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .community-card{padding:8px;border-radius:18px}
@@ -259,8 +259,8 @@ legend{margin-bottom:14px;font-size:14px;font-weight:800}
   .community-invite .btn{width:100%}
   .how-grid{gap:10px}
   .how-grid article{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:14px;padding:16px;border-radius:22px}
-  .how-grid article>span{grid-row:span 2;width:40px;height:40px;font-size:17px}
-  .how-grid h3{margin-top:0;font-size:18px}
+  .how-grid article>span{grid-row:span 2;width:40px;height:40px;font-size:14px}
+  .how-grid h3{margin-top:0;font-size:17px}
   .how-grid p{margin-top:4px;font-size:14px}
   .privacy{margin-top:56px;padding:22px;border-radius:26px}
   .studio>.steps{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}

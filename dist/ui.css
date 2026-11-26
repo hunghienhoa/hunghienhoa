@@ -13,6 +13,9 @@
 @font-face{font-family:'Playfair Display';src:url('/fonts/PlayfairDisplay-SemiBoldItalic.woff2') format('woff2');font-weight:600;font-style:italic;font-display:swap}
 
 :root{
+  /* Hệ chữ: Be Vietnam Pro cho mọi tiêu đề, nội dung, nút, nhãn, số; Playfair Display nghiêng CHỈ cho
+     (1) cụm nhấn <em> trong tiêu đề h1/h2 (tối đa một cụm), (2) câu dẫn và trích dẫn trong bài đọc, (3) lời chúc ở footer. */
+  --fs-display:clamp(40px,5.2vw,74px);--fs-h2:clamp(30px,3.6vw,50px);--fs-h3:clamp(19px,1.6vw,22px);--fs-title:clamp(34px,4.4vw,56px);
   --cream:#fbf2e3;--blue:#303487;--yellow:#ffdc38;--coral:#ec6550;--lilac:#9aa0ff;--mint:#7cc7a5;
   --hh-card:color-mix(in srgb,var(--cream) 55%,#fff);
   --hh-hair:color-mix(in srgb,var(--blue) 16%,transparent);
@@ -29,8 +32,9 @@ html{scroll-behavior:smooth;scroll-padding-top:96px;-webkit-text-size-adjust:100
 html.i18n-wait body{opacity:0}
 body{margin:0;min-height:100vh;color:var(--blue);background-color:var(--cream);background-image:radial-gradient(color-mix(in srgb,var(--blue) 15%,transparent) 1px,transparent 1.5px);background-size:24px 24px;font-family:var(--font);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 h1,h2,h3,h4,p,figure,blockquote{margin:0}
-h1,h2,h3{line-height:1.15;letter-spacing:-.03em;text-wrap:balance}
-em,.accent{font-family:var(--accent);font-style:italic;font-weight:600;letter-spacing:-.01em}
+h1,h2,h3{font-weight:800;line-height:1.15;letter-spacing:-.025em;text-wrap:balance}
+h3{font-weight:700;line-height:1.3;letter-spacing:-.01em}
+h1 em,h2 em,.accent{font-family:var(--accent);font-style:italic;font-weight:600;letter-spacing:-.005em}
 a{color:inherit;text-decoration:none}
 img,svg,video,canvas{display:block;max-width:100%}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -49,8 +53,8 @@ button:disabled{cursor:not-allowed;opacity:.55}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;width:max-content;max-width:100%;margin:0 0 16px;padding:7px 13px;border:1px solid var(--hh-hair);border-radius:999px;background:color-mix(in srgb,var(--hh-card) 70%,transparent);font-size:12px;font-weight:800;line-height:1.3;letter-spacing:1.6px;text-transform:uppercase}
 .eyebrow::before{content:'';flex:none;width:7px;height:7px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 2px var(--blue)}
 .head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px 32px;margin-bottom:32px}
-.head h2,.title-2{font-size:clamp(36px,4.6vw,62px);font-weight:800;letter-spacing:-.04em}
-.head h2 em,.title-2 em{display:inline-block;font-size:1.04em;background:linear-gradient(transparent 76%,var(--yellow) 76% 90%,transparent 90%)}
+.head h2,.title-2{font-size:var(--fs-h2);line-height:1.12}
+.head h2 em,.title-2 em{display:inline-block;background:linear-gradient(transparent 78%,var(--yellow) 78% 92%,transparent 92%)}
 .head>p{max-width:38ch;font-size:16px;font-weight:500}
 .lead{font-size:18px;font-weight:500;line-height:1.6;opacity:.9}
 
@@ -129,7 +133,7 @@ details.faq-item>p{padding:0 0 18px;max-width:70ch}
 .footer-cta{--blue:var(--hh-footer-fg);--cream:var(--hh-footer-bg);--hh-hair:color-mix(in srgb,var(--hh-footer-fg) 20%,transparent);--hh-soft:color-mix(in srgb,var(--hh-footer-fg) 10%,transparent);--hh-card:color-mix(in srgb,var(--hh-footer-fg) 7%,transparent);position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:end;padding:clamp(28px,5vw,56px);overflow:hidden;border-radius:36px;background:var(--hh-footer-bg);color:var(--hh-footer-fg);box-shadow:var(--hh-shadow)}
 .footer-cta::before{content:'';position:absolute;z-index:-1;right:-80px;top:-120px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--yellow) 38%,transparent),transparent 70%)}
 .footer-cta .eyebrow{margin-bottom:14px}
-.footer-cta h2{font-size:clamp(34px,5vw,68px);font-weight:800;line-height:1.08;letter-spacing:-.045em}
+.footer-cta h2{font-size:var(--fs-h2);line-height:1.12}
 .footer-cta h2 em{color:var(--yellow)}
 .footer-cta-copy p{max-width:40ch;margin-top:14px;font-size:16px;opacity:.85}
 .footer-cta-actions{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
@@ -159,10 +163,10 @@ details.faq-item>p{padding:0 0 18px;max-width:70ch}
 /* ---------- Trang chính sách & 404 ---------- */
 .doc{width:min(820px,100%);margin:0 auto;padding:clamp(40px,6vw,80px) var(--gutter) 0}
 .doc-head{padding-bottom:28px;margin-bottom:12px;border-bottom:1px solid var(--hh-hair)}
-.doc h1{font-size:clamp(38px,5vw,64px);font-weight:800;letter-spacing:-.04em}
+.doc h1{font-size:var(--fs-title);line-height:1.12}
 .doc h1 em{display:inline-block;background:linear-gradient(transparent 76%,var(--yellow) 76% 90%,transparent 90%)}
 .doc-head p{margin-top:14px;font-size:15px;opacity:.8}
-.doc h2{margin:40px 0 12px;font-size:clamp(22px,2.4vw,28px);font-weight:800}
+.doc h2{margin:40px 0 12px;font-size:clamp(22px,2.2vw,26px)}
 .doc h3{margin:24px 0 8px;font-size:19px;font-weight:800}
 .doc p,.doc li{font-size:17px;line-height:1.75}
 .doc p+p{margin-top:12px}
@@ -174,7 +178,7 @@ details.faq-item>p{padding:0 0 18px;max-width:70ch}
 .doc th,.doc td{padding:10px 12px;border-bottom:1px solid var(--hh-hair);text-align:left;vertical-align:top}
 .not-found{display:grid;place-items:center;min-height:70vh;padding:40px var(--gutter);text-align:center}
 .not-found b{display:block;font-size:clamp(110px,20vw,240px);font-weight:900;line-height:1;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:2px var(--blue)}
-.not-found h1{margin-top:8px;font-size:clamp(32px,4vw,52px);font-weight:800}
+.not-found h1{margin-top:8px;font-size:var(--fs-h2)}
 .not-found p{max-width:44ch;margin:14px auto 0;font-size:17px}
 .not-found .btn{margin-top:26px}
 
@@ -195,7 +199,7 @@ main{overflow-x:clip}
 @media(max-width:640px){
   .site-footer{margin-top:56px;padding:0 12px}
   .footer-cta{grid-template-columns:minmax(0,1fr);gap:22px;padding:28px 22px;border-radius:28px}
-  .footer-cta h2{font-size:clamp(30px,8.6vw,38px)}
+  .footer-cta h2{font-size:clamp(28px,8vw,34px)}
   .footer-cta-copy p{font-size:15px}
   .footer-cta-actions{gap:14px}
   .footer-cta .contact-button{width:100%}

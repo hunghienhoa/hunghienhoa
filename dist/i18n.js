@@ -144,7 +144,7 @@
     if (loading) return;
     loading = true;
     // Số phiên bản ?v= nằm ngay trong đường dẫn để tools/asset-versions.mjs báo lỗi khi đổi từ điển mà quên tăng v.
-    import('./i18n-en.js?v=4').then(module => { dict = module.default || {}; loading = false; done(); })
+    import('./i18n-en.js?v=5').then(module => { dict = module.default || {}; loading = false; done(); })
       .catch(() => { loading = false; root.classList.remove('i18n-wait'); });
   }
 

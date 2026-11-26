@@ -10,6 +10,8 @@ Website chỉ còn một tên miền và một bộ giao diện mới làm từ 
 - `dist/tools.css`: phần chung của trang công cụ (hero căn giữa, các bước, riêng tư, hỏi đáp). Mỗi mục có stylesheet riêng: `home.css`, `blog/style.css`, `photobooth/style.css`, `snaptik/style.css`, `lamnet/style.css`, `admin/style.css`.
 - Trang chủ (`dist/index.html`) là blog chia sẻ: bài nổi bật ở hero, lưới bài mới lọc theo chủ đề (`dist/app.js` đọc `/api/posts`), ba tiện ích Hộp Ảnh, Snap Video, Làm Nét Ảnh và giới thiệu ngắn. Ảnh "about" trong admin là ảnh đại diện ở mục Về Hùng.
 - `python tools/site-chrome.py [trang.html …]` sinh lại thanh điều hướng và footer cho các trang công khai từ một mẫu. `python tools/build-content-fields.py` gắn `data-edit` cho chữ mới và ghi lại `content-fields.json` (gốc và admin). Ô chữ, ảnh dự án của giao diện cũ đã lưu được máy chủ bỏ qua khi lưu, không báo lỗi.
+- **Quy tắc chữ** (biến `--fs-display`, `--fs-h2`, `--fs-h3`, `--fs-title` trong `ui.css`): Be Vietnam Pro cho mọi tiêu đề, đoạn văn, nút, nhãn, số thứ tự, dải băng và tiêu đề thẻ. Playfair Display nghiêng chỉ dùng cho: một cụm nhấn `<em>` trong tiêu đề h1/h2 (kèm vệt vàng), câu dẫn và trích dẫn trong trang đọc bài, lời chúc ở footer. Không dùng Playfair cho liên kết "Đọc bài", số, nhãn hay chữ trong hình minh họa.
+- Trang chủ hiện bài nổi bật ở hero và tối đa 6 bài mới trong lưới; xem tất cả ở `/blog/`.
 - Phần portfolio cũ (hộp quà, sáu thẻ thiết kế, nhãn dán, hình động tham khảo) đã xóa khỏi mã nguồn; dữ liệu Supabase (bài viết, khung) giữ nguyên.
 
 ## Dự án đã làm và Hộp Ảnh
