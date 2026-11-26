@@ -83,7 +83,7 @@
 .article-code pre{margin:0;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
 .article-code code{padding:0;background:none}
 .article-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}
-.article-tags span{padding:6px 12px;border-radius:999px;background:var(--hh-soft);font-size:13px;font-weight:600}
+.article-tags span{padding:6px 12px;border-radius:999px;background:color-mix(in srgb,var(--blue) 8%,#fff);font-size:13px;font-weight:600}
 .reader-end{margin-top:32px}
 
 /* Về góc nhỏ */
