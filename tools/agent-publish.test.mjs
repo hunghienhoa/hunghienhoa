@@ -7,7 +7,7 @@ test('đăng bài tự động: Authorization Bearer được chuyển thành he
   let reply = () => Response.json({ id: 7, slug: 'bai-thu', status: 'published' });
   t.mock.method(globalThis, 'fetch', async (url, init) => { calls.push({ url: String(url), init }); return reply(); });
   const env = { SUPABASE_URL: 'https://db.example.test', SUPABASE_PUBLISHABLE_KEY: 'pub' };
-  const send = (auth, body = { slug: 'bai-thu', title: 'Bài thử' }) => worker.fetch(new Request('https://blog.hunghienhoa.com/api/agent/publish', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(auth ? { Authorization: auth } : {}) }, body: JSON.stringify(body) }), env);
+  const send = (auth, body = { slug: 'bai-thu', title: 'Bài thử' }) => worker.fetch(new Request('https://hunghienhoa.com/api/agent/publish', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(auth ? { Authorization: auth } : {}) }, body: JSON.stringify(body) }), env);
   assert.equal((await send(null)).status, 401);
   assert.equal(calls.length, 0, 'thiếu mã thì không gọi Supabase');
   const ok = await send('Bearer ma-bi-mat');
@@ -20,8 +20,8 @@ test('đăng bài tự động: Authorization Bearer được chuyển thành he
   reply = () => Response.json({ message: 'daily limit reached' }, { status: 400 });
   const limit = await send('Bearer ma-bi-mat');
   assert.deepEqual([limit.status, (await limit.json()).error], [400, 'Không đăng được bài: daily limit reached']);
-  assert.equal((await worker.fetch(new Request('https://blog.hunghienhoa.com/api/agent/publish'), env)).status, 405);
+  assert.equal((await worker.fetch(new Request('https://hunghienhoa.com/api/agent/publish'), env)).status, 405);
   const keys = [];
-  const limited = await worker.fetch(new Request('https://blog.hunghienhoa.com/api/agent/publish', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer x', 'CF-Connecting-IP': '203.0.113.7' }, body: '{}' }), { ...env, SNAPTIK_LIMIT: { limit: async ({ key }) => { keys.push(key); return { success: false }; } } });
+  const limited = await worker.fetch(new Request('https://hunghienhoa.com/api/agent/publish', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer x', 'CF-Connecting-IP': '203.0.113.7' }, body: '{}' }), { ...env, SNAPTIK_LIMIT: { limit: async ({ key }) => { keys.push(key); return { success: false }; } } });
   assert.deepEqual([limited.status, keys], [429, ['agent:203.0.113.7']], 'bị giới hạn tần suất thì không gọi Supabase');
 });

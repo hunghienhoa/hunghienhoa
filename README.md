@@ -4,10 +4,10 @@
 
 <p align="center">
   <a href="https://hunghienhoa.com"><b>Portfolio ↗</b></a> &nbsp;·&nbsp;
-  <a href="https://photobooth.hunghienhoa.com">Hộp Ảnh</a> &nbsp;·&nbsp;
-  <a href="https://blog.hunghienhoa.com">Góc tò mò</a> &nbsp;·&nbsp;
-  <a href="https://snap.hunghienhoa.com">Snap</a> &nbsp;·&nbsp;
-  <a href="https://lamnet.hunghienhoa.com">Làm Nét</a>
+  <a href="https://hunghienhoa.com/photobooth/">Hộp Ảnh</a> &nbsp;·&nbsp;
+  <a href="https://hunghienhoa.com/blog/">Góc tò mò</a> &nbsp;·&nbsp;
+  <a href="https://hunghienhoa.com/snaptik/">Snap</a> &nbsp;·&nbsp;
+  <a href="https://hunghienhoa.com/lamnet/">Làm Nét</a>
 </p>
 
 Mình là **Hùng** — Hùng Hiền Hòa. Mình thích những ý tưởng có cá tính, những thiết kế có chuyện để kể và những điều nhỏ khiến một ngày thú vị hơn. Đây là chiếc hộp mình gom những thứ đang làm.
@@ -17,30 +17,30 @@ Mình là **Hùng** — Hùng Hiền Hòa. Mình thích những ý tưởng có 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <a href="https://photobooth.hunghienhoa.com"><img src=".github/profile/du-an-hop-anh.webp" alt="Hộp Ảnh: Bốn khoảnh khắc. Một dải kỷ niệm."></a>
+      <a href="https://hunghienhoa.com/photobooth/"><img src=".github/profile/du-an-hop-anh.webp" alt="Hộp Ảnh: Bốn khoảnh khắc. Một dải kỷ niệm."></a>
       <h3>Hộp Ảnh</h3>
       <p>Photobooth trực tuyến: bốn khoảnh khắc, một dải kỷ niệm.</p>
-      <a href="https://photobooth.hunghienhoa.com"><b>photobooth.hunghienhoa.com ↗</b></a>
+      <a href="https://hunghienhoa.com/photobooth/"><b>hunghienhoa.com/photobooth ↗</b></a>
     </td>
     <td width="50%" valign="top">
-      <a href="https://blog.hunghienhoa.com"><img src=".github/profile/du-an-goc-to-mo.webp" alt="Góc tò mò của Hùng: blog những điều nhỏ mà thú vị"></a>
+      <a href="https://hunghienhoa.com/blog/"><img src=".github/profile/du-an-goc-to-mo.webp" alt="Góc tò mò của Hùng: blog những điều nhỏ mà thú vị"></a>
       <h3>Góc tò mò</h3>
       <p>Những điều nhỏ mà thú vị và những câu chuyện muốn chia sẻ.</p>
-      <a href="https://blog.hunghienhoa.com"><b>blog.hunghienhoa.com ↗</b></a>
+      <a href="https://hunghienhoa.com/blog/"><b>hunghienhoa.com/blog ↗</b></a>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <a href="https://snap.hunghienhoa.com"><img src=".github/profile/du-an-snap.webp" alt="Snap: Video hay, để dành xem lại."></a>
+      <a href="https://hunghienhoa.com/snaptik/"><img src=".github/profile/du-an-snap.webp" alt="Snap: Video hay, để dành xem lại."></a>
       <h3>Snap</h3>
       <p>Video hay từ TikTok, Instagram và Facebook, để dành xem lại.</p>
-      <a href="https://snap.hunghienhoa.com"><b>snap.hunghienhoa.com ↗</b></a>
+      <a href="https://hunghienhoa.com/snaptik/"><b>hunghienhoa.com/snaptik ↗</b></a>
     </td>
     <td width="50%" valign="top">
-      <a href="https://lamnet.hunghienhoa.com"><img src=".github/profile/du-an-lam-net.webp" alt="Làm Nét: Ảnh hơi mờ? Làm nét một chút."></a>
+      <a href="https://hunghienhoa.com/lamnet/"><img src=".github/profile/du-an-lam-net.webp" alt="Làm Nét: Ảnh hơi mờ? Làm nét một chút."></a>
       <h3>Làm Nét</h3>
       <p>Ảnh hơi mờ? AI phóng to 4 lần, ngay trong trình duyệt.</p>
-      <a href="https://lamnet.hunghienhoa.com"><b>lamnet.hunghienhoa.com ↗</b></a>
+      <a href="https://hunghienhoa.com/lamnet/"><b>hunghienhoa.com/lamnet ↗</b></a>
     </td>
   </tr>
 </table>

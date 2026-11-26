@@ -17,7 +17,7 @@ const admin=readFileSync('dist/admin/index.html','utf8');
 assert.ok(!admin.includes('adsbygoogle')&&!admin.includes(ADSENSE_CLIENT));
 assert.equal(adsenseHtml(admin,'nonce'),null);
 const main=readFileSync('dist/index.html','utf8');
-for(const id of ['photobooth-project','blog-project']) {
+for(const id of ['photobooth-project','snaptik-project','lamnet-project']) {
   const tag=main.match(new RegExp('<a[^>]+id="'+id+'"[^>]*>'))[0];
   assert.ok(tag.includes('target="_blank"')&&tag.includes('noopener noreferrer'));
 }
@@ -34,8 +34,8 @@ for(const page of ['dist/index.html','dist/blog/index.html','dist/photobooth/ind
 for(const name of policies) {
  const html=readFileSync(`dist/${name}.html`,'utf8');
  assert.ok(html.includes('<html lang="vi">')&&html.includes('hunghienhoa2110@gmail.com'));
- assert.ok(!/<script\b(?![^>]*src="i18n\.js\?v=\d+"><\/script>)/.test(html),'Trang chính sách chỉ được nạp i18n.js cùng nguồn, không có script khác');
- for(const href of [...html.matchAll(/href="([^"#]+)"/g)].map(m=>m[1]).filter(h=>!/^https?:|^mailto:|^\//.test(h)))assert.doesNotThrow(()=>readFileSync('dist/'+href.split(/[?#]/)[0]));
+ assert.ok([...html.matchAll(/<script\b([^>]*)>/g)].every(m=>/^ src="\/(?:i18n|sitebar|contact)\.js\?v=\d+"(?: defer)?$/.test(m[1])),'Trang chính sách chỉ nạp script giao diện cùng nguồn, không có script khác');
+ for(const href of [...html.matchAll(/href="([^"#]+)"/g)].map(m=>m[1]).filter(h=>!/^https?:|^mailto:|^tel:|^\//.test(h)))assert.doesNotThrow(()=>readFileSync('dist/'+href.split(/[?#]/)[0]));
 }
 const booth=readFileSync('dist/photobooth/index.html','utf8');
 assert.match(booth,/<input id="contribution-consent" type="checkbox" required>/);

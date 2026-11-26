@@ -22,6 +22,8 @@ assert.equal((await counter.fetch(new Request('https://counter/unknown'))).statu
 const fields=JSON.parse(readFileSync('dist/content-fields.json','utf8'));
 assert.ok(fields.length>200);
 assert.throws(()=>siteSettings({...defaultSite,pageTexts:{'unknown-key':'x'}}));
+// Ô chữ và ảnh dự án của giao diện cũ đã lưu trong admin được bỏ qua thay vì làm hỏng lần lưu tiếp theo.
+{const kept=siteSettings({...defaultSite,pageTexts:{'main-999':'cũ'},pageImages:{'project-2':'/api/media/11111111-1111-4111-8111-111111111111.webp'}});assert.deepEqual(kept.pageTexts,{});assert.deepEqual(kept.pageImages,{});}
 assert.throws(()=>siteSettings({...defaultSite,theme:{blue:'url(secret)'}}));
 assert.throws(()=>siteSettings({...defaultSite,socials:{facebook:'javascript:alert(1)'}}));
 const key=fields[0].key;
@@ -34,7 +36,6 @@ await vm.runInNewContext(readFileSync('dist/page-customization.js','utf8'),{
 });
 assert.equal(node.textContent,'<img src=x onerror=alert(1)>');assert.equal(colors['--blue'],'#303487');
 node.textContent='Changed by older content loader';events['hung-content-ready']();assert.equal(node.textContent,edited.pageTexts[key]);
-for(const folder of ['blog','photobooth','admin'])assert.equal(readFileSync(`dist/${folder}/page-customization.js`,'utf8'),readFileSync('dist/page-customization.js','utf8'));
 const before=visitSummary(sql,now).total;
 recordVisit(sql,'main',now,'visitor-a');recordVisit(sql,'main',now,'visitor-a');
 assert.equal(visitSummary(sql,now).total,before+1);

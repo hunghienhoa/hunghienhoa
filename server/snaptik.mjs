@@ -71,7 +71,7 @@ function metaTag(html,key){for(const [,tag]of html.matchAll(/(<meta\b[^>]*>)/gi)
 async function metaPage(value,fetcher){
  let url=value;
  for(let i=0;i<5;i++){
-  let r;try{r=await fetcher(url,{headers:{Accept:'text/html','User-Agent':'Snap/1.0 (+https://snap.hunghienhoa.com/)'},redirect:'manual',signal:AbortSignal.timeout(20000)});}catch{throw error(504,'Nguồn phản hồi chậm. Hãy thử lại sau một chút.');}
+  let r;try{r=await fetcher(url,{headers:{Accept:'text/html','User-Agent':'Snap/1.0 (+https://hunghienhoa.com/snaptik/)'},redirect:'manual',signal:AbortSignal.timeout(20000)});}catch{throw error(504,'Nguồn phản hồi chậm. Hãy thử lại sau một chút.');}
   if([301,302,303,307,308].includes(r.status)){const location=r.headers.get('location');await r.body?.cancel();try{const next=new URL(location,url),embed=/\/embed(?:\/captioned)?\/?$/.test(next.pathname);if(embed)next.pathname=next.pathname.replace(/\/embed(?:\/captioned)?\/?$/,'/');const post=socialURL(next.href);url=post.url+(embed&&post.platform==='instagram'?'embed/':'');}catch{throw error(404,'Bài chưa có nội dung nhúng công khai để tải.');}continue;}
   if(!r.ok){await r.body?.cancel();throw error(r.status===429?429:502,'Nguồn chưa trả được nội dung. Hãy thử lại sau.');}
   return {url,html:await limitedText(r,2097152)};
@@ -177,7 +177,7 @@ export async function snaptikRoute(request,{fetcher=fetch,store=edgeStore()}={})
   }catch(e){
    if(!request.headers.get('accept')?.includes('text/html'))throw e;
    const text=String(e.message).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-   const back=url.hostname==='snap.hunghienhoa.com'?'/':'/snaptik/';
+   const back='/snaptik/';
    return new Response(`<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Chưa tải được file — Snap của Hùng</title><body style="background:#fbf2e3;color:#303487;font-family:Arial,sans-serif;max-width:650px;margin:12vh auto;padding:24px;line-height:1.8"><h1>Chưa tải được file.</h1><p>${text}</p><a href="${back}">← Trở về Snap để thử lại</a></body></html>`,{status:e.status||502,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Robots-Tag':'noindex','Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'; frame-ancestors 'none'"}});
   }
  }

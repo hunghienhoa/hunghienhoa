@@ -181,9 +181,9 @@ await assert.rejects(vm.runInContext(`jpegBlob({toBlob(callback) { callback({typ
 let destination;
 context.URL = URL;
 context.document.body = {classList:{contains:name=>name==='booth-landing'}};
-context.window.location = {href:'https://photobooth.hunghienhoa.com/',assign:value=>{destination=value;}};
+context.window.location = {href:'https://hunghienhoa.com/photobooth/',assign:value=>{destination=value;}};
 vm.runInContext("selectDesign(frames.pink, 'Tiệm thư tình')",context);
-assert.equal(new URL(destination).pathname,'/shoot');
+assert.equal(new URL(destination).pathname,'/photobooth/shoot');
 const shared = JSON.parse(new URL(destination).searchParams.get('thietke'));
 assert.equal(shared.title,'TIỆM THƯ TÌNH');
 assert.ok(!JSON.stringify(shared).includes('PRIVATE-PHOTO'));
@@ -194,10 +194,10 @@ assert.equal(new URL(destination).searchParams.has('thietke'),false);
 assert.ok(html.includes('Bắt đầu chụp') && html.includes('Đóng góp khung của bạn'));
 assert.equal([...html.matchAll(/data-showcase="/g)].length,16);
 assert.match(html,/class="showcase-group" aria-hidden="true" inert/);
-assert.ok(!shootHtml.includes('data-showcase=') && !shootHtml.includes('landing.css'));
-const landingCss=fs.readFileSync('dist/photobooth/landing.css','utf8');
+assert.ok(!shootHtml.includes('data-showcase='));
+const landingCss=fs.readFileSync('dist/photobooth/style.css','utf8');
 assert.match(landingCss,/translateX\(-50%\)/);
-assert.match(landingCss,/prefers-reduced-motion:reduce/);
+assert.match(landingCss,/prefers-reduced-motion:no-preference\)\{\.showcase-track\{animation/,'Khung chạy ngang chỉ chuyển động khi người dùng không tắt hiệu ứng');
 assert.match(landingCss,/:focus-within/);
 
 showcaseButtons[0].listeners.click();

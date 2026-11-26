@@ -1,6 +1,6 @@
 # Quản trị các trang của Hùng
 
-Đăng nhập [admin.hunghienhoa.com](https://admin.hunghienhoa.com/) bằng tài khoản quản trị hiện có.
+Đăng nhập [hunghienhoa.com/admin](https://hunghienhoa.com/admin/) bằng tài khoản quản trị hiện có.
 
 - **Tổng quan**: số bài/khung và lượt xem tổng, hôm nay, 7 ngày, 30 ngày. Có phân chia Trang chính, Blog, Photobooth và biểu đồ từng ngày. Nhấn “Làm mới số liệu” để cập nhật.
 - **Nội dung web**: sửa thông tin chung, rồi dùng “Tùy chỉnh cả bốn trang” để tìm và sửa từng đoạn chữ, đổi màu nền/chữ/nhấn hoặc thay liên kết mạng xã hội. Nội dung được chia theo trang. “Khôi phục chữ gốc” đặt lại một mục; nhấn “Lưu tùy chỉnh toàn trang” mới lưu thay đổi.

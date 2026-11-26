@@ -263,7 +263,7 @@ export function createApp(options = {}) {
       if (route.startsWith('/api/admin/')) {
         const session = auth(req, req.method !== 'GET' && req.method !== 'HEAD');
         if (route === '/api/admin/analytics' && req.method === 'GET') return json(res, visitSummary(visitSQL, now()));
-        if (route === '/api/admin/usage' && req.method === 'GET') return json(res,{...usageReport([],now()),connections:{supabase:'Số liệu cloud tự động hiển thị trên admin.hunghienhoa.com.',github:'Số liệu cloud tự động hiển thị trên admin.hunghienhoa.com.',cloudflare:'Số liệu cloud tự động hiển thị trên admin.hunghienhoa.com.'}});
+        if (route === '/api/admin/usage' && req.method === 'GET') return json(res,{...usageReport([],now()),connections:{supabase:'Số liệu cloud tự động hiển thị trên hunghienhoa.com/admin.',github:'Số liệu cloud tự động hiển thị trên hunghienhoa.com/admin.',cloudflare:'Số liệu cloud tự động hiển thị trên hunghienhoa.com/admin.'}});
         if (route === '/api/admin/usage' && req.method === 'PUT') return json(res,{error:'Số liệu chỉ cập nhật tự động từ API.'},405);
         if (req.method === 'POST' && route === '/api/admin/logout') {
           db.prepare('DELETE FROM sessions WHERE token_hash=?').run(session.token_hash);
@@ -350,9 +350,6 @@ export function createApp(options = {}) {
     const agent=await agentRoute(new Request(pageURL,{method:req.method,headers:{Accept:req.headers.accept||'*/*'}}),data);
     if(agent){res.writeHead(agent.status,Object.fromEntries(agent.headers));return res.end(req.method==='HEAD'?undefined:Buffer.from(await agent.arrayBuffer()));}
     if (route.includes('\0') || route.split(/[\\/]/).some(part => part.startsWith('.')) || /(?:^|\/)README\.md$|\.test\.mjs$/i.test(route)) fail(404, 'Không tìm thấy trang.');
-    const adminHost = options.adminHost ?? process.env.ADMIN_HOST ?? 'admin.hunghienhoa.com';
-    const requestHost = (req.headers.host || '').split(':')[0];
-    if (requestHost === adminHost) route = `/admin${route}`;
     // Giống Worker: Làm Nét cần biên dịch WebAssembly (cả trong luồng phụ) và crossOriginIsolated để chạy nhiều luồng.
     if (/^\/lamnet(?:\/|$)/.test(route)) {
       res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");

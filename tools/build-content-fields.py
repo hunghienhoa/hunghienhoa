@@ -26,7 +26,7 @@ class Slots(HTMLParser):
             node=self.stack.pop()
             if node['tag']==tag:break
         eligible={'p','h1','h2','h3','span','small','legend','a','b','em','summary','label'}
-        excluded={'customize-form','auth-title','auth-note','auth-status','page-status','status','camera-status','photo-count','design-status','community-status','wechat-status'}
+        excluded={'hero-feature','home-posts','customize-form','auth-title','auth-note','auth-status','page-status','status','camera-status','photo-count','design-status','community-status','wechat-status'}
         lineage=node['parents']+[node]
         if tag not in eligible or len(node['texts'])!=1 or not any(n['tag']=='body' for n in lineage):return
         if any(n['tag'] in {'script','style','select'} or n['attrs'].get('id') in excluded or n['attrs'].get('aria-hidden')=='true' for n in lineage):return
@@ -41,6 +41,6 @@ for page,folder in [('main',root),('blog',root/'blog'),('photobooth',root/'photo
     path=folder/'index.html';source=path.read_text(encoding='utf-8');parser=Slots(source,page);parser.feed(source)
     for pos,addition in sorted(parser.edits,reverse=True):source=source[:pos]+addition+source[pos:]
     path.write_text(source,encoding='utf-8')
-for folder in [root,root/'blog',root/'photobooth',root/'admin']:(folder/'content-fields.json').write_text(json.dumps(fields,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+for folder in [root,root/'admin']:(folder/'content-fields.json').write_text(json.dumps(fields,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 assert len({f['key'] for f in fields})==len(fields)
 print(f'PASS: {len(fields)} validated text slots across four pages.')

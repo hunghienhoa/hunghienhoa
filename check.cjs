@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const path = require('node:path');
 const html = fs.readFileSync('dist/index.html', 'utf8');
-const css = fs.readFileSync('dist/style.css', 'utf8');
+const css = fs.readFileSync('dist/ui.css', 'utf8');
 new vm.Script(fs.readFileSync('dist/app.js', 'utf8'));
 const sourceFiles = fs.readdirSync('dist', { recursive: true }).map(file => path.join('dist', file));
 assert.ok(!sourceFiles.some(file => /\.png$/i.test(file)), 'Convert served PNG assets with python tools/convert-webp.py');
@@ -21,21 +21,14 @@ for (const sourceFile of sourceFiles.filter(file => /\.(html|css)$/.test(file)))
     for (const [, id] of source.matchAll(/href="#([^"]+)"/g)) assert.ok(source.includes(`id="${id}"`), `Missing anchor ${id} in ${sourceFile}`);
   }
 }
-assert.equal((html.match(/data-project="/g) || []).length, 6);
-for (const page of ['', 'blog/', 'photobooth/', 'admin/']) {
-  const typography = fs.readFileSync(`dist/${page}style.css`, 'utf8');
-  assert.ok(typography.includes("font-family:'Be Vietnam Pro'"));
-  assert.ok(typography.includes("font-family:'Playfair Display'"));
-  for (const name of ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold', 'Black']) {
-    assert.equal(fs.readFileSync(`dist/${page}fonts/BeVietnamPro-${name}.woff2`).subarray(0, 4).toString(), 'wOF2');
-  }
-}
+// Một bộ phông dùng chung ở /fonts, khai báo trong /ui.css cho mọi trang.
+assert.ok(css.includes("font-family:'Be Vietnam Pro'") && css.includes("font-family:'Playfair Display'"));
+for (const name of ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold', 'Black']) assert.equal(fs.readFileSync(`dist/fonts/BeVietnamPro-${name}.woff2`).subarray(0, 4).toString(), 'wOF2');
+for (const page of ['index.html', 'blog/index.html', 'photobooth/index.html', 'photobooth/shoot.html', 'snaptik/index.html', 'lamnet/index.html', 'admin/index.html', '404.html']) assert.ok(fs.readFileSync(`dist/${page}`, 'utf8').includes('/ui.css?v='), `${page} phải dùng /ui.css`);
 assert.equal((html.match(/<h1\b/g) || []).length, 1);
-assert.ok(html.includes('concept-disclaimer'));
 assert.ok(css.includes('prefers-reduced-motion'));
-assert.ok(html.includes('<dialog'));
-console.log('PASS: assets, anchors, six concepts, JS syntax, dialog and reduced-motion support.');
-for (const id of ['photobooth-project','blog-project']) {
+console.log('PASS: assets, anchors, JS syntax and reduced-motion support.');
+for (const id of ['photobooth-project','snaptik-project','lamnet-project']) {
   const link = html.match(new RegExp('<a[^>]+id="'+id+'"[^>]*>'))[0];
   assert.ok(link.includes('target="_blank"') && link.includes('rel="noopener noreferrer"') && !link.includes('data-project-window'));
 }

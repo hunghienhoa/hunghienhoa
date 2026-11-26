@@ -10,7 +10,7 @@ fetch(siteAPI + '/api/site', { credentials: 'omit', cache: 'no-store' }).then(re
   set('.id-card>b', site.displayName.toLocaleUpperCase('vi-VN'));
   set('.hero-top>span:last-child', site.displayName.toLocaleUpperCase('vi-VN') + ' · 2026');
   set('footer>span', '© 2026 ' + site.displayName + ' · Được tạo nên bằng sự tò mò.');
-  document.title = site.displayName + ' — Portfolio, Photobooth Hộp Ảnh và Blog';
+  document.title = site.displayName + ' — Blog chia sẻ và công cụ tiện ích';
   const email = document.querySelector('#contact-email');
   email.textContent = site.email; email.href = 'mailto:' + site.email;
   document.querySelector('.contact-button').href = 'mailto:' + site.email + '?subject=' + encodeURIComponent('Chào ' + site.shortName + ', mình có một ý tưởng');

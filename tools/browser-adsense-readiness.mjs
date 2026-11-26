@@ -9,16 +9,16 @@ let app,directory,base=process.env.SITE_URL?.replace(/\/$/,'');
 if(!base){
  directory=fs.mkdtempSync(path.join(os.tmpdir(),'hung-adsense-browser-'));
  app=createApp({port:0,dataDir:directory});await app.listen();
- const publicPosts=(await (await fetch('https://blog.hunghienhoa.com/api/posts')).json()).posts;
+ const publicPosts=(await (await fetch('https://hunghienhoa.com/blog/api/posts')).json()).posts;
  app.db.prepare('DELETE FROM posts').run();
- for(const p of publicPosts){const cover=p.coverUrl?Buffer.from(await (await fetch(new URL(p.coverUrl,'https://blog.hunghienhoa.com'))).arrayBuffer()):null;
+ for(const p of publicPosts){const cover=p.coverUrl?Buffer.from(await (await fetch(new URL(p.coverUrl,'https://hunghienhoa.com/blog/'))).arrayBuffer()):null;
   app.db.prepare('INSERT INTO posts(id,slug,title,excerpt,content,category,tags,status,is_sample,cover,created_at,published_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)').run(p.id,p.slug,p.title,p.excerpt,p.content,p.category,JSON.stringify(p.tags),'published',0,cover,p.publishedAt,p.publishedAt);
  }
  base=`http://127.0.0.1:${app.server.address().port}`;
 }
 const local=base.includes('127.0.0.1');
-const blog=local?base+'/blog':base.replace('://hunghienhoa.com','://blog.hunghienhoa.com');
-const photo=local?base+'/photobooth':base.replace('://hunghienhoa.com','://photobooth.hunghienhoa.com');
+const blog=local?base+'/blog':base.replace('://hunghienhoa.com','://hunghienhoa.com/blog');
+const photo=local?base+'/photobooth':base.replace('://hunghienhoa.com','://hunghienhoa.com/photobooth');
 const posts=(await (await fetch((local?base:blog)+'/api/posts')).json()).posts;
 const first=posts[0];assert.ok(first);
 fs.mkdirSync('outputs/adsense-readiness',{recursive:true});
