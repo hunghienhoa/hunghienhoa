@@ -1,6 +1,6 @@
 // Tiến Lên Pixel: bàn nỉ, lá bài pixel, chơi với máy (2–4 người) hoặc online. Chỉ tính điểm cho vui.
 import * as R from './rules.mjs?v=1';
-import { $, sfx, soundButton, banner, hideBanner, say, tabs, choice, renderPlayers, Online, LEVEL_NAMES, store, confirmTwice } from '../kit.js?v=3';
+import { $, sfx, soundButton, banner, hideBanner, say, tabs, choice, renderPlayers, Online, LEVEL_NAMES, store, confirmTwice } from '../kit.js?v=4';
 
 const S = { mode: 'ai', state: null, view: null, me: 0, level: 'vua', picked: new Set(), bySuit: false, totals: [0, 0, 0, 0], online: null, seenMoves: -1, seenRound: -1, timer: 0 };
 const PLACE = ['Về nhất', 'Về nhì', 'Về ba', 'Về bét'];

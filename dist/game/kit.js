@@ -122,31 +122,28 @@ export function setupFullscreen() {
   syncButtons();
 }
 
-// ---------- Vẽ pixel ----------
-export const off = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+// ---------- Vẽ vector (canvas độ phân giải gấp K lần cho nét mượt) ----------
+export const K = 3;
+export const UI_FONT = '"Be Vietnam Pro",system-ui,sans-serif';
+export function setup(canvas, W, H, opts) { canvas.width = W * K; canvas.height = H * K; const g = canvas.getContext('2d', opts); g.setTransform(K, 0, 0, K, 0, 0); return g; }
+export const off = (w, h) => { const c = document.createElement('canvas'); c.width = w * K; c.height = h * K; return c; };
+export const ctxOf = c => { const g = c.getContext('2d'); g.scale(K, K); return g; };
 export const hash = (x, y) => { let h = x * 374761393 + y * 668265263; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
-export const px = (g, x, y, color) => { g.fillStyle = color; g.fillRect(x, y, 1, 1); };
-const DIGITS = ['111101101101111', '010110010010111', '111001111100111', '111001111001111', '101101111001001', '111100111001111', '111100111101111', '111001001001001', '111101111101111', '111101111001111'];
+export function rrect(g, x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
 export function digits(g, value, x, y, color, scale = 1) {
-  const text = String(value);
-  text.split('').forEach((ch, k) => { const bits = DIGITS[+ch]; if (!bits) return; for (let i = 0; i < 15; i++) if (bits[i] === '1') { g.fillStyle = color; g.fillRect(x + (k * 4 + (i % 3)) * scale, y + ((i / 3) | 0) * scale, scale, scale); } });
-  return text.length * 4 * scale - scale;
+  const text = String(value), size = 6.5 * scale;
+  g.font = `800 ${size}px ${UI_FONT}`; g.textAlign = 'left'; g.textBaseline = 'top'; g.fillStyle = color;
+  g.fillText(text, x, y - 0.5 * scale);
+  return g.measureText(text).width;
 }
-export function disc(g, cx, cy, r, tones, outline = '#2a1a0e') { // đĩa tròn tô 4 tông sáng từ góc trên trái
-  for (let y = -r - 1; y <= r + 1; y++) for (let x = -r - 1; x <= r + 1; x++) {
-    const d = Math.hypot(x + 0.5, y + 0.5);
-    if (d > r + 0.5) continue;
-    if (d > r - 0.6) { px(g, cx + x, cy + y, outline); continue; }
-    const t = (-(x + 0.5) * 0.6 - (y + 0.5) * 0.8) / r;
-    px(g, cx + x, cy + y, t > 0.5 ? tones[0] : t > 0.05 ? tones[1] : t > -0.45 ? tones[2] : tones[3]);
-  }
+export function disc(g, cx, cy, r, tones, outline = '#2a1a0e') { // viên tròn có chiếm sáng từ góc trên trái
+  const gr = g.createRadialGradient(cx - r * 0.4, cy - r * 0.45, r * 0.1, cx, cy, r);
+  gr.addColorStop(0, tones[0]); gr.addColorStop(0.45, tones[1]); gr.addColorStop(0.8, tones[2]); gr.addColorStop(1, tones[3]);
+  g.fillStyle = gr; g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fill();
+  g.lineWidth = 0.7; g.strokeStyle = outline; g.stroke();
 }
-export function brackets(g, x, y, w, h, color, len = 4) {
-  g.fillStyle = color;
-  for (const [ax, ay, sx, sy] of [[x, y, 1, 1], [x + w - 1, y, -1, 1], [x, y + h - 1, 1, -1], [x + w - 1, y + h - 1, -1, -1]]) {
-    g.fillRect(sx > 0 ? ax : ax - len + 1, ay, len, 1); g.fillRect(sx > 0 ? ax : ax - len + 1, ay + sy, len, 1);
-    g.fillRect(ax, sy > 0 ? ay : ay - len + 1, 1, len); g.fillRect(ax + sx, sy > 0 ? ay : ay - len + 1, 1, len);
-  }
+export function brackets(g, x, y, w, h, color) {
+  g.strokeStyle = color; g.lineWidth = 2; g.beginPath(); g.roundRect(x, y, w, h, 6); g.stroke();
 }
 export function pointer(canvas, W, H, e) {
   const r = canvas.getBoundingClientRect();
