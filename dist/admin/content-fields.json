@@ -2948,8 +2948,8 @@
   {
     "key": "admin-069",
     "page": "admin",
-    "label": "Mỗi ngày lúc 08:30 và 20:15, hệ thống chọn ngách đang bật đã lâu chưa dùng nhất, gom 2–3 nguồn độc l",
-    "default": "Mỗi ngày lúc 08:30 và 20:15, hệ thống chọn ngách đang bật đã lâu chưa dùng nhất, gom 2–3 nguồn độc lập rồi viết một bài tối thiểu 2.500 từ. Bật, tắt hoặc sửa từ khóa và nguồn RSS ở đây."
+    "label": "Mỗi ngày lúc 08:00 và 20:00, hệ thống chọn ngách đang bật đã lâu chưa dùng nhất, gom 2–3 nguồn độc l",
+    "default": "Mỗi ngày lúc 08:00 và 20:00, hệ thống chọn ngách đang bật đã lâu chưa dùng nhất, gom 2–3 nguồn độc lập rồi viết một bài 1.800–2.500 từ. Bật, tắt hoặc sửa từ khóa và nguồn RSS ở đây."
   },
   {
     "key": "admin-070",

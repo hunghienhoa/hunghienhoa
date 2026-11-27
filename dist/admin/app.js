@@ -414,7 +414,7 @@ initialize();
 
 // Ngách nội dung cho hệ thống đăng bài tự động (bảng ai_niches trên Supabase; chỉ có ở bản cloud).
 let niches = [];
-const NICHE_TYPES = { ai_news: 'Tin AI', tech_deep_dive: 'Công nghệ chuyên sâu', github_trending: 'Dự án GitHub' };
+const NICHE_TYPES = { ai_news: 'Tin AI', tech_deep_dive: 'Công nghệ chuyên sâu', github_trending: 'Dự án GitHub', tips: 'Thủ thuật' };
 const nicheBody = (niche, changes = {}) => ({ name: niche.name, slug: niche.slug, category_type: niche.categoryType, keywords: niche.keywords, rss_sources: niche.rssSources, system_tone: niche.systemTone, post_category: niche.postCategory, is_active: niche.isActive, ...changes });
 function renderNiches() {
   const target = $('#niches-list');
