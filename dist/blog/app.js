@@ -1,4 +1,4 @@
-import { readingMinutes, filterPosts, articleBlocks, inlineTokens, safeCoverURL } from './core.mjs?v=media-4';
+import { readingMinutes, filterPosts, articleBlocks, inlineTokens, safeCoverURL } from './core.mjs?v=media-5';
 
 const $ = selector => document.querySelector(selector);
 const API = String(window.HUNG_API_BASE || '').replace(/\/$/, '');
@@ -176,6 +176,13 @@ function renderBody(content) {
       const figure=element('figure','article-image'),image=element('img');
       image.src=safeCoverURL(block.src,API,location.origin);image.alt=block.text;image.loading='lazy';image.decoding='async';
       figure.append(image);if(block.text)figure.append(element('figcaption','',block.text));nodes.push(figure);continue;
+    }
+    if(block.type==='download') {
+      list=null;
+      const box=element('p','article-download'),link=element('a','download-btn');
+      link.href=block.href;link.target='_blank';link.rel='nofollow noopener noreferrer';
+      link.append(element('span','download-icon','↓'),document.createTextNode(block.text));link.firstChild.setAttribute('aria-hidden','true');
+      box.append(link);nodes.push(box);continue;
     }
     if (block.type === 'table') {
       list=null;

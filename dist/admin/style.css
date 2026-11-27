@@ -237,3 +237,69 @@ textarea[name="content"]{font-size:15px;line-height:1.7}
 .niche-editor{position:sticky;top:96px}
 .niche-editor label small{display:block;font-weight:400;font-size:12px;opacity:.85}
 @media(max-width:1100px){.niche-layout{grid-template-columns:minmax(0,1fr)}.niche-editor{position:static}}
+
+/* Bài viết: mặc định chỉ hiện danh sách; bấm Viết bài mới hoặc Sửa bài mới mở trình soạn, lưu xong tự đóng. */
+.post-layout,.post-layout.editing{grid-template-columns:minmax(0,1fr)}
+.post-layout:not(.editing) .post-editor,.post-layout.editing .posts-pane{display:none}
+.post-layout .posts-pane{position:static;max-height:none;overflow:visible;padding:16px}
+.posts-tools{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:10px}
+#posts-status:empty{display:none}
+#posts-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.post-entry{display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:14px 16px;text-align:left}
+.post-entry .post-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.post-entry .badge{padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;background:var(--yellow);color:var(--blue)}
+.post-entry .badge.draft{background:transparent;border:1px solid var(--hh-hair)}
+.post-entry .item-actions{flex-direction:row;justify-content:flex-start;margin-top:auto;padding-top:6px}
+.post-entry.just-saved{outline:2px solid var(--blue);outline-offset:2px}
+.post-editor .post-side{grid-template-columns:minmax(0,1fr)}.post-side>*{min-width:0}
+@media(max-width:1280px){.post-editor .post-side{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.post-editor .post-side{grid-template-columns:minmax(0,1fr)}}
+.editor-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.editor-head b{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;opacity:.8}
+@media(max-width:760px){.posts-tools{grid-template-columns:minmax(0,1fr)}#posts-list{grid-template-columns:minmax(0,1fr)}}
+/* Cùng một kiểu cho mọi mục có danh sách: khung danh sách dạng thẻ trải rộng, trình soạn chỉ mở khi Thêm/Sửa. */
+.head-actions{display:flex;flex-wrap:wrap;gap:10px}
+.niche-layout,.niche-layout.editing{grid-template-columns:minmax(0,1fr)}
+.niche-layout:not(.editing) .niche-editor,.niche-layout.editing .list-pane{display:none}
+.list-pane{display:grid;gap:12px;padding:16px;border:1px solid var(--hh-hair);border-radius:22px;background:var(--hh-card)}
+.niche-list{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+.niche-card{display:flex;flex-direction:column;gap:2px;padding:14px 16px;border-radius:14px;background:#fff}
+.niche-card .item-actions{margin-top:auto;padding-top:10px}
+.niche-card.just-saved{outline:2px solid var(--blue);outline-offset:2px}
+.niche-editor{position:static;max-width:860px;padding:24px;border:1px solid var(--hh-hair);border-radius:26px;background:var(--hh-card)}
+.editor-head h2{margin:0;font-size:13px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;opacity:.8}
+.items{grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:10px;padding:16px;border:1px solid var(--hh-hair);border-radius:22px;background:var(--hh-card)}
+.items .item{border-radius:14px;background:#fff}
+.items:has(>.empty:only-child){padding:0;border:0;background:none}
+.download-box .download-hint{margin-top:8px;font-size:12px;opacity:.85}
+@media(max-width:760px){.niche-list,.items{grid-template-columns:minmax(0,1fr)}.items{padding:10px}.niche-editor{padding:16px}}
+
+/* Điện thoại: menu bàn làm việc thành ngăn kéo trượt từ bên trái, mở bằng nút ☰ trên thanh trên cùng. */
+.menu-toggle,.menu-drawer-head,.menu-site-link,.menu-backdrop{display:none}
+@media(max-width:760px){
+  .admin-page>header{flex-wrap:wrap;gap:8px;padding:8px 10px}
+  body:has(#workspace:not([hidden])) .menu-toggle{display:inline-flex}
+  .menu-toggle{align-items:center;gap:10px;min-height:42px;max-width:52vw;padding:0 14px 0 12px;border:1.5px solid var(--hh-hair);border-radius:999px;background:#fff;font-size:14px}
+  .menu-toggle strong{overflow:hidden;font-weight:600;white-space:nowrap;text-overflow:ellipsis}
+  .menu-icon,.menu-icon::before,.menu-icon::after{display:block;width:18px;height:2px;border-radius:2px;background:currentColor}
+  .menu-icon{position:relative;flex:none}
+  .menu-icon::before,.menu-icon::after{content:'';position:absolute;left:0}
+  .menu-icon::before{top:-6px}.menu-icon::after{top:6px}
+  .admin-page:has(#workspace:not([hidden]))>header>.brand{display:none}
+  .admin-page>header>.brand{font-size:22px}
+  .admin-page:has(#workspace:not([hidden]))>header>a:last-of-type{display:none}
+  #logout{margin-left:auto}
+  .save-badge{order:5;width:100%;min-height:30px;justify-content:center;font-size:12px}
+  .menu{position:fixed;inset:0 auto 0 0;z-index:40;display:flex;flex-direction:column;width:min(300px,84vw);max-height:none;height:100dvh;padding:16px 14px 24px;overflow-y:auto;background:var(--cream);box-shadow:var(--hh-shadow);border-radius:0 26px 26px 0;transform:translateX(-105%);visibility:hidden;transition:transform .28s cubic-bezier(.2,.7,.2,1),visibility 0s linear .28s}
+  .menu.is-open{transform:none;visibility:visible;transition:transform .28s cubic-bezier(.2,.7,.2,1)}
+  .menu>button:last-of-type{grid-column:auto}
+  .menu p{display:block}
+  .menu-drawer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+  .menu-drawer-title{font-size:13px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;opacity:.8}
+  .menu-site-link strong{font-weight:600}
+  .menu-close{display:grid;place-items:center;flex:none;width:42px;height:42px;border:1.5px solid var(--hh-hair);border-radius:50%;font-size:16px}
+  .menu-site-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:12px;border:1.5px solid var(--hh-hair);border-radius:999px;font-size:14px;font-weight:600}
+  .menu-backdrop:not([hidden]){display:block;position:fixed;inset:0;z-index:35;background:color-mix(in srgb,var(--blue) 35%,transparent)}
+  body.menu-open{overflow:hidden}
+}
+@media(max-width:760px) and (prefers-reduced-motion:reduce){.menu,.menu.is-open{transition:none}}

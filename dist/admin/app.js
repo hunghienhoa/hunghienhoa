@@ -112,21 +112,52 @@ function renderFrames(pending) {
     card.append(image, copy); return card;
   }));
 }
+// Nút tải xuống lưu trong nội dung bài thành một dòng riêng @[Chữ trên nút](https://link) (blog vẽ thành nút).
+// Trình soạn tách dòng đó ra hai ô Link tải / Chữ trên nút, lúc lưu ghép lại vào cuối bài.
+const DOWNLOAD_LINE = /^@\[([^\]\r\n]{1,60})\]\((https:\/\/[^\s)]{1,1000})\)$/;
+function splitDownload(content = '') {
+  const lines = String(content).split(/\r?\n/), index = lines.findIndex(line => DOWNLOAD_LINE.test(line.trim()));
+  if (index < 0) return { content: String(content), url: '', label: '' };
+  const [, label, url] = DOWNLOAD_LINE.exec(lines[index].trim()); lines.splice(index, 1);
+  return { content: lines.join('\n').replace(/\n{3,}/g, '\n\n').replace(/\s+$/, ''), url, label };
+}
+function joinDownload(content, url, label) {
+  const link = String(url || '').trim(), text = String(label || '').replace(/[\[\]\r\n]/g, ' ').trim().slice(0, 60) || 'Tải xuống';
+  if (!link) return content;
+  if (!/^https:\/\/[^\s()]{1,1000}$/.test(link)) throw new Error('Link tải phải bắt đầu bằng https:// và không có khoảng trắng.');
+  return String(content).replace(/\s+$/, '') + '\n\n@[' + text + '](' + link + ')';
+}
 function editPost(post) {
   const form = $('#post-form'); form.reset();
   for (const key of ['id', 'title', 'slug', 'excerpt', 'content', 'category', 'status']) form.elements.namedItem(key).value = post?.[key] || (key === 'status' ? 'draft' : '');
+  const download = splitDownload(post?.content || ''); form.elements.namedItem('content').value = download.content;
+  form.elements.namedItem('downloadUrl').value = download.url; form.elements.namedItem('downloadLabel').value = download.label;
   form.elements.tags.value = (post?.tags || []).join(', '); form.elements.isSample.checked = !!post?.isSample;
   coverData = undefined; $('#post-cover').value = ''; $('#cover-preview').hidden = !post?.coverUrl;
   $('#post-form textarea[name="content"]').dispatchEvent(new Event('input'));
   if (post?.coverUrl) setImage($('#cover-preview'), post.coverUrl); else $('#cover-preview').removeAttribute('src');
-  message($('#post-status'));
+  message($('#post-status')); delete form.dataset.dirty;
+  $('#post-editor-mode').textContent = post ? 'Sửa bài' : 'Bài mới';
+  $('.post-layout').classList.toggle('editing', true); message($('#posts-status'));
 }
+// Đóng trình soạn, quay về danh sách bài; savedId (nếu có) được viền nổi để Hùng thấy bài vừa lưu nằm đâu.
+function closeEditor(note = '', savedId = '') {
+  $('.post-layout').classList.toggle('editing', false); delete $('#post-form').dataset.dirty;
+  message($('#posts-status'), note);
+  if (savedId) for (const entry of document.querySelectorAll('#posts-list .post-entry')) entry.classList.toggle('just-saved', entry.dataset.id === String(savedId));
+}
+const postTime = post => Number(post.publishedAt || post.createdAt || 0);
 function renderPosts() {
   const target = $('#posts-list');
   if (!posts.length) { empty(target, 'Chưa có bài viết. Bắt đầu một câu chuyện nhỏ nhé.'); return; }
-  target.replaceChildren(...posts.map(post => {
-    const card = make('article', undefined, 'post-entry'); card.append(make('h3', post.title), make('p', `${post.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}${post.isSample ? ' · Bài viết mẫu' : ''}`));
-    const controls = make('div', undefined, 'item-actions'); controls.append(action('Sửa bài', async () => { editPost(post); $('#post-form').scrollIntoView({ behavior: 'smooth', block: 'start' }); }), action('Xóa bài', async () => { if (!confirm(`Xóa hẳn bài “${post.title}”?`)) return; await api(`/api/admin/posts/${encodeURIComponent(post.id)}`, { method: 'DELETE' }); editPost(); await loadAll(); message($('#page-status'), 'Đã xóa bài viết.'); }, 'danger')); card.append(controls); return card;
+  // Bản nháp lên đầu (đang làm dở), sau đó bài đã xuất bản mới nhất trước.
+  const sorted = [...posts].sort((a, b) => (b.status === 'draft') - (a.status === 'draft') || postTime(b) - postTime(a));
+  target.replaceChildren(...sorted.map(post => {
+    const card = make('article', undefined, 'post-entry'); card.dataset.id = String(post.id); card.dataset.status = post.status;
+    const meta = make('p', undefined, 'post-meta'), time = postTime(post);
+    meta.append(make('span', post.status === 'published' ? 'Đã xuất bản' : 'Bản nháp', post.status === 'published' ? 'badge' : 'badge draft'), make('span', [time ? new Date(time).toLocaleDateString('vi-VN') : '', post.category, post.isSample ? 'Bài viết mẫu' : ''].filter(Boolean).join(' · ')));
+    card.append(make('h3', post.title), meta);
+    const controls = make('div', undefined, 'item-actions'); controls.append(action('Sửa bài', async () => { editPost(post); $('#post-form').scrollIntoView({ behavior: 'smooth', block: 'start' }); }), action('Xóa bài', async () => { if (!confirm(`Xóa hẳn bài “${post.title}”?`)) return; await api(`/api/admin/posts/${encodeURIComponent(post.id)}`, { method: 'DELETE' }); await loadAll(); closeEditor('Đã xóa bài viết.'); }, 'danger')); card.append(controls); return card;
   }));
   if (typeof Event === 'function') $('#posts-filter')?.dispatchEvent?.(new Event('input'));
 }
@@ -217,14 +248,18 @@ $('#post-form').addEventListener('submit', async event => {
   try {
     const values = Object.fromEntries(new FormData(form)); const id = values.id; delete values.id;
     values.tags = String(values.tags || '').split(',').map(tag => tag.trim()).filter(Boolean); values.isSample = form.elements.isSample.checked;
+    values.content = joinDownload(values.content, values.downloadUrl, values.downloadLabel); delete values.downloadUrl; delete values.downloadLabel;
     if (coverData !== undefined) values.coverDataUrl = coverData;
     const response = await api('/api/admin/posts' + (id ? '/' + encodeURIComponent(id) : ''), { method: id ? 'PUT' : 'POST', body: JSON.stringify(values) });
     if (auto) {
       if (response.post?.id) form.elements.id.value = response.post.id;
       coverData = undefined;
       const postData = await api('/api/admin/posts'); posts = postData.posts; renderPosts(); renderStats();
-    } else { await loadAll(); if (response.post) editPost(response.post); }
-    message($('#post-status'), values.status === 'published' ? `Đã lưu lúc ${clock()} và cập nhật ngay trên web.` : `Đã lưu bản nháp lúc ${clock()}. Chọn Xuất bản để bài hiện trên web.`);
+      message($('#post-status'), values.status === 'published' ? `Đã lưu lúc ${clock()} và cập nhật ngay trên web.` : `Đã lưu bản nháp lúc ${clock()}. Chọn Xuất bản để bài hiện trên web.`);
+    } else {
+      await loadAll();
+      closeEditor(values.status === 'published' ? `Đã lưu “${values.title}” lúc ${clock()} và cập nhật ngay trên web.` : `Đã lưu bản nháp “${values.title}” lúc ${clock()}. Mở Sửa bài, chọn Xuất bản để bài hiện trên web.`, response.post?.id || id);
+    }
   } catch (error) { message($('#post-status'), error.message, true); } finally { button.disabled = false; }
 });
 $('#site-form').addEventListener('submit', async event => {
@@ -325,9 +360,18 @@ $('#customize-search').addEventListener('input',event=>{
   if(event.target.value.trim()){$('.basic-settings').hidden=true;$('#customize-form').hidden=false;for(const button of document.querySelectorAll('#content-tabs button'))button.setAttribute('aria-pressed','false');}
   else applyTabs();
 });
-$('#posts-filter')?.addEventListener('input',event=>{
-  const query=event.target.value.toLocaleLowerCase('vi-VN').trim();
-  for(const entry of document.querySelectorAll('#posts-list .post-entry'))entry.hidden=!!query&&!entry.textContent.toLocaleLowerCase('vi-VN').includes(query);
+function filterPostList(){
+  const query=($('#posts-filter')?.value||'').toLocaleLowerCase('vi-VN').trim(),status=$('#posts-status-filter')?.value||'';
+  for(const entry of document.querySelectorAll('#posts-list .post-entry'))entry.hidden=(!!query&&!entry.textContent.toLocaleLowerCase('vi-VN').includes(query))||(!!status&&entry.dataset.status!==status);
+}
+$('#posts-filter')?.addEventListener('input',filterPostList);
+$('#posts-status-filter')?.addEventListener('change',filterPostList);
+// Về danh sách: còn thay đổi chưa lưu thì lưu luôn (lưu tay tự đóng); ô bắt buộc còn trống thì hỏi trước khi bỏ.
+$('#close-post')?.addEventListener('click',()=>{
+  const form=$('#post-form');
+  if(form.dataset.dirty!=='1')return closeEditor();
+  if(form.checkValidity())return form.requestSubmit($('#save-post'));
+  if(confirm('Bài còn ô bắt buộc trống nên chưa lưu được. Bỏ thay đổi và về danh sách?'))closeEditor();
 });
 $('#customize-form').addEventListener('submit',async event=>{
   event.preventDefault();const button=$('#save-customization');button.disabled=true;
@@ -381,11 +425,11 @@ if (typeof MutationObserver === 'function') {
     const form = $(formSelector), button = $(buttonSelector);
     const queue = event => {
       if (event.target.type === 'search' || event.target.id === 'editor-columns' || event.target.type === 'file') return;
-      clearTimeout(pending.get(form)); badge('dirty', 'Có thay đổi, sắp tự lưu…');
+      clearTimeout(pending.get(form)); form.dataset.dirty = '1'; badge('dirty', 'Có thay đổi, sắp tự lưu…');
       pending.set(form, setTimeout(() => autosave(form, button, statusSelector), 1500));
     };
     form.addEventListener('input', queue); form.addEventListener('change', queue);
-    form.addEventListener('submit', () => { clearTimeout(pending.get(form)); pending.delete(form); });
+    form.addEventListener('submit', () => { clearTimeout(pending.get(form)); pending.delete(form); if (!form.dataset.autosave) waitIdle(button).then(() => { if (!pending.size && !$(statusSelector).classList.contains('error') && !(formSelector === '#post-form' && $('#posts-status').classList.contains('error'))) badge('saved', `Đã lưu ${clock()} · đã lên web`); }); });
   }
   window.addEventListener('beforeunload', event => { if (pending.size) { event.preventDefault(); event.returnValue = ''; } });
 }
@@ -393,6 +437,30 @@ window.addEventListener('pagehide', showAuth);
 window.addEventListener('pageshow', event => { if (event.persisted) initialize(); });
 setInterval(async () => { if (!LOCAL && !session) return; try { const data = await api('/api/admin/session'); if (!data.authenticated) await initialize(); } catch { saveSession(null); showAuth(); } }, 60000);
 initialize();
+
+// Điện thoại: menu bàn làm việc là ngăn kéo bên trái. Nút ☰ (kèm tên mục đang mở) mở ra; chọn mục, bấm ✕,
+// bấm ra ngoài hoặc Esc thì đóng. Trên máy tính menu luôn hiện như cũ.
+(() => {
+  const toggle = $('#menu-toggle'), menu = $('#admin-menu'), backdrop = $('#menu-backdrop');
+  if (!toggle || !menu || !backdrop) return;
+  const isOpen = () => toggle.getAttribute?.('aria-expanded') === 'true';
+  const set = (open, refocus = false) => {
+    menu.classList.toggle('is-open', open); backdrop.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open)); toggle.setAttribute('aria-label', open ? 'Đóng menu quản trị' : 'Mở menu quản trị');
+    document.body?.classList.toggle('menu-open', open);
+    if (open) document.querySelector('#admin-menu [aria-pressed="true"]')?.focus(); else if (refocus) toggle.focus();
+  };
+  toggle.addEventListener('click', () => set(!isOpen()));
+  $('#menu-close')?.addEventListener('click', () => set(false, true));
+  backdrop.addEventListener('click', () => set(false, true));
+  document.querySelectorAll('#admin-menu [data-panel]').forEach(button => button.addEventListener('click', () => {
+    $('#menu-current').textContent = button.querySelector('span')?.textContent || button.textContent;
+    if (isOpen()) { set(false); window.scrollTo?.({ top: 0 }); }
+  }));
+  window.addEventListener('keydown', event => { if (event.key === 'Escape' && isOpen()) set(false, true); });
+  window.matchMedia?.('(max-width: 760px)').addEventListener?.('change', event => { if (!event.matches) set(false); });
+  window.addEventListener('pagehide', () => set(false));
+})();
 
 // Thanh trên cùng của trang quản trị: vuốt xuống thì ẩn, vuốt lên thì hiện lại (giống các trang công khai).
 (() => {
@@ -421,9 +489,10 @@ function renderNiches() {
   if (!target) return;
   const active = niches.filter(n => n.isActive).length, postsTotal = niches.reduce((a, n) => a + n.stats.posts, 0), words = niches.reduce((a, n) => a + n.stats.totalWords, 0);
   $('#niche-summary').textContent = `${active}/${niches.length} ngách đang bật · ${postsTotal} bài tự động · ${words.toLocaleString('vi-VN')} từ`;
-  if (!niches.length) { empty(target, 'Chưa có ngách nào. Thêm ngách đầu tiên ở khung bên cạnh.'); return; }
-  target.replaceChildren(...niches.map(niche => {
-    const card = make('article', undefined, 'niche-card' + (niche.isActive ? '' : ' is-off'));
+  if (!niches.length) { empty(target, 'Chưa có ngách nào. Bấm Thêm ngách mới ＋ để bắt đầu.'); return; }
+  const sorted = [...niches].sort((a, b) => b.isActive - a.isActive || String(a.name).localeCompare(String(b.name), 'vi'));
+  target.replaceChildren(...sorted.map(niche => {
+    const card = make('article', undefined, 'niche-card' + (niche.isActive ? '' : ' is-off')); card.dataset.id = String(niche.id); card.dataset.state = niche.isActive ? 'on' : 'off';
     const head = make('div', undefined, 'niche-head');
     head.append(make('h3', niche.name), make('span', niche.isActive ? 'Đang bật' : 'Đang tắt', 'niche-state'));
     const meta = make('p', `${NICHE_TYPES[niche.categoryType] || niche.categoryType} · ${niche.postCategory} · ${niche.keywords.length} từ khóa · ${niche.rssSources.length} nguồn RSS`);
@@ -438,6 +507,16 @@ function renderNiches() {
     card.append(head, meta, stats, used, controls);
     return card;
   }));
+  filterNicheList();
+}
+function filterNicheList() {
+  const query = ($('#niches-filter')?.value || '').toLocaleLowerCase('vi-VN').trim(), state = $('#niches-state-filter')?.value || '';
+  for (const card of document.querySelectorAll('#niches-list .niche-card')) card.hidden = (!!query && !card.textContent.toLocaleLowerCase('vi-VN').includes(query)) || (!!state && card.dataset.state !== state);
+}
+function closeNiche(note = '', savedId = '') {
+  $('.niche-layout')?.classList.toggle('editing', false);
+  message($('#niche-status'), note);
+  if (savedId) for (const card of document.querySelectorAll('#niches-list .niche-card')) card.classList.toggle('just-saved', card.dataset.id === String(savedId));
 }
 function editNiche(niche) {
   const form = $('#niche-form'); if (!form?.elements) return;
@@ -452,7 +531,7 @@ function editNiche(niche) {
   form.elements.namedItem('system_tone').value = niche?.systemTone || '';
   form.elements.namedItem('is_active').checked = niche ? niche.isActive : true;
   $('#niche-form-title').textContent = niche ? `Sửa ngách “${niche.name}”` : 'Thêm ngách mới';
-  message($('#niche-status'));
+  message($('#niche-status')); $('.niche-layout')?.classList.toggle('editing', true);
 }
 async function loadNiches() {
   try { niches = (await api('/api/admin/niches')).niches || []; renderNiches(); }
@@ -460,14 +539,17 @@ async function loadNiches() {
 }
 $('#refresh-niches')?.addEventListener?.('click', () => loadNiches());
 $('#new-niche')?.addEventListener?.('click', () => editNiche());
+$('#close-niche')?.addEventListener?.('click', () => closeNiche());
+$('#niches-filter')?.addEventListener?.('input', filterNicheList);
+$('#niches-state-filter')?.addEventListener?.('change', filterNicheList);
 $('#niche-form')?.addEventListener?.('submit', async event => {
   event.preventDefault();
   const form = event.target, id = form.elements.namedItem('id').value, button = $('#save-niche');
   const body = { name: form.elements.namedItem('name').value, slug: form.elements.namedItem('slug').value.trim().toLowerCase(), category_type: form.elements.namedItem('category_type').value, post_category: form.elements.namedItem('post_category').value, keywords: form.elements.namedItem('keywords').value, rss_sources: form.elements.namedItem('rss_sources').value, system_tone: form.elements.namedItem('system_tone').value, is_active: form.elements.namedItem('is_active').checked };
   button.disabled = true;
   try {
-    await api(id ? `/api/admin/niches/${id}` : '/api/admin/niches', { method: id ? 'PUT' : 'POST', body: JSON.stringify(body) });
-    await loadNiches(); editNiche(); message($('#niche-status'), id ? 'Đã lưu thay đổi của ngách.' : 'Đã thêm ngách mới.');
+    const saved = await api(id ? `/api/admin/niches/${id}` : '/api/admin/niches', { method: id ? 'PUT' : 'POST', body: JSON.stringify(body) });
+    await loadNiches(); closeNiche(id ? `Đã lưu thay đổi của ngách “${body.name}”.` : `Đã thêm ngách “${body.name}”.`, id || saved?.niche?.id || '');
   } catch (error) { message($('#niche-status'), error.message, true); }
   finally { button.disabled = false; }
 });
