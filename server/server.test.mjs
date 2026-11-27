@@ -228,6 +228,6 @@ try {
   assert.match(missingApi.headers.get('content-type'), /application\/json/);
   const icon = await fetch(origin + '/favicon.ico', { redirect: 'manual' });
   assert.equal(icon.status, 301);
-  assert.equal(icon.headers.get('location'), '/assets/logo.svg');
-  console.log('PASS: missing pages show the Vietnamese 404 page; favicon.ico points to the logo icon.');
+  assert.equal(icon.headers.get('location'), '/assets/star.svg');
+  console.log('PASS: missing pages show the Vietnamese 404 page; favicon.ico points to the star icon.');
 } finally { await production.close(); fs.rmSync(publicData, { recursive: true, force: true }); }

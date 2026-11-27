@@ -37,7 +37,7 @@ SOCIALS = [
 
 
 def header(section, app, links, cta):
-    brand = '<a class="sitebar-brand" href="/" aria-label="Hùng Hiền Hòa, về trang chủ"><img class="brand-mark" src="/assets/logo.svg" alt="" width="32" height="32" aria-hidden="true">hhh<span>.</span>' + (f'<small>{app}</small>' if app else '') + '</a>'
+    brand = '<a class="sitebar-brand" href="/" aria-label="Hùng Hiền Hòa, về trang chủ">hhh<span>.</span>' + (f'<small>{app}</small>' if app else '') + '</a>'
     nav = ''.join(f'<a href="{href}"{extra}>{label}</a>' for href, label, extra in links)
     # Trang con có liên kết "Trang chủ" đứng đầu (icon ngôi nhà + chữ) để quay về rõ ràng, không chỉ dựa vào logo.
     if section != 'main':
@@ -64,7 +64,7 @@ def footer():
             '<div class="footer-cta-actions"><a class="btn btn-sun contact-button" href="mailto:hunghienhoa2110@gmail.com?subject=Ch%C3%A0o%20H%C3%B9ng">Gửi email cho Hùng <span aria-hidden="true">↗</span></a>'
             '<div class="footer-cta-lines"><a class="contact-email" id="contact-email" href="mailto:hunghienhoa2110@gmail.com">hunghienhoa2110@gmail.com</a><a class="contact-phone" href="tel:+84898298886">0898.29.8886</a></div>'
             f'<ul class="social-links" aria-label="Mạng xã hội">{socials}</ul><p class="social-note" id="wechat-status" role="status"></p></div></section>'
-            '<div class="footer-main"><div class="footer-about"><a class="footer-logo" href="/"><img class="brand-mark" src="/assets/logo.svg" alt="" width="48" height="48" aria-hidden="true">hhh<span>.</span></a><p>Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.</p></div>'
+            '<div class="footer-main"><div class="footer-about"><a class="footer-logo" href="/">hhh<span>.</span></a><p>Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.</p></div>'
             '<nav class="footer-col" aria-label="Khám phá"><h2>Khám phá</h2><ul><li><a href="/">Trang chủ</a></li><li><a href="/blog/">Góc tò mò</a></li><li><a href="/#ve-hung">Về Hùng</a></li><li><a href="#contact">Liên hệ</a></li></ul></nav>'
             '<nav class="footer-col" aria-label="Công cụ"><h2>Công cụ</h2><ul><li><a href="/photobooth/">Hộp Ảnh</a></li><li><a href="/snaptik/">Snap Video</a></li><li><a href="/lamnet/">Làm Nét Ảnh</a></li></ul></nav>'
             '<nav class="footer-col" aria-label="Game Pixel"><h2>Game Pixel</h2><ul><li><a href="/game/">Tất cả game</a></li><li><a href="/cotuong/">Cờ Tướng</a></li><li><a href="/game/tien-len/">Tiến Lên</a></li><li><a href="/game/ca-ngua/">Cờ Cá Ngựa</a></li><li><a href="/game/o-an-quan/">Ô Ăn Quan</a></li></ul></nav>'

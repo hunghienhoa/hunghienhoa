@@ -578,7 +578,7 @@ async function handle(request, env, ctx) {
     const redirect=publicRedirect(new URL(request.url));
     if(redirect)return Response.redirect(redirect.href,308);
     const route = new URL(request.url).pathname;
-    if (route === '/favicon.ico') return Response.redirect(new URL('/assets/logo.svg', request.url).href, 301);
+    if (route === '/favicon.ico') return Response.redirect(new URL('/assets/star.svg', request.url).href, 301);
     // Tài liệu và test dành cho lập trình viên nằm trong dist nhưng không phục vụ công khai.
     if (DEV_ONLY.test(route)) return (await notFoundPage(request, env)) || new Response(null, { status: 404 });
     try {
