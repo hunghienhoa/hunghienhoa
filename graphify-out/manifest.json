@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "cloudflare.config.ts": {
-    "mtime": 1795739879.3397636,
-    "seen": 1795739916.160075,
-    "ast_hash": "c5a85ee5daf93eb05cc714527df11060",
+    "mtime": 1795741015.2390308,
+    "seen": 1795741522.1822903,
+    "ast_hash": "0d603b1dad48b25dc03b2ff73f73016d",
     "semantic_hash": ""
   },
   "package.json": {
@@ -78,9 +78,9 @@
     "semantic_hash": ""
   },
   "server/agent-content.mjs": {
-    "mtime": 1795739879.3393354,
-    "seen": 1795739916.160136,
-    "ast_hash": "c613f1cd5e3ee85be2b8720bf4262921",
+    "mtime": 1795741015.240773,
+    "seen": 1795741522.1823254,
+    "ast_hash": "eae234ee6fed197c581ab82e2ac70bfd",
     "semantic_hash": ""
   },
   "server/contribution-limit.mjs": {
@@ -330,9 +330,9 @@
     "semantic_hash": ""
   },
   "worker/index.mjs": {
-    "mtime": 1795678734.1734066,
-    "seen": 1795678833.2076766,
-    "ast_hash": "8a237240bf75e1e4b4e4a9fc466c6172",
+    "mtime": 1795741015.2418923,
+    "seen": 1795741522.183144,
+    "ast_hash": "748b650b3dc17e2db923d50cdff76153",
     "semantic_hash": ""
   },
   "worker/index.test.mjs": {
@@ -498,9 +498,9 @@
     "semantic_hash": ""
   },
   "DEPLOYMENT.md": {
-    "mtime": 1795739911.9174535,
-    "seen": 1795739916.162191,
-    "ast_hash": "92b21826e6b82a22d90dddab517d6d3c",
+    "mtime": 1795741030.3391824,
+    "seen": 1795741522.18365,
+    "ast_hash": "36f0e1ddb0c06db2605e8ee0f2636166",
     "semantic_hash": ""
   },
   "FONT-SOURCES.md": {
@@ -1722,9 +1722,9 @@
     "semantic_hash": ""
   },
   "tools/agent-publish.test.mjs": {
-    "mtime": 1795739879.3402078,
-    "seen": 1795739916.160584,
-    "ast_hash": "dd652b9d58a15a0dc8e56bcf424cb9a3",
+    "mtime": 1795741015.2461045,
+    "seen": 1795741522.1825902,
+    "ast_hash": "dc566365b43b203e744ce3a72af4960a",
     "semantic_hash": ""
   },
   "tools/i18n.test.mjs": {

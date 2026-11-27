@@ -26,11 +26,19 @@ test('đăng bài tự động: Authorization Bearer được chuyển thành he
   assert.deepEqual([limited.status, keys], [429, ['agent:203.0.113.7']], 'bị giới hạn tần suất thì không gọi Supabase');
 });
 
-test('subdomain cũ: trang chuyển hướng 308 về đường dẫn mới, còn API (đăng bài, danh sách bài) chạy thẳng', async () => {
-  const { publicRedirect } = await import('../server/agent-content.mjs');
-  assert.equal(publicRedirect('https://blog.hunghienhoa.com/api/agent/publish'), null);
-  assert.equal(publicRedirect('https://blog.hunghienhoa.com/api/posts'), null);
-  assert.equal(publicRedirect('http://blog.hunghienhoa.com/api/posts').href, 'https://blog.hunghienhoa.com/api/posts');
-  assert.equal(publicRedirect('https://blog.hunghienhoa.com/bai-viet').href, 'https://hunghienhoa.com/blog/bai-viet');
-  assert.equal(publicRedirect('https://lamnet.hunghienhoa.com/').href, 'https://hunghienhoa.com/lamnet/');
+test('đăng ký mã: chỉ chuyển mã sang hàm Supabase, cửa sổ đóng thì báo 403', async t => {
+  const calls = [];
+  let reply = () => Response.json({ enrolled: true });
+  t.mock.method(globalThis, 'fetch', async (url, init) => { calls.push({ url: String(url), init }); return reply(); });
+  const env = { SUPABASE_URL: 'https://db.example.test', SUPABASE_PUBLISHABLE_KEY: 'pub' };
+  const send = auth => worker.fetch(new Request('https://hunghienhoa.com/api/agent/enroll', { method: 'POST', headers: auth ? { Authorization: auth } : {} }), env);
+  assert.equal((await send(null)).status, 401);
+  assert.equal(calls.length, 0);
+  const ok = await send('Bearer ma-moi-du-dai-0123456789');
+  assert.deepEqual([ok.status, (await ok.json()).enrolled], [201, true]);
+  assert.equal(calls[0].url, 'https://db.example.test/rest/v1/rpc/agent_enroll_token');
+  assert.equal(calls[0].init.headers['x-agent-token'], 'ma-moi-du-dai-0123456789');
+  reply = () => Response.json({ message: 'enroll closed' }, { status: 403 });
+  assert.equal((await send('Bearer ma-moi-du-dai-0123456789')).status, 403);
+  assert.equal((await worker.fetch(new Request('https://hunghienhoa.com/api/agent/enroll'), env)).status, 405);
 });
