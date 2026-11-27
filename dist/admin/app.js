@@ -438,6 +438,30 @@ window.addEventListener('pageshow', event => { if (event.persisted) initialize()
 setInterval(async () => { if (!LOCAL && !session) return; try { const data = await api('/api/admin/session'); if (!data.authenticated) await initialize(); } catch { saveSession(null); showAuth(); } }, 60000);
 initialize();
 
+// Điện thoại: menu bàn làm việc là ngăn kéo bên trái. Nút ☰ (kèm tên mục đang mở) mở ra; chọn mục, bấm ✕,
+// bấm ra ngoài hoặc Esc thì đóng. Trên máy tính menu luôn hiện như cũ.
+(() => {
+  const toggle = $('#menu-toggle'), menu = $('#admin-menu'), backdrop = $('#menu-backdrop');
+  if (!toggle || !menu || !backdrop) return;
+  const isOpen = () => toggle.getAttribute?.('aria-expanded') === 'true';
+  const set = (open, refocus = false) => {
+    menu.classList.toggle('is-open', open); backdrop.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open)); toggle.setAttribute('aria-label', open ? 'Đóng menu quản trị' : 'Mở menu quản trị');
+    document.body?.classList.toggle('menu-open', open);
+    if (open) document.querySelector('#admin-menu [aria-pressed="true"]')?.focus(); else if (refocus) toggle.focus();
+  };
+  toggle.addEventListener('click', () => set(!isOpen()));
+  $('#menu-close')?.addEventListener('click', () => set(false, true));
+  backdrop.addEventListener('click', () => set(false, true));
+  document.querySelectorAll('#admin-menu [data-panel]').forEach(button => button.addEventListener('click', () => {
+    $('#menu-current').textContent = button.querySelector('span')?.textContent || button.textContent;
+    if (isOpen()) { set(false); window.scrollTo?.({ top: 0 }); }
+  }));
+  window.addEventListener('keydown', event => { if (event.key === 'Escape' && isOpen()) set(false, true); });
+  window.matchMedia?.('(max-width: 760px)').addEventListener?.('change', event => { if (!event.matches) set(false); });
+  window.addEventListener('pagehide', () => set(false));
+})();
+
 // Thanh trên cùng của trang quản trị: vuốt xuống thì ẩn, vuốt lên thì hiện lại (giống các trang công khai).
 (() => {
   const bar = document.querySelector('.admin-page>header');
