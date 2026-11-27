@@ -78,6 +78,35 @@
 .tool-snap .tool-visual{background:linear-gradient(150deg,color-mix(in srgb,var(--blue) 10%,#fff),color-mix(in srgb,var(--blue) 28%,#fff))}
 .tool-chess .tool-visual{background:#e6c58a}
 .chess-shot{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+/* Minh họa thẻ công cụ: mỗi hình vẽ trong khung 230×230 (.art) rồi thu nhỏ theo khung trên điện thoại. */
+.art{position:relative;display:block;flex:none;width:230px;height:230px}
+.strip{position:absolute;top:22px;display:grid;gap:5px;width:70px;padding:7px 7px 22px;background:#fff;box-shadow:0 18px 28px -16px rgba(0,0,0,.45)}
+.strip i{display:grid;place-items:center;height:37px;background:var(--cream)}
+.strip img{width:26px}
+.strip-back{left:104px;rotate:9deg;opacity:.75}
+.strip-back i{background:color-mix(in srgb,var(--blue) 14%,var(--cream))}
+.strip-front{left:56px;rotate:-6deg}
+.flash-badge{position:absolute;top:24px;right:18px;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#fff;color:#f0b400;font-size:24px;box-shadow:0 0 0 8px color-mix(in srgb,#fff 45%,transparent)}
+.snap-link{position:absolute;top:14px;left:50%;translate:-50% 0;white-space:nowrap;padding:6px 12px;border-radius:999px;background:var(--cream);font-size:11px;font-weight:600;letter-spacing:.3px}
+.snap-phone{position:absolute;top:56px;left:62px;display:flex;flex-direction:column;gap:8px;width:92px;height:158px;padding:9px;border:5px solid var(--blue);border-radius:22px;background:var(--cream);rotate:-4deg;box-shadow:0 18px 28px -16px rgba(0,0,0,.45)}
+.snap-screen{display:grid;place-items:center;height:86px;border-radius:12px;background:linear-gradient(160deg,var(--blue),color-mix(in srgb,var(--blue) 45%,#fff) 70%,var(--yellow))}
+.snap-play{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--yellow);color:var(--blue);font-size:14px}
+.snap-bar{height:6px;border-radius:9px;background:var(--hh-hair)}
+.snap-bar.short{width:60%}
+.snap-save{position:absolute;top:150px;left:132px;display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--yellow);color:var(--blue);font-size:24px;border:4px solid #fff;box-shadow:0 12px 20px -12px rgba(0,0,0,.5)}
+.sharp-frame{position:absolute;inset:38px 25px;overflow:hidden;border:5px solid #fff;border-radius:16px;box-shadow:0 18px 28px -16px rgba(0,0,0,.45)}
+.sharp-scene{position:absolute;inset:0;background:linear-gradient(#cfe0ff,#f4f1ff)}
+.sharp-scene.blur{filter:blur(3.5px) saturate(.75)}
+.sharp-scene.crisp{clip-path:inset(0 0 0 50%)}
+.sharp-scene i{position:absolute;display:block}
+.sharp-scene .sun{top:16px;left:calc(50% - 20px);width:40px;height:40px;border-radius:50%;background:var(--yellow)}
+.sharp-scene .hill{left:-15%;right:-15%;bottom:-48%;height:95%;border-radius:50%;background:var(--blue)}
+.sharp-scene .hill.far{left:20%;right:-40%;bottom:-30%;height:80%;background:color-mix(in srgb,var(--blue) 45%,#fff)}
+.sharp-scene .tree{bottom:30px;left:calc(50% - 34px);width:26px;height:26px;border-radius:50%;background:#2e9e5b;box-shadow:0 22px 0 -9px #6b4a2b}
+.sharp-scene .house{bottom:24px;left:calc(50% + 6px);width:30px;height:22px;background:#fff;box-shadow:inset 0 -10px 0 color-mix(in srgb,var(--yellow) 60%,#fff)}
+.sharp-scene .house::before{content:'';position:absolute;left:-4px;right:-4px;top:-14px;height:14px;background:#c8323c;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.sharp-divider{position:absolute;top:0;bottom:0;left:calc(50% - 1.5px);width:3px;background:#fff}
+.sharp-knob{position:absolute;top:calc(50% - 22px);left:calc(50% - 22px);display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--yellow);border:3px solid #fff;font-weight:700;font-size:14px;box-shadow:0 8px 16px -8px rgba(0,0,0,.5)}
 .tool-sharp .tool-visual{background:linear-gradient(150deg,color-mix(in srgb,var(--blue) 24%,#fff),color-mix(in srgb,var(--blue) 52%,#fff))}
 .tool-body{display:flex;flex-direction:column;flex:1;gap:10px;padding:20px 12px 12px}
 .tool-kicker{font-size:12px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;opacity:.9}
@@ -88,21 +117,6 @@
 .tool-cta{display:flex;align-items:center;justify-content:space-between;margin-top:auto;min-height:52px;padding:0 22px;border-radius:999px;background:var(--blue);color:var(--cream);font-size:15px;font-weight:600}
 .tool-card:hover .tool-cta{background:var(--yellow);color:var(--blue)}
 /* Hình minh họa nhỏ bằng CSS */
-.photo-strip{display:grid;gap:7px;width:92px;padding:9px 9px 26px;background:#fff;box-shadow:0 18px 30px -18px rgba(0,0,0,.45);rotate:-7deg}
-.photo-strip i{display:grid;place-items:center;aspect-ratio:4/3;background:var(--cream)}
-.photo-strip img{width:56%}
-.photo-flash{position:absolute;top:24px;right:30px;width:46px;height:46px;border-radius:50%;background:#fff;box-shadow:0 0 0 10px color-mix(in srgb,#fff 40%,transparent),0 0 0 22px color-mix(in srgb,#fff 18%,transparent)}
-.snap-phone{display:flex;flex-direction:column;gap:9px;justify-content:flex-end;width:104px;height:178px;padding:14px;border:6px solid var(--blue);border-radius:24px;background:var(--cream);rotate:6deg;box-shadow:0 18px 30px -18px rgba(0,0,0,.45)}
-.snap-play{display:grid;place-items:center;align-self:center;width:46px;height:46px;margin-bottom:auto;margin-top:22px;border-radius:50%;background:var(--yellow);font-size:18px}
-.snap-bar{height:7px;border-radius:9px;background:var(--hh-hair)}
-.snap-bar.short{width:60%}
-.snap-link{position:absolute;bottom:18px;left:18px;padding:7px 12px;border-radius:999px;background:var(--cream);font-size:12px;font-weight:600;letter-spacing:.4px}
-.sharp-pane{position:absolute;inset:34px 22% 34px 22%;overflow:hidden;border:5px solid #fff;border-radius:14px;background:linear-gradient(color-mix(in srgb,var(--blue) 30%,#fff),color-mix(in srgb,var(--blue) 8%,#fff))}
-.sharp-pane.crisp{clip-path:inset(0 0 0 50%)}
-.sharp-pane.blur>*{filter:blur(4px)}
-.sharp-pane .sun{position:absolute;top:18%;right:18%;width:34px;height:34px;border-radius:50%;background:var(--yellow)}
-.sharp-pane .hill{position:absolute;left:-10%;right:-10%;bottom:-40%;height:80%;border-radius:50%;background:var(--blue)}
-.sharp-knob{position:absolute;z-index:2;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--yellow);border:3px solid #fff;font-weight:700;font-size:15px}
 
 /* Giới thiệu */
 .about-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:32px;align-items:center;padding:32px;border:1px solid var(--hh-hair);border-radius:36px;background:var(--hh-card);box-shadow:var(--hh-shadow-sm)}
@@ -161,13 +175,7 @@
   .post-skeleton{min-height:116px;border-radius:22px}
   .tool-card{flex-direction:row;align-items:center;gap:14px;padding:10px;border-radius:24px}
   .tool-visual{flex:none;width:96px;height:96px;border-radius:18px}
-  .photo-flash,.snap-link,.snap-bar{display:none}
-  .photo-strip{width:46px;gap:4px;padding:5px 5px 12px}
-  .snap-phone{width:52px;height:84px;padding:6px;border-width:4px;border-radius:14px}
-  .snap-play{width:28px;height:28px;margin:auto;font-size:11px}
-  .sharp-pane{inset:16px 14px;border-width:3px;border-radius:10px}
-  .sharp-pane .sun{width:16px;height:16px}
-  .sharp-knob{width:28px;height:28px;font-size:11px;border-width:2px}
+  .tool-visual .art{position:absolute;top:50%;left:50%;translate:-50% -50%;scale:.42}
   .tool-body{gap:4px;padding:2px 4px 2px 0}
   .tool-kicker{font-size:11px;letter-spacing:1px}
   .tool-body>b{font-size:20px}
