@@ -72,12 +72,14 @@
   "70": "dashboard.test.mjs",
   "71": "Kiểm tra triển khai hunghienhoa — 09/11/2026",
   "72": "Hướng dẫn mã nguồn — Hùng Hiền Hòa",
-  "73": "Reconnaissance",
+  "73": "XiangqiRoom",
   "74": "load_state",
   "75": "lamnet-ai.test.mjs",
   "76": "steps",
   "77": "Security Policy",
-  "78": "browser-usage-audit.mjs",
+  "78": "ref_node_fs",
   "79": "server.test.mjs",
+  "80": "server.mjs",
+  "81": "browser-adsense-readiness.mjs",
   "82": "ref_node_assert"
 }

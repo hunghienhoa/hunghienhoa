@@ -34,6 +34,9 @@
     [/^Ảnh (\d+)×(\d+) điểm ảnh, tạo bởi AI đám mây\.$/, (a, b) => `${a}×${b} pixel image, created by cloud AI.`],
     [/^(.+?) Tự thử lại sau (\d+) giây…$/, (msg, n) => `${tr(msg) || msg} Retrying automatically in ${n} seconds…`],
     [/^(\d+) phút đọc$/, n => `${n} min read`],
+    [/^(\d+) phút mỗi bên$/, n => `${n} min per side`],
+    [/^Máy · (Dễ|Vừa|Khó)$/, l => `Computer · ${tr(l) || l}`],
+    [/^(Đỏ thắng|Đen thắng|Hòa) · (.+)$/, (a, b) => `${tr(a) || a} · ${tr(b) || b}`],
     [/^Hiển thị (\d+) bài viết\.$/, n => `Showing ${n} posts.`],
     [/^Thêm chủ đề \(\+(\d+)\)$/, n => `More topics (+${n})`],
     [/^Xem thêm bài viết \((\d+)\)$/, n => `See more posts (${n})`],
@@ -144,7 +147,7 @@
     if (loading) return;
     loading = true;
     // Số phiên bản ?v= nằm ngay trong đường dẫn để tools/asset-versions.mjs báo lỗi khi đổi từ điển mà quên tăng v.
-    import('./i18n-en.js?v=10').then(module => { dict = module.default || {}; loading = false; done(); })
+    import('./i18n-en.js?v=11').then(module => { dict = module.default || {}; loading = false; done(); })
       .catch(() => { loading = false; root.classList.remove('i18n-wait'); });
   }
 
