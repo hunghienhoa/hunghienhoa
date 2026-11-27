@@ -25,3 +25,12 @@ test('đăng bài tự động: Authorization Bearer được chuyển thành he
   const limited = await worker.fetch(new Request('https://hunghienhoa.com/api/agent/publish', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer x', 'CF-Connecting-IP': '203.0.113.7' }, body: '{}' }), { ...env, SNAPTIK_LIMIT: { limit: async ({ key }) => { keys.push(key); return { success: false }; } } });
   assert.deepEqual([limited.status, keys], [429, ['agent:203.0.113.7']], 'bị giới hạn tần suất thì không gọi Supabase');
 });
+
+test('subdomain cũ: trang chuyển hướng 308 về đường dẫn mới, còn API (đăng bài, danh sách bài) chạy thẳng', async () => {
+  const { publicRedirect } = await import('../server/agent-content.mjs');
+  assert.equal(publicRedirect('https://blog.hunghienhoa.com/api/agent/publish'), null);
+  assert.equal(publicRedirect('https://blog.hunghienhoa.com/api/posts'), null);
+  assert.equal(publicRedirect('http://blog.hunghienhoa.com/api/posts').href, 'https://blog.hunghienhoa.com/api/posts');
+  assert.equal(publicRedirect('https://blog.hunghienhoa.com/bai-viet').href, 'https://hunghienhoa.com/blog/bai-viet');
+  assert.equal(publicRedirect('https://lamnet.hunghienhoa.com/').href, 'https://hunghienhoa.com/lamnet/');
+});
