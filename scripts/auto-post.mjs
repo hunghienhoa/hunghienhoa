@@ -9,6 +9,7 @@
 //    lượt 1 tiêu đề/meta/sapo + 3 chương đầu (JSON có cấu trúc), lượt 2 bốn chương chuyên sâu kèm bảng so sánh
 //    và ví dụ kỹ thuật, lượt 3 ứng dụng thực tế + 5 câu hỏi thường gặp + kết luận. Thiếu số từ thì viết bù Case Study.
 // 4. Ảnh bìa: Workers AI của website (/api/lamnet/ai) → WebP 1024x576; lỗi thì vẽ ảnh trừu tượng bằng SVG (không chữ).
+//    Ảnh minh họa trong bài (bắt buộc ≥ 1): sơ đồ SVG Claude vẽ theo nội dung bài, dự phòng là thẻ tóm tắt các chương.
 // 5. Đăng qua POST /api/agent/publish: Supabase kiểm tra mã, giới hạn 2 bài/ngày, chống trùng nguồn,
 //    ghi crawled_sources, cập nhật last_used_at; Worker tự xóa cache trang blog.
 //
@@ -18,7 +19,8 @@ import sharp from 'sharp';
 import { mkdir, writeFile } from 'node:fs/promises';
 import {
   MIN_WORDS_DEFAULT, countWords, slugify, parseFeed, corroborate, domainOf, matchesKeywords,
-  assembleArticle, trimSource, vietnamDate, significantTerms, parseTrendshift, riskyRepo
+  assembleArticle, trimSource, vietnamDate, significantTerms, parseTrendshift, riskyRepo,
+  placeIllustration, safeSvg, outlineSvg
 } from './auto-blog-lib.mjs';
 
 const SITE = (process.env.SITE_URL || 'https://hunghienhoa.com').replace(/\/$/, '');
@@ -217,6 +219,33 @@ async function writeArticle(niche, topic, sources, extraContext, recentTitles) {
   return { ...meta, content: article, words };
 }
 
+// ---------- 3b. Ảnh minh họa trong bài (bắt buộc ít nhất 1) ----------
+// Claude vẽ một sơ đồ/infographic SVG tiếng Việt bám nội dung bài (cách hoạt động, quy trình, so sánh); SVG bị lọc
+// chỉ còn hình vẽ thuần rồi chuyển WebP. Không được thì dùng thẻ "Bài này có gì" vẽ từ các chương, để bài luôn có ảnh.
+const ILLUSTRATION_SCHEMA = {
+  type: 'object', additionalProperties: false, required: ['caption', 'svg'],
+  properties: { caption: { type: 'string' }, svg: { type: 'string' } }
+};
+async function svgToWebp(svg) {
+  const webp = await sharp(Buffer.from(svg)).resize({ width: 1200, withoutEnlargement: false }).flatten({ background: '#fbf2e3' }).webp({ quality: 86 }).toBuffer();
+  if (webp.subarray(0, 4).toString() !== 'RIFF' || webp.subarray(8, 12).toString() !== 'WEBP' || webp.length > 900_000) throw new Error('Ảnh minh họa WebP chưa hợp lệ.');
+  return webp;
+}
+async function makeIllustration(post) {
+  try {
+    const messages = [{ role: 'user', content: `Bài viết tiếng Việt dưới đây cần MỘT hình minh họa đặt sau chương đầu. Vẽ một sơ đồ hoặc infographic SVG giúp người đọc hiểu nhanh ý chính (ví dụ: cách công cụ hoạt động, các bước quy trình, so sánh lựa chọn) — chỉ dùng dữ kiện có trong bài.\nYêu cầu SVG: thẻ gốc <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">; nền #fbf2e3, chữ và nét #303487, điểm nhấn #ffdc38 (chữ vàng trên nền kem dùng #f0b400); font-family="DejaVu Sans, Arial, sans-serif"; chữ tiếng Việt có dấu, cỡ ≥ 20px, tối đa khoảng 12 nhãn ngắn, không chữ tràn khung, các khối không chồng lên nhau; chỉ dùng rect, circle, ellipse, line, polyline, polygon, path, text, tspan, g, defs, marker, linearGradient, stop; KHÔNG script, style, image, foreignObject, use, liên kết hay tài nguyên ngoài; không logo, không vẽ người thật.\ncaption: chú thích tiếng Việt 6–18 từ mô tả đúng nội dung hình.\n\nTiêu đề: ${post.title}\n\n${post.content.slice(0, 14000)}` }];
+    const result = JSON.parse(await ask(messages, 'Bạn là họa sĩ thông tin (information designer) của blog hunghienhoa.com, vẽ sơ đồ SVG sạch, rõ, đúng dữ kiện.', { output_config: { format: { type: 'json_schema', schema: ILLUSTRATION_SCHEMA } } }));
+    const svg = safeSvg(result.svg);
+    if (!svg) throw new Error('SVG có thành phần không an toàn hoặc sai định dạng.');
+    const image = await svgToWebp(svg);
+    log('Ảnh minh họa: sơ đồ SVG do Claude vẽ');
+    return { caption: result.caption, image };
+  } catch (error) {
+    log('Sơ đồ minh họa chưa được, dùng thẻ tóm tắt chương:', error.message);
+    return { caption: `Các phần chính của bài: ${post.title}`, image: await svgToWebp(outlineSvg(post.title, post.content)) };
+  }
+}
+
 // ---------- 4. Ảnh bìa ----------
 async function coverFromAi(prompt) {
   const response = await fetch(`${SITE}/api/lamnet/ai`, {
@@ -274,8 +303,10 @@ async function main() {
     const existing = await getJson(`${SITE}/api/posts`).catch(() => ({ posts: [] }));
     if ((existing.posts || []).some(p => p.slug === slug)) slug = `${slug}-${vietnamDate().replace(/-/g, '')}`.slice(0, 110);
     const cover = await makeCover(post.cover_prompt, slug);
+    const illustration = await makeIllustration(post);
     const payload = {
-      slug, title: post.title.slice(0, 160), excerpt: post.excerpt.slice(0, 480), content: post.content,
+      slug, title: post.title.slice(0, 160), excerpt: post.excerpt.slice(0, 480), content: placeIllustration(post.content, illustration.caption, 1),
+      images: [{ key: '1', base64: illustration.image.toString('base64') }],
       category: niche.post_category || 'Góc nhìn', tags: (post.tags || []).slice(0, 5), status: 'published',
       cover_base64: cover.toString('base64'), niche_id: niche.id, word_count: post.words,
       sources_cited: candidate.sources.map(s => ({ title: s.title.slice(0, 290), url: s.url }))
@@ -284,7 +315,8 @@ async function main() {
       await mkdir(new URL('./out/', import.meta.url), { recursive: true });
       await writeFile(new URL('./out/post.md', import.meta.url), `# ${payload.title}\n\n${payload.content}\n`);
       await writeFile(new URL('./out/cover.webp', import.meta.url), cover);
-      await writeFile(new URL('./out/post.json', import.meta.url), JSON.stringify({ ...payload, cover_base64: `(${cover.length} byte)` }, null, 2));
+      await writeFile(new URL('./out/image-1.webp', import.meta.url), illustration.image);
+      await writeFile(new URL('./out/post.json', import.meta.url), JSON.stringify({ ...payload, cover_base64: `(${cover.length} byte)`, images: [{ key: '1', base64: `(${illustration.image.length} byte)` }] }, null, 2));
       log(`DRY_RUN: đã viết "${payload.title}" (${post.words} từ) vào scripts/out/, không đăng.`);
       return;
     }
