@@ -24,6 +24,12 @@
   const PATTERNS = [
     [/^Hiển thị (\d+) thiết kế\.$/, n => `Showing ${n} designs.`],
     [/^\+(\d+) điểm$/, n => `+${n} points`],
+    [/^Người thân: "Mình nghĩ là đáp án ([A-D]), chắc khoảng (\d+)%\."$/, (l, n) => `Friend: "I think it's answer ${l}, about ${n}% sure."`],
+    [/^(.+) \(chủ phòng\)$/, n => `${n} (host)`],
+    [/^(.+) đã đổi câu hỏi cho cả phòng\.$/, n => `${n} swapped the question for the whole room.`],
+    [/^Chuỗi (\d+)$/, n => `Streak ${n}`],
+    [/^(\d+) người$/, n => `${n} players`],
+    [/^Câu (\d+)$/, n => `Question ${n}`],
     [/^Mẹo: (.+)$/, t => `Tip: ${t}`],
     [/^Đã sao chép mã WeChat: (.+)\.$/, id => `WeChat ID copied: ${id}.`],
     [/^Mã WeChat: (.+)\. Bạn có thể chọn và sao chép ID này\.$/, id => `WeChat ID: ${id}. You can select and copy this ID.`],
@@ -189,7 +195,7 @@
     if (loading) return;
     loading = true;
     // Số phiên bản ?v= nằm ngay trong đường dẫn để tools/asset-versions.mjs báo lỗi khi đổi từ điển mà quên tăng v.
-    import('./i18n-en.js?v=18').then(module => { dict = module.default || {}; loading = false; done(); })
+    import('./i18n-en.js?v=20').then(module => { dict = module.default || {}; loading = false; done(); })
       .catch(() => { loading = false; root.classList.remove('i18n-wait'); });
   }
 

@@ -2,26 +2,31 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Đố Vui Trí Tuệ — Câu đố mẹo, logic và dân gian có gợi ý</title>
-<meta name="description" content="Đố vui trí tuệ miễn phí: mỗi lượt 10 câu đố mẹo, logic và dân gian có lời giải. Bí thì bấm Mẹo để được gợi ý. Chơi ngay trên trình duyệt, không cần tài khoản.">
+<title>Đố Vui Trí Tuệ — Đố vui kiểu triệu phú, chơi cùng bạn bè</title>
+<meta name="description" content="Đố vui trí tuệ kiểu Ai là triệu phú: câu đố không giới hạn, có 50:50, hỏi khán giả, gọi người thân, đổi câu hỏi và chuỗi đúng. Chơi một mình hoặc mở phòng thi cùng bạn bè, không cần tài khoản.">
 <meta name="theme-color" content="#fbf2e3">
 <link rel="icon" href="/assets/logo.svg" type="image/svg+xml"><link rel="canonical" href="/game/do-vui/">
 <link rel="preload" href="/fonts/BeVietnamPro-Bold.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/PlayfairDisplay-SemiBoldItalic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/ui.css?v=28"><link rel="stylesheet" href="/tools.css?v=5"><link rel="stylesheet" href="/game/pixel.css?v=7">
-<script src="/i18n.js?v=17"></script><script src="app.js?v=1" type="module"></script><script src="/page-customization.js?v=media-4" defer></script><script src="/sitebar.js?v=5" defer></script><script src="/contact.js?v=4" defer></script>
+<link rel="stylesheet" href="/ui.css?v=28"><link rel="stylesheet" href="/tools.css?v=5"><link rel="stylesheet" href="/game/pixel.css?v=8">
+<script src="/i18n.js?v=19"></script><script src="app.js?v=2" type="module"></script><script src="/page-customization.js?v=media-4" defer></script><script src="/sitebar.js?v=5" defer></script><script src="/contact.js?v=4" defer></script>
 </head>
 <body>
 <a class="skip" href="#choi">Đến phần đố vui</a>
 <header class="sitebar"><div class="sitebar-in"><a class="sitebar-brand" href="/" aria-label="Hùng Hiền Hòa, về trang chủ"><img class="brand-mark" src="/assets/logo.svg" alt="" width="36" height="36" aria-hidden="true"><small>Đố Vui</small></a><button class="sitebar-toggle" type="button" aria-expanded="false" aria-controls="sitebar-menu" aria-label="Mở menu"><span class="ic ic-menu" aria-hidden="true"></span></button><nav class="sitebar-nav" id="sitebar-menu" aria-label="Điều hướng"><a class="sitebar-home" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M10 20v-6h4v6"/></svg>Trang chủ</a><span class="sitebar-sep" aria-hidden="true"></span><a href="/game/">Tất cả game</a><a href="#choi">Đố vui</a><a href="#cach-choi">Mẹo giải</a><a class="sitebar-cta" href="#contact">Kết nối <span class="ic ic-arrow-up-right" aria-hidden="true"></span></a></nav></div></header>
 <main id="main">
 <section class="tool-hero wrap game-hero" aria-labelledby="title">
-<span class="eyebrow">Trò chơi · Đố vui có mẹo</span>
+<span class="eyebrow">Trò chơi · Đố vui kiểu triệu phú</span>
 <h1 id="title">Đố vui <em>trí tuệ.</em></h1>
-<p class="lead">Mỗi lượt 10 câu đố mẹo, logic và dân gian. Bí thì bấm Mẹo để được gợi ý, nhưng câu đó chỉ còn nửa điểm. Chơi ngay, không cần tài khoản.</p>
+<p class="lead">Câu đố không bao giờ hết, càng đúng liên tiếp càng khó. Có 50:50, hỏi khán giả, gọi người thân và đổi câu hỏi. Chơi một mình hoặc rủ bạn bè vào phòng cùng thi.</p>
 </section>
 
 <section class="wrap quiz-wrap" id="choi" aria-label="Phần đố vui">
 <div class="quiz card">
+<div class="quiz-tabs" role="tablist" aria-label="Chế độ chơi">
+<button type="button" role="tab" id="tab-solo" aria-selected="true">Chơi một mình</button>
+<button type="button" role="tab" id="tab-multi" aria-selected="false">Chơi nhiều người</button>
+</div>
+
 <div class="quiz-panel" id="quiz-start">
 <h2 class="quiz-title">Chọn nhóm câu đố</h2>
 <div class="pick" role="radiogroup" aria-label="Nhóm câu đố">
@@ -30,34 +35,67 @@
 <label><input type="radio" name="group" value="logic"><span>Logic &amp; số</span></label>
 <label><input type="radio" name="group" value="dangian"><span>Dân gian &amp; chữ</span></label>
 </div>
-<p class="panel-note">Mỗi lượt có 10 câu lấy ngẫu nhiên. Đúng được 10 điểm, dùng Mẹo còn 5 điểm, đúng liên tiếp từ câu thứ ba được cộng thêm.</p>
-<p class="quiz-best">Điểm cao nhất của bạn: <b id="best">0</b></p>
+<p class="panel-note">Chơi không giới hạn câu, có 3 mạng. Đúng 10 điểm trở lên, câu càng khó điểm càng cao, dùng Mẹo còn nửa điểm. Đúng liên tiếp thì mức khó tăng dần và được cộng điểm thưởng.</p>
+<p class="quiz-best">Điểm cao nhất của bạn: <b id="best">0</b> · Chuỗi đúng dài nhất: <b id="best-streak">0</b></p>
 <button class="pixel-btn pixel-btn-sun" type="button" id="start">Bắt đầu</button>
+</div>
+
+<div class="quiz-panel" id="multi-lobby" hidden>
+<h2 class="quiz-title">Thi cùng bạn bè</h2>
+<p class="panel-note">Tạo phòng rồi gửi link cho bạn bè. Mọi người cùng trả lời một câu, trả lời nhanh và đúng liên tiếp được thưởng điểm. Phòng chơi được đến khi chủ phòng kết thúc.</p>
+<label class="quiz-field"><span>Tên hiển thị</span><input id="player-name" maxlength="20" autocomplete="nickname" placeholder="Ví dụ: Bạn Mèo"></label>
+<div class="quiz-row"><button class="pixel-btn pixel-btn-sun" type="button" id="create-room">Tạo phòng mời bạn</button></div>
+<form class="quiz-join" id="join-form"><label class="sr-only" for="join-code">Mã phòng</label><input id="join-code" maxlength="6" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="Nhập mã phòng" pattern="[A-Za-z0-9]{6}"><button class="pixel-btn" type="submit">Vào phòng</button></form>
+<p class="quiz-status" id="lobby-status" role="status" aria-live="polite"></p>
+</div>
+
+<div class="quiz-panel" id="multi-room" hidden>
+<p class="quiz-code"><span>Phòng</span> <b id="room-code"></b> <small id="room-info"></small></p>
+<div class="quiz-invite"><input id="invite-link" readonly aria-label="Link mời bạn vào phòng"><button class="pixel-btn" type="button" id="copy-link">Sao chép link</button></div>
+<h3 class="quiz-sub">Người chơi trong phòng</h3>
+<ol class="quiz-players" id="players"></ol>
+<div class="quiz-row"><button class="pixel-btn pixel-btn-sun" type="button" id="start-room" hidden>Bắt đầu</button><button class="pixel-btn" type="button" id="leave-room">Rời phòng</button></div>
+<p class="quiz-status" id="room-status" role="status" aria-live="polite"></p>
 </div>
 
 <div class="quiz-panel" id="quiz-play" hidden>
 <div class="quiz-stats" aria-live="off">
-<span class="quiz-stat"><small>Câu</small><b id="q-num">1</b>/<span id="q-total">10</span></span>
+<span class="quiz-stat"><small>Câu</small><b id="q-num">1</b></span>
 <span class="quiz-stat"><small>Điểm</small><b id="score">0</b></span>
 <span class="quiz-stat"><small>Chuỗi đúng</small><b id="streak">0</b></span>
+<span class="quiz-stat" id="lives-wrap"><small>Mạng</small><b id="lives">3</b></span>
+<span class="quiz-stat" id="timer-wrap" hidden><small>Thời gian</small><b id="timer">25</b></span>
 </div>
 <div class="quiz-bar" aria-hidden="true"><i id="bar"></i></div>
-<p class="quiz-tag" id="q-group"></p>
+<p class="quiz-tag"><span id="q-group"></span> · <span id="q-level"></span></p>
 <h2 class="quiz-q" id="q-text" tabindex="-1"></h2>
+<p class="quiz-note" id="swap-note" role="status" hidden></p>
 <div class="quiz-options" id="options" role="group" aria-label="Các đáp án"></div>
-<div class="quiz-actions"><button class="pixel-btn" type="button" id="hint">Mẹo (còn nửa điểm)</button></div>
+<div class="quiz-lifelines" role="group" aria-label="Quyền trợ giúp">
+<button class="quiz-life" type="button" data-life="fifty">50:50</button>
+<button class="quiz-life" type="button" data-life="audience">Hỏi khán giả</button>
+<button class="quiz-life" type="button" data-life="friend">Gọi người thân</button>
+<button class="quiz-life" type="button" data-life="swap">Đổi câu hỏi</button>
+<button class="quiz-life" type="button" id="hint">Mẹo (còn nửa điểm)</button>
+</div>
 <p class="quiz-hint" id="hint-text" role="status" hidden></p>
+<p class="quiz-hint quiz-friend" id="friend-text" role="status" hidden></p>
+<div class="quiz-audience" id="audience" hidden><h3 class="quiz-sub">Ý kiến khán giả</h3><div id="audience-bars"></div></div>
 <div class="quiz-feedback" id="feedback" role="status" aria-live="polite" hidden>
 <p class="quiz-verdict"><b id="fb-title"></b> <span id="fb-points"></span></p>
 <p class="quiz-explain"><strong>Giải thích:</strong> <span id="fb-explain"></span></p>
 <button class="pixel-btn pixel-btn-sun" type="button" id="next">Câu tiếp</button>
+<p class="quiz-auto" id="fb-auto" hidden>Câu tiếp theo sẽ tự hiện ra.</p>
 </div>
+<div id="board-wrap" hidden><h3 class="quiz-sub">Bảng điểm</h3><ol class="quiz-players quiz-board" id="board"></ol>
+<div class="quiz-row"><button class="pixel-btn" type="button" id="stop-room" hidden>Kết thúc trận</button></div></div>
+<p class="quiz-status" id="play-status" role="status" aria-live="polite"></p>
 </div>
 
 <div class="quiz-panel" id="quiz-end" hidden>
 <h2 class="quiz-title" id="end-rank"></h2>
 <p class="quiz-final"><b id="end-score">0</b> <small>điểm</small></p>
-<p class="quiz-best"><span>Đúng</span> <b id="end-right">0</b>/<span id="end-total">10</span> <span>câu</span> · <span>Điểm cao nhất của bạn:</span> <b id="end-best">0</b></p>
+<p class="quiz-best"><span>Đúng</span> <b id="end-right">0</b> <span>câu</span> · <span>Chuỗi đúng dài nhất:</span> <b id="end-streak">0</b> · <span>Điểm cao nhất của bạn:</span> <b id="end-best">0</b></p>
 <button class="pixel-btn pixel-btn-sun" type="button" id="again">Chơi lại</button>
 <button class="pixel-btn" type="button" id="change">Đổi nhóm câu đố</button>
 </div>
@@ -66,13 +104,14 @@
 
 <div class="topic-band" aria-hidden="true"><div class="band-track"><div class="band-group"><span>Động não nào</span><i>✳</i><span>Bí thì xin Mẹo</span><i>✳</i><span>Đừng trả lời vội</span><i>✳</i><span>Vui là chính</span><i>✳</i><span>Động não nào</span><i>✳</i><span>Bí thì xin Mẹo</span><i>✳</i><span>Đừng trả lời vội</span><i>✳</i><span>Vui là chính</span><i>✳</i></div><div class="band-group"><span>Động não nào</span><i>✳</i><span>Bí thì xin Mẹo</span><i>✳</i><span>Đừng trả lời vội</span><i>✳</i><span>Vui là chính</span><i>✳</i><span>Động não nào</span><i>✳</i><span>Bí thì xin Mẹo</span><i>✳</i><span>Đừng trả lời vội</span><i>✳</i><span>Vui là chính</span><i>✳</i></div></div></div><!--/band-->
 <section id="cach-choi" class="section wrap piece-guide card" aria-labelledby="guide-title">
-<h3 id="guide-title">Mẹo giải câu đố</h3>
+<h3 id="guide-title">Quyền trợ giúp và mẹo giải</h3>
 <ul>
-<li><b>Đọc kỹ từng chữ</b>: nhiều câu đố mẹo hỏi một đằng, đáp một nẻo. Hãy xem câu hỏi thật sự muốn biết điều gì.</li>
-<li><b>Đừng trả lời vội</b>: đáp án đầu tiên nảy ra thường là cái bẫy. Thử kiểm tra lại bằng phép tính hoặc ví dụ.</li>
-<li><b>Dãy số</b>: tìm hiệu hoặc tỉ số giữa hai số liên tiếp, thử cả tổng hai số đứng trước.</li>
-<li><b>Bài toán đếm</b>: nên vẽ sơ đồ hoặc làm ngược từ kết quả, như bài hồ bèo hay bài qua cầu.</li>
-<li><b>Câu đố dân gian</b>: chú ý chữ nghĩa, nghĩa bóng và những thứ quen thuộc quanh nhà.</li>
+<li><b>50:50</b>: bỏ đi hai đáp án sai, chỉ còn hai đáp án để chọn.</li>
+<li><b>Hỏi khán giả</b>: cho biết tỉ lệ bình chọn của khán giả, câu càng khó thì khán giả càng dễ chọn sai.</li>
+<li><b>Gọi người thân</b>: người thân gợi ý một đáp án kèm độ chắc chắn, đôi khi cũng nhầm.</li>
+<li><b>Đổi câu hỏi</b>: sang câu khác cùng mức khó. Trong phòng nhiều người, chỉ đổi được khi chưa ai trả lời và đổi cho cả phòng.</li>
+<li><b>Mẹo</b>: không giới hạn lần dùng, nhưng câu đó chỉ còn nửa điểm. Mỗi quyền trợ giúp còn lại chỉ dùng được một lần mỗi trận.</li>
+<li><b>Đọc kỹ từng chữ</b>: nhiều câu đố mẹo hỏi một đằng, đáp một nẻo. Đáp án đầu tiên nảy ra thường là cái bẫy.</li>
 </ul>
 </section>
 </main>

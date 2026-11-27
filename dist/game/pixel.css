@@ -77,3 +77,44 @@
 @media(max-width:1100px){.game-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.quiz-option{font-size:15px}.piece-guide ul{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:560px){.game-grid{grid-template-columns:minmax(0,1fr)}.game-card{box-shadow:inset 0 0 0 1px var(--line),var(--soft)}}
+
+/* Đố vui: chế độ nhiều người và quyền trợ giúp */
+.quiz-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:18px;padding:5px;border-radius:16px;background:color-mix(in srgb,var(--blue) 8%,var(--cream))}
+.quiz-tabs button{min-height:44px;padding:6px 10px;border-radius:12px;font-size:15px;font-weight:700;color:var(--blue);transition:background .15s ease}
+.quiz-tabs button[aria-selected="true"]{background:var(--blue);color:var(--yellow);box-shadow:0 2px 6px rgba(29,31,85,.25)}
+.quiz-field{display:grid;gap:6px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.quiz-field input,.quiz-join input,.quiz-invite input{width:100%;min-height:46px;padding:8px 12px;border:0;border-radius:12px;background:#fff;color:var(--blue);box-shadow:inset 0 0 0 1px var(--line);font-size:16px;font-weight:500;letter-spacing:0;text-transform:none}
+.quiz-join,.quiz-invite{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.quiz-join input{text-transform:uppercase;letter-spacing:.2em;font-weight:700}
+.quiz-join input::placeholder{letter-spacing:0;text-transform:none;font-weight:500}
+.quiz-row{display:flex;flex-wrap:wrap;gap:10px}
+.quiz-status{min-height:20px;margin:0;font-size:14px;font-weight:600;color:var(--blue);opacity:.85}
+.quiz-code{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin:0;font-weight:600}
+.quiz-code b{padding:2px 12px;border-radius:8px;background:var(--blue);color:var(--yellow);font-size:24px;letter-spacing:.18em}
+.quiz-code small{font-size:13px;opacity:.8}
+.quiz-sub{margin:4px 0 0;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.quiz-players{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.quiz-players li{display:flex;align-items:center;gap:10px;min-height:42px;padding:6px 12px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);font-weight:600}
+.quiz-players li.is-me{box-shadow:inset 0 0 0 2px var(--blue)}
+.quiz-players li.is-off{opacity:.55}
+.quiz-players li.is-done{background:color-mix(in srgb,var(--yellow) 35%,#fff)}
+.quiz-players li.is-ok{background:#d9f2e1}
+.quiz-players li.is-bad{background:#fbdcdc}
+.quiz-pname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.quiz-pstat{font-size:12px;font-weight:700;color:var(--red)}
+.quiz-players b{min-width:36px;padding:2px 8px;border-radius:8px;background:var(--blue);color:var(--yellow);text-align:center;font-variant-numeric:tabular-nums}
+.quiz-lifelines{display:flex;flex-wrap:wrap;gap:8px}
+.quiz-life{min-height:42px;padding:6px 14px;border-radius:999px;background:var(--cream);color:var(--blue);box-shadow:inset 0 0 0 2px var(--blue);font-size:14px;font-weight:700;transition:background .15s ease}
+.quiz-life:not(:disabled):hover{background:color-mix(in srgb,var(--yellow) 55%,var(--cream))}
+.quiz-life:disabled{opacity:.4;box-shadow:inset 0 0 0 2px var(--line);cursor:default}
+.quiz-option.is-removed{opacity:.35;text-decoration:line-through}
+.quiz-option.is-picked{box-shadow:inset 0 0 0 2px var(--blue)}
+.quiz-friend{background:color-mix(in srgb,var(--blue) 10%,var(--cream))}
+.quiz-note{margin:0;font-size:14px;font-weight:600;color:var(--red)}
+.quiz-audience{display:grid;gap:6px}
+.quiz-abar{display:grid;grid-template-columns:20px minmax(0,1fr) 44px;align-items:center;gap:8px;font-weight:700}
+.quiz-abar i{display:block;height:14px;width:var(--w);min-width:2px;border-radius:99px;background:var(--blue);transition:width .4s ease}
+.quiz-abar b{text-align:right;font-variant-numeric:tabular-nums;font-size:14px}
+.quiz-auto{margin:0;font-size:13px;opacity:.75}
+.quiz-bar i{transition:width .25s linear}
+@media(max-width:640px){.quiz-join,.quiz-invite{grid-template-columns:minmax(0,1fr)}}
