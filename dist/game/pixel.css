@@ -285,3 +285,43 @@ body.has-game-fs .sitebar{display:none}
 .arcade.is-fs.is-fs-compact .seat-score{min-height:18px;font-size:11px;padding:1px 6px}
 .arcade.is-fs.is-fs-compact .players{gap:4px}
 .arcade.is-fs.is-fs-compact .player{min-height:28px;padding:2px 6px;font-size:11px}
+
+/* ---------- Giao diện thường: bo góc, đổ bóng mềm, bỏ viền bậc thang và hiệu ứng pixel ---------- */
+.arcade{--line:rgba(29,31,85,.18);--soft:0 1px 2px rgba(29,31,85,.12),0 6px 18px rgba(29,31,85,.1);border-radius:22px;clip-path:none;background-image:none;box-shadow:0 10px 30px rgba(29,31,85,.18)}
+.arcade.is-fs{border-radius:0}
+.board-frame{padding:6px;border-radius:16px;background:var(--ink);box-shadow:none}
+#board,.board-frame canvas{image-rendering:auto;border-radius:10px}
+#board:focus-visible,.board-frame canvas:focus-visible{box-shadow:0 0 0 3px var(--yellow)}
+.dice,.game-shot img{image-rendering:auto}
+.player-bar,.player,.console,.offer,.status,.field input,.join-row input,.invite input,#move-list,.board-bar,.opp,.seat-box,.felt,.mode-tabs button,.pick label span,.emotes button,.board-banner,.emote-bubble,.clock,.player-tag,.player-score,.turn-timer,.seat-score,.points-tag,.room-code b,.meld,.game-tags span,.game-cta,.game-card{border-radius:12px;box-shadow:none}
+.player-bar,.player,.field input,.join-row input,.invite input,#move-list,.mode-tabs button,.pick label span,.emotes button,.game-tags span{box-shadow:inset 0 0 0 1px var(--line)}
+.console{border-radius:16px;box-shadow:var(--soft)}
+.felt{border-radius:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.clock,.player-tag,.player-score,.turn-timer,.seat-score,.points-tag,.room-code b{border-radius:8px}
+.player-bar.turn,.player.turn{box-shadow:inset 0 0 0 2px var(--yellow),0 2px 8px rgba(29,31,85,.15)}
+.pick input:checked+span{box-shadow:inset 0 0 0 2px var(--blue)}
+.mode-tabs button[aria-selected="true"]{box-shadow:none}
+.board-bar{box-shadow:none}
+.board-banner{box-shadow:0 12px 32px rgba(0,0,0,.35);animation:pop .3s ease-out}
+.board-banner b{text-shadow:none}
+.emote-bubble{box-shadow:var(--soft)}
+.emote-bubble.show{animation:emote 1.8s ease forwards}
+.player-bar .pawn-dot,.player .pawn-dot{border-radius:50%;clip-path:none;box-shadow:inset -2px -2px 0 rgba(0,0,0,.2)}
+.pixel-btn{border-radius:12px;box-shadow:inset 0 0 0 1px var(--line),0 2px 4px rgba(29,31,85,.15);transition:translate .15s ease,box-shadow .15s ease,background .15s ease}
+.pixel-btn:not(:disabled):active{translate:0 1px;box-shadow:inset 0 0 0 1px var(--line)}
+.board-tools .pixel-btn{box-shadow:inset 0 0 0 1px var(--line),0 1px 2px rgba(29,31,85,.15)}
+.pcard,.pcard.back,button.pcard.locked{border-radius:8px;box-shadow:inset 0 0 0 1px rgba(29,31,85,.3),0 2px 6px rgba(0,0,0,.28);transition:translate .15s ease}
+.pcard.back{background:var(--blue);box-shadow:inset 0 0 0 3px var(--cream),inset 0 0 0 4px var(--blue),0 2px 6px rgba(0,0,0,.28)}
+button.pcard[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--yellow),0 4px 10px rgba(0,0,0,.35)}
+button.pcard.locked{box-shadow:inset 0 -5px 0 var(--yellow),0 2px 6px rgba(0,0,0,.28)}
+.opp .backs i{border-radius:3px;box-shadow:inset 0 0 0 2px var(--cream),inset 0 0 0 3px var(--blue)}
+.pile .pcard{animation:deal .25s ease-out}
+.flip-in{animation:flip .3s ease}
+.game-card{background:var(--cream);box-shadow:inset 0 0 0 1px var(--line),var(--soft);overflow:hidden;transition:translate .2s ease,box-shadow .2s ease}
+.game-card:hover{translate:0 -3px;box-shadow:inset 0 0 0 1px var(--line),0 10px 28px rgba(29,31,85,.18)}
+.game-shot{margin:0;border-bottom:0}
+.game-cta{box-shadow:0 2px 4px rgba(29,31,85,.18)}
+.piece-guide li::before{border-radius:50%;box-shadow:none}
+.turn-timer.low,.player-bar.low .clock{animation:blink 1s ease-in-out infinite}
+@media(max-width:640px){.arcade{border-radius:16px}.board-frame{box-shadow:none}.game-card{box-shadow:inset 0 0 0 1px var(--line),var(--soft)}}
+.felt{background-image:none}
