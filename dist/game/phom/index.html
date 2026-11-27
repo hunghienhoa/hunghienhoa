@@ -7,8 +7,8 @@
 <meta name="theme-color" content="#fbf2e3">
 <link rel="icon" href="/assets/logo.svg" type="image/svg+xml"><link rel="canonical" href="/game/phom/">
 <link rel="preload" href="/fonts/BeVietnamPro-Bold.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/PlayfairDisplay-SemiBoldItalic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/ui.css?v=28"><link rel="stylesheet" href="/tools.css?v=5"><link rel="stylesheet" href="/game/pixel.css?v=3">
-<script src="/i18n.js?v=13"></script><script src="app.js?v=2" type="module"></script><script src="/page-customization.js?v=media-4" defer></script><script src="/sitebar.js?v=5" defer></script><script src="/contact.js?v=4" defer></script>
+<link rel="stylesheet" href="/ui.css?v=28"><link rel="stylesheet" href="/tools.css?v=5"><link rel="stylesheet" href="/game/pixel.css?v=4">
+<script src="/i18n.js?v=13"></script><script src="app.js?v=3" type="module"></script><script src="/page-customization.js?v=media-4" defer></script><script src="/sitebar.js?v=5" defer></script><script src="/contact.js?v=4" defer></script>
 </head>
 <body>
 <a class="skip" href="#choi">Đến bàn chơi</a>
@@ -23,8 +23,8 @@
 <section class="wrap arcade-wrap" id="choi" aria-label="Bàn đánh phỏm">
 <div class="arcade" data-fs="landscape">
 <div class="board-col">
+<div class="board-bar"><span class="board-status" id="board-status" aria-hidden="true"></span><div class="board-tools"><button class="pixel-btn fs-only" type="button" id="fs-hint">Gợi ý</button><button class="pixel-btn fs-only" type="button" id="fs-new">Ván mới</button><button class="pixel-btn fs-corner" type="button" aria-pressed="false" aria-label="Phóng to toàn màn hình" title="Toàn màn hình"><span class="ic ic-expand" aria-hidden="true"></span><span>Phóng to</span></button></div></div>
 <div class="board-frame">
-<button class="pixel-btn fs-corner" type="button" aria-pressed="false" aria-label="Phóng to toàn màn hình" title="Toàn màn hình"><span class="ic ic-expand" aria-hidden="true"></span><span>Phóng to</span></button>
 <div class="felt" id="felt">
 <div class="opponents" id="opponents" aria-label="Đối thủ"></div>
 <div class="table-center"><div class="pile-stack"><button type="button" id="pile-btn" aria-label="Bốc một lá từ nọc"><span class="pcard back"><b>?</b><span class="suit">?</span></span></button><span id="pile-count"></span></div><div class="pile-stack"><span id="last-discard"></span><span id="last-label"></span></div></div>

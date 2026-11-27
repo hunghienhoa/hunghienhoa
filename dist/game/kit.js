@@ -105,6 +105,8 @@ export function setupFullscreen() {
 
   $('#fullscreen')?.addEventListener('click', () => toggle());
   $('.fs-corner')?.addEventListener('click', () => toggle());
+  $('#fs-hint')?.addEventListener('click', () => $('#hint')?.click());
+  $('#fs-new')?.addEventListener('click', () => { const st = $('#start-room'); if (st && !st.hidden) { st.click(); return; } const ag = $('#again'); if (ag && !ag.disabled) { ag.click(); return; } const nl = $('#new-local'); if (nl && !$('#panel-local')?.hidden) { nl.click(); return; } $('#new-ai')?.click(); });
   window.addEventListener('resize', () => { if (active) syncViewport(); });
   window.addEventListener('orientationchange', () => { if (active) setTimeout(syncViewport, 60); });
   const onFsChange = () => {
@@ -165,7 +167,7 @@ export function banner(title, sub = '', flash = false) {
   if (flash) bannerTimer = setTimeout(() => { el.hidden = true; }, 1000);
 }
 export const hideBanner = () => { $('#banner').hidden = true; };
-export function say(text) { $('#status').textContent = text; }
+export function say(text) { $('#status').textContent = text; const bs = $('#board-status'); if (bs) bs.textContent = text; }
 let armed = null;
 export function confirmTwice(key, button, label) {
   if (armed?.key === key && Date.now() - armed.at < 3500) { clearTimeout(armed.timer); button.textContent = armed.text; armed = null; return true; }

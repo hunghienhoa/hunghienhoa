@@ -230,57 +230,58 @@ button.pcard.locked{box-shadow:inset 0 0 0 2px var(--ink),inset 0 -6px 0 var(--y
 body.has-game-fs{overflow:hidden}
 body.has-game-fs .sitebar{display:none}
 .arcade-wrap:fullscreen,.arcade-wrap:-webkit-full-screen{background:var(--ink);width:100%;height:100%;max-width:none;margin:0;padding:0}
-.fs-corner{position:absolute;top:8px;right:8px;z-index:4;min-height:32px;padding:4px 10px;background:color-mix(in srgb,var(--yellow) 92%,var(--cream));font-size:12px;box-shadow:inset 0 0 0 2px var(--ink),0 3px 0 var(--ink)}
+.board-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:38px;padding:4px 8px;background:var(--ink);color:var(--cream);box-shadow:inset 0 0 0 2px var(--yellow)}
+.board-status{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:600;color:var(--cream)}
+.board-tools{display:flex;align-items:center;gap:6px;flex:none;margin-left:auto}
+.board-tools .pixel-btn{min-height:30px;padding:3px 10px;font-size:12px;box-shadow:inset 0 0 0 2px var(--ink),0 2px 0 var(--ink)}
+.fs-corner{background:var(--yellow);color:var(--blue)}
+.fs-only{display:none}
+.arcade.is-fs .fs-only{display:inline-flex}
+.arcade.is-fs .console{display:none!important}
 .arcade.is-fs{
   position:fixed;inset:0;z-index:1000;
   width:var(--fs-w,100dvw);height:var(--fs-h,100dvh);max-width:none;
-  margin:0;padding:clamp(8px,1.2vw,16px);clip-path:none;box-sizing:border-box;overflow:hidden;
-  grid-template-columns:minmax(0,1fr) clamp(230px,25%,320px);grid-template-rows:minmax(0,1fr);align-items:stretch;gap:clamp(8px,1.2vw,16px)
+  margin:0;padding:clamp(6px,1vw,14px);clip-path:none;box-sizing:border-box;overflow:hidden;
+  grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:stretch
 }
 .arcade.is-fs.is-fs-rot{inset:auto;top:50%;left:50%;translate:-50% -50%;rotate:90deg}
-.arcade.is-fs .board-col{width:100%;max-width:none;height:100%;min-height:0;grid-template-rows:minmax(0,1fr) auto;gap:6px}
-.arcade.is-fs .board-frame{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0;height:100%;overflow:hidden}
+.arcade.is-fs .board-col{display:flex;flex-direction:column;width:100%;max-width:none;height:100%;min-height:0;gap:6px}
+.arcade.is-fs .board-col>:not(.board-frame){flex:none}
+.arcade.is-fs .board-frame{flex:1 1 0;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0;height:100%;overflow:hidden}
 .arcade.is-fs .felt{width:100%;height:100%;min-height:0;box-sizing:border-box;align-content:space-between;overflow:auto}
-.arcade.is-fs .opponents{padding-right:88px}
-.arcade.is-fs .players{grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:6px}
+.arcade.is-fs .players{grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px}
 .arcade.is-fs .player{min-height:34px;padding:3px 8px;font-size:12px}
-.arcade.is-fs .console{height:100%;min-height:0;overflow-y:auto;align-content:start;box-sizing:border-box;padding:10px;gap:8px}
-.arcade[data-fs="landscape"].is-fs .board-frame canvas{aspect-ratio:352/140;width:min(100%,calc((var(--fs-h,100dvh) - 96px)*352/140));height:auto;margin:auto}
-.arcade:not([data-fs="landscape"]).is-fs .board-frame canvas{aspect-ratio:1/1;width:min(100%,calc(var(--fs-h,100dvh) - 96px));height:auto;margin:auto}
-.arcade.is-fs:not(.is-fs-compact) .pcard{width:58px;height:84px;font-size:17px;margin-left:-14px;padding:4px 6px}
+.arcade[data-fs="landscape"].is-fs .board-frame canvas{aspect-ratio:352/140;width:min(100%,calc((var(--fs-h,100dvh) - 148px)*352/140));height:auto;margin:auto}
+.arcade:not([data-fs="landscape"]).is-fs .board-frame canvas{aspect-ratio:1/1;width:min(100%,calc(var(--fs-h,100dvh) - 156px));height:auto;margin:auto}
+.arcade.is-fs:not(.is-fs-compact) .pcard{width:60px;height:86px;font-size:17px;margin-left:-14px;padding:4px 6px}
 .arcade.is-fs:not(.is-fs-compact) .pcard:first-child,.arcade.is-fs:not(.is-fs-compact) .seat-cards .pcard{margin-left:0}
 .arcade.is-fs:not(.is-fs-compact) .pcard .suit{font-size:28px}
-.arcade.is-fs:not(.is-fs-compact) .meld .pcard,.arcade.is-fs:not(.is-fs-compact) .discard-row .pcard,.arcade.is-fs:not(.is-fs-compact) .dead .pcard{width:34px;height:50px;font-size:12px;margin-left:-10px}
+.arcade.is-fs:not(.is-fs-compact) .meld .pcard,.arcade.is-fs:not(.is-fs-compact) .discard-row .pcard,.arcade.is-fs:not(.is-fs-compact) .dead .pcard{width:36px;height:52px;font-size:12px;margin-left:-10px}
 .arcade.is-fs:not(.is-fs-compact) .meld .pcard:first-child,.arcade.is-fs:not(.is-fs-compact) .discard-row .pcard:first-child,.arcade.is-fs:not(.is-fs-compact) .dead .pcard:first-child{margin-left:0}
 .arcade.is-fs:not(.is-fs-compact) .meld .pcard .suit,.arcade.is-fs:not(.is-fs-compact) .discard-row .pcard .suit,.arcade.is-fs:not(.is-fs-compact) .dead .pcard .suit{font-size:16px}
-.arcade.is-fs.is-fs-compact{padding:6px;gap:6px;grid-template-columns:minmax(0,1fr) 210px}
+.arcade.is-fs.is-fs-compact{padding:6px;gap:4px}
+.arcade.is-fs.is-fs-compact .board-col{gap:4px}
+.arcade.is-fs.is-fs-compact .board-bar{min-height:32px;padding:2px 6px}
+.arcade.is-fs.is-fs-compact .board-status{font-size:12px}
 .arcade.is-fs.is-fs-compact .felt{padding:6px;gap:4px}
-.arcade.is-fs.is-fs-compact .pcard{width:38px;height:54px;font-size:13px;margin-left:-11px;padding:2px 3px}
+.arcade.is-fs.is-fs-compact .pcard{width:40px;height:58px;font-size:13px;margin-left:-11px;padding:2px 4px}
 .arcade.is-fs.is-fs-compact .pcard:first-child,.arcade.is-fs.is-fs-compact .seat-cards .pcard{margin-left:0}
-.arcade.is-fs.is-fs-compact .pcard .suit{font-size:17px}
+.arcade.is-fs.is-fs-compact .pcard .suit{font-size:18px}
 .arcade.is-fs.is-fs-compact button.pcard[aria-pressed="true"]{translate:0 -9px}
 .arcade.is-fs.is-fs-compact .pile{min-height:56px;gap:4px}
 .arcade.is-fs.is-fs-compact .pile-cards{min-height:48px}
-.arcade.is-fs.is-fs-compact .hand{min-height:56px;padding:8px 2px 2px}
-.arcade.is-fs.is-fs-compact .hand-actions{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
-.arcade.is-fs.is-fs-compact .hand-actions .pixel-btn{min-height:32px;padding:3px 6px;font-size:12px}
+.arcade.is-fs.is-fs-compact .hand{min-height:58px;padding:8px 2px 2px}
+.arcade.is-fs.is-fs-compact .hand-actions{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.arcade.is-fs.is-fs-compact .hand-actions .pixel-btn,.arcade.is-fs.is-fs-compact .direction .pixel-btn{min-height:32px;padding:3px 8px;font-size:12px}
 .arcade.is-fs.is-fs-compact .opp{min-width:64px;padding:3px 6px;gap:2px;font-size:11px}
 .arcade.is-fs.is-fs-compact .opp .backs i{width:11px;height:16px;margin-left:-6px}
 .arcade.is-fs.is-fs-compact .opp .backs i:first-child{margin-left:0}
 .arcade.is-fs.is-fs-compact .meld .pcard,.arcade.is-fs.is-fs-compact .discard-row .pcard,.arcade.is-fs.is-fs-compact .dead .pcard{width:22px;height:32px;font-size:9px;margin-left:-7px}
 .arcade.is-fs.is-fs-compact .meld .pcard:first-child,.arcade.is-fs.is-fs-compact .discard-row .pcard:first-child,.arcade.is-fs.is-fs-compact .dead .pcard:first-child{margin-left:0}
 .arcade.is-fs.is-fs-compact .meld .pcard .suit,.arcade.is-fs.is-fs-compact .discard-row .pcard .suit,.arcade.is-fs.is-fs-compact .dead .pcard .suit{font-size:11px}
-.arcade.is-fs.is-fs-compact .seat-grid{gap:6px;padding-right:76px}
+.arcade.is-fs.is-fs-compact .seat-grid{gap:6px}
 .arcade.is-fs.is-fs-compact .seat-box{padding:4px 6px;gap:3px}
 .arcade.is-fs.is-fs-compact .seat-name{font-size:12px}
 .arcade.is-fs.is-fs-compact .seat-score{min-height:18px;font-size:11px;padding:1px 6px}
 .arcade.is-fs.is-fs-compact .players{gap:4px}
 .arcade.is-fs.is-fs-compact .player{min-height:28px;padding:2px 6px;font-size:11px}
-.arcade.is-fs.is-fs-compact .console{padding:6px;gap:6px}
-.arcade.is-fs.is-fs-compact .console .pixel-btn,.arcade.is-fs.is-fs-compact .mode-tabs button{min-height:34px;padding:4px 6px;font-size:12px}
-.arcade.is-fs.is-fs-compact .status{min-height:34px;padding:6px 8px;font-size:12px}
-@media(orientation:portrait){
-  .arcade:not([data-fs="landscape"]).is-fs{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);overflow-y:auto}
-  .arcade:not([data-fs="landscape"]).is-fs .board-col{height:auto}
-  .arcade:not([data-fs="landscape"]).is-fs .board-frame canvas{width:min(100%,calc(var(--fs-h,100dvh)*0.52))}
-}

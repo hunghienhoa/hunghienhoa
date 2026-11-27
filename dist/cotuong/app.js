@@ -516,7 +516,7 @@ function confirmTwice(key, button, label) {
 }
 
 // ---------- Bảng điều khiển ----------
-function say(text) { $('#status').textContent = text; }
+function say(text) { $('#status').textContent = text; const bs = $('#board-status'); if (bs) bs.textContent = text; }
 const barFor = color => { const bottom = S.flip ? BLACK : RED; return color === bottom ? $('#bar-bottom') : color ? $('#bar-top') : null; };
 const clockText = ms => { const s = Math.max(0, Math.ceil(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
 function update() {
@@ -723,6 +723,8 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) requ
   };
   $('#fullscreen')?.addEventListener('click', () => toggle());
   $('.fs-corner')?.addEventListener('click', () => toggle());
+  $('#fs-hint')?.addEventListener('click', () => $('#hint')?.click());
+  $('#fs-new')?.addEventListener('click', () => { const rm = $('#rematch'); if (rm && !rm.hidden) { rm.click(); return; } const nl = $('#new-local'); if (nl && !$('#panel-local')?.hidden) { nl.click(); return; } $('#new-ai')?.click(); });
   window.addEventListener('resize', () => { if (active) syncViewport(); });
   const onFsChange = () => {
     const nativeEl = document.fullscreenElement || document.webkitFullscreenElement;
