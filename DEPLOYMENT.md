@@ -34,7 +34,7 @@ Zone `hunghienhoa.com` đã **Active**. Website chỉ còn một tên miền: m�
 5. Lưu thay đổi. Không cần tạo A/CNAME ở Nhân Hòa.
 6. Chờ Cloudflare báo zone `Active`; việc cập nhật thường mất vài phút đến 24 giờ tùy nhà đăng ký.
 
-`cloudflare.config.ts` khai báo ba Custom Domain: `hunghienhoa.com`, `www.hunghienhoa.com` (chuyển hướng 308 về `hunghienhoa.com`) và `admin.hunghienhoa.com` (riêng cho trang quản trị, phục vụ `dist/admin` ở gốc; `/api` và tài nguyên dùng chung như `/ui.css`, `/fonts`, `/assets` lấy từ gốc). Các trang công khai nằm trong đường dẫn:
+`cloudflare.config.ts` khai báo các Custom Domain: `hunghienhoa.com`, `www.hunghienhoa.com` (chuyển hướng 308 về `hunghienhoa.com`), `admin.hunghienhoa.com` và bốn subdomain cũ chỉ để chuyển hướng (xem dưới) (riêng cho trang quản trị, phục vụ `dist/admin` ở gốc; `/api` và tài nguyên dùng chung như `/ui.css`, `/fonts`, `/assets` lấy từ gốc). Các trang công khai nằm trong đường dẫn:
 
 | Đường dẫn | Nội dung |
 | --- | --- |
@@ -45,7 +45,7 @@ Zone `hunghienhoa.com` đã **Active**. Website chỉ còn một tên miền: m�
 | `hunghienhoa.com/lamnet/` | Làm Nét |
 | `admin.hunghienhoa.com` | Bảng quản trị (`hunghienhoa.com/admin/` chuyển 308 sang đây) |
 
-Các subdomain cũ của trang công khai (`blog.`, `photobooth.`, `snap.`, `lamnet.`) đã bỏ khỏi cấu hình. Lần triển khai tiếp theo, Cloudflare gỡ các Custom Domain này khỏi Worker; nếu DNS của chúng còn trong zone thì xóa bản ghi ở Cloudflare → DNS. Mã Worker vẫn chuyển hướng 308 các địa chỉ cũ về đường dẫn mới nếu yêu cầu còn tới được Worker (ví dụ qua Route thủ công), nên liên kết cũ không cần sửa tay.
+Các subdomain cũ của trang công khai (`blog.`, `photobooth.`, `snap.`, `lamnet.`) vẫn gắn vào Worker nhưng chỉ để chuyển hướng 308 về đường dẫn mới (`blog.hunghienhoa.com/bai` → `hunghienhoa.com/blog/bai`), nên liên kết cũ trên mạng vẫn dùng được. Riêng đường dẫn `/api/` trên các subdomain này chạy thẳng, không chuyển hướng: lịch đăng bài tự động gọi `https://blog.hunghienhoa.com/api/agent/publish` vì mã đăng bài của môi trường Claude được gắn theo host đó, và yêu cầu POST không đi theo chuyển hướng 308. Đừng gỡ `blog.hunghienhoa.com` khỏi `cloudflare.config.ts` khi lịch đăng bài còn dùng host này.
 
 ## GitHub → Cloudflare tự triển khai
 

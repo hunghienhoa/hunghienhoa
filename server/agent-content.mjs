@@ -6,7 +6,7 @@ import {articleBlocks,inlineTokens,safeCoverURL,readingMinutes} from '../dist/bl
 export const SITE='https://hunghienhoa.com';
 export const ADMIN_HOST='admin.hunghienhoa.com';
 export const ORIGINS={main:SITE,blog:SITE+'/blog',photobooth:SITE+'/photobooth',snaptik:SITE+'/snaptik',lamnet:SITE+'/lamnet'};
-// Subdomain cũ của các trang công khai chỉ còn để chuyển hướng 308 về đường dẫn tương ứng.
+// Subdomain cũ của các trang công khai chỉ còn để chuyển hướng 308 về đường dẫn tương ứng (riêng /api/ vẫn chạy thẳng).
 const LEGACY_HOSTS={'blog.hunghienhoa.com':'/blog','photobooth.hunghienhoa.com':'/photobooth','snap.hunghienhoa.com':'/snaptik','lamnet.hunghienhoa.com':'/lamnet'};
 export const POLICY_PATHS=['/chinh-sach-rieng-tu','/dieu-khoan-su-dung','/bao-cao-ban-quyen','/cookie-va-quang-cao'];
 export function publicRedirect(input) {
@@ -26,6 +26,9 @@ export function publicRedirect(input) {
     return url;
   }
   const legacy=LEGACY_HOSTS[url.hostname];
+  // API trên subdomain cũ chạy thẳng, không chuyển hướng: lịch đăng bài tự động gọi blog.hunghienhoa.com/api/agent/publish
+  // (mã đăng bài được môi trường gắn theo host này) và POST không đi theo chuyển hướng 308.
+  if(legacy&&url.pathname.startsWith('/api/'))return url.protocol==='https:'&&url.href===new URL(input).href?null:url;
   if(legacy&&!['/ads.txt','/robots.txt'].includes(url.pathname)&&!url.pathname.startsWith('/api/'))url.pathname=legacy+url.pathname;
   url.hostname='hunghienhoa.com';
   if(/^\/snap(?:\/|$)/.test(url.pathname))url.pathname='/snaptik'+url.pathname.slice(5);
