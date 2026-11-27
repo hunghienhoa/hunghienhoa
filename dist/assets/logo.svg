@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Hùng Hiền Hòa">
+  <title>Hùng Hiền Hòa</title>
+  <rect width="128" height="128" rx="32" fill="#303487"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M40 34V94M88 34V94" stroke="#fbf2e3" stroke-width="14"/>
+    <path d="M40 62Q64 90 88 62" stroke="#ffdc38" stroke-width="12"/>
+  </g>
+  <circle cx="104" cy="28" r="7" fill="#ec6550"/>
+</svg>
