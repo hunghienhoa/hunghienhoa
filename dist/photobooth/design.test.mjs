@@ -46,8 +46,8 @@ for (const [pattern, method] of [['hearts','bezierCurveTo'],['waves','ellipse'],
 
 const {importedFrames}=await import('./imported-frames.mjs');
 const fs=await import('node:fs');
-assert.equal(importedFrames.length,170);
-assert.equal(new Set(importedFrames.map(item=>item.id)).size,170);
+assert.equal(importedFrames.length,320);
+assert.equal(new Set(importedFrames.map(item=>item.id)).size,320);
 for(const item of importedFrames){
  assert.ok(item.category && item.name);
  for(const asset of [item.src,item.thumb]) assert.ok(fs.statSync('dist/photobooth/'+asset).size>100);

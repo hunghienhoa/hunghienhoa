@@ -206,7 +206,7 @@ assert.equal(JSON.parse(new URL(destination).searchParams.get('thietke')).title,
 vm.runInContext("importedFrame={slots:[[40,100,300,400],[380,100,300,400]],image:{}}; renderStrip(); importedFrame=null;",context);
 
 const importedChoices=elements.get('#imported-frame-options').children;
-assert.equal(importedChoices.length,170);
+assert.equal(importedChoices.length,320);
 await importedChoices[0].listeners.click();
 await new Promise(resolve=>setImmediate(resolve));
 assert.equal(vm.runInContext('importedFrame.id',context),importedFrames[0].id);
