@@ -260,14 +260,14 @@
   {
     "key": "main-244",
     "page": "main",
-    "label": "Cờ tướng, tiến lên, phỏm, ba cây, cờ cá ngựa, ô ăn quan. Chơi với máy hoặc online cùng bạn.",
-    "default": "Cờ tướng, tiến lên, phỏm, ba cây, cờ cá ngựa, ô ăn quan. Chơi với máy hoặc online cùng bạn."
+    "label": "Cờ tướng, tiến lên, phỏm, ba cây. Chơi với máy hoặc online cùng bạn.",
+    "default": "Cờ tướng, tiến lên, phỏm, ba cây. Chơi với máy hoặc online cùng bạn."
   },
   {
     "key": "main-245",
     "page": "main",
-    "label": "Sáu trò chơi",
-    "default": "Sáu trò chơi"
+    "label": "Bốn trò chơi",
+    "default": "Bốn trò chơi"
   },
   {
     "key": "main-246",
@@ -472,18 +472,6 @@
     "page": "main",
     "label": "Ba Cây",
     "default": "Ba Cây"
-  },
-  {
-    "key": "main-254",
-    "page": "main",
-    "label": "Cờ Cá Ngựa",
-    "default": "Cờ Cá Ngựa"
-  },
-  {
-    "key": "main-255",
-    "page": "main",
-    "label": "Ô Ăn Quan",
-    "default": "Ô Ăn Quan"
   },
   {
     "key": "main-237",
@@ -814,18 +802,6 @@
     "page": "blog",
     "label": "Ba Cây",
     "default": "Ba Cây"
-  },
-  {
-    "key": "blog-090",
-    "page": "blog",
-    "label": "Cờ Cá Ngựa",
-    "default": "Cờ Cá Ngựa"
-  },
-  {
-    "key": "blog-091",
-    "page": "blog",
-    "label": "Ô Ăn Quan",
-    "default": "Ô Ăn Quan"
   },
   {
     "key": "blog-080",
@@ -1704,18 +1680,6 @@
     "default": "Ba Cây"
   },
   {
-    "key": "photobooth-205",
-    "page": "photobooth",
-    "label": "Cờ Cá Ngựa",
-    "default": "Cờ Cá Ngựa"
-  },
-  {
-    "key": "photobooth-206",
-    "page": "photobooth",
-    "label": "Ô Ăn Quan",
-    "default": "Ô Ăn Quan"
-  },
-  {
     "key": "photobooth-191",
     "page": "photobooth",
     "label": "Chính sách",
@@ -2194,18 +2158,6 @@
     "page": "snaptik",
     "label": "Ba Cây",
     "default": "Ba Cây"
-  },
-  {
-    "key": "snaptik-085",
-    "page": "snaptik",
-    "label": "Cờ Cá Ngựa",
-    "default": "Cờ Cá Ngựa"
-  },
-  {
-    "key": "snaptik-086",
-    "page": "snaptik",
-    "label": "Ô Ăn Quan",
-    "default": "Ô Ăn Quan"
   },
   {
     "key": "snaptik-071",
@@ -2776,18 +2728,6 @@
     "page": "lamnet",
     "label": "Ba Cây",
     "default": "Ba Cây"
-  },
-  {
-    "key": "lamnet-100",
-    "page": "lamnet",
-    "label": "Cờ Cá Ngựa",
-    "default": "Cờ Cá Ngựa"
-  },
-  {
-    "key": "lamnet-101",
-    "page": "lamnet",
-    "label": "Ô Ăn Quan",
-    "default": "Ô Ăn Quan"
   },
   {
     "key": "lamnet-086",

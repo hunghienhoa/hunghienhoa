@@ -293,7 +293,7 @@ async function publicApi(request, env, route, ctx) {
   // agent_publish_post của Supabase (hàm tự kiểm tra mã, giới hạn 2 bài/ngày và định dạng bài).
   // Cờ tướng online: tạo phòng, ghép trận nhanh, xem phòng còn không. Mỗi địa chỉ tối đa 30 lần/phút.
   if (route.startsWith('/api/cotuong/')) return cotuongApi(request, env, route);
-  // Các game pixel khác (Tiến Lên, Cờ Cá Ngựa, Ô Ăn Quan) dùng chung một kiểu phòng.
+  // Các game pixel khác (Tiến Lên, Phỏm, Ba Cây) dùng chung một kiểu phòng.
   if (route.startsWith('/api/game/')) return gameApi(request, env, route);
   if (route === '/api/agent/publish') {
     if (request.method !== 'POST') fail(405, 'Phương thức chưa được hỗ trợ.');

@@ -20,8 +20,6 @@ PAGES = {
     'game/tien-len/index.html': ('game', 'Tiến Lên', [('/game/', 'Tất cả game', ''), ('#choi', 'Bàn chơi', ''), ('#cach-choi', 'Luật chơi', '')], '#contact'),
     'game/phom/index.html': ('game', 'Phỏm', [('/game/', 'Tất cả game', ''), ('#choi', 'Bàn chơi', ''), ('#cach-choi', 'Luật chơi', '')], '#contact'),
     'game/ba-cay/index.html': ('game', 'Ba Cây', [('/game/', 'Tất cả game', ''), ('#choi', 'Bàn chơi', ''), ('#cach-choi', 'Luật chơi', '')], '#contact'),
-    'game/ca-ngua/index.html': ('game', 'Cá Ngựa', [('/game/', 'Tất cả game', ''), ('#choi', 'Bàn chơi', ''), ('#cach-choi', 'Luật chơi', '')], '#contact'),
-    'game/o-an-quan/index.html': ('game', 'Ô Ăn Quan', [('/game/', 'Tất cả game', ''), ('#choi', 'Bàn chơi', ''), ('#cach-choi', 'Luật chơi', '')], '#contact'),
     'chinh-sach-rieng-tu.html': (None, '', [], '#contact'),
     'dieu-khoan-su-dung.html': (None, '', [], '#contact'),
     'bao-cao-ban-quyen.html': (None, '', [], '#contact'),
@@ -69,7 +67,7 @@ def footer():
             '<div class="footer-main"><div class="footer-about"><a class="footer-logo" href="/" aria-label="Hùng Hiền Hòa, về trang chủ"><img class="brand-mark" src="/assets/logo.svg" alt="" width="48" height="48" aria-hidden="true"></a><p>Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.</p></div>'
             '<nav class="footer-col" aria-label="Khám phá"><h2>Khám phá</h2><ul><li><a href="/">Trang chủ</a></li><li><a href="/blog/">Góc tò mò</a></li><li><a href="/#ve-hung">Về Hùng</a></li><li><a href="#contact">Liên hệ</a></li></ul></nav>'
             '<nav class="footer-col" aria-label="Công cụ"><h2>Công cụ</h2><ul><li><a href="/photobooth/">Hộp Ảnh</a></li><li><a href="/snaptik/">Snap Video</a></li><li><a href="/lamnet/">Làm Nét Ảnh</a></li></ul></nav>'
-            '<nav class="footer-col" aria-label="Trò chơi"><h2>Trò chơi</h2><ul><li><a href="/game/">Tất cả game</a></li><li><a href="/cotuong/">Cờ Tướng</a></li><li><a href="/game/tien-len/">Tiến Lên</a></li><li><a href="/game/phom/">Phỏm (Tá Lả)</a></li><li><a href="/game/ba-cay/">Ba Cây</a></li><li><a href="/game/ca-ngua/">Cờ Cá Ngựa</a></li><li><a href="/game/o-an-quan/">Ô Ăn Quan</a></li></ul></nav>'
+            '<nav class="footer-col" aria-label="Trò chơi"><h2>Trò chơi</h2><ul><li><a href="/game/">Tất cả game</a></li><li><a href="/cotuong/">Cờ Tướng</a></li><li><a href="/game/tien-len/">Tiến Lên</a></li><li><a href="/game/phom/">Phỏm (Tá Lả)</a></li><li><a href="/game/ba-cay/">Ba Cây</a></li></ul></nav>'
             '<nav class="footer-col policy-links" aria-label="Chính sách website"><h2>Chính sách</h2><ul>' + ''.join(f'<li><a href="https://hunghienhoa.com/{slug}">{label}</a></li>' for slug, label in policies) + '</ul></nav></div>'
             '<div class="footer-bottom"><div class="footer-legal"><span>© 2026 Hùng Hiền Hòa</span><p class="footer-wish">Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!</p><a class="footer-top" href="#">Về đầu trang <span class="ic ic-arrow-up" aria-hidden="true"></span></a></div>'
             '</div>'
@@ -105,8 +103,6 @@ RIBBONS = {
     'game/tien-len/index.html': (['Chặt heo!', 'Đôi thông chặt chồng', 'Về nhất nào', 'Chỉ tính điểm cho vui'], 'before', '<section id="cach-choi"', ''),
     'game/phom/index.html': (['Ăn chốt!', 'Hạ phỏm gửi bài', 'Ù tròn nào', 'Chỉ tính điểm cho vui'], 'before', '<section id="cach-choi"', ''),
     'game/ba-cay/index.html': (['Nặn từng lá', 'Chín nút!', 'Ba tiên gặp sáp', 'Chỉ tính điểm cho vui'], 'before', '<section id="cach-choi"', ''),
-    'game/ca-ngua/index.html': (['Đổ được sáu', 'Xuất quân!', 'Đá ngựa về chuồng', 'Cả nhà cùng chơi'], 'before', '<section id="cach-choi"', ''),
-    'game/o-an-quan/index.html': (['Bốc quân rải quân', 'Cách ô thì ăn', 'Hết quan tàn dân', 'Trò chơi tuổi thơ'], 'before', '<section id="cach-choi"', ''),
     'chinh-sach-rieng-tu.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
     'dieu-khoan-su-dung.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
     'bao-cao-ban-quyen.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
