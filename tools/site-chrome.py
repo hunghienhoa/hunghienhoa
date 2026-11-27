@@ -15,6 +15,7 @@ PAGES = {
     'photobooth/shoot.html': ('photobooth', 'Hộp Ảnh', [('./', 'Về Hộp Ảnh', '')], '/#contact'),
     'snaptik/index.html': ('snaptik', 'Snap Video', [('#cach-dung', 'Cách dùng', ''), ('#rieng-tu', 'Riêng tư', '')], '#contact'),
     'lamnet/index.html': ('lamnet', 'Làm Nét', [('#cach-dung', 'Cách dùng', ''), ('#rieng-tu', 'Riêng tư', '')], '#contact'),
+    'cotuong/index.html': ('cotuong', 'Cờ Tướng', [('#ban-co', 'Bàn cờ', ''), ('#cach-choi', 'Cách chơi', ''), ('#rieng-tu', 'Riêng tư', '')], '#contact'),
     'chinh-sach-rieng-tu.html': (None, '', [], '#contact'),
     'dieu-khoan-su-dung.html': (None, '', [], '#contact'),
     'bao-cao-ban-quyen.html': (None, '', [], '#contact'),
@@ -61,7 +62,7 @@ def footer():
             f'<ul class="social-links" aria-label="Mạng xã hội">{socials}</ul><p class="social-note" id="wechat-status" role="status"></p></div></section>'
             '<div class="footer-main"><div class="footer-about"><a class="footer-logo" href="/">hhh<span>.</span></a><p>Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.</p></div>'
             '<nav class="footer-col" aria-label="Khám phá"><h2>Khám phá</h2><ul><li><a href="/">Trang chủ</a></li><li><a href="/blog/">Góc tò mò</a></li><li><a href="/#ve-hung">Về Hùng</a></li><li><a href="#contact">Liên hệ</a></li></ul></nav>'
-            '<nav class="footer-col" aria-label="Công cụ"><h2>Công cụ</h2><ul><li><a href="/photobooth/">Hộp Ảnh</a></li><li><a href="/snaptik/">Snap Video</a></li><li><a href="/lamnet/">Làm Nét Ảnh</a></li></ul></nav>'
+            '<nav class="footer-col" aria-label="Công cụ"><h2>Công cụ</h2><ul><li><a href="/photobooth/">Hộp Ảnh</a></li><li><a href="/snaptik/">Snap Video</a></li><li><a href="/lamnet/">Làm Nét Ảnh</a></li><li><a href="/cotuong/">Cờ Tướng Pixel</a></li></ul></nav>'
             '<nav class="footer-col policy-links" aria-label="Chính sách website"><h2>Chính sách</h2><ul>' + ''.join(f'<li><a href="https://hunghienhoa.com/{slug}">{label}</a></li>' for slug, label in policies) + '</ul></nav></div>'
             '<div class="footer-bottom"><div class="footer-legal"><span>© 2026 Hùng Hiền Hòa</span><p class="footer-wish">Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!</p><a class="footer-top" href="#">Về đầu trang <span aria-hidden="true">↑</span></a></div>'
             '</div>'
@@ -92,6 +93,7 @@ RIBBONS = {
     'photobooth/shoot.html': ([], 'before', '</main>', ''),
     'snaptik/index.html': (['Gặp video hay, giữ lại ngay', 'Dán link là xong', 'Nhớ ghi nguồn tác giả'], 'before', '<section id="cach-dung"', ''),
     'lamnet/index.html': (['Ảnh mờ hóa ảnh rõ', 'Phóng to gấp 4 lần', 'Ảnh ở yên trên máy bạn'], 'before', '<section id="cach-dung"', ''),
+    'cotuong/index.html': (['Pháo đầu mã đội', 'Chiếu tướng!', 'Một ván cờ, một ly trà', 'Rủ bạn chơi chung'], 'before', '<section id="cach-choi"', ''),
     'chinh-sach-rieng-tu.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
     'dieu-khoan-su-dung.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
     'bao-cao-ban-quyen.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),

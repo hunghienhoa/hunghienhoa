@@ -70,12 +70,14 @@
 .post-empty b{font-size:22px}
 
 /* Công cụ */
-.tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
 .tool-card{display:flex;flex-direction:column;padding:12px;border:1px solid var(--hh-hair);border-radius:32px;background:var(--hh-card);box-shadow:var(--hh-shadow-sm)}
 .tool-card:hover{translate:0 -4px;border-color:var(--blue);box-shadow:var(--hh-shadow)}
 .tool-visual{position:relative;display:grid;place-items:center;height:230px;overflow:hidden;border-radius:24px}
 .tool-photo .tool-visual{background:linear-gradient(150deg,color-mix(in srgb,var(--yellow) 75%,var(--cream)),color-mix(in srgb,var(--yellow) 28%,var(--cream)))}
 .tool-snap .tool-visual{background:linear-gradient(150deg,color-mix(in srgb,var(--blue) 10%,#fff),color-mix(in srgb,var(--blue) 28%,#fff))}
+.tool-chess .tool-visual{background:#e6c58a}
+.chess-shot{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
 .tool-sharp .tool-visual{background:linear-gradient(150deg,color-mix(in srgb,var(--blue) 24%,#fff),color-mix(in srgb,var(--blue) 52%,#fff))}
 .tool-body{display:flex;flex-direction:column;flex:1;gap:10px;padding:20px 12px 12px}
 .tool-kicker{font-size:12px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;opacity:.9}
@@ -116,6 +118,7 @@
   .post-skeleton{animation:hh-shimmer 1.4s linear infinite}
 }
 @keyframes hh-float{50%{translate:0 -8px}}
+@media(max-width:1180px){.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:1000px){
   .home-hero{grid-template-columns:minmax(0,1fr);gap:24px}
   .home-hero-visual{max-width:560px;width:100%;justify-self:center}
