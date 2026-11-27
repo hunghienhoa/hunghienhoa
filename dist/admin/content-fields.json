@@ -62,8 +62,8 @@
   {
     "key": "main-154",
     "page": "main",
-    "label": "Blog của Hùng về sáng tạo, hình ảnh và những điều nhỏ mà thú vị. Kèm ba tiện ích miễn phí, dùng ngay",
-    "default": "Blog của Hùng về sáng tạo, hình ảnh và những điều nhỏ mà thú vị. Kèm ba tiện ích miễn phí, dùng ngay trên trình duyệt."
+    "label": "Blog của Hùng về sáng tạo, hình ảnh và những điều nhỏ mà thú vị. Kèm vài tiện ích miễn phí và một bà",
+    "default": "Blog của Hùng về sáng tạo, hình ảnh và những điều nhỏ mà thú vị. Kèm vài tiện ích miễn phí và một bàn cờ tướng pixel, dùng ngay trên trình duyệt."
   },
   {
     "key": "main-155",
@@ -116,8 +116,8 @@
   {
     "key": "main-170",
     "page": "main",
-    "label": "Ba công cụ nhỏ,",
-    "default": "Ba công cụ nhỏ,"
+    "label": "Công cụ và trò chơi,",
+    "default": "Công cụ và trò chơi,"
   },
   {
     "key": "main-171",
@@ -246,6 +246,48 @@
     "default": "(mở trong thẻ mới)"
   },
   {
+    "key": "main-241",
+    "page": "main",
+    "label": "Trò chơi pixel",
+    "default": "Trò chơi pixel"
+  },
+  {
+    "key": "main-242",
+    "page": "main",
+    "label": "Cờ Tướng Pixel",
+    "default": "Cờ Tướng Pixel"
+  },
+  {
+    "key": "main-243",
+    "page": "main",
+    "label": "Đấu với máy, chơi hai người hoặc mở phòng online mời bạn qua link.",
+    "default": "Đấu với máy, chơi hai người hoặc mở phòng online mời bạn qua link."
+  },
+  {
+    "key": "main-244",
+    "page": "main",
+    "label": "Máy ba mức",
+    "default": "Máy ba mức"
+  },
+  {
+    "key": "main-245",
+    "page": "main",
+    "label": "Phòng online có đồng hồ",
+    "default": "Phòng online có đồng hồ"
+  },
+  {
+    "key": "main-246",
+    "page": "main",
+    "label": "Vào bàn cờ",
+    "default": "Vào bàn cờ"
+  },
+  {
+    "key": "main-247",
+    "page": "main",
+    "label": "(mở trong thẻ mới)",
+    "default": "(mở trong thẻ mới)"
+  },
+  {
     "key": "main-192",
     "page": "main",
     "label": "Người viết",
@@ -300,7 +342,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "main-242",
+    "key": "main-248",
     "page": "main",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -402,6 +444,12 @@
     "default": "Làm Nét Ảnh"
   },
   {
+    "key": "main-249",
+    "page": "main",
+    "label": "Cờ Tướng Pixel",
+    "default": "Cờ Tướng Pixel"
+  },
+  {
     "key": "main-237",
     "page": "main",
     "label": "Chính sách",
@@ -468,7 +516,7 @@
     "default": "hhh"
   },
   {
-    "key": "blog-085",
+    "key": "blog-084",
     "page": "blog",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -606,7 +654,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "blog-086",
+    "key": "blog-085",
     "page": "blog",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -708,6 +756,12 @@
     "default": "Làm Nét Ảnh"
   },
   {
+    "key": "blog-086",
+    "page": "blog",
+    "label": "Cờ Tướng Pixel",
+    "default": "Cờ Tướng Pixel"
+  },
+  {
     "key": "blog-080",
     "page": "blog",
     "label": "Chính sách",
@@ -774,7 +828,7 @@
     "default": "hhh"
   },
   {
-    "key": "photobooth-196",
+    "key": "photobooth-199",
     "page": "photobooth",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -1458,7 +1512,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "photobooth-197",
+    "key": "photobooth-200",
     "page": "photobooth",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -1560,6 +1614,12 @@
     "default": "Làm Nét Ảnh"
   },
   {
+    "key": "photobooth-201",
+    "page": "photobooth",
+    "label": "Cờ Tướng Pixel",
+    "default": "Cờ Tướng Pixel"
+  },
+  {
     "key": "photobooth-191",
     "page": "photobooth",
     "label": "Chính sách",
@@ -1626,7 +1686,7 @@
     "default": "hhh"
   },
   {
-    "key": "snaptik-080",
+    "key": "snaptik-079",
     "page": "snaptik",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -1914,7 +1974,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "snaptik-081",
+    "key": "snaptik-080",
     "page": "snaptik",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -2016,6 +2076,12 @@
     "default": "Làm Nét Ảnh"
   },
   {
+    "key": "snaptik-081",
+    "page": "snaptik",
+    "label": "Cờ Tướng Pixel",
+    "default": "Cờ Tướng Pixel"
+  },
+  {
     "key": "snaptik-071",
     "page": "snaptik",
     "label": "Chính sách",
@@ -2082,7 +2148,7 @@
     "default": "hhh"
   },
   {
-    "key": "lamnet-095",
+    "key": "lamnet-094",
     "page": "lamnet",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -2460,7 +2526,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "lamnet-096",
+    "key": "lamnet-095",
     "page": "lamnet",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -2560,6 +2626,12 @@
     "page": "lamnet",
     "label": "Làm Nét Ảnh",
     "default": "Làm Nét Ảnh"
+  },
+  {
+    "key": "lamnet-096",
+    "page": "lamnet",
+    "label": "Cờ Tướng Pixel",
+    "default": "Cờ Tướng Pixel"
   },
   {
     "key": "lamnet-086",

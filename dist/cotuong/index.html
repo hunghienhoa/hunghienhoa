@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cờ Tướng Pixel của Hùng — Chơi cờ tướng online miễn phí</title>
+<meta name="description" content="Chơi cờ tướng online miễn phí phong cách pixel 32-bit: đấu với máy ba mức, hai người trên một máy hoặc mở phòng mời bạn qua link. Không cần đăng nhập.">
+<meta name="theme-color" content="#fbf2e3">
+<link rel="icon" href="/assets/star.svg" type="image/svg+xml"><link rel="canonical" href="/cotuong/">
+<link rel="preload" href="/fonts/BeVietnamPro-Bold.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/PlayfairDisplay-SemiBoldItalic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/ui.css?v=24"><link rel="stylesheet" href="/tools.css?v=5"><link rel="stylesheet" href="style.css?v=1">
+<script src="/i18n.js?v=10"></script><script src="app.js?v=1" type="module"></script><script src="/page-customization.js?v=media-4" defer></script><script src="/sitebar.js?v=5" defer></script><script src="/contact.js?v=4" defer></script>
+</head>
+<body>
+<a class="skip" href="#ban-co">Đến bàn cờ</a>
+<header class="sitebar"><div class="sitebar-in"><a class="sitebar-brand" href="/" aria-label="Hùng Hiền Hòa, về trang chủ">hhh<span>.</span><small>Cờ Tướng</small></a><button class="sitebar-toggle" type="button" aria-expanded="false" aria-controls="sitebar-menu" aria-label="Mở menu"><span aria-hidden="true">☰</span></button><nav class="sitebar-nav" id="sitebar-menu" aria-label="Điều hướng"><a class="sitebar-home" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M10 20v-6h4v6"/></svg>Trang chủ</a><span class="sitebar-sep" aria-hidden="true"></span><a href="#ban-co">Bàn cờ</a><a href="#cach-choi">Cách chơi</a><a href="#rieng-tu">Riêng tư</a><a class="sitebar-cta" href="#contact">Kết nối <span aria-hidden="true">↗</span></a></nav></div></header>
+<main id="main">
+<section class="tool-hero wrap game-hero" aria-labelledby="title">
+<span class="eyebrow">Trò chơi · Pixel 32-bit</span>
+<h1 id="title">Cờ tướng <em>pixel.</em></h1>
+<p class="lead">Đấu với máy, rủ bạn chơi chung một máy hoặc mở phòng online rồi gửi link mời. Miễn phí, không cần đăng nhập.</p>
+</section>
+
+<section class="wrap arcade-wrap" id="ban-co" aria-label="Bàn cờ tướng">
+<div class="arcade">
+<div class="board-col">
+<div class="player-bar" id="bar-top"><span class="pawn-dot" aria-hidden="true"></span><span class="player-name"></span><span class="player-tag"></span><span class="captured" aria-label="Quân đã ăn"></span><span class="clock" aria-label="Thời gian còn lại"></span><span class="emote-bubble" aria-hidden="true"></span></div>
+<div class="board-frame">
+<canvas id="board" width="288" height="320" tabindex="0" role="application" aria-label="Bàn cờ tướng. Dùng phím mũi tên để di chuyển ô chọn, Enter để chọn quân và đi." aria-describedby="status"></canvas>
+<div class="board-banner" id="banner" hidden><b id="banner-title"></b><span id="banner-sub"></span></div>
+</div>
+<div class="player-bar" id="bar-bottom"><span class="pawn-dot" aria-hidden="true"></span><span class="player-name"></span><span class="player-tag"></span><span class="captured" aria-label="Quân đã ăn"></span><span class="clock" aria-label="Thời gian còn lại"></span><span class="emote-bubble" aria-hidden="true"></span></div>
+</div>
+
+<aside class="console" aria-label="Bảng điều khiển">
+<div class="mode-tabs" role="tablist" aria-label="Chế độ chơi">
+<button type="button" role="tab" id="tab-ai" aria-controls="panel-ai" aria-selected="true">Chơi với máy</button>
+<button type="button" role="tab" id="tab-local" aria-controls="panel-local" aria-selected="false">Hai người</button>
+<button type="button" role="tab" id="tab-online" aria-controls="panel-online" aria-selected="false">Online</button>
+</div>
+
+<div class="mode-panel" id="panel-ai" role="tabpanel" aria-labelledby="tab-ai">
+<div class="pick" role="radiogroup" aria-label="Mức độ"><span class="pick-label">Mức độ</span>
+<label><input type="radio" name="level" value="de"><span>Dễ</span></label>
+<label><input type="radio" name="level" value="vua" checked><span>Vừa</span></label>
+<label><input type="radio" name="level" value="kho"><span>Khó</span></label>
+</div>
+<div class="pick" role="radiogroup" aria-label="Bạn cầm quân"><span class="pick-label">Bạn cầm</span>
+<label><input type="radio" name="side" value="r" checked><span>Đỏ, đi trước</span></label>
+<label><input type="radio" name="side" value="b"><span>Đen</span></label>
+</div>
+<button class="pixel-btn pixel-btn-sun" type="button" id="new-ai">Ván mới</button>
+</div>
+
+<div class="mode-panel" id="panel-local" role="tabpanel" aria-labelledby="tab-local" hidden>
+<p class="panel-note">Hai người ngồi cùng một máy, lần lượt đi. Bàn cờ giữ nguyên hướng, Đỏ ở dưới.</p>
+<button class="pixel-btn pixel-btn-sun" type="button" id="new-local">Ván mới</button>
+</div>
+
+<div class="mode-panel" id="panel-online" role="tabpanel" aria-labelledby="tab-online" hidden>
+<div id="lobby">
+<label class="field"><span>Tên hiển thị</span><input id="player-name" maxlength="20" autocomplete="nickname" placeholder="Ví dụ: Kỳ thủ phố núi"></label>
+<div class="pick" role="radiogroup" aria-label="Thời gian mỗi bên"><span class="pick-label">Mỗi bên</span>
+<label><input type="radio" name="minutes" value="5"><span>5 phút</span></label>
+<label><input type="radio" name="minutes" value="10" checked><span>10 phút</span></label>
+<label><input type="radio" name="minutes" value="15"><span>15 phút</span></label>
+</div>
+<div class="online-actions">
+<button class="pixel-btn pixel-btn-sun" type="button" id="quick-match">Tìm đối thủ nhanh</button>
+<button class="pixel-btn" type="button" id="create-room">Tạo phòng mời bạn</button>
+</div>
+<form class="join-row" id="join-form"><label class="sr-only" for="join-code">Mã phòng</label><input id="join-code" maxlength="6" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="Nhập mã phòng" pattern="[A-Za-z0-9]{6}"><button class="pixel-btn" type="submit">Vào phòng</button></form>
+</div>
+<div id="room" hidden>
+<p class="room-code"><span>Phòng</span> <b id="room-code"></b> <small id="room-minutes"></small></p>
+<div class="invite" id="invite"><input id="invite-link" readonly aria-label="Link mời bạn vào phòng"><button class="pixel-btn" type="button" id="copy-link">Sao chép link</button></div>
+<div class="emotes" role="group" aria-label="Gửi biểu cảm"><button type="button" data-emote="👍" aria-label="Gửi biểu cảm thích">👍</button><button type="button" data-emote="😮" aria-label="Gửi biểu cảm ngạc nhiên">😮</button><button type="button" data-emote="😂" aria-label="Gửi biểu cảm cười">😂</button><button type="button" data-emote="🔥" aria-label="Gửi biểu cảm lửa">🔥</button></div>
+<div class="offer" id="draw-offer" hidden><span>Đối thủ xin hòa.</span><button class="pixel-btn pixel-btn-sun" type="button" id="accept-draw">Đồng ý hòa</button><button class="pixel-btn" type="button" id="decline-draw">Từ chối</button></div>
+<div class="online-actions"><button class="pixel-btn pixel-btn-sun" type="button" id="rematch" hidden>Đấu lại</button><button class="pixel-btn" type="button" id="leave-room">Rời phòng</button></div>
+</div>
+</div>
+
+<p class="status" id="status" role="status" aria-live="polite"></p>
+
+<div class="controls" role="group" aria-label="Điều khiển ván cờ">
+<button class="pixel-btn" type="button" id="undo">Đi lại</button>
+<button class="pixel-btn" type="button" id="hint">Gợi ý</button>
+<button class="pixel-btn" type="button" id="draw">Xin hòa</button>
+<button class="pixel-btn" type="button" id="resign">Xin thua</button>
+<button class="pixel-btn" type="button" id="flip">Lật bàn</button>
+<button class="pixel-btn" type="button" id="sound" aria-pressed="true">Âm thanh: bật</button>
+<button class="pixel-btn" type="button" id="glyphs">Chữ quân: Hán</button>
+</div>
+
+<div class="moves"><h2 class="moves-title">Biên bản</h2><ol id="move-list" aria-label="Các nước đã đi"></ol></div>
+</aside>
+</div>
+<noscript><p class="notice">Bạn cần bật JavaScript để chơi cờ.</p></noscript>
+</section>
+
+<div class="topic-band" aria-hidden="true"><div class="band-track"><div class="band-group"><span>Pháo đầu mã đội</span><i>✳</i><span>Chiếu tướng!</span><i>✳</i><span>Một ván cờ, một ly trà</span><i>✳</i><span>Rủ bạn chơi chung</span><i>✳</i><span>Pháo đầu mã đội</span><i>✳</i><span>Chiếu tướng!</span><i>✳</i><span>Một ván cờ, một ly trà</span><i>✳</i><span>Rủ bạn chơi chung</span><i>✳</i></div><div class="band-group"><span>Pháo đầu mã đội</span><i>✳</i><span>Chiếu tướng!</span><i>✳</i><span>Một ván cờ, một ly trà</span><i>✳</i><span>Rủ bạn chơi chung</span><i>✳</i><span>Pháo đầu mã đội</span><i>✳</i><span>Chiếu tướng!</span><i>✳</i><span>Một ván cờ, một ly trà</span><i>✳</i><span>Rủ bạn chơi chung</span><i>✳</i></div></div></div><!--/band-->
+<section id="cach-choi" class="section wrap" aria-labelledby="guide-title"><div class="head"><div><span class="eyebrow">Ba bước là chơi được</span><h2 id="guide-title">Chọn chế độ, đi quân, <em>chiếu bí là thắng.</em></h2></div></div>
+<ol class="steps"><li class="card"><span>01</span><h3>Chọn cách chơi</h3><p>Đấu với máy ở mức Dễ, Vừa hoặc Khó. Chơi hai người trên một máy. Hoặc vào Online để tìm đối thủ nhanh, hay tạo phòng rồi gửi link cho bạn.</p></li><li class="card"><span>02</span><h3>Chạm quân, chạm ô</h3><p>Chạm một quân của bạn, các ô đi được sẽ hiện chấm. Chạm ô muốn tới là xong. Trên máy tính có thể dùng phím mũi tên và Enter.</p></li><li class="card"><span>03</span><h3>Chiếu bí tướng đối phương</h3><p>Bên nào hết nước đi là thua, kể cả khi không bị chiếu. Online có đồng hồ cho mỗi bên, hết giờ cũng thua.</p></li></ol>
+<div class="piece-guide card"><h3>Cách đi của từng quân</h3><ul>
+<li><b>Tướng</b> đi một ô ngang hoặc dọc, chỉ trong cung. Hai tướng không được nhìn thẳng mặt nhau trên một cột trống.</li>
+<li><b>Sĩ</b> đi chéo một ô, chỉ trong cung.</li>
+<li><b>Tượng</b> đi chéo hai ô, không qua sông, bị chặn nếu ô giữa có quân.</li>
+<li><b>Mã</b> đi một ô thẳng rồi một ô chéo, bị cản nếu ô thẳng kề bên có quân.</li>
+<li><b>Xe</b> đi thẳng bao xa cũng được, không nhảy qua quân.</li>
+<li><b>Pháo</b> đi như xe, nhưng muốn ăn phải nhảy qua đúng một quân làm ngòi.</li>
+<li><b>Tốt</b> đi thẳng một ô. Qua sông rồi được đi ngang, không bao giờ lùi.</li>
+</ul></div>
+</section>
+
+<section id="rieng-tu" class="section wrap" aria-labelledby="privacy-title"><div class="privacy-card card"><div><span class="eyebrow">Một chút minh bạch</span><h2 id="privacy-title" class="title-2">Chơi vui, <em>không cần tài khoản.</em></h2></div><div class="privacy-copy"><p>Chơi với máy và hai người chạy hoàn toàn trên trình duyệt của bạn. Không có gì gửi lên máy chủ.</p><p>Khi chơi online, máy chủ chỉ giữ mã phòng, tên hiển thị bạn nhập, các nước đã đi và đồng hồ để hai bên chơi cùng nhau. Phòng tự xóa sau hai giờ không ai đi. Mã ghế được lưu trên trình duyệt của bạn để vào lại khi rớt mạng.</p><p>Hãy đặt tên lịch sự và đừng ghi thông tin cá nhân vào tên hiển thị. Không có khung trò chuyện, chỉ có vài biểu cảm có sẵn.</p></div></div></section>
+
+<section class="section wrap" aria-labelledby="faq-title"><div class="head"><div><span class="eyebrow">Hỏi nhanh một chút</span><h2 id="faq-title">Có thể bạn <em>đang thắc mắc.</em></h2></div></div><div class="faq-list">
+<details class="faq-item"><summary>Chiếu dai thì xử thế nào?</summary><p>Khi một thế cờ lặp lại lần thứ ba, nếu trong vòng lặp đó một bên nước nào cũng chiếu còn bên kia thì không, bên chiếu dai bị xử thua. Còn lại thì ván hòa. Sau 60 nước mỗi bên không ăn quân nào, ván cũng hòa.</p></details>
+<details class="faq-item"><summary>Rớt mạng giữa ván có sao không?</summary><p>Mở lại đúng link phòng trên cùng trình duyệt là bạn vào lại ghế của mình. Đồng hồ của bạn vẫn chạy khi tới lượt, nên hãy vào lại sớm.</p></details>
+<details class="faq-item"><summary>Bạn bè vào phòng bằng cách nào?</summary><p>Bấm Tạo phòng mời bạn rồi Sao chép link, gửi cho bạn qua Zalo hay Messenger. Bạn cũng có thể đọc mã phòng 6 ký tự để bạn nhập vào ô Nhập mã phòng. Người thứ ba vào sau sẽ được xem ván đấu.</p></details>
+<details class="faq-item"><summary>Máy ở mức Khó mạnh cỡ nào?</summary><p>Máy tính trước vài nước trong khoảng hai, ba giây mỗi lượt. Đủ làm khó người mới và người chơi phong trào, nhưng chưa phải đối thủ của kỳ thủ chuyên nghiệp. Bấm Gợi ý nếu muốn máy chỉ cho một nước.</p></details>
+</div></section>
+</main>
+<footer class="site-footer"><section class="footer-cta" id="contact" aria-labelledby="contact-title"><div class="footer-cta-copy"><span class="eyebrow">Cùng trò chuyện</span><h2 id="contact-title">Có ý tưởng hay? <em>Nhắn Hùng nhé.</em></h2><p>Trao đổi dự án, chia sẻ ý tưởng hay đơn giản là chào nhau một tiếng.</p></div><div class="footer-cta-actions"><a class="btn btn-sun contact-button" href="mailto:hunghienhoa2110@gmail.com?subject=Ch%C3%A0o%20H%C3%B9ng">Gửi email cho Hùng <span aria-hidden="true">↗</span></a><div class="footer-cta-lines"><a class="contact-email" id="contact-email" href="mailto:hunghienhoa2110@gmail.com">hunghienhoa2110@gmail.com</a><a class="contact-phone" href="tel:+84898298886">0898.29.8886</a></div><ul class="social-links" aria-label="Mạng xã hội"><li><a class="social-link" href="https://www.facebook.com/quanghungdethuong" target="_blank" rel="noopener noreferrer" aria-label="Facebook (mở trong thẻ mới)" title="Facebook"><img src="/assets/social/facebook.webp" alt="" width="22" height="22" aria-hidden="true"></a></li><li><a class="social-link" href="https://www.instagram.com/im.bqhung/" target="_blank" rel="noopener noreferrer" aria-label="Instagram (mở trong thẻ mới)" title="Instagram"><img src="/assets/social/instagram.webp" alt="" width="22" height="22" aria-hidden="true"></a></li><li><a class="social-link" href="https://www.threads.com/@im.bqhung" target="_blank" rel="noopener noreferrer" aria-label="Threads (mở trong thẻ mới)" title="Threads"><img src="/assets/social/threads.svg" alt="" width="22" height="22" aria-hidden="true"></a></li><li><a class="social-link" href="https://www.tiktok.com/@im.bqhung" target="_blank" rel="noopener noreferrer" aria-label="TikTok (mở trong thẻ mới)" title="TikTok"><img src="/assets/social/tiktok.webp" alt="" width="22" height="22" aria-hidden="true"></a></li><li><a class="social-link" href="https://zalo.me/0898298886" target="_blank" rel="noopener noreferrer" aria-label="Zalo (mở trong thẻ mới)" title="Zalo"><img src="/assets/social/zalo.webp" alt="" width="22" height="22" aria-hidden="true"></a></li><li><button class="social-link" type="button" id="wechat-copy" data-wechat-id="bqhtit" aria-label="Sao chép mã WeChat bqhtit" title="WeChat bqhtit"><img src="/assets/social/wechat.webp" alt="" width="22" height="22" aria-hidden="true"></button></li><li><a class="social-link" href="https://www.youtube.com/@hunghienhoa98886" target="_blank" rel="noopener noreferrer" aria-label="YouTube (mở trong thẻ mới)" title="YouTube"><img src="/assets/social/youtube.webp" alt="" width="22" height="22" aria-hidden="true"></a></li></ul><p class="social-note" id="wechat-status" role="status"></p></div></section><div class="footer-main"><div class="footer-about"><a class="footer-logo" href="/">hhh<span>.</span></a><p>Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.</p></div><nav class="footer-col" aria-label="Khám phá"><h2>Khám phá</h2><ul><li><a href="/">Trang chủ</a></li><li><a href="/blog/">Góc tò mò</a></li><li><a href="/#ve-hung">Về Hùng</a></li><li><a href="#contact">Liên hệ</a></li></ul></nav><nav class="footer-col" aria-label="Công cụ"><h2>Công cụ</h2><ul><li><a href="/photobooth/">Hộp Ảnh</a></li><li><a href="/snaptik/">Snap Video</a></li><li><a href="/lamnet/">Làm Nét Ảnh</a></li><li><a href="/cotuong/">Cờ Tướng Pixel</a></li></ul></nav><nav class="footer-col policy-links" aria-label="Chính sách website"><h2>Chính sách</h2><ul><li><a href="https://hunghienhoa.com/chinh-sach-rieng-tu">Riêng tư</a></li><li><a href="https://hunghienhoa.com/dieu-khoan-su-dung">Điều khoản</a></li><li><a href="https://hunghienhoa.com/bao-cao-ban-quyen">Bản quyền</a></li><li><a href="https://hunghienhoa.com/cookie-va-quang-cao">Cookie</a></li></ul></nav></div><div class="footer-bottom"><div class="footer-legal"><span>© 2026 Hùng Hiền Hòa</span><p class="footer-wish">Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!</p><a class="footer-top" href="#">Về đầu trang <span aria-hidden="true">↑</span></a></div></div></footer>
+</body>
+</html>

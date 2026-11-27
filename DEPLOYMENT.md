@@ -157,3 +157,11 @@ Thiết lập một lần:
 3. Chạy chế độ `dry-run` để xem bài và ảnh bìa (artifact `bai-chay-thu`), rồi để lịch tự chạy.
 
 Chi phí: mỗi bài gọi Claude 3–5 lượt; với `claude-opus-5-5` ở effort `medium`, ước tính vài chục nghìn token đầu ra mỗi bài (khoảng 0,5–1 USD/bài theo giá công bố), tính vào tài khoản Claude API. Đổi `CLAUDE_EFFORT` hoặc `CLAUDE_MODEL` để cân chất lượng và chi phí.
+
+## Cờ Tướng Pixel (`/cotuong/`)
+
+- Chơi với máy và hai người chạy hoàn toàn trên trình duyệt: luật ở `dist/cotuong/core.mjs`, máy chơi cờ ở `dist/cotuong/ai.mjs` (chạy trong Web Worker `ai-worker.mjs`).
+- Online dùng Durable Object `XiangqiRoom` (binding `XIANGQI`, `worker/xiangqi.mjs`) với WebSocket ngủ đông: mỗi phòng một đối tượng `room:<MÃ>`, ghép trận nhanh qua đối tượng `lobby`. Máy chủ kiểm tra mọi nước bằng cùng `core.mjs`, giữ đồng hồ mỗi bên, xử thua khi hết giờ (alarm) và tự xóa phòng sau 2 giờ không hoạt động.
+- API: `POST /api/cotuong/rooms`, `POST /api/cotuong/match`, `GET /api/cotuong/rooms/<MÃ>`, WebSocket `GET /api/cotuong/ws?room=<MÃ>` (kiểm tra Origin; đi thẳng tới Durable Object, không qua bước gắn header chung). Giới hạn 30 lần/phút mỗi địa chỉ (dùng chung `SNAPTIK_LIMIT`).
+- Máy chủ Node chạy thử không có phòng online; trang báo "Chế độ online chưa sẵn sàng ở đây".
+- Kiểm thử: `tools/cotuong.test.mjs` (perft chuẩn, luật, chiếu dai, ký hiệu, máy), `tools/cotuong-room.test.mjs` (phòng, đồng hồ, đấu lại, ghép trận, chặn WebSocket sai nguồn).

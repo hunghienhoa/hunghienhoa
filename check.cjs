@@ -24,11 +24,11 @@ for (const sourceFile of sourceFiles.filter(file => /\.(html|css)$/.test(file)))
 // Một bộ phông dùng chung ở /fonts, khai báo trong /ui.css cho mọi trang.
 assert.ok(css.includes("font-family:'Be Vietnam Pro'") && css.includes("font-family:'Playfair Display'"));
 for (const name of ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold', 'Black', 'Italic', 'SemiBoldItalic', 'BoldItalic']) assert.equal(fs.readFileSync(`dist/fonts/BeVietnamPro-${name}.woff2`).subarray(0, 4).toString(), 'wOF2');
-for (const page of ['index.html', 'blog/index.html', 'photobooth/index.html', 'photobooth/shoot.html', 'snaptik/index.html', 'lamnet/index.html', 'admin/index.html', '404.html']) assert.ok(fs.readFileSync(`dist/${page}`, 'utf8').includes('/ui.css?v='), `${page} phải dùng /ui.css`);
+for (const page of ['index.html', 'blog/index.html', 'photobooth/index.html', 'photobooth/shoot.html', 'snaptik/index.html', 'lamnet/index.html', 'cotuong/index.html', 'admin/index.html', '404.html']) assert.ok(fs.readFileSync(`dist/${page}`, 'utf8').includes('/ui.css?v='), `${page} phải dùng /ui.css`);
 assert.equal((html.match(/<h1\b/g) || []).length, 1);
 assert.ok(css.includes('prefers-reduced-motion'));
 console.log('PASS: assets, anchors, JS syntax and reduced-motion support.');
-for (const id of ['photobooth-project','snaptik-project','lamnet-project']) {
+for (const id of ['photobooth-project','snaptik-project','lamnet-project','cotuong-project']) {
   const link = html.match(new RegExp('<a[^>]+id="'+id+'"[^>]*>'))[0];
   assert.ok(link.includes('target="_blank"') && link.includes('rel="noopener noreferrer"') && !link.includes('data-project-window'));
 }

@@ -235,7 +235,7 @@ async function loadAnalytics() {
   try {
     const data = await api('/api/admin/analytics');
     $('#traffic-stats').replaceChildren(...[[data.total,'Tổng lượt truy cập'],[data.today,'Hôm nay'],[data.last7,'7 ngày gần nhất'],[data.last30,'30 ngày gần nhất']].map(([count,label]) => {const card=make('div',undefined,'stat');card.append(make('b',Number(count).toLocaleString('vi-VN')),make('span',label));return card;}));
-    const names={main:'Trang chính',blog:'Blog',photobooth:'Photobooth',snaptik:'Snap',lamnet:'Làm Nét'};
+    const names={main:'Trang chính',blog:'Blog',photobooth:'Photobooth',snaptik:'Snap',lamnet:'Làm Nét',cotuong:'Cờ Tướng'};
     $('#traffic-pages').replaceChildren(...Object.entries(names).map(([page,label]) => make('p',label+': '+(data.pages.find(row=>row.page===page)?.count || 0).toLocaleString('vi-VN'))));
     const max=Math.max(1,...data.daily.map(row=>row.count));
     $('#traffic-chart').replaceChildren(...data.daily.map(row=>{const column=make('div',undefined,'traffic-column'),bar=make('div');bar.style.height=Math.max(2,row.count/max*120)+'px';bar.title=row.day+': '+row.count+' lượt xem';column.append(bar,make('small',row.day.slice(5)),make('span',String(row.count)));return column;}));
@@ -268,9 +268,9 @@ async function loadCustomization(settings) {
     label.append(input,preview,note,reset);imageGrid.append(label);
   }
   container.append(images);
-  for(const [page,name] of Object.entries({main:'Trang chủ',blog:'Góc tò mò (Blog)',photobooth:'Hộp Ảnh',snaptik:'Snap Video',lamnet:'Làm Nét',admin:'Trang quản trị'})) {
+  for(const [page,name] of Object.entries({main:'Trang chủ',blog:'Góc tò mò (Blog)',photobooth:'Hộp Ảnh',snaptik:'Snap Video',lamnet:'Làm Nét',cotuong:'Cờ Tướng',admin:'Trang quản trị'})) {
     const group=make('details');group.append(make('summary',name));
-    const pageUrl={main:'/',blog:'/blog/',photobooth:'/photobooth/',snaptik:'/snaptik/',lamnet:'/lamnet/'}[page];
+    const pageUrl={main:'/',blog:'/blog/',photobooth:'/photobooth/',snaptik:'/snaptik/',lamnet:'/lamnet/',cotuong:'/cotuong/'}[page];
     if(pageUrl){const open=make('a','Mở trang này trong thẻ mới ↗','page-link');open.href=SITE+pageUrl;open.target='_blank';open.rel='noopener';group.append(open);}
     const grid=make('div',undefined,'field-grid');group.append(grid);
     for(const field of contentFields.filter(field=>field.page===page)) {
