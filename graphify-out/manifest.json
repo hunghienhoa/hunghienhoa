@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "tools/asset-versions.json": {
-    "mtime": 1795743135.890996,
-    "seen": 1795744489.5140362,
-    "ast_hash": "c186205093d0791740b0a8a0d30c3ecc",
+    "mtime": 1795746095.728055,
+    "seen": 1795746108.4728005,
+    "ast_hash": "d5bcbdd7de31cfbb0ec751b3b4819eae",
     "semantic_hash": ""
   },
   "tools/asset-versions.mjs": {
@@ -330,9 +330,9 @@
     "semantic_hash": ""
   },
   "worker/index.mjs": {
-    "mtime": 1795743135.890996,
-    "seen": 1795744489.5146637,
-    "ast_hash": "b1eb0c3f54bd177fe649e7443f6355c7",
+    "mtime": 1795746092.5145185,
+    "seen": 1795746108.4733558,
+    "ast_hash": "f06c576104b266adee92ca000da8f1dc",
     "semantic_hash": ""
   },
   "worker/index.test.mjs": {
@@ -498,9 +498,9 @@
     "semantic_hash": ""
   },
   "DEPLOYMENT.md": {
-    "mtime": 1795744482.5504181,
-    "seen": 1795744489.51521,
-    "ast_hash": "9f905321cafcecefdc9c5db08ed56027",
+    "mtime": 1795746092.5167952,
+    "seen": 1795746108.4739282,
+    "ast_hash": "05adb1615d9489e89732a3b20cfdca8f",
     "semantic_hash": ""
   },
   "FONT-SOURCES.md": {
@@ -1764,9 +1764,9 @@
     "semantic_hash": ""
   },
   "tools/auto-blog.test.mjs": {
-    "mtime": 1795743135.9005008,
-    "seen": 1795744489.5140543,
-    "ast_hash": "7385f6b70516ae6a8c1e72d61dae1f77",
+    "mtime": 1795746092.5170336,
+    "seen": 1795746108.4728203,
+    "ast_hash": "b3f239ce709752e60c6234a4e49dddb9",
     "semantic_hash": ""
   },
   "package-lock.json": {
