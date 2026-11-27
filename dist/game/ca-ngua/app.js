@@ -1,6 +1,6 @@
 // Cờ Cá Ngựa Pixel: bàn 15×15 vẽ bằng canvas, ngựa pixel, xúc xắc có hoạt cảnh; chơi với máy, chung một máy hoặc online.
 import * as R from './rules.mjs?v=1';
-import { $, sfx, soundButton, off, hash, px, digits, brackets, pointer, banner, hideBanner, say, tabs, choice, renderPlayers, Online, LEVEL_NAMES, store } from '../kit.js?v=1';
+import { $, sfx, soundButton, off, hash, px, digits, brackets, pointer, banner, hideBanner, say, tabs, choice, renderPlayers, Online, LEVEL_NAMES, store } from '../kit.js?v=2';
 
 const canvas = $('#board'), g = canvas.getContext('2d', { alpha: false });
 const dice = $('#dice'), dg = dice.getContext('2d');

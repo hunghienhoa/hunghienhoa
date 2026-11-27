@@ -32,6 +32,92 @@ export function soundButton(button) {
   const label = () => { button.textContent = soundOn ? 'Âm thanh: bật' : 'Âm thanh: tắt'; button.setAttribute('aria-pressed', String(soundOn)); };
   button.addEventListener('click', () => { soundOn = !soundOn; store.set('sound', soundOn ? 'on' : 'off'); label(); if (soundOn) sfx('ping'); });
   label();
+  setupFullscreen();
+}
+
+// ---------- Toàn màn hình & xoay ngang tự động ----------
+export function setupFullscreen() {
+  const arcade = $('.arcade');
+  if (!arcade || arcade.dataset.fsReady) return;
+  arcade.dataset.fsReady = '1';
+  const landscape = arcade.dataset.fs === 'landscape' || /\/(tien-len|phom|ba-cay|o-an-quan)(\/|$)/.test(location.pathname);
+  if (landscape) arcade.dataset.fs = 'landscape';
+  const wrap = arcade.closest('.arcade-wrap') || document.documentElement;
+  let active = false, wasNative = false;
+
+  const syncButtons = () => {
+    for (const [el, fullTxt, shortTxt] of [[$('#fullscreen'), 'Toàn màn hình', 'Thu nhỏ'], [$('.fs-corner'), 'Phóng to', 'Thu nhỏ']]) {
+      if (!el) continue;
+      el.setAttribute('aria-pressed', String(active));
+      el.setAttribute('aria-label', active ? 'Thu nhỏ màn hình' : 'Phóng to toàn màn hình');
+      el.title = active ? 'Thu nhỏ' : 'Toàn màn hình';
+      const ic = el.querySelector('.ic'), tx = el.querySelector('span:not(.ic)');
+      if (ic) ic.className = 'ic ' + (active ? 'ic-collapse' : 'ic-expand');
+      if (tx) tx.textContent = active ? shortTxt : fullTxt;
+    }
+  };
+
+  const syncViewport = () => {
+    if (!active) {
+      arcade.classList.remove('is-fs', 'is-fs-rot', 'is-fs-compact');
+      arcade.style.removeProperty('--fs-w');
+      arcade.style.removeProperty('--fs-h');
+      document.body.classList.remove('has-game-fs');
+      return;
+    }
+    document.body.classList.add('has-game-fs');
+    arcade.classList.add('is-fs');
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const rot = landscape && vw < vh;
+    const w = rot ? vh : vw, h = rot ? vw : vh;
+    arcade.classList.toggle('is-fs-rot', rot);
+    arcade.classList.toggle('is-fs-compact', h < 540);
+    arcade.style.setProperty('--fs-w', w + 'px');
+    arcade.style.setProperty('--fs-h', h + 'px');
+  };
+
+  const toggle = async force => {
+    const next = typeof force === 'boolean' ? force : !active;
+    if (next === active) return;
+    active = next;
+    syncViewport();
+    syncButtons();
+    if (active) {
+      try {
+        const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen;
+        if (req && !document.fullscreenElement && !document.webkitFullscreenElement) await req.call(wrap);
+      } catch { /* Trình duyệt không hỗ trợ Fullscreen API: dùng khung cố định toàn màn hình */ }
+      if (landscape) {
+        try { await screen.orientation?.lock?.('landscape'); } catch { /* Tự xoay ngang bằng CSS .is-fs-rot khi màn hình dọc */ }
+      }
+      syncViewport();
+    } else {
+      wasNative = false;
+      try { screen.orientation?.unlock?.(); } catch {}
+      try {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          await (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
+        }
+      } catch {}
+      syncViewport();
+    }
+  };
+
+  $('#fullscreen')?.addEventListener('click', () => toggle());
+  $('.fs-corner')?.addEventListener('click', () => toggle());
+  window.addEventListener('resize', () => { if (active) syncViewport(); });
+  window.addEventListener('orientationchange', () => { if (active) setTimeout(syncViewport, 60); });
+  const onFsChange = () => {
+    const nativeEl = document.fullscreenElement || document.webkitFullscreenElement;
+    if (nativeEl) { wasNative = true; if (active) syncViewport(); }
+    else if (wasNative && active) { wasNative = false; toggle(false); }
+  };
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('webkitfullscreenchange', onFsChange);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && active && !document.fullscreenElement && !document.webkitFullscreenElement) toggle(false);
+  });
+  syncButtons();
 }
 
 // ---------- Vẽ pixel ----------
@@ -62,6 +148,9 @@ export function brackets(g, x, y, w, h, color, len = 4) {
 }
 export function pointer(canvas, W, H, e) {
   const r = canvas.getBoundingClientRect();
+  if (canvas.closest('.is-fs-rot')) {
+    return [((e.clientY - r.top) * W) / r.height, ((r.right - e.clientX) * H) / r.width];
+  }
   return [((e.clientX - r.left) * W) / r.width, ((e.clientY - r.top) * H) / r.height];
 }
 

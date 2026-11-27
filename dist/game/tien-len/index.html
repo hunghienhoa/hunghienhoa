@@ -7,8 +7,8 @@
 <meta name="theme-color" content="#fbf2e3">
 <link rel="icon" href="/assets/logo.svg" type="image/svg+xml"><link rel="canonical" href="/game/tien-len/">
 <link rel="preload" href="/fonts/BeVietnamPro-Bold.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/PlayfairDisplay-SemiBoldItalic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/ui.css?v=27"><link rel="stylesheet" href="/tools.css?v=5"><link rel="stylesheet" href="/game/pixel.css?v=2">
-<script src="/i18n.js?v=12"></script><script src="app.js?v=1" type="module"></script><script src="/page-customization.js?v=media-4" defer></script><script src="/sitebar.js?v=5" defer></script><script src="/contact.js?v=4" defer></script>
+<link rel="stylesheet" href="/ui.css?v=28"><link rel="stylesheet" href="/tools.css?v=5"><link rel="stylesheet" href="/game/pixel.css?v=3">
+<script src="/i18n.js?v=13"></script><script src="app.js?v=2" type="module"></script><script src="/page-customization.js?v=media-4" defer></script><script src="/sitebar.js?v=5" defer></script><script src="/contact.js?v=4" defer></script>
 </head>
 <body>
 <a class="skip" href="#choi">Đến bàn chơi</a>
@@ -21,9 +21,10 @@
 </section>
 
 <section class="wrap arcade-wrap" id="choi" aria-label="Bàn đánh bài tiến lên">
-<div class="arcade">
+<div class="arcade" data-fs="landscape">
 <div class="board-col">
 <div class="board-frame">
+<button class="pixel-btn fs-corner" type="button" aria-pressed="false" aria-label="Phóng to toàn màn hình" title="Toàn màn hình"><span class="ic ic-expand" aria-hidden="true"></span><span>Phóng to</span></button>
 <div class="felt" id="felt">
 <div class="opponents" id="opponents" aria-label="Đối thủ"></div>
 <div class="pile" aria-live="polite"><div class="pile-cards" id="pile"></div><p class="pile-label" id="pile-label"></p></div>
@@ -67,7 +68,7 @@
 </div>
 </div>
 <p class="status" id="status" role="status" aria-live="polite"></p>
-<div class="controls" role="group" aria-label="Điều khiển"><button class="pixel-btn" type="button" id="hint">Gợi ý</button><button class="pixel-btn" type="button" id="sound" aria-pressed="true">Âm thanh: bật</button></div>
+<div class="controls" role="group" aria-label="Điều khiển"><button class="pixel-btn" type="button" id="hint">Gợi ý</button><button class="pixel-btn" type="button" id="sound" aria-pressed="true">Âm thanh: bật</button><button class="pixel-btn" type="button" id="fullscreen" aria-pressed="false"><span class="ic ic-expand" aria-hidden="true"></span> <span>Toàn màn hình</span></button></div>
 </aside>
 </div>
 <noscript><p class="notice">Bạn cần bật JavaScript để chơi.</p></noscript>

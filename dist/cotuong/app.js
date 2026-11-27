@@ -672,3 +672,67 @@ if (fromLink && /^[A-Z0-9]{6}$/i.test(fromLink)) {
 } else newGame();
 document.fonts?.ready?.then(() => { sprites.clear(); boardLayer = null; request(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) request(); });
+
+// ---------- Toàn màn hình ----------
+(() => {
+  const arcade = $('.arcade');
+  if (!arcade) return;
+  const wrap = arcade.closest('.arcade-wrap') || document.documentElement;
+  let active = false, wasNative = false;
+  const syncButtons = () => {
+    for (const [el, fullTxt, shortTxt] of [[$('#fullscreen'), 'Toàn màn hình', 'Thu nhỏ'], [$('.fs-corner'), 'Phóng to', 'Thu nhỏ']]) {
+      if (!el) continue;
+      el.setAttribute('aria-pressed', String(active));
+      el.setAttribute('aria-label', active ? 'Thu nhỏ màn hình' : 'Phóng to toàn màn hình');
+      el.title = active ? 'Thu nhỏ' : 'Toàn màn hình';
+      const ic = el.querySelector('.ic'), tx = el.querySelector('span:not(.ic)');
+      if (ic) ic.className = 'ic ' + (active ? 'ic-collapse' : 'ic-expand');
+      if (tx) tx.textContent = active ? shortTxt : fullTxt;
+    }
+  };
+  const syncViewport = () => {
+    document.body.classList.toggle('has-game-fs', active);
+    arcade.classList.toggle('is-fs', active);
+    if (active) {
+      arcade.style.setProperty('--fs-w', window.innerWidth + 'px');
+      arcade.style.setProperty('--fs-h', window.innerHeight + 'px');
+    } else {
+      arcade.style.removeProperty('--fs-w');
+      arcade.style.removeProperty('--fs-h');
+    }
+  };
+  const toggle = async force => {
+    const next = typeof force === 'boolean' ? force : !active;
+    if (next === active) return;
+    active = next; syncViewport(); syncButtons();
+    if (active) {
+      try {
+        const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen;
+        if (req && !document.fullscreenElement && !document.webkitFullscreenElement) await req.call(wrap);
+      } catch {}
+      syncViewport();
+    } else {
+      wasNative = false;
+      try {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          await (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
+        }
+      } catch {}
+      syncViewport();
+    }
+  };
+  $('#fullscreen')?.addEventListener('click', () => toggle());
+  $('.fs-corner')?.addEventListener('click', () => toggle());
+  window.addEventListener('resize', () => { if (active) syncViewport(); });
+  const onFsChange = () => {
+    const nativeEl = document.fullscreenElement || document.webkitFullscreenElement;
+    if (nativeEl) { wasNative = true; if (active) syncViewport(); }
+    else if (wasNative && active) { wasNative = false; toggle(false); }
+  };
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('webkitfullscreenchange', onFsChange);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && active && !document.fullscreenElement && !document.webkitFullscreenElement) toggle(false);
+  });
+  syncButtons();
+})();

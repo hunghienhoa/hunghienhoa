@@ -1,6 +1,6 @@
 // Ô Ăn Quan Pixel: bàn gỗ vẽ bằng canvas, rải quân có hoạt cảnh, chơi với máy, hai người hoặc online.
 import * as R from './rules.mjs?v=1';
-import { $, sfx, soundButton, off, hash, px, digits, disc, brackets, pointer, banner, hideBanner, say, tabs, choice, renderPlayers, Online, LEVEL_NAMES, store } from '../kit.js?v=1';
+import { $, sfx, soundButton, off, hash, px, digits, disc, brackets, pointer, banner, hideBanner, say, tabs, choice, renderPlayers, Online, LEVEL_NAMES, store } from '../kit.js?v=2';
 
 const canvas = $('#board'), g = canvas.getContext('2d', { alpha: false });
 const W = 352, H = 140, CW = 48, CH = 52, GX = 56, TOP = 16, BOT = 72;

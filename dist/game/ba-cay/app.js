@@ -1,6 +1,6 @@
 // Ba Cây Pixel: bàn nỉ, 3 lá úp cho mỗi người, nặn từng lá hoặc lật hết. Chỉ tính điểm cho vui.
 import * as R from './rules.mjs?v=1';
-import { $, sfx, soundButton, banner, hideBanner, say, tabs, choice, renderPlayers, Online, store, confirmTwice } from '../kit.js?v=1';
+import { $, sfx, soundButton, banner, hideBanner, say, tabs, choice, renderPlayers, Online, store, confirmTwice } from '../kit.js?v=2';
 
 const S = { mode: 'ai', state: null, view: null, totals: [0, 0, 0, 0], online: null, seenMoves: -1, seenRound: -1, timer: 0 };
 
