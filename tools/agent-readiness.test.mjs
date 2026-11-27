@@ -29,7 +29,7 @@ const website=graph.find(item=>item['@type']==='WebSite');
 assert.equal(website.name,site.displayName);assert.equal(website.url,ORIGINS.main+'/');
 assert.equal(website.publisher['@id'],graph.find(item=>item['@type']==='Person')['@id']);
 assert.equal(graph.find(item=>item['@type']==='ProfilePage').isPartOf['@id'],website['@id']);
-assert.deepEqual(website.hasPart.map(ref=>graph.find(item=>item['@id']===ref['@id']).url),[ORIGINS.photobooth+'/',ORIGINS.blog+'/',ORIGINS.snaptik+'/',ORIGINS.lamnet+'/',ORIGINS.cotuong+'/']);
+assert.deepEqual(website.hasPart.map(ref=>graph.find(item=>item['@id']===ref['@id']).url),[ORIGINS.photobooth+'/',ORIGINS.blog+'/',ORIGINS.snaptik+'/',ORIGINS.lamnet+'/',ORIGINS.game+'/']);
 for(const [page,origin]of Object.entries(ORIGINS)){
  const context={page,path:'/',origin},template=fs.readFileSync(page==='main'?'dist/index.html':`dist/${page}/index.html`,'utf8');
  const rendered=decorateHtml(template,defaultSite,context,new URL(origin+'/'));

@@ -24,6 +24,12 @@
     "default": "Công cụ"
   },
   {
+    "key": "main-241",
+    "page": "main",
+    "label": "Game Pixel",
+    "default": "Game Pixel"
+  },
+  {
     "key": "main-005",
     "page": "main",
     "label": "Về mình",
@@ -246,43 +252,43 @@
     "default": "(mở trong thẻ mới)"
   },
   {
-    "key": "main-241",
+    "key": "main-242",
     "page": "main",
     "label": "Trò chơi pixel",
     "default": "Trò chơi pixel"
   },
   {
-    "key": "main-242",
-    "page": "main",
-    "label": "Cờ Tướng Pixel",
-    "default": "Cờ Tướng Pixel"
-  },
-  {
     "key": "main-243",
     "page": "main",
-    "label": "Đấu với máy, chơi hai người hoặc mở phòng online mời bạn qua link.",
-    "default": "Đấu với máy, chơi hai người hoặc mở phòng online mời bạn qua link."
+    "label": "Game Pixel",
+    "default": "Game Pixel"
   },
   {
     "key": "main-244",
     "page": "main",
-    "label": "Máy ba mức",
-    "default": "Máy ba mức"
+    "label": "Cờ tướng, tiến lên, cờ cá ngựa, ô ăn quan. Chơi với máy hoặc online cùng bạn.",
+    "default": "Cờ tướng, tiến lên, cờ cá ngựa, ô ăn quan. Chơi với máy hoặc online cùng bạn."
   },
   {
     "key": "main-245",
     "page": "main",
-    "label": "Phòng online có đồng hồ",
-    "default": "Phòng online có đồng hồ"
+    "label": "Bốn trò chơi",
+    "default": "Bốn trò chơi"
   },
   {
     "key": "main-246",
     "page": "main",
-    "label": "Vào bàn cờ",
-    "default": "Vào bàn cờ"
+    "label": "Phòng online mời bạn",
+    "default": "Phòng online mời bạn"
   },
   {
     "key": "main-247",
+    "page": "main",
+    "label": "Vào góc game",
+    "default": "Vào góc game"
+  },
+  {
+    "key": "main-248",
     "page": "main",
     "label": "(mở trong thẻ mới)",
     "default": "(mở trong thẻ mới)"
@@ -342,7 +348,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "main-248",
+    "key": "main-256",
     "page": "main",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -444,10 +450,40 @@
     "default": "Làm Nét Ảnh"
   },
   {
-    "key": "main-249",
+    "key": "main-250",
     "page": "main",
-    "label": "Cờ Tướng Pixel",
-    "default": "Cờ Tướng Pixel"
+    "label": "Game Pixel",
+    "default": "Game Pixel"
+  },
+  {
+    "key": "main-251",
+    "page": "main",
+    "label": "Tất cả game",
+    "default": "Tất cả game"
+  },
+  {
+    "key": "main-252",
+    "page": "main",
+    "label": "Cờ Tướng",
+    "default": "Cờ Tướng"
+  },
+  {
+    "key": "main-253",
+    "page": "main",
+    "label": "Tiến Lên",
+    "default": "Tiến Lên"
+  },
+  {
+    "key": "main-254",
+    "page": "main",
+    "label": "Cờ Cá Ngựa",
+    "default": "Cờ Cá Ngựa"
+  },
+  {
+    "key": "main-255",
+    "page": "main",
+    "label": "Ô Ăn Quan",
+    "default": "Ô Ăn Quan"
   },
   {
     "key": "main-237",
@@ -758,8 +794,38 @@
   {
     "key": "blog-086",
     "page": "blog",
-    "label": "Cờ Tướng Pixel",
-    "default": "Cờ Tướng Pixel"
+    "label": "Game Pixel",
+    "default": "Game Pixel"
+  },
+  {
+    "key": "blog-087",
+    "page": "blog",
+    "label": "Tất cả game",
+    "default": "Tất cả game"
+  },
+  {
+    "key": "blog-088",
+    "page": "blog",
+    "label": "Cờ Tướng",
+    "default": "Cờ Tướng"
+  },
+  {
+    "key": "blog-089",
+    "page": "blog",
+    "label": "Tiến Lên",
+    "default": "Tiến Lên"
+  },
+  {
+    "key": "blog-090",
+    "page": "blog",
+    "label": "Cờ Cá Ngựa",
+    "default": "Cờ Cá Ngựa"
+  },
+  {
+    "key": "blog-091",
+    "page": "blog",
+    "label": "Ô Ăn Quan",
+    "default": "Ô Ăn Quan"
   },
   {
     "key": "blog-080",
@@ -828,7 +894,7 @@
     "default": "hhh"
   },
   {
-    "key": "photobooth-199",
+    "key": "photobooth-207",
     "page": "photobooth",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -1512,7 +1578,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "photobooth-200",
+    "key": "photobooth-208",
     "page": "photobooth",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -1616,8 +1682,38 @@
   {
     "key": "photobooth-201",
     "page": "photobooth",
-    "label": "Cờ Tướng Pixel",
-    "default": "Cờ Tướng Pixel"
+    "label": "Game Pixel",
+    "default": "Game Pixel"
+  },
+  {
+    "key": "photobooth-202",
+    "page": "photobooth",
+    "label": "Tất cả game",
+    "default": "Tất cả game"
+  },
+  {
+    "key": "photobooth-203",
+    "page": "photobooth",
+    "label": "Cờ Tướng",
+    "default": "Cờ Tướng"
+  },
+  {
+    "key": "photobooth-204",
+    "page": "photobooth",
+    "label": "Tiến Lên",
+    "default": "Tiến Lên"
+  },
+  {
+    "key": "photobooth-205",
+    "page": "photobooth",
+    "label": "Cờ Cá Ngựa",
+    "default": "Cờ Cá Ngựa"
+  },
+  {
+    "key": "photobooth-206",
+    "page": "photobooth",
+    "label": "Ô Ăn Quan",
+    "default": "Ô Ăn Quan"
   },
   {
     "key": "photobooth-191",
@@ -1686,7 +1782,7 @@
     "default": "hhh"
   },
   {
-    "key": "snaptik-079",
+    "key": "snaptik-087",
     "page": "snaptik",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -1974,7 +2070,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "snaptik-080",
+    "key": "snaptik-088",
     "page": "snaptik",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -2078,8 +2174,38 @@
   {
     "key": "snaptik-081",
     "page": "snaptik",
-    "label": "Cờ Tướng Pixel",
-    "default": "Cờ Tướng Pixel"
+    "label": "Game Pixel",
+    "default": "Game Pixel"
+  },
+  {
+    "key": "snaptik-082",
+    "page": "snaptik",
+    "label": "Tất cả game",
+    "default": "Tất cả game"
+  },
+  {
+    "key": "snaptik-083",
+    "page": "snaptik",
+    "label": "Cờ Tướng",
+    "default": "Cờ Tướng"
+  },
+  {
+    "key": "snaptik-084",
+    "page": "snaptik",
+    "label": "Tiến Lên",
+    "default": "Tiến Lên"
+  },
+  {
+    "key": "snaptik-085",
+    "page": "snaptik",
+    "label": "Cờ Cá Ngựa",
+    "default": "Cờ Cá Ngựa"
+  },
+  {
+    "key": "snaptik-086",
+    "page": "snaptik",
+    "label": "Ô Ăn Quan",
+    "default": "Ô Ăn Quan"
   },
   {
     "key": "snaptik-071",
@@ -2148,7 +2274,7 @@
     "default": "hhh"
   },
   {
-    "key": "lamnet-094",
+    "key": "lamnet-102",
     "page": "lamnet",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -2526,7 +2652,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "lamnet-095",
+    "key": "lamnet-103",
     "page": "lamnet",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -2630,8 +2756,38 @@
   {
     "key": "lamnet-096",
     "page": "lamnet",
-    "label": "Cờ Tướng Pixel",
-    "default": "Cờ Tướng Pixel"
+    "label": "Game Pixel",
+    "default": "Game Pixel"
+  },
+  {
+    "key": "lamnet-097",
+    "page": "lamnet",
+    "label": "Tất cả game",
+    "default": "Tất cả game"
+  },
+  {
+    "key": "lamnet-098",
+    "page": "lamnet",
+    "label": "Cờ Tướng",
+    "default": "Cờ Tướng"
+  },
+  {
+    "key": "lamnet-099",
+    "page": "lamnet",
+    "label": "Tiến Lên",
+    "default": "Tiến Lên"
+  },
+  {
+    "key": "lamnet-100",
+    "page": "lamnet",
+    "label": "Cờ Cá Ngựa",
+    "default": "Cờ Cá Ngựa"
+  },
+  {
+    "key": "lamnet-101",
+    "page": "lamnet",
+    "label": "Ô Ăn Quan",
+    "default": "Ô Ăn Quan"
   },
   {
     "key": "lamnet-086",

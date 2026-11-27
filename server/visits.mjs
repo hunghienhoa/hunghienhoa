@@ -1,4 +1,4 @@
-export const VISIT_PAGES = ['main', 'blog', 'photobooth', 'snaptik', 'lamnet', 'cotuong'];
+export const VISIT_PAGES = ['main', 'blog', 'photobooth', 'snaptik', 'lamnet', 'cotuong', 'game'];
 export const visitDay = now => new Date(now + 7 * 3600000).toISOString().slice(0, 10);
 export function initVisits(sql) {
   sql('CREATE TABLE IF NOT EXISTS visit_days(day TEXT,page TEXT,count INTEGER NOT NULL,PRIMARY KEY(day,page))');
@@ -26,5 +26,6 @@ export function pageForVisit(path) {
   if (/^\/snaptik\/(?:index\.html)?$/.test(path)) return 'snaptik';
   if (/^\/lamnet\/(?:index\.html)?$/.test(path)) return 'lamnet';
   if (/^\/cotuong\/(?:index\.html)?$/.test(path)) return 'cotuong';
+  if (/^\/game\/(?:(?:tien-len|ca-ngua|o-an-quan)\/)?(?:index\.html)?$/.test(path)) return 'game';
   return null;
 }

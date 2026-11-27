@@ -54,7 +54,7 @@
   "52": "Phông chữ website",
   "53": "adsense.test.mjs",
   "54": "site-chrome.py",
-  "55": "README.md",
+  "55": "DEPLOYMENT.md",
   "56": "Canvas",
   "57": "3. Sáu bước",
   "58": "TestDate",
@@ -76,10 +76,13 @@
   "74": "load_state",
   "75": "lamnet-ai.test.mjs",
   "76": "steps",
-  "77": "Security Policy",
+  "77": "build-readme-art.py",
   "78": "ref_node_fs",
   "79": "server.test.mjs",
-  "80": "server.mjs",
-  "81": "browser-adsense-readiness.mjs",
-  "82": "ref_node_assert"
+  "80": "GameRoom",
+  "81": "server.mjs",
+  "82": "cloud-smoke.mjs",
+  "83": "Reconnaissance",
+  "84": "ref_node_assert",
+  "85": "FakeSocket"
 }

@@ -35,6 +35,31 @@
     [/^(.+?) Tự thử lại sau (\d+) giây…$/, (msg, n) => `${tr(msg) || msg} Retrying automatically in ${n} seconds…`],
     [/^(\d+) phút đọc$/, n => `${n} min read`],
     [/^(\d+) phút mỗi bên$/, n => `${n} min per side`],
+    [/^Máy (\d+) · (Dễ|Vừa|Khó)$/, (n, l) => `Computer ${n} · ${tr(l) || l}`],
+    [/^Máy (\d+)$/, n => `Computer ${n}`],
+    [/^(\d+)\/(\d+) người$/, (a, b) => `${a}/${b} players`],
+    [/^Ván (\d+)$/, n => `Game ${n}`],
+    [/^(\d+) điểm · (\d+) quan$/, (a, b) => `${a} points · ${b} mandarin${b === '1' ? '' : 's'}`],
+    [/^Chuồng (\d)\/4$/, n => `Home ${n}/4`],
+    [/^(\d+) lá$/, n => `${n} cards`],
+    [/^(\d+) – (\d+) điểm$/, (a, b) => `${a} – ${b} points`],
+    [/^(.+) · (\d+) – (\d+) điểm$/, (t, a, b) => `${tr(t) || t} · ${a} – ${b} points`],
+    [/^(3|4|5|6|7|8|9|10|J|Q|K|A|2) (bích|chuồn|rô|cơ)$/, (r, s) => `${r} of ${{ 'bích': 'spades', 'chuồn': 'clubs', 'rô': 'diamonds', 'cơ': 'hearts' }[s]}`],
+    [/^Nước đầu(?: tiên)? phải có lá (.+)\.$/, c => `The first play must include the ${tr(c) || c}.`],
+    [/^Bạn đi đầu, nhớ đánh kèm lá (.+)\.$/, c => `You lead: remember to include the ${tr(c) || c}.`],
+    [/^Sảnh (\d+)$/, n => `Straight of ${n}`],
+    [/^Đôi thông (\d+) đôi$/, n => `${n} consecutive pairs`],
+    [/^(.+) · (Rác|Đôi|Sám cô|Tứ quý|Sảnh \d+|Đôi thông \d+ đôi)$/, (who, t) => `${tr(who) || who} · ${tr(t) || t}`],
+    [/^Vòng mới · (.+) đi tự do$/, who => `New round · ${tr(who) || who} leads`],
+    [/^(.+) đang đánh…$/, who => `${tr(who) || who} is playing…`],
+    [/^(.+) về nhất$/, who => `${tr(who) || who} finished first`],
+    [/^Tới trắng: (.+)$/, why => `Instant win: ${tr(why) || why}`],
+    [/^Ngựa (Đỏ|Xanh|Vàng|Lục): đổ xúc xắc\.$/, c => `${tr('Ngựa ' + c) || c}: roll the die.`],
+    [/^Ngựa (Đỏ|Xanh|Vàng|Lục) được (\d): chạm con ngựa muốn đi\.$/, (c, d) => `${tr('Ngựa ' + c) || c} rolled ${d}: tap the horse to move.`],
+    [/^Bạn đổ được (\d)\. Chạm con ngựa có khung vàng\.$/, d => `You rolled ${d}. Tap a horse with a yellow frame.`],
+    [/^Đổ được (\d) nhưng không có ngựa nào đi được\.$/, d => `Rolled ${d}, but no horse can move.`],
+    [/^Ngựa (Đỏ|Xanh|Vàng|Lục) thắng$/, c => `${tr('Ngựa ' + c) || c} win`],
+    [/^(Về nhất|Về nhì|Về ba|Về bét): (.+)$/, (p, who) => `${tr(p) || p}: ${tr(who) || who}`],
     [/^Máy · (Dễ|Vừa|Khó)$/, l => `Computer · ${tr(l) || l}`],
     [/^(Đỏ thắng|Đen thắng|Hòa) · (.+)$/, (a, b) => `${tr(a) || a} · ${tr(b) || b}`],
     [/^Hiển thị (\d+) bài viết\.$/, n => `Showing ${n} posts.`],
@@ -147,7 +172,7 @@
     if (loading) return;
     loading = true;
     // Số phiên bản ?v= nằm ngay trong đường dẫn để tools/asset-versions.mjs báo lỗi khi đổi từ điển mà quên tăng v.
-    import('./i18n-en.js?v=11').then(module => { dict = module.default || {}; loading = false; done(); })
+    import('./i18n-en.js?v=12').then(module => { dict = module.default || {}; loading = false; done(); })
       .catch(() => { loading = false; root.classList.remove('i18n-wait'); });
   }
 
