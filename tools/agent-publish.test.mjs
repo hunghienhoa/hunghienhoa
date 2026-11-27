@@ -48,4 +48,6 @@ test('blog.hunghienhoa.com: trang chuyển 308 về /blog/, API đăng bài ch�
   assert.equal(publicRedirect('https://blog.hunghienhoa.com/api/agent/publish'), null);
   assert.equal(publicRedirect('https://blog.hunghienhoa.com/api/agent/context'), null);
   assert.equal(publicRedirect('https://blog.hunghienhoa.com/bai-viet').href, 'https://hunghienhoa.com/blog/bai-viet');
+  assert.equal(publicRedirect('https://blog.hunghienhoa.com/blog/?bai=x').href, 'https://hunghienhoa.com/blog/?bai=x', 'không lặp /blog/blog/');
+  assert.equal(publicRedirect('https://snap.hunghienhoa.com/snaptik/').href, 'https://hunghienhoa.com/snaptik/');
 });
