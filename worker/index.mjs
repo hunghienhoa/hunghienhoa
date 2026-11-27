@@ -10,6 +10,8 @@ import {agentRoute,pageContext,representation,markdown404,publicHtml,publicRedir
 export { VisitCounter } from './visits.mjs';
 import { isRoomCode, roomCode, MINUTES } from './xiangqi.mjs';
 export { XiangqiRoom } from './xiangqi.mjs';
+import { isGame, capacityFor } from './game-room.mjs';
+export { GameRoom } from './game-room.mjs';
 
 const API_LIMIT = 1600000;
 const POSTS_SELECT = 'id,slug,title,excerpt,content,category,tags,status,is_sample,created_at,published_at,has_cover';
@@ -291,6 +293,8 @@ async function publicApi(request, env, route, ctx) {
   // agent_publish_post của Supabase (hàm tự kiểm tra mã, giới hạn 2 bài/ngày và định dạng bài).
   // Cờ tướng online: tạo phòng, ghép trận nhanh, xem phòng còn không. Mỗi địa chỉ tối đa 30 lần/phút.
   if (route.startsWith('/api/cotuong/')) return cotuongApi(request, env, route);
+  // Các game pixel khác (Tiến Lên, Cờ Cá Ngựa, Ô Ăn Quan) dùng chung một kiểu phòng.
+  if (route.startsWith('/api/game/')) return gameApi(request, env, route);
   if (route === '/api/agent/publish') {
     if (request.method !== 'POST') fail(405, 'Phương thức chưa được hỗ trợ.');
     const token = bearer(request);
@@ -563,7 +567,9 @@ async function notFoundPage(request, env) {
 export default {
   async fetch(request, env, ctx) {
     // Kết nối WebSocket của phòng cờ đi thẳng tới Durable Object (phản hồi 101 không qua bước gắn header chung).
-    if (new URL(request.url).pathname === '/api/cotuong/ws') return cotuongSocket(request, env);
+    const path = new URL(request.url).pathname;
+    if (path === '/api/cotuong/ws') return cotuongSocket(request, env);
+    if (path === '/api/game/ws') return gameSocket(request, env);
     return deliver(request, await handle(request, env, ctx));
   }
 };
@@ -655,6 +661,46 @@ async function cotuongSocket(request, env) {
   if (!isRoomCode(code)) return new Response('Mã phòng không hợp lệ.', { status: 400 });
   if (!env.XIANGQI) return new Response('Chế độ online đang được chuẩn bị.', { status: 503 });
   return roomStub(env, code).fetch(request);
+}
+
+const gameStub = (env, game, code) => env.GAMEROOM.get(env.GAMEROOM.idFromName(game + ':' + code));
+async function gameApi(request, env, route) {
+  if (!env.GAMEROOM) fail(503, 'Chế độ online đang được chuẩn bị. Bạn chơi với máy nhé.');
+  const peek = route.match(/^\/api\/game\/rooms\/([a-z-]{3,20})\/([A-Z0-9]{6})$/);
+  if (peek && request.method === 'GET') {
+    if (!isGame(peek[1]) || !isRoomCode(peek[2])) fail(404, 'Không tìm thấy phòng.');
+    const info = await (await gameStub(env, peek[1], peek[2]).fetch('https://room/peek')).json();
+    if (info.status === 'missing') fail(404, 'Phòng không tồn tại hoặc đã hết hạn.');
+    return json(info);
+  }
+  if (request.method !== 'POST' || !['/api/game/rooms', '/api/game/match'].includes(route)) fail(404, 'Không tìm thấy API.');
+  await cotuongLimit(request, env);
+  const body = await readJson(request, 2048);
+  if (!isGame(body?.game)) fail(400, 'Trò chơi chưa hợp lệ.');
+  const name = typeof body.name === 'string' ? body.name.slice(0, 40) : '';
+  const seats = capacityFor(body.game, body.seats);
+  if (route === '/api/game/match') {
+    const res = await env.GAMEROOM.get(env.GAMEROOM.idFromName('lobby:' + body.game)).fetch('https://lobby/match', { method: 'POST', body: JSON.stringify({ game: body.game, name, seats }) });
+    if (!res.ok) fail(503, 'Chưa ghép được trận. Hãy thử lại sau.');
+    return json(await res.json());
+  }
+  for (let i = 0; i < 4; i++) {
+    const code = roomCode();
+    const res = await gameStub(env, body.game, code).fetch('https://room/init', { method: 'POST', body: JSON.stringify({ code, game: body.game, name, seats }) });
+    if (res.status === 409) continue;
+    if (!res.ok) break;
+    return json(await res.json(), 201);
+  }
+  fail(503, 'Chưa tạo được phòng. Hãy thử lại sau.');
+}
+async function gameSocket(request, env) {
+  const url = new URL(request.url), origin = request.headers.get('origin');
+  if (request.headers.get('upgrade')?.toLowerCase() !== 'websocket') return new Response('Cần kết nối WebSocket.', { status: 426, headers: { 'Cache-Control': 'no-store' } });
+  if (origin && origin !== url.origin) return new Response('Nguồn kết nối không được phép.', { status: 403 });
+  const game = url.searchParams.get('game') || '', code = url.searchParams.get('room') || '';
+  if (!isGame(game) || !isRoomCode(code)) return new Response('Mã phòng không hợp lệ.', { status: 400 });
+  if (!env.GAMEROOM) return new Response('Chế độ online đang được chuẩn bị.', { status: 503 });
+  return gameStub(env, game, code).fetch(request);
 }
 
 export { assetRequest, readJson };

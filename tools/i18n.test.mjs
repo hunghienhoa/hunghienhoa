@@ -11,7 +11,7 @@ for (const [vi, en] of Object.entries(dict)) assert.ok(typeof en === 'string' &&
 const SAME = new Set(['Hùng Hiền Hòa', 'HÙNG HIỀN HÒA · 2026', 'Hùng.', 'HÙNG HIỀN HÒA', 'Hùng Hiền Hòa — #BQHTIT', '4×', '×', '1×', '1.5×', '2×']);
 const viet = /[À-ÖØ-öø-ỹĐđ]/;
 const decode = value => value.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ' ').trim();
-const pages = ['dist/index.html', 'dist/blog/index.html', 'dist/photobooth/index.html', 'dist/photobooth/shoot.html', 'dist/snaptik/index.html', 'dist/lamnet/index.html', 'dist/cotuong/index.html', 'dist/chinh-sach-rieng-tu.html', 'dist/dieu-khoan-su-dung.html', 'dist/cookie-va-quang-cao.html', 'dist/bao-cao-ban-quyen.html', 'dist/404.html'];
+const pages = ['dist/index.html', 'dist/blog/index.html', 'dist/photobooth/index.html', 'dist/photobooth/shoot.html', 'dist/snaptik/index.html', 'dist/lamnet/index.html', 'dist/cotuong/index.html', 'dist/game/index.html', 'dist/game/tien-len/index.html', 'dist/game/ca-ngua/index.html', 'dist/game/o-an-quan/index.html', 'dist/chinh-sach-rieng-tu.html', 'dist/dieu-khoan-su-dung.html', 'dist/cookie-va-quang-cao.html', 'dist/bao-cao-ban-quyen.html', 'dist/404.html'];
 for (const page of pages) {
   const raw0 = fs.readFileSync(page, 'utf8'), html = raw0.replace(/<(script|style)\b[\s\S]*?<\/\1>/g, '');
   const found = [...html.matchAll(/>([^<>]+)</g)].map(m => m[1]).concat([...html.matchAll(/\b(?:aria-label|title|placeholder|alt|content)="([^"]*)"/g)].map(m => m[1]));

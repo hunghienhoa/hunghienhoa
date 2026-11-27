@@ -13,7 +13,7 @@ assert.match(ui, /input\[type=text\][^{]*\{[^}]*font-size:16px/, 'Ô nhập 16px
 console.log('PASS: pinch and browser zoom allowed on every page; inputs stay 16px so iOS does not auto-zoom.');
 
 // Giao diện 2026: một tên miền, một bộ giao diện dùng chung /ui.css, thanh điều hướng và footer sinh từ tools/site-chrome.py.
-const publicPages = ['dist/index.html', 'dist/blog/index.html', 'dist/photobooth/index.html', 'dist/photobooth/shoot.html', 'dist/snaptik/index.html', 'dist/lamnet/index.html', 'dist/cotuong/index.html', 'dist/chinh-sach-rieng-tu.html', 'dist/dieu-khoan-su-dung.html', 'dist/bao-cao-ban-quyen.html', 'dist/cookie-va-quang-cao.html'];
+const publicPages = ['dist/index.html', 'dist/blog/index.html', 'dist/photobooth/index.html', 'dist/photobooth/shoot.html', 'dist/snaptik/index.html', 'dist/lamnet/index.html', 'dist/cotuong/index.html', 'dist/game/index.html', 'dist/game/tien-len/index.html', 'dist/game/ca-ngua/index.html', 'dist/game/o-an-quan/index.html', 'dist/chinh-sach-rieng-tu.html', 'dist/dieu-khoan-su-dung.html', 'dist/bao-cao-ban-quyen.html', 'dist/cookie-va-quang-cao.html'];
 for (const page of publicPages) {
   const html = fs.readFileSync(page, 'utf8');
   assert.match(html, /<link rel="stylesheet" href="\/ui\.css\?v=\d+">/, `${page} phải nạp /ui.css`);

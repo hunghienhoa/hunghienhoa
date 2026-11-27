@@ -13,6 +13,7 @@ export default defineConfig({
     env: {
       VISITS: bindings.durableObject({ worker: "hunghienhoa", exportName: "VisitCounter" }),
       XIANGQI: bindings.durableObject({ worker: "hunghienhoa", exportName: "XiangqiRoom" }),
+      GAMEROOM: bindings.durableObject({ worker: "hunghienhoa", exportName: "GameRoom" }),
       ASSETS: bindings.assets(),
       AI: bindings.ai(),
       SNAPTIK_LIMIT: bindings.rateLimit({ namespace: "914202611", simple: { limit: 30, period: 60 } }),
@@ -23,7 +24,7 @@ export default defineConfig({
       SUPABASE_PUBLISHABLE_KEY: bindings.text("sb_publishable_77IrLLmapoiJaotnK8BAvw_WUtoOnp4"),
       ADMIN_EMAIL: bindings.text("hunghienhoa2110@gmail.com")
     },
-    exports: { VisitCounter: exports.durableObject({ storage: "sqlite" }), XiangqiRoom: exports.durableObject({ storage: "sqlite" }) },
+    exports: { VisitCounter: exports.durableObject({ storage: "sqlite" }), XiangqiRoom: exports.durableObject({ storage: "sqlite" }), GameRoom: exports.durableObject({ storage: "sqlite" }) },
     assets: {
       runWorkerFirst: true,
       htmlHandling: "auto-trailing-slash",

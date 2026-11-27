@@ -1,17 +1,17 @@
 # Graph Report - hunghienhoa  (2026-11-27)
 
 ## Corpus Check
-- 130 files · ~104,067 words
+- 133 files · ~108,913 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 18 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
 ## Summary
-- 1243 nodes · 2228 edges · 83 communities (67 shown, 16 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.86)
+- 1303 nodes · 2399 edges · 84 communities (67 shown, 17 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 41 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5360ead1`
+- Built from commit: `ff657d30`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -90,42 +90,43 @@
 - Security Policy
 - ref_node_fs
 - server.test.mjs
-- server.mjs
-- browser-adsense-readiness.mjs
-- ref_node_assert
+- GameRoom
+- usage.mjs
+- cloud-smoke.mjs
+- Reconnaissance
 
 ## God Nodes (most connected - your core abstractions)
 1. `createApp()` - 58 edges
 2. `handle()` - 43 edges
-3. `fail()` - 36 edges
-4. `XiangqiRoom` - 28 edges
-5. `publicApi()` - 26 edges
-6. `Element` - 22 edges
-7. `adminApi()` - 22 edges
-8. `handle()` - 21 edges
-9. `collectUnitErrors()` - 16 edges
-10. `publicHtml()` - 15 edges
+3. `fail()` - 37 edges
+4. `GameRoom` - 31 edges
+5. `XiangqiRoom` - 28 edges
+6. `publicApi()` - 27 edges
+7. `Element` - 22 edges
+8. `adminApi()` - 22 edges
+9. `handle()` - 21 edges
+10. `fetch()` - 17 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Khu Game Pixel (`/game/`)` --references--> `GameRoom`  [INFERRED]
+  DEPLOYMENT.md → worker/game-room.mjs
 - `Dữ liệu cá nhân website đang giữ` --references--> `VisitCounter`  [INFERRED]
   INCIDENT-RESPONSE.md → worker/visits.mjs
-- `Làm Nét` --references--> `VisitCounter`  [INFERRED]
-  PROJECT.md → worker/visits.mjs
 - `Cờ Tướng Pixel (`/cotuong/`)` --references--> `XiangqiRoom`  [INFERRED]
   DEPLOYMENT.md → worker/xiangqi.mjs
+- `Làm Nét` --references--> `VisitCounter`  [INFERRED]
+  PROJECT.md → worker/visits.mjs
 - `withSecurity()` --calls--> `adsenseHtml()`  [EXTRACTED]
   worker/index.mjs → server/adsense.mjs
-- `handle()` --calls--> `pageContext()`  [EXTRACTED]
-  worker/index.mjs → server/agent-content.mjs
 
 ## Import Cycles
 - None detected.
 
-## Communities (83 total, 16 thin omitted)
+## Communities (84 total, 17 thin omitted)
 
 ### Community 0 - "index.mjs"
-Cohesion: 0.09
-Nodes (52): publicRedirect(), usageEntry(), usageMetrics, usageProviders, usageReport(), utcDay(), now, ADMIN_FILES (+44 more)
+Cohesion: 0.12
+Nodes (45): publicRedirect(), ADMIN_FILES, adminApi(), assetRequest(), bearer(), cachedImage(), cachedJson(), cacheKey() (+37 more)
 
 ### Community 1 - "validate-findings.cjs"
 Cohesion: 0.06
@@ -136,16 +137,16 @@ Cohesion: 0.07
 Nodes (65): ATTEMPT_FIELDS, ATTEMPT_STATUSES, canonicalCoverageId(), collectUnitErrors(), createErrorList(), encodeCanonicalRef(), escapeUnsafeDiagnosticCharacters(), fs (+57 more)
 
 ### Community 3 - "fail"
-Cohesion: 0.27
-Nodes (17): decodeFrameImage(), decodeWebP(), defaultSite, design(), fail(), keys(), MAX_IMAGE_BYTES, mediaAsset() (+9 more)
+Cohesion: 0.16
+Nodes (24): AI_BODY_LIMIT, derive, loopback(), root, seedPosts, decodeFrameImage(), decodeWebP(), defaultSite (+16 more)
 
 ### Community 4 - "agent-content.mjs"
 Cohesion: 0.06
 Nodes (45): ADMIN_HOST, articleHtml(), canonical(), decorateHtml(), escapeHtml(), html404(), inlineHtml(), instructions() (+37 more)
 
 ### Community 6 - "Triển khai `hunghienhoa`"
-Cohesion: 0.14
-Nodes (14): AI đám mây cho Làm Nét (miễn phí), Cập nhật hằng ngày, Cờ Tướng Pixel (`/cotuong/`), GitHub → Cloudflare tự triển khai, Giám sát, Giới hạn đã ghi nhận, Kiến trúc đang dùng, Lệnh kiểm tra và triển khai thủ công (+6 more)
+Cohesion: 0.13
+Nodes (15): AI đám mây cho Làm Nét (miễn phí), Cập nhật hằng ngày, Cờ Tướng Pixel (`/cotuong/`), GitHub → Cloudflare tự triển khai, Giám sát, Giới hạn đã ghi nhận, Khu Game Pixel (`/game/`), Kiến trúc đang dùng (+7 more)
 
 ### Community 7 - "snaptik.test.mjs"
 Cohesion: 0.09
@@ -176,8 +177,8 @@ Cohesion: 0.11
 Nodes (18): Anti-patterns, Core principles, Cost budget, Coverage and prior runs, Full audit planning, Full audit setup, Full audit workflow, Operating modes (+10 more)
 
 ### Community 14 - "browser-usage-audit.mjs"
-Cohesion: 0.18
-Nodes (8): {chromium}, errors, mock, mp4, app, {chromium}, cli, dataDir
+Cohesion: 0.12
+Nodes (13): ads, base, {chromium}, errors, local, {chromium}, errors, mock (+5 more)
 
 ### Community 15 - "ref_node_path"
 Cohesion: 0.29
@@ -196,19 +197,15 @@ Cohesion: 0.24
 Nodes (3): main(), obsolete(), git()
 
 ### Community 19 - "Vulnerability Hunting"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (10): Core hunting method — include in every hunter prompt, Core validation rules — include in every hunter prompt, Coverage-critic waves, Local validation boundaries, Parent consolidation and ledger update, Phase 2: Run coverage-led hunting waves, Promotion procedure — copy this promotion procedure verbatim into every hunter prompt, Required hunter prompt (+2 more)
 
 ### Community 20 - "AI, LLM, and Agent Hunting"
 Cohesion: 0.20
 Nodes (9): AI, LLM, and Agent Hunting, Context, retrieval, and memory attack classes (subagent_type: `general`), Core discipline (include in every agent prompt for this domain), MCP and sub-agent trust classes (subagent_type: `general`), Output and disclosure attack classes (subagent_type: `general`), Tool and action attack classes (subagent_type: `general`), Universal moves (apply across the above), Validation rules (apply before reporting ANY finding here) (+1 more)
 
-### Community 21 - "ATTACK-CLASSES.md"
-Cohesion: 0.20
-Nodes (7): Attack Classes, Attack classes — choose and split based on Phase 1, Architecture summary and companion selection, Deterministic coverage ledger, Phase 1: Map the source and plan coverage, Prior-run input, Reconnaissance
-
 ### Community 22 - "Client-Side and Browser Hunting"
-Cohesion: 0.18
+Cohesion: 0.20
 Nodes (10): Client-Side and Browser Hunting, Core discipline (include in every agent prompt for this domain), Cross-origin messaging and network attack classes (subagent_type: `general`), Cross-site information leak classes (subagent_type: `general`), DOM and object-state attack classes (subagent_type: `general`), Service-worker and browser-storage attack classes (subagent_type: `general`), UI-redress and navigation attack classes (subagent_type: `general`), Universal moves (apply across the above) (+2 more)
 
 ### Community 23 - "Data Isolation and Lifecycle Hunting"
@@ -216,7 +213,7 @@ Cohesion: 0.20
 Nodes (9): Core discipline (include in every agent prompt for this domain), Data Isolation and Lifecycle Hunting, Deletion, revocation, and lifecycle attack classes (subagent_type: `general`), Derived-data and disclosure attack classes (subagent_type: `general`), Export, backup, restore, and migration attack classes (subagent_type: `general`), Tenant and object-isolation attack classes (subagent_type: `general`), Universal moves (apply across the above), Validation rules (apply before reporting ANY finding here) (+1 more)
 
 ### Community 24 - "Desktop, Mobile, and Local IPC Hunting"
-Cohesion: 0.18
+Cohesion: 0.20
 Nodes (10): Application-state and device-lifecycle attack classes (subagent_type: `general`), Core discipline (include in every agent prompt for this domain), Deep-link, callback, and navigation attack classes (subagent_type: `general`), Desktop, Mobile, and Local IPC Hunting, Local IPC and exported-component attack classes (subagent_type: `general`), Privileged-helper and local-file attack classes (subagent_type: `general`), Universal moves (apply across the above), Validation rules (apply before reporting ANY finding here) (+2 more)
 
 ### Community 25 - "build-lamnet-model.py"
@@ -236,7 +233,7 @@ Cohesion: 0.20
 Nodes (9): Computational amplification attack classes (subagent_type: `general`), Core discipline (include in every agent prompt for this domain), Failure and recovery attack classes (subagent_type: `general`), Quota and scheduling attack classes (subagent_type: `general`), Resource accumulation attack classes (subagent_type: `general`), Resource Exhaustion and Availability Hunting, Universal moves (apply across the above), Validation rules (apply before reporting ANY finding here) (+1 more)
 
 ### Community 30 - "HTTP-Protocol and Authentication Hunting"
-Cohesion: 0.18
+Cohesion: 0.20
 Nodes (10): API-key and mTLS attack classes (subagent_type: `general`), Browser-session attack classes (subagent_type: `general`), Core discipline (include in every agent prompt for this domain), Federated-identity attack classes (subagent_type: `general`), HTTP framing and cache attack classes (subagent_type: `general`), HTTP-Protocol and Authentication Hunting, MFA, passkey, and account-transition attack classes (subagent_type: `general`), Universal moves (apply across the above) (+2 more)
 
 ### Community 31 - "Supply Chain and Release Hunting"
@@ -276,8 +273,8 @@ Cohesion: 0.29
 Nodes (6): Gửi sitemap, Kiểm tra URL và yêu cầu lập chỉ mục, Những phần đã có trên website, Search Console cho website của Hùng, Trạng thái đã kiểm tra ngày 14/11/2026, Xác minh quyền sở hữu
 
 ### Community 41 - "createApp"
-Cohesion: 0.19
-Nodes (23): adsenseHtml(), pageContext(), quotaMessage(), createApp(), activeSession(), auth(), body(), cleanup() (+15 more)
+Cohesion: 0.15
+Nodes (29): adsenseHtml(), agentRoute(), markdown404(), pageContext(), representation(), textResponse(), claimContribution(), contributionDay() (+21 more)
 
 ### Community 42 - "Nguồn tham khảo khung Hộp Ảnh"
 Cohesion: 0.33
@@ -300,7 +297,7 @@ Cohesion: 0.40
 Nodes (4): Giới hạn kiểm tra và xuất bản, Kết quả, Việt hóa và Hộp Ảnh — 09/11/2026, Đã kiểm tra
 
 ### Community 48 - "Validation, Structured Output, Verification, and Reporting"
-Cohesion: 0.20
+Cohesion: 0.22
 Nodes (9): Candidate-verifier prompt, `FINDINGS-DETAIL.md`, `NEEDS-VALIDATION.md`, Phase 3: Independently validate every candidate, Phase 4: Write and validate `findings.json`, Phase 5: Verify the final records with fresh eyes, Phase 6: Produce target-neutral reports from final records, `REPORT.md` (+1 more)
 
 ### Community 49 - "Máy chủ nội dung và quản trị"
@@ -340,28 +337,28 @@ Cohesion: 0.33
 Nodes (5): API admin, API public, Bảo mật và vòng đời, Nội dung dùng chung — hợp đồng giao tiếp, Snap (công khai, không cần tài khoản)
 
 ### Community 70 - "dashboard.test.mjs"
-Cohesion: 0.11
-Nodes (22): claimContribution(), contributionDay(), initContributionLimit(), aiStatus(), claimAi(), initVisits(), recordVisit(), VISIT_PAGES (+14 more)
+Cohesion: 0.09
+Nodes (21): Làm Nét, initContributionLimit(), initAiQuota(), initVisits(), pageForVisit(), recordVisit(), VISIT_PAGES, visitDay() (+13 more)
 
 ### Community 71 - "Kiểm tra triển khai hunghienhoa — 09/11/2026"
 Cohesion: 0.40
 Nodes (4): Chưa hoàn tất và giới hạn kiểm tra, Kiểm tra triển khai hunghienhoa — 09/11/2026, Kết quả đã kiểm chứng, Sửa biểu mẫu đăng nhập — 10/11/2026
 
 ### Community 72 - "Hướng dẫn mã nguồn — Hùng Hiền Hòa"
-Cohesion: 0.18
-Nodes (11): Chạy tại máy, Chỉnh nội dung, Dự án đã làm và Hộp Ảnh, Giao diện 2026, Hướng dẫn mã nguồn — Hùng Hiền Hòa, Kiểm tra giao diện và luồng bằng trình duyệt, Làm Nét, Skill và plugin cho Claude Code (+3 more)
+Cohesion: 0.20
+Nodes (10): Chạy tại máy, Chỉnh nội dung, Dự án đã làm và Hộp Ảnh, Giao diện 2026, Hướng dẫn mã nguồn — Hùng Hiền Hòa, Kiểm tra giao diện và luồng bằng trình duyệt, Skill và plugin cho Claude Code, Snap của Hùng (+2 more)
 
 ### Community 73 - "XiangqiRoom"
 Cohesion: 0.06
-Nodes (14): connect(), FakeSocket, makeCtx(), newRoom(), say(), perft(), cleanName(), digest() (+6 more)
+Nodes (13): connect(), FakeSocket, makeCtx(), newRoom(), say(), perft(), digest(), EMOTES (+5 more)
 
 ### Community 74 - "load_state"
 Cohesion: 0.50
 Nodes (3): load_state(), find_class(), rebuild()
 
 ### Community 75 - "lamnet-ai.test.mjs"
-Cohesion: 0.20
-Nodes (12): AI_CLIENT_LIMIT, AI_DAILY_LIMIT, AI_MAX_IMAGE, AI_MAX_PROMPT, AI_MODEL, initAiQuota(), parseAiRequest(), runAi() (+4 more)
+Cohesion: 0.21
+Nodes (11): AI_CLIENT_LIMIT, AI_DAILY_LIMIT, AI_MAX_IMAGE, AI_MAX_PROMPT, AI_MODEL, parseAiRequest(), runAi(), side() (+3 more)
 
 ### Community 76 - "steps"
 Cohesion: 0.09
@@ -372,42 +369,46 @@ Cohesion: 0.50
 Nodes (3): Reporting a Vulnerability, Security Policy, Supported Versions
 
 ### Community 78 - "ref_node_fs"
-Cohesion: 0.19
-Nodes (4): admin(), pages, SAME, sandbox
+Cohesion: 0.13
+Nodes (8): admin(), app, html, report, results, pages, SAME, sandbox
 
 ### Community 79 - "server.test.mjs"
-Cohesion: 0.14
-Nodes (12): app, clock, dataDir, design, folder, frame, login(), pending (+4 more)
-
-### Community 80 - "server.mjs"
-Cohesion: 0.19
-Nodes (9): agentRoute(), markdown404(), representation(), textResponse(), AI_BODY_LIMIT, derive, loopback(), root (+1 more)
-
-### Community 81 - "browser-adsense-readiness.mjs"
-Cohesion: 0.33
-Nodes (5): ads, base, {chromium}, errors, local
-
-### Community 82 - "ref_node_assert"
 Cohesion: 0.15
-Nodes (7): checks, files, sections, app, html, report, results
+Nodes (11): app, clock, dataDir, design, folder, frame, login(), pending (+3 more)
+
+### Community 80 - "GameRoom"
+Cohesion: 0.09
+Nodes (16): connect(), create(), FakeSocket, makeCtx(), quick(), say(), BOT_DELAY, capacityFor() (+8 more)
+
+### Community 81 - "usage.mjs"
+Cohesion: 0.31
+Nodes (10): usageEntry(), usageMetrics, usageProviders, usageReport(), utcDay(), now, dailyQuery, nonnegative() (+2 more)
+
+### Community 82 - "cloud-smoke.mjs"
+Cohesion: 0.40
+Nodes (3): checks, files, sections
+
+### Community 83 - "Reconnaissance"
+Cohesion: 0.40
+Nodes (5): Architecture summary and companion selection, Deterministic coverage ledger, Phase 1: Map the source and plan coverage, Prior-run input, Reconnaissance
 
 ## Knowledge Gaps
-- **16 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `VisitCounter` connect `dashboard.test.mjs` to `Hướng dẫn mã nguồn — Hùng Hiền Hòa`, `index.mjs`, `Quy trình ứng phó sự cố`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **Why does `VisitCounter` connect `dashboard.test.mjs` to `index.mjs`, `createApp`, `Quy trình ứng phó sự cố`?**
+  _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `handle()` (e.g. with `frameData()` and `pendingData()`) actually correct?**
   _`handle()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `index.mjs` be split into smaller, more focused modules?**
-  _Cohesion score 0.09316394434361766 - nodes in this community are weakly interconnected._
-- **Why does `createApp()` connect `createApp` to `index.mjs`, `fail`, `agent-content.mjs`, `browser-audit.mjs`, `dashboard.test.mjs`, `snaptik.test.mjs`, `lamnet-ai.test.mjs`, `browser-usage-audit.mjs`, `server.test.mjs`, `server.mjs`, `browser-adsense-readiness.mjs`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+  _Cohesion score 0.1211840888066605 - nodes in this community are weakly interconnected._
+- **Why does `GameRoom` connect `GameRoom` to `index.mjs`, `Triển khai `hunghienhoa``?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Should `validate-findings.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.05750658472344162 - nodes in this community are weakly interconnected._
-- **Why does `XiangqiRoom` connect `XiangqiRoom` to `index.mjs`, `Triển khai `hunghienhoa``?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+- **Why does `createApp()` connect `createApp` to `index.mjs`, `fail`, `agent-content.mjs`, `browser-audit.mjs`, `dashboard.test.mjs`, `snaptik.test.mjs`, `lamnet-ai.test.mjs`, `browser-usage-audit.mjs`, `server.test.mjs`, `usage.mjs`?**
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06559356136820925 - nodes in this community are weakly interconnected._
