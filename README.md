@@ -1,70 +1,72 @@
-<a href="https://hunghienhoa.com">
-  <img src=".github/profile/chao-hung.svg" width="100%" alt="Xin chào, mình là Hùng Hiền Hòa. Một hộp đầy ý tưởng — thiết kế, kể chuyện và khám phá.">
-</a>
+<p align="center">
+  <a href="https://hunghienhoa.com">
+    <img src=".github/profile/chao-hung.svg" width="100%" alt="Xin chào, mình là Hùng Hiền Hòa. Một hộp đầy ý tưởng: thiết kế, kể chuyện và khám phá.">
+  </a>
+</p>
 
 <p align="center">
-  <a href="https://hunghienhoa.com"><b>Portfolio ↗</b></a> &nbsp;·&nbsp;
-  <a href="https://hunghienhoa.com/photobooth/">Hộp Ảnh</a> &nbsp;·&nbsp;
-  <a href="https://hunghienhoa.com/blog/">Góc tò mò</a> &nbsp;·&nbsp;
-  <a href="https://hunghienhoa.com/snaptik/">Snap</a> &nbsp;·&nbsp;
+  <a href="https://hunghienhoa.com"><b>PORTFOLIO ↗</b></a> &nbsp;▸&nbsp;
+  <a href="https://hunghienhoa.com/photobooth/">Hộp Ảnh</a> &nbsp;▸&nbsp;
+  <a href="https://hunghienhoa.com/blog/">Góc tò mò</a> &nbsp;▸&nbsp;
+  <a href="https://hunghienhoa.com/snaptik/">Snap</a> &nbsp;▸&nbsp;
   <a href="https://hunghienhoa.com/lamnet/">Làm Nét</a>
 </p>
 
-Mình là **Hùng** — Hùng Hiền Hòa. Mình thích những ý tưởng có cá tính, những thiết kế có chuyện để kể và những điều nhỏ khiến một ngày thú vị hơn. Đây là chiếc hộp mình gom những thứ đang làm.
+<p align="center">
+  <img src=".github/profile/ho-so.svg" width="100%" alt="Hồ sơ người chơi: Hùng Hiền Hòa, thiết kế, kể chuyện và khám phá, căn cứ hunghienhoa.com, bốn dự án, tiếng Việt và English.">
+</p>
 
-## Có gì trong chiếc hộp?
+Mình là **Hùng** — Hùng Hiền Hòa. Mình thích những ý tưởng có cá tính, những thiết kế có chuyện để kể và những điều nhỏ khiến một ngày thú vị hơn. Đây là chiếc hộp mình gom những thứ đang làm: mỗi ngăn là một sản phẩm chạy thật, thiết kế tay và viết mã từ đầu.
+
+<h2 align="center"><img src=".github/profile/muc-hop.svg" width="100%" alt="01 · Có gì trong chiếc hộp?"></h2>
 
 <table>
   <tr>
     <td width="50%" valign="top">
+      <img src=".github/profile/the-hop-anh.svg" width="100%" alt="Nhiệm vụ 01: Hộp Ảnh">
       <a href="https://hunghienhoa.com/photobooth/"><img src=".github/profile/du-an-hop-anh.webp" alt="Hộp Ảnh: Bốn khoảnh khắc. Một dải kỷ niệm."></a>
-      <h3>Hộp Ảnh</h3>
       <p>Photobooth trực tuyến: bốn khoảnh khắc, một dải kỷ niệm.</p>
-      <a href="https://hunghienhoa.com/photobooth/"><b>hunghienhoa.com/photobooth ↗</b></a>
+      <a href="https://hunghienhoa.com/photobooth/"><b>▶ hunghienhoa.com/photobooth</b></a>
     </td>
     <td width="50%" valign="top">
+      <img src=".github/profile/the-goc-to-mo.svg" width="100%" alt="Nhiệm vụ 02: Góc tò mò">
       <a href="https://hunghienhoa.com/blog/"><img src=".github/profile/du-an-goc-to-mo.webp" alt="Góc tò mò của Hùng: blog những điều nhỏ mà thú vị"></a>
-      <h3>Góc tò mò</h3>
       <p>Những điều nhỏ mà thú vị và những câu chuyện muốn chia sẻ.</p>
-      <a href="https://hunghienhoa.com/blog/"><b>hunghienhoa.com/blog ↗</b></a>
+      <a href="https://hunghienhoa.com/blog/"><b>▶ hunghienhoa.com/blog</b></a>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
+      <img src=".github/profile/the-snap.svg" width="100%" alt="Nhiệm vụ 03: Snap">
       <a href="https://hunghienhoa.com/snaptik/"><img src=".github/profile/du-an-snap.webp" alt="Snap: Video hay, để dành xem lại."></a>
-      <h3>Snap</h3>
       <p>Video hay từ TikTok, Instagram và Facebook, để dành xem lại.</p>
-      <a href="https://hunghienhoa.com/snaptik/"><b>hunghienhoa.com/snaptik ↗</b></a>
+      <a href="https://hunghienhoa.com/snaptik/"><b>▶ hunghienhoa.com/snaptik</b></a>
     </td>
     <td width="50%" valign="top">
+      <img src=".github/profile/the-lam-net.svg" width="100%" alt="Nhiệm vụ 04: Làm Nét">
       <a href="https://hunghienhoa.com/lamnet/"><img src=".github/profile/du-an-lam-net.webp" alt="Làm Nét: Ảnh hơi mờ? Làm nét một chút."></a>
-      <h3>Làm Nét</h3>
       <p>Ảnh hơi mờ? AI phóng to 4 lần, ngay trong trình duyệt.</p>
-      <a href="https://hunghienhoa.com/lamnet/"><b>hunghienhoa.com/lamnet ↗</b></a>
+      <a href="https://hunghienhoa.com/lamnet/"><b>▶ hunghienhoa.com/lamnet</b></a>
     </td>
   </tr>
 </table>
 
-## Bên trong xưởng nhỏ
+> **Quyền riêng tư:** ảnh ở Hộp Ảnh chỉ nằm trong trình duyệt của bạn. Làm Nét mặc định chạy AI ngay trên máy; chỉ khi bạn tự chọn chế độ đám mây và đồng ý thì ảnh mới được gửi đi xử lý, và máy chủ không lưu lại.
 
-<p>
-  <img src="https://img.shields.io/badge/HTML-303487?style=flat-square&logo=html5&logoColor=white" alt="HTML">
-  <img src="https://img.shields.io/badge/CSS-303487?style=flat-square&logo=css&logoColor=white" alt="CSS">
-  <img src="https://img.shields.io/badge/JavaScript-303487?style=flat-square&logo=javascript&logoColor=white" alt="JavaScript">
-  <img src="https://img.shields.io/badge/Node.js-303487?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js">
-  <img src="https://img.shields.io/badge/Supabase-303487?style=flat-square&logo=supabase&logoColor=white" alt="Supabase">
-  <img src="https://img.shields.io/badge/Cloudflare_Workers-303487?style=flat-square&logo=cloudflareworkers&logoColor=white" alt="Cloudflare Workers">
-  <img src="https://img.shields.io/badge/GitHub_Actions-303487?style=flat-square&logo=githubactions&logoColor=white" alt="GitHub Actions">
-  <img src="https://img.shields.io/badge/ONNX_Runtime_Web-303487?style=flat-square&logo=onnx&logoColor=white" alt="ONNX Runtime Web">
+<h2 align="center"><img src=".github/profile/muc-xuong.svg" width="100%" alt="02 · Bên trong xưởng nhỏ"></h2>
+
+<p align="center">
+  <img src=".github/profile/kho-do.svg" width="100%" alt="Túi đồ nghề: HTML, CSS, JavaScript, Node.js, Supabase, Cloudflare Workers, GitHub Actions và ONNX Runtime Web.">
 </p>
 
-Ảnh ở Hộp Ảnh và Làm Nét chỉ nằm trong trình duyệt của bạn, không gửi lên máy chủ.
-
-## Bắt đầu bằng một lời chào
+<h2 align="center"><img src=".github/profile/muc-chao.svg" width="100%" alt="03 · Bắt đầu bằng một lời chào"></h2>
 
 Có ý tưởng muốn trao đổi, muốn góp một chiếc khung ảnh hay chỉ muốn chào nhau một tiếng?
 
-**[Gửi email cho mình ↗](mailto:hunghienhoa2110@gmail.com)** &nbsp; `hunghienhoa2110@gmail.com`
+<p>
+  <a href="mailto:hunghienhoa2110@gmail.com"><img src=".github/profile/nut-email.svg" height="46" alt="Gửi email cho mình"></a>
+  &nbsp; <code>hunghienhoa2110@gmail.com</code>
+</p>
 
 <p>
   <a href="https://www.facebook.com/quanghungdethuong"><img src="dist/assets/social/facebook.webp" width="28" height="28" alt="Facebook"></a>&nbsp;&nbsp;
@@ -81,7 +83,7 @@ Có ý tưởng muốn trao đổi, muốn góp một chiếc khung ảnh hay ch
 </a>
 
 <details>
-  <summary><b>Bạn đến đây vì mã nguồn?</b></summary>
+  <summary><b>▸ Bạn đến đây vì mã nguồn?</b></summary>
 
 <br>
 
@@ -91,6 +93,9 @@ Có ý tưởng muốn trao đổi, muốn góp một chiếc khung ảnh hay ch
 - [Mã nguồn, chạy trên máy và công cụ kiểm tra](PROJECT.md)
 - [Triển khai, giám sát và sao lưu](DEPLOYMENT.md)
 - [API và quyền riêng tư](API-CONTRACT.md)
+- [Bảo mật](SECURITY.md)
 - [Quy trình ứng phó sự cố](INCIDENT-RESPONSE.md)
+
+Ảnh pixel trong trang này sinh bằng `python tools/build-readme-art.py` (thư mục `.github/profile`).
 
 </details>
