@@ -271,6 +271,18 @@ async function publicApi(request, env, route, ctx) {
     await purge(postKeys(result?.slug));
     return json(result, 201);
   }
+  // Đăng ký (hoặc thay) mã đăng bài: chỉ chạy khi chủ trang vừa mở cửa sổ ngắn trong database (agent_settings.enroll_until).
+  // Môi trường của lịch đăng bài tự gắn mã vào yêu cầu; database chỉ lưu bản băm, không ai phải xem hay dán mã.
+  if (route === '/api/agent/enroll') {
+    if (request.method !== 'POST') fail(405, 'Phương thức chưa được hỗ trợ.');
+    const token = bearer(request);
+    if (!token) fail(401, 'Thiếu mã đăng bài.');
+    if (env.SNAPTIK_LIMIT && !(await env.SNAPTIK_LIMIT.limit({ key: 'agent:' + (request.headers.get('CF-Connecting-IP') || 'unknown') })).success) fail(429, 'Bạn thao tác hơi nhanh. Hãy chờ một phút rồi thử lại.');
+    const response = await fetch(new URL('/rest/v1/rpc/agent_enroll_token', env.SUPABASE_URL), { method: 'POST', headers: { apikey: env.SUPABASE_PUBLISHABLE_KEY, 'x-agent-token': token, 'Content-Type': 'application/json' }, body: '{}' });
+    const result = await response.json().catch(() => null);
+    if (!response.ok) fail(response.status === 400 ? 400 : response.status === 401 || response.status === 403 ? 403 : 502, response.status === 401 || response.status === 403 ? 'Chưa mở đăng ký mã. Chủ trang cần mở cửa sổ đăng ký trước.' : 'Chưa đăng ký được mã: ' + String(result?.message || response.status).slice(0, 200));
+    return json(result || { enrolled: true }, 201);
+  }
   if (route === '/api/lamnet/ai') {
     if (!env.VISITS) fail(503, 'Chưa kiểm tra được lượt dùng AI. Hãy thử lại sau.');
     const key=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contributionDay(Date.now())+':'+(request.headers.get('CF-Connecting-IP')||'unknown')))),byte=>byte.toString(16).padStart(2,'0')).join('');

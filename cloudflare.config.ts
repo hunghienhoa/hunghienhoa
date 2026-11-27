@@ -7,8 +7,7 @@ export default defineConfig({
     entrypoint: "./worker/index.mjs",
     compatibilityDate: "2026-11-09",
     compatibilityFlags: ["nodejs_compat"],
-    // Subdomain cũ chỉ chuyển hướng 308 về đường dẫn trên tên miền chính (giữ link cũ); riêng /api/ chạy thẳng cho lịch đăng bài.
-    domains: ["hunghienhoa.com", "www.hunghienhoa.com", "admin.hunghienhoa.com", "blog.hunghienhoa.com", "photobooth.hunghienhoa.com", "snap.hunghienhoa.com", "lamnet.hunghienhoa.com"],
+    domains: ["hunghienhoa.com", "www.hunghienhoa.com", "admin.hunghienhoa.com"],
     env: {
       VISITS: bindings.durableObject({ worker: "hunghienhoa", exportName: "VisitCounter" }),
       ASSETS: bindings.assets(),
