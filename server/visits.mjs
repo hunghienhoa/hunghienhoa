@@ -26,6 +26,6 @@ export function pageForVisit(path) {
   if (/^\/snaptik\/(?:index\.html)?$/.test(path)) return 'snaptik';
   if (/^\/lamnet\/(?:index\.html)?$/.test(path)) return 'lamnet';
   if (/^\/cotuong\/(?:index\.html)?$/.test(path)) return 'cotuong';
-  if (/^\/game\/(?:(?:tien-len|phom|ba-cay)\/)?(?:index\.html)?$/.test(path)) return 'game';
+  if (/^\/game\/(?:(?:tien-len|phom|ba-cay|do-vui)\/)?(?:index\.html)?$/.test(path)) return 'game';
   return null;
 }

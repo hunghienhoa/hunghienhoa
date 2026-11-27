@@ -325,3 +325,36 @@ button.pcard.locked{box-shadow:inset 0 -5px 0 var(--yellow),0 2px 6px rgba(0,0,0
 .turn-timer.low,.player-bar.low .clock{animation:blink 1s ease-in-out infinite}
 @media(max-width:640px){.arcade{border-radius:16px}.board-frame{box-shadow:none}.game-card{box-shadow:inset 0 0 0 1px var(--line),var(--soft)}}
 .felt{background-image:none}
+
+/* ---------- Đố vui trí tuệ ---------- */
+.quiz-wrap{margin-top:clamp(20px,3vw,36px)}
+.quiz{max-width:760px;margin-inline:auto;padding:clamp(18px,3vw,32px);border-radius:22px}
+.quiz-panel{display:grid;gap:14px}
+.quiz-title{font-size:var(--fs-h3,26px);margin:0}
+.quiz-best{margin:0;font-size:14px;opacity:.85}
+.quiz-stats{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline;font-weight:600}
+.quiz-stat small{margin-right:6px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+.quiz-stat b{font-size:20px;font-variant-numeric:tabular-nums}
+.quiz-bar{height:8px;border-radius:99px;background:color-mix(in srgb,var(--blue) 12%,var(--cream));overflow:hidden}
+.quiz-bar i{display:block;height:100%;width:0;border-radius:99px;background:var(--yellow);box-shadow:inset 0 0 0 1px rgba(29,31,85,.25);transition:width .3s ease}
+.quiz-tag{margin:0;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);opacity:.75}
+.quiz-q{margin:0;font-size:clamp(20px,3vw,26px);line-height:1.4;outline:none}
+.quiz-options{display:grid;gap:10px}
+.quiz-option{display:flex;align-items:center;gap:12px;min-height:52px;padding:10px 14px;border-radius:14px;background:var(--cream);color:var(--blue);box-shadow:inset 0 0 0 1px var(--line,rgba(29,31,85,.18)),0 2px 4px rgba(29,31,85,.1);font-size:16px;font-weight:600;line-height:1.4;text-align:left;transition:background .15s ease,box-shadow .15s ease}
+.quiz-option kbd{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--blue);color:var(--yellow);font:700 13px/1 inherit}
+.quiz-option:not(:disabled):hover{background:color-mix(in srgb,var(--yellow) 45%,var(--cream))}
+.quiz-option:disabled{cursor:default}
+.quiz-option.is-right{background:#d9f2e1;box-shadow:inset 0 0 0 2px #2e9e5b}
+.quiz-option.is-wrong{background:#fbdcdc;box-shadow:inset 0 0 0 2px var(--red)}
+.quiz-actions{display:flex;gap:10px}
+.quiz-hint{margin:0;padding:10px 14px;border-radius:12px;background:color-mix(in srgb,var(--yellow) 40%,var(--cream));font-weight:600;line-height:1.5}
+.quiz-feedback{display:grid;gap:10px;padding:14px;border-radius:14px;background:color-mix(in srgb,var(--blue) 8%,var(--cream))}
+.quiz-feedback p{margin:0;line-height:1.55}
+.quiz-verdict{font-size:18px}
+.quiz-verdict span{margin-left:6px;color:var(--blue);font-weight:700}
+.quiz-feedback .pixel-btn{justify-self:start}
+.quiz-final{margin:0;font-size:clamp(40px,8vw,64px);line-height:1;font-weight:800;color:var(--blue)}
+.quiz-final small{font-size:18px;font-weight:600}
+#quiz-end .pixel-btn{justify-self:start}
+.quiz[hidden],.quiz-panel[hidden]{display:none}
+@media(max-width:640px){.quiz-option{font-size:15px}}

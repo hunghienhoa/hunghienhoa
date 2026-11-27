@@ -23,6 +23,8 @@
   const lookup = key => (dict && Object.prototype.hasOwnProperty.call(dict, key)) ? dict[key] : null;
   const PATTERNS = [
     [/^Hiển thị (\d+) thiết kế\.$/, n => `Showing ${n} designs.`],
+    [/^\+(\d+) điểm$/, n => `+${n} points`],
+    [/^Mẹo: (.+)$/, t => `Tip: ${t}`],
     [/^Đã sao chép mã WeChat: (.+)\.$/, id => `WeChat ID copied: ${id}.`],
     [/^Mã WeChat: (.+)\. Bạn có thể chọn và sao chép ID này\.$/, id => `WeChat ID: ${id}. You can select and copy this ID.`],
     [/^Đang tải AI lần đầu: (.+)$/, rest => `Downloading the AI for the first time: ${rest}`],
@@ -187,7 +189,7 @@
     if (loading) return;
     loading = true;
     // Số phiên bản ?v= nằm ngay trong đường dẫn để tools/asset-versions.mjs báo lỗi khi đổi từ điển mà quên tăng v.
-    import('./i18n-en.js?v=16').then(module => { dict = module.default || {}; loading = false; done(); })
+    import('./i18n-en.js?v=17').then(module => { dict = module.default || {}; loading = false; done(); })
       .catch(() => { loading = false; root.classList.remove('i18n-wait'); });
   }
 

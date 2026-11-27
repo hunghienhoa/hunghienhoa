@@ -260,14 +260,14 @@
   {
     "key": "main-244",
     "page": "main",
-    "label": "Cờ tướng, tiến lên, phỏm, ba cây. Chơi với máy hoặc online cùng bạn.",
-    "default": "Cờ tướng, tiến lên, phỏm, ba cây. Chơi với máy hoặc online cùng bạn."
+    "label": "Cờ tướng, tiến lên, phỏm, ba cây, đố vui. Chơi với máy hoặc online cùng bạn.",
+    "default": "Cờ tướng, tiến lên, phỏm, ba cây, đố vui. Chơi với máy hoặc online cùng bạn."
   },
   {
     "key": "main-245",
     "page": "main",
-    "label": "Bốn trò chơi",
-    "default": "Bốn trò chơi"
+    "label": "Năm trò chơi",
+    "default": "Năm trò chơi"
   },
   {
     "key": "main-246",
@@ -472,6 +472,12 @@
     "page": "main",
     "label": "Ba Cây",
     "default": "Ba Cây"
+  },
+  {
+    "key": "main-260",
+    "page": "main",
+    "label": "Đố Vui Trí Tuệ",
+    "default": "Đố Vui Trí Tuệ"
   },
   {
     "key": "main-237",
@@ -802,6 +808,12 @@
     "page": "blog",
     "label": "Ba Cây",
     "default": "Ba Cây"
+  },
+  {
+    "key": "blog-098",
+    "page": "blog",
+    "label": "Đố Vui Trí Tuệ",
+    "default": "Đố Vui Trí Tuệ"
   },
   {
     "key": "blog-080",
@@ -1680,6 +1692,12 @@
     "default": "Ba Cây"
   },
   {
+    "key": "photobooth-213",
+    "page": "photobooth",
+    "label": "Đố Vui Trí Tuệ",
+    "default": "Đố Vui Trí Tuệ"
+  },
+  {
     "key": "photobooth-191",
     "page": "photobooth",
     "label": "Chính sách",
@@ -2158,6 +2176,12 @@
     "page": "snaptik",
     "label": "Ba Cây",
     "default": "Ba Cây"
+  },
+  {
+    "key": "snaptik-093",
+    "page": "snaptik",
+    "label": "Đố Vui Trí Tuệ",
+    "default": "Đố Vui Trí Tuệ"
   },
   {
     "key": "snaptik-071",
@@ -2728,6 +2752,12 @@
     "page": "lamnet",
     "label": "Ba Cây",
     "default": "Ba Cây"
+  },
+  {
+    "key": "lamnet-108",
+    "page": "lamnet",
+    "label": "Đố Vui Trí Tuệ",
+    "default": "Đố Vui Trí Tuệ"
   },
   {
     "key": "lamnet-086",

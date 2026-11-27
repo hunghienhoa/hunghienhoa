@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Đố Vui Trí Tuệ — Câu đố mẹo, logic và dân gian có gợi ý</title>
+<meta name="description" content="Đố vui trí tuệ miễn phí: mỗi lượt 10 câu đố mẹo, logic và dân gian có lời giải. Bí thì bấm Mẹo để được gợi ý. Chơi ngay trên trình duyệt, không cần tài khoản.">
+<meta name="theme-color" content="#fbf2e3">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml"><link rel="canonical" href="/game/do-vui/">
+<link rel="preload" href="/fonts/BeVietnamPro-Bold.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/PlayfairDisplay-SemiBoldItalic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/ui.css?v=28"><link rel="stylesheet" href="/tools.css?v=5"><link rel="stylesheet" href="/game/pixel.css?v=6">
+<script src="/i18n.js?v=16"></script><script src="app.js?v=1" type="module"></script><script src="/page-customization.js?v=media-4" defer></script><script src="/sitebar.js?v=5" defer></script><script src="/contact.js?v=4" defer></script>
+</head>
+<body>
+<a class="skip" href="#choi">Đến phần đố vui</a>
+<header class="sitebar"><div class="sitebar-in"><a class="sitebar-brand" href="/" aria-label="Hùng Hiền Hòa, về trang chủ"><img class="brand-mark" src="/assets/logo.svg" alt="" width="36" height="36" aria-hidden="true"><small>Đố Vui</small></a><button class="sitebar-toggle" type="button" aria-expanded="false" aria-controls="sitebar-menu" aria-label="Mở menu"><span class="ic ic-menu" aria-hidden="true"></span></button><nav class="sitebar-nav" id="sitebar-menu" aria-label="Điều hướng"><a class="sitebar-home" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M10 20v-6h4v6"/></svg>Trang chủ</a><span class="sitebar-sep" aria-hidden="true"></span><a href="/game/">Tất cả game</a><a href="#choi">Đố vui</a><a href="#cach-choi">Mẹo giải</a><a class="sitebar-cta" href="#contact">Kết nối <span class="ic ic-arrow-up-right" aria-hidden="true"></span></a></nav></div></header>
+<main id="main">
+<section class="tool-hero wrap game-hero" aria-labelledby="title">
+<span class="eyebrow">Trò chơi · Đố vui có mẹo</span>
+<h1 id="title">Đố vui <em>trí tuệ.</em></h1>
+<p class="lead">Mỗi lượt 10 câu đố mẹo, logic và dân gian. Bí thì bấm Mẹo để được gợi ý, nhưng câu đó chỉ còn nửa điểm. Chơi ngay, không cần tài khoản.</p>
+</section>
+
+<section class="wrap quiz-wrap" id="choi" aria-label="Phần đố vui">
+<div class="quiz card">
+<div class="quiz-panel" id="quiz-start">
+<h2 class="quiz-title">Chọn nhóm câu đố</h2>
+<div class="pick" role="radiogroup" aria-label="Nhóm câu đố">
+<label><input type="radio" name="group" value="all" checked><span>Tất cả</span></label>
+<label><input type="radio" name="group" value="meo"><span>Đố mẹo</span></label>
+<label><input type="radio" name="group" value="logic"><span>Logic &amp; số</span></label>
+<label><input type="radio" name="group" value="dangian"><span>Dân gian &amp; chữ</span></label>
+</div>
+<p class="panel-note">Mỗi lượt có 10 câu lấy ngẫu nhiên. Đúng được 10 điểm, dùng Mẹo còn 5 điểm, đúng liên tiếp từ câu thứ ba được cộng thêm.</p>
+<p class="quiz-best">Điểm cao nhất của bạn: <b id="best">0</b></p>
+<button class="pixel-btn pixel-btn-sun" type="button" id="start">Bắt đầu</button>
+</div>
+
+<div class="quiz-panel" id="quiz-play" hidden>
+<div class="quiz-stats" aria-live="off">
+<span class="quiz-stat"><small>Câu</small><b id="q-num">1</b>/<span id="q-total">10</span></span>
+<span class="quiz-stat"><small>Điểm</small><b id="score">0</b></span>
+<span class="quiz-stat"><small>Chuỗi đúng</small><b id="streak">0</b></span>
+</div>
+<div class="quiz-bar" aria-hidden="true"><i id="bar"></i></div>
+<p class="quiz-tag" id="q-group"></p>
+<h2 class="quiz-q" id="q-text" tabindex="-1"></h2>
+<div class="quiz-options" id="options" role="group" aria-label="Các đáp án"></div>
+<div class="quiz-actions"><button class="pixel-btn" type="button" id="hint">Mẹo (còn nửa điểm)</button></div>
+<p class="quiz-hint" id="hint-text" role="status" hidden></p>
+<div class="quiz-feedback" id="feedback" role="status" aria-live="polite" hidden>
+<p class="quiz-verdict"><b id="fb-title"></b> <span id="fb-points"></span></p>
+<p class="quiz-explain"><strong>Giải thích:</strong> <span id="fb-explain"></span></p>
+<button class="pixel-btn pixel-btn-sun" type="button" id="next">Câu tiếp</button>
+</div>
+</div>
+
+<div class="quiz-panel" id="quiz-end" hidden>
+<h2 class="quiz-title" id="end-rank"></h2>
+<p class="quiz-final"><b id="end-score">0</b> <small>điểm</small></p>
+<p class="quiz-best"><span>Đúng</span> <b id="end-right">0</b>/<span id="end-total">10</span> <span>câu</span> · <span>Điểm cao nhất của bạn:</span> <b id="end-best">0</b></p>
+<button class="pixel-btn pixel-btn-sun" type="button" id="again">Chơi lại</button>
+<button class="pixel-btn" type="button" id="change">Đổi nhóm câu đố</button>
+</div>
+</div>
+</section>
+
+<div class="topic-band" aria-hidden="true"><div class="band-track"><div class="band-group"><span>Động não nào</span><i>✳</i><span>Bí thì xin Mẹo</span><i>✳</i><span>Đừng trả lời vội</span><i>✳</i><span>Vui là chính</span><i>✳</i><span>Động não nào</span><i>✳</i><span>Bí thì xin Mẹo</span><i>✳</i><span>Đừng trả lời vội</span><i>✳</i><span>Vui là chính</span><i>✳</i></div><div class="band-group"><span>Động não nào</span><i>✳</i><span>Bí thì xin Mẹo</span><i>✳</i><span>Đừng trả lời vội</span><i>✳</i><span>Vui là chính</span><i>✳</i><span>Động não nào</span><i>✳</i><span>Bí thì xin Mẹo</span><i>✳</i><span>Đừng trả lời vội</span><i>✳</i><span>Vui là chính</span><i>✳</i></div></div></div><!--/band-->
+<section id="cach-choi" class="section wrap piece-guide card" aria-labelledby="guide-title">
+<h3 id="guide-title">Mẹo giải câu đố</h3>
+<ul>
+<li><b>Đọc kỹ từng chữ</b>: nhiều câu đố mẹo hỏi một đằng, đáp một nẻo. Hãy xem câu hỏi thật sự muốn biết điều gì.</li>
+<li><b>Đừng trả lời vội</b>: đáp án đầu tiên nảy ra thường là cái bẫy. Thử kiểm tra lại bằng phép tính hoặc ví dụ.</li>
+<li><b>Dãy số</b>: tìm hiệu hoặc tỉ số giữa hai số liên tiếp, thử cả tổng hai số đứng trước.</li>
+<li><b>Bài toán đếm</b>: nên vẽ sơ đồ hoặc làm ngược từ kết quả, như bài hồ bèo hay bài qua cầu.</li>
+<li><b>Câu đố dân gian</b>: chú ý chữ nghĩa, nghĩa bóng và những thứ quen thuộc quanh nhà.</li>
+</ul>
+</section>
+</main>
+<footer class="site-footer"><section class="footer-cta" id="contact" aria-labelledby="contact-title"><div class="footer-cta-copy"><span class="eyebrow">Cùng trò chuyện</span><h2 id="contact-title">Có ý tưởng hay? <em>Nhắn Hùng nhé.</em></h2><p>Trao đổi dự án, chia sẻ ý tưởng hay đơn giản là chào nhau một tiếng.</p></div><div class="footer-cta-actions"><a class="btn btn-sun contact-button" href="mailto:hunghienhoa2110@gmail.com?subject=Ch%C3%A0o%20H%C3%B9ng">Gửi email cho Hùng <span class="ic ic-arrow-up-right" aria-hidden="true"></span></a><div class="footer-cta-lines"><a class="contact-email" id="contact-email" href="mailto:hunghienhoa2110@gmail.com">hunghienhoa2110@gmail.com</a><a class="contact-phone" href="tel:+84898298886">0898.29.8886</a></div><ul class="social-links" aria-label="Mạng xã hội"><li><a class="social-link" href="https://www.facebook.com/quanghungdethuong" target="_blank" rel="noopener noreferrer" aria-label="Facebook (mở trong thẻ mới)" title="Facebook"><img src="/assets/social/facebook.webp" alt="" width="22" height="22" aria-hidden="true"></a></li><li><a class="social-link" href="https://www.instagram.com/im.bqhung/" target="_blank" rel="noopener noreferrer" aria-label="Instagram (mở trong thẻ mới)" title="Instagram"><img src="/assets/social/instagram.webp" alt="" width="22" height="22" aria-hidden="true"></a></li><li><a class="social-link" href="https://www.threads.com/@im.bqhung" target="_blank" rel="noopener noreferrer" aria-label="Threads (mở trong thẻ mới)" title="Threads"><img src="/assets/social/threads.svg" alt="" width="22" height="22" aria-hidden="true"></a></li><li><a class="social-link" href="https://www.tiktok.com/@im.bqhung" target="_blank" rel="noopener noreferrer" aria-label="TikTok (mở trong thẻ mới)" title="TikTok"><img src="/assets/social/tiktok.webp" alt="" width="22" height="22" aria-hidden="true"></a></li><li><a class="social-link" href="https://zalo.me/0898298886" target="_blank" rel="noopener noreferrer" aria-label="Zalo (mở trong thẻ mới)" title="Zalo"><img src="/assets/social/zalo.webp" alt="" width="22" height="22" aria-hidden="true"></a></li><li><button class="social-link" type="button" id="wechat-copy" data-wechat-id="bqhtit" aria-label="Sao chép mã WeChat bqhtit" title="WeChat bqhtit"><img src="/assets/social/wechat.webp" alt="" width="22" height="22" aria-hidden="true"></button></li><li><a class="social-link" href="https://www.youtube.com/@hunghienhoa98886" target="_blank" rel="noopener noreferrer" aria-label="YouTube (mở trong thẻ mới)" title="YouTube"><img src="/assets/social/youtube.webp" alt="" width="22" height="22" aria-hidden="true"></a></li></ul><p class="social-note" id="wechat-status" role="status"></p></div></section><div class="footer-main"><div class="footer-about"><a class="footer-logo" href="/" aria-label="Hùng Hiền Hòa, về trang chủ"><img class="brand-mark" src="/assets/logo.svg" alt="" width="48" height="48" aria-hidden="true"></a><p>Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.</p></div><nav class="footer-col" aria-label="Khám phá"><h2>Khám phá</h2><ul><li><a href="/">Trang chủ</a></li><li><a href="/blog/">Góc tò mò</a></li><li><a href="/#ve-hung">Về Hùng</a></li><li><a href="#contact">Liên hệ</a></li></ul></nav><nav class="footer-col" aria-label="Công cụ"><h2>Công cụ</h2><ul><li><a href="/photobooth/">Hộp Ảnh</a></li><li><a href="/snaptik/">Snap Video</a></li><li><a href="/lamnet/">Làm Nét Ảnh</a></li></ul></nav><nav class="footer-col" aria-label="Trò chơi"><h2>Trò chơi</h2><ul><li><a href="/game/">Tất cả game</a></li><li><a href="/cotuong/">Cờ Tướng</a></li><li><a href="/game/tien-len/">Tiến Lên</a></li><li><a href="/game/phom/">Phỏm (Tá Lả)</a></li><li><a href="/game/ba-cay/">Ba Cây</a></li><li><a href="/game/do-vui/">Đố Vui Trí Tuệ</a></li></ul></nav><nav class="footer-col policy-links" aria-label="Chính sách website"><h2>Chính sách</h2><ul><li><a href="https://hunghienhoa.com/chinh-sach-rieng-tu">Riêng tư</a></li><li><a href="https://hunghienhoa.com/dieu-khoan-su-dung">Điều khoản</a></li><li><a href="https://hunghienhoa.com/bao-cao-ban-quyen">Bản quyền</a></li><li><a href="https://hunghienhoa.com/cookie-va-quang-cao">Cookie</a></li></ul></nav></div><div class="footer-bottom"><div class="footer-legal"><span>© 2026 Hùng Hiền Hòa</span><p class="footer-wish">Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!</p><a class="footer-top" href="#">Về đầu trang <span class="ic ic-arrow-up" aria-hidden="true"></span></a></div></div></footer>
+</body>
+</html>
