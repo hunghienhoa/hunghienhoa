@@ -42,6 +42,17 @@ test('phòng tiến lên: 2 người + 2 máy chơi hết ván, bài người kh
   assert.equal(b.last('joined').seat, 1);
   assert.equal(a.last('state').status, 'waiting');
   await say(room, b, { t: 'start' });
+  // Chia ngẫu nhiên đôi khi cho một người tới trắng (~1/40 ván): ván kết thúc ngay khi chia.
+  // Kiểm tra nhánh đó rồi chia ván mới, thay vì để test lỗi ngẫu nhiên.
+  for (let i = 0; room.room.status === 'ended' && i < 20; i++) {
+    const instant = a.last('state');
+    assert.equal(instant.status, 'ended');
+    assert.notEqual(instant.view.result.reason, 'Hết bài', 'chỉ tới trắng mới kết thúc ngay khi chia');
+    assert.equal(instant.view.result.scores[0].delta, 3, 'tới trắng ăn 1 từ mỗi người còn lại');
+    assert.equal(instant.totals.reduce((x, y) => x + y, 0), 0);
+    assert.ok(instant.view.hands, 'tới trắng thì lật bài');
+    await quick(room, b, { t: 'start' });
+  }
   const watcher = connect(room);
   await say(room, watcher, { t: 'hello', name: 'Khách' });
   assert.equal(watcher.last('state').you, null, 'vào sau khi đã bắt đầu thì là người xem');
@@ -68,8 +79,9 @@ test('phòng tiến lên: 2 người + 2 máy chơi hết ván, bài người kh
   assert.equal(end.status, 'ended');
   assert.equal(end.totals.reduce((x, y) => x + y, 0), 0);
   assert.ok(end.view.hands, 'hết ván thì lật bài');
+  const round = end.round;
   await say(room, a, { t: 'start' });
-  assert.equal(a.last('state').round, 2);
+  assert.equal(a.last('state').round, round + 1);
 });
 
 test('phòng game: ghép trận nhanh theo từng game', async () => {
