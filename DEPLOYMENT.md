@@ -167,10 +167,9 @@ Chi phí: mỗi bài gọi Claude 3–5 lượt; với `claude-opus-5-5` ở eff
 - Máy chủ Node chạy thử không có phòng online; trang báo "Chế độ online chưa sẵn sàng ở đây".
 - Kiểm thử: `tools/cotuong.test.mjs` (perft chuẩn, luật, chiếu dai, ký hiệu, máy), `tools/cotuong-room.test.mjs` (phòng, đồng hồ, đấu lại, ghép trận, chặn WebSocket sai nguồn).
 
-## Khu Game Pixel (`/game/`)
+## Trò chơi (`/game/`)
 
-- Trang tổng hợp `/game/` và các game: `/game/tien-len/`, `/game/phom/`, `/game/ba-cay/` (Cờ Tướng vẫn ở `/cotuong/`; `/game/ca-ngua/` và `/game/o-an-quan/` đã gỡ, được chuyển về `/game/`). Phần dùng chung: `dist/game/kit.js` (âm thanh, vẽ pixel, danh sách người chơi, phần online) và `dist/game/pixel.css`.
-- Luật mỗi game ở `dist/game/<game>/rules.mjs`, dùng chung cho trình duyệt và máy chủ: `setup`, `apply` (kiểm tra và trả trạng thái mới), `view` (chỉ phần người đó được thấy — bài trên tay người khác bị ẩn), `turn`, `bot`.
-- Online dùng Durable Object `GameRoom` (binding `GAMEROOM`, `worker/game-room.mjs`): phòng `<game>:<MÃ>`, ghép trận `lobby:<game>`; 2–4 ghế, ghế trống được máy lấp khi bấm Bắt đầu, hết giờ lượt (Tiến Lên 30 giây, Cá Ngựa 20 giây, Ô Ăn Quan 40 giây) hoặc rớt mạng thì máy đi hộ; xúc xắc và chia bài do máy chủ làm. API: `POST /api/game/rooms`, `POST /api/game/match`, `GET /api/game/rooms/<game>/<MÃ>`, WebSocket `/api/game/ws?game=&room=`.
-- Tiến Lên chỉ tính điểm trong phòng cho vui: không tiền, không cược, không đổi thưởng (giữ đúng chính sách quảng cáo).
-- Kiểm thử: `tools/games.test.mjs` (luật + máy tự đấu hàng trăm ván, bảo toàn bài/quân), `tools/game-room.test.mjs` (phòng chung, ẩn bài, máy lấp ghế, hết giờ, ghép trận).
+- Trang tổng hợp `/game/` gồm Cờ Tướng (`/cotuong/`, có phòng online) và Đố Vui Trí Tuệ (`/game/do-vui/`, chơi một mình). Giao diện chung ở `dist/game/pixel.css` (tên tệp giữ nguyên, nội dung là giao diện thường).
+- Các game đã gỡ: Cờ Cá Ngựa, Ô Ăn Quan, Tiến Lên, Phỏm, Ba Cây. Đường dẫn cũ `/game/<tên>/` được chuyển 308 về `/game/` (`publicRedirect` trong `server/agent-content.mjs`).
+- Durable Object `GameRoom` (binding `GAMEROOM`, `worker/game-room.mjs`) được giữ lại ở dạng lớp rỗng, trả 410, vì gỡ hẳn một lớp Durable Object cần migration riêng trên Cloudflare; API `/api/game/*` đã bỏ.
+- Đố Vui Trí Tuệ: ngân hàng câu ở `dist/game/do-vui/questions.mjs` (đề, 4 đáp án, mẹo, lời giải), mỗi lượt 10 câu ngẫu nhiên; điểm cao nhất lưu ở trình duyệt. Kiểm thử: `tools/quiz.test.mjs`.

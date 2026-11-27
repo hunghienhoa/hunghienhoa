@@ -260,14 +260,14 @@
   {
     "key": "main-244",
     "page": "main",
-    "label": "Cờ tướng, tiến lên, phỏm, ba cây, đố vui. Chơi với máy hoặc online cùng bạn.",
-    "default": "Cờ tướng, tiến lên, phỏm, ba cây, đố vui. Chơi với máy hoặc online cùng bạn."
+    "label": "Cờ tướng và đố vui trí tuệ. Chơi với máy hoặc online cùng bạn.",
+    "default": "Cờ tướng và đố vui trí tuệ. Chơi với máy hoặc online cùng bạn."
   },
   {
     "key": "main-245",
     "page": "main",
-    "label": "Năm trò chơi",
-    "default": "Năm trò chơi"
+    "label": "Hai trò chơi",
+    "default": "Hai trò chơi"
   },
   {
     "key": "main-246",
@@ -342,7 +342,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "main-259",
+    "key": "main-261",
     "page": "main",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -456,24 +456,6 @@
     "default": "Cờ Tướng"
   },
   {
-    "key": "main-253",
-    "page": "main",
-    "label": "Tiến Lên",
-    "default": "Tiến Lên"
-  },
-  {
-    "key": "main-257",
-    "page": "main",
-    "label": "Phỏm (Tá Lả)",
-    "default": "Phỏm (Tá Lả)"
-  },
-  {
-    "key": "main-258",
-    "page": "main",
-    "label": "Ba Cây",
-    "default": "Ba Cây"
-  },
-  {
     "key": "main-260",
     "page": "main",
     "label": "Đố Vui Trí Tuệ",
@@ -540,7 +522,7 @@
     "default": "Góc tò mò"
   },
   {
-    "key": "blog-096",
+    "key": "blog-099",
     "page": "blog",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -678,7 +660,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "blog-097",
+    "key": "blog-100",
     "page": "blog",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -792,24 +774,6 @@
     "default": "Cờ Tướng"
   },
   {
-    "key": "blog-089",
-    "page": "blog",
-    "label": "Tiến Lên",
-    "default": "Tiến Lên"
-  },
-  {
-    "key": "blog-094",
-    "page": "blog",
-    "label": "Phỏm (Tá Lả)",
-    "default": "Phỏm (Tá Lả)"
-  },
-  {
-    "key": "blog-095",
-    "page": "blog",
-    "label": "Ba Cây",
-    "default": "Ba Cây"
-  },
-  {
     "key": "blog-098",
     "page": "blog",
     "label": "Đố Vui Trí Tuệ",
@@ -876,7 +840,7 @@
     "default": "Hộp Ảnh"
   },
   {
-    "key": "photobooth-211",
+    "key": "photobooth-214",
     "page": "photobooth",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -1560,7 +1524,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "photobooth-212",
+    "key": "photobooth-215",
     "page": "photobooth",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -1674,24 +1638,6 @@
     "default": "Cờ Tướng"
   },
   {
-    "key": "photobooth-204",
-    "page": "photobooth",
-    "label": "Tiến Lên",
-    "default": "Tiến Lên"
-  },
-  {
-    "key": "photobooth-209",
-    "page": "photobooth",
-    "label": "Phỏm (Tá Lả)",
-    "default": "Phỏm (Tá Lả)"
-  },
-  {
-    "key": "photobooth-210",
-    "page": "photobooth",
-    "label": "Ba Cây",
-    "default": "Ba Cây"
-  },
-  {
     "key": "photobooth-213",
     "page": "photobooth",
     "label": "Đố Vui Trí Tuệ",
@@ -1758,7 +1704,7 @@
     "default": "Snap Video"
   },
   {
-    "key": "snaptik-091",
+    "key": "snaptik-094",
     "page": "snaptik",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -2046,7 +1992,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "snaptik-092",
+    "key": "snaptik-095",
     "page": "snaptik",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -2160,24 +2106,6 @@
     "default": "Cờ Tướng"
   },
   {
-    "key": "snaptik-084",
-    "page": "snaptik",
-    "label": "Tiến Lên",
-    "default": "Tiến Lên"
-  },
-  {
-    "key": "snaptik-089",
-    "page": "snaptik",
-    "label": "Phỏm (Tá Lả)",
-    "default": "Phỏm (Tá Lả)"
-  },
-  {
-    "key": "snaptik-090",
-    "page": "snaptik",
-    "label": "Ba Cây",
-    "default": "Ba Cây"
-  },
-  {
     "key": "snaptik-093",
     "page": "snaptik",
     "label": "Đố Vui Trí Tuệ",
@@ -2244,7 +2172,7 @@
     "default": "Làm Nét"
   },
   {
-    "key": "lamnet-106",
+    "key": "lamnet-109",
     "page": "lamnet",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -2622,7 +2550,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "lamnet-107",
+    "key": "lamnet-110",
     "page": "lamnet",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -2734,24 +2662,6 @@
     "page": "lamnet",
     "label": "Cờ Tướng",
     "default": "Cờ Tướng"
-  },
-  {
-    "key": "lamnet-099",
-    "page": "lamnet",
-    "label": "Tiến Lên",
-    "default": "Tiến Lên"
-  },
-  {
-    "key": "lamnet-104",
-    "page": "lamnet",
-    "label": "Phỏm (Tá Lả)",
-    "default": "Phỏm (Tá Lả)"
-  },
-  {
-    "key": "lamnet-105",
-    "page": "lamnet",
-    "label": "Ba Cây",
-    "default": "Ba Cây"
   },
   {
     "key": "lamnet-108",
