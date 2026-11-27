@@ -17,9 +17,6 @@ PAGES = {
     'lamnet/index.html': ('lamnet', 'Làm Nét', [('#cach-dung', 'Cách dùng', ''), ('#rieng-tu', 'Riêng tư', '')], '#contact'),
     'cotuong/index.html': ('cotuong', 'Cờ Tướng', [('/game/', 'Tất cả game', ''), ('#ban-co', 'Bàn cờ', ''), ('#cach-choi', 'Cách chơi', '')], '#contact'),
     'game/index.html': ('game', 'Trò chơi', [('#tro-choi', 'Trò chơi', ''), ('#cach-choi', 'Chơi online', ''), ('#rieng-tu', 'Chơi lành mạnh', '')], '#contact'),
-    'game/tien-len/index.html': ('game', 'Tiến Lên', [('/game/', 'Tất cả game', ''), ('#choi', 'Bàn chơi', ''), ('#cach-choi', 'Luật chơi', '')], '#contact'),
-    'game/phom/index.html': ('game', 'Phỏm', [('/game/', 'Tất cả game', ''), ('#choi', 'Bàn chơi', ''), ('#cach-choi', 'Luật chơi', '')], '#contact'),
-    'game/ba-cay/index.html': ('game', 'Ba Cây', [('/game/', 'Tất cả game', ''), ('#choi', 'Bàn chơi', ''), ('#cach-choi', 'Luật chơi', '')], '#contact'),
     'game/do-vui/index.html': ('game', 'Đố Vui', [('/game/', 'Tất cả game', ''), ('#choi', 'Đố vui', ''), ('#cach-choi', 'Mẹo giải', '')], '#contact'),
     'chinh-sach-rieng-tu.html': (None, '', [], '#contact'),
     'dieu-khoan-su-dung.html': (None, '', [], '#contact'),
@@ -68,7 +65,7 @@ def footer():
             '<div class="footer-main"><div class="footer-about"><a class="footer-logo" href="/" aria-label="Hùng Hiền Hòa, về trang chủ"><img class="brand-mark" src="/assets/logo.svg" alt="" width="48" height="48" aria-hidden="true"></a><p>Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.</p></div>'
             '<nav class="footer-col" aria-label="Khám phá"><h2>Khám phá</h2><ul><li><a href="/">Trang chủ</a></li><li><a href="/blog/">Góc tò mò</a></li><li><a href="/#ve-hung">Về Hùng</a></li><li><a href="#contact">Liên hệ</a></li></ul></nav>'
             '<nav class="footer-col" aria-label="Công cụ"><h2>Công cụ</h2><ul><li><a href="/photobooth/">Hộp Ảnh</a></li><li><a href="/snaptik/">Snap Video</a></li><li><a href="/lamnet/">Làm Nét Ảnh</a></li></ul></nav>'
-            '<nav class="footer-col" aria-label="Trò chơi"><h2>Trò chơi</h2><ul><li><a href="/game/">Tất cả game</a></li><li><a href="/cotuong/">Cờ Tướng</a></li><li><a href="/game/tien-len/">Tiến Lên</a></li><li><a href="/game/phom/">Phỏm (Tá Lả)</a></li><li><a href="/game/ba-cay/">Ba Cây</a></li><li><a href="/game/do-vui/">Đố Vui Trí Tuệ</a></li></ul></nav>'
+            '<nav class="footer-col" aria-label="Trò chơi"><h2>Trò chơi</h2><ul><li><a href="/game/">Tất cả game</a></li><li><a href="/cotuong/">Cờ Tướng</a></li><li><a href="/game/do-vui/">Đố Vui Trí Tuệ</a></li></ul></nav>'
             '<nav class="footer-col policy-links" aria-label="Chính sách website"><h2>Chính sách</h2><ul>' + ''.join(f'<li><a href="https://hunghienhoa.com/{slug}">{label}</a></li>' for slug, label in policies) + '</ul></nav></div>'
             '<div class="footer-bottom"><div class="footer-legal"><span>© 2026 Hùng Hiền Hòa</span><p class="footer-wish">Nếu bạn kéo xuống hết trang này, tôi chúc bạn một ngày tốt lành!</p><a class="footer-top" href="#">Về đầu trang <span class="ic ic-arrow-up" aria-hidden="true"></span></a></div>'
             '</div>'
@@ -101,10 +98,7 @@ RIBBONS = {
     'lamnet/index.html': (['Ảnh mờ hóa ảnh rõ', 'Phóng to gấp 4 lần', 'Ảnh ở yên trên máy bạn'], 'before', '<section id="cach-dung"', ''),
     'cotuong/index.html': (['Pháo đầu mã đội', 'Chiếu tướng!', 'Một ván cờ, một ly trà', 'Rủ bạn chơi chung'], 'before', '<section id="cach-choi"', ''),
     'game/index.html': (['Chơi là vui', 'Một link mời', 'Không cược tiền', 'Chơi mọi lúc'], 'before', '<section id="cach-choi"', ''),
-    'game/tien-len/index.html': (['Chặt heo!', 'Đôi thông chặt chồng', 'Về nhất nào', 'Chỉ tính điểm cho vui'], 'before', '<section id="cach-choi"', ''),
-    'game/phom/index.html': (['Ăn chốt!', 'Hạ phỏm gửi bài', 'Ù tròn nào', 'Chỉ tính điểm cho vui'], 'before', '<section id="cach-choi"', ''),
     'game/do-vui/index.html': (['Động não nào', 'Bí thì xin Mẹo', 'Đừng trả lời vội', 'Vui là chính'], 'before', '<section id="cach-choi"', ''),
-    'game/ba-cay/index.html': (['Nặn từng lá', 'Chín nút!', 'Ba tiên gặp sáp', 'Chỉ tính điểm cho vui'], 'before', '<section id="cach-choi"', ''),
     'chinh-sach-rieng-tu.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
     'dieu-khoan-su-dung.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
     'bao-cao-ban-quyen.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
