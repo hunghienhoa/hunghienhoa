@@ -2,7 +2,8 @@
 // Pipeline đăng bài tự động cho hunghienhoa.com (chạy trên GitHub Actions, 08:30 và 20:15 giờ Việt Nam).
 //
 // 1. Hỏi Worker (POST /api/agent/context, cần mã đăng bài): ngách đang bật có last_used_at cũ nhất, số bài hôm nay.
-// 2. Gom ứng viên theo loại ngách: GitHub Search (repo tạo trong 7 ngày, nhiều sao), Hacker News, RSS của ngách.
+// 2. Gom ứng viên theo loại ngách: Trendshift (repo GitHub đang lên theo ngày/tuần) + GitHub Search (repo tạo trong
+//    7 ngày, nhiều sao), Hacker News, RSS của ngách.
 //    Mỗi chủ đề cần 2–3 nguồn độc lập (khác tên miền); URL đã dùng bị loại qua bảng crawled_sources.
 // 3. Đọc nội dung nguồn qua Jina Reader (https://r.jina.ai/), rồi gọi Claude 3 lượt nối tiếp:
 //    lượt 1 tiêu đề/meta/sapo + 3 chương đầu (JSON có cấu trúc), lượt 2 bốn chương chuyên sâu kèm bảng so sánh
@@ -17,7 +18,7 @@ import sharp from 'sharp';
 import { mkdir, writeFile } from 'node:fs/promises';
 import {
   MIN_WORDS_DEFAULT, countWords, slugify, parseFeed, corroborate, domainOf, matchesKeywords,
-  assembleArticle, trimSource, vietnamDate, significantTerms
+  assembleArticle, trimSource, vietnamDate, significantTerms, parseTrendshift, riskyRepo
 } from './auto-blog-lib.mjs';
 
 const SITE = (process.env.SITE_URL || 'https://hunghienhoa.com').replace(/\/$/, '');
@@ -69,18 +70,44 @@ async function feeds(urls) {
   return all.flat();
 }
 
+// Repo đang hot lấy từ Trendshift (bảng xếp hạng theo ngày + theo tuần), xếp trước; GitHub Search (repo mới
+// trong 7 ngày, nhiều sao) làm nguồn dự phòng. Mỗi repo cần ≥ 2 nguồn khác tên miền: GitHub + trang Trendshift của
+// repo (hoặc trang chủ dự án / thảo luận Hacker News).
+async function trendshiftRepos() {
+  const lists = await Promise.all(['https://trendshift.io/', 'https://trendshift.io/weekly'].map(url =>
+    getText(url, { headers: { Accept: 'text/html' } }).then(parseTrendshift).catch(error => { log('Trendshift lỗi:', url, error.message); return []; })));
+  const seen = new Set(), out = [];
+  for (const item of lists.flat().sort((a, b) => a.rank - b.rank)) if (!seen.has(item.name.toLowerCase())) { seen.add(item.name.toLowerCase()); out.push(item); }
+  log(`Trendshift: ${out.length} repo đang lên.`);
+  return out;
+}
+
 async function githubCandidates(niche) {
-  const since = vietnamDate(Date.now() - 7 * 86400_000);
   const headers = { Accept: 'application/vnd.github+json', ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}) };
-  const data = await getJson(`https://api.github.com/search/repositories?q=${encodeURIComponent(`created:>=${since} stars:>=40 archived:false`)}&sort=stars&order=desc&per_page=40`, { headers });
-  const repos = (data.items || []).filter(r => !r.fork && matchesKeywords(`${r.full_name} ${r.description || ''} ${(r.topics || []).join(' ')}`, niche.keywords));
+  const since = vietnamDate(Date.now() - 7 * 86400_000);
+  const search = await getJson(`https://api.github.com/search/repositories?q=${encodeURIComponent(`created:>=${since} stars:>=40 archived:false`)}&sort=stars&order=desc&per_page=40`, { headers })
+    .catch(error => { log('GitHub Search lỗi:', error.message); return { items: [] }; });
+  const trending = (await trendshiftRepos()).filter(t => t.description && !riskyRepo(`${t.name} ${t.description}`));
+  const byName = new Map((search.items || []).map(r => [r.full_name.toLowerCase(), r]));
+  const picks = [];
+  for (const t of trending.slice(0, 15)) {
+    const repo = byName.get(t.name.toLowerCase()) || await getJson(`https://api.github.com/repos/${t.name}`, { headers }).catch(() => null);
+    if (repo) picks.push({ repo, trend: t });
+  }
+  for (const repo of search.items || []) if (!picks.some(p => p.repo.full_name.toLowerCase() === repo.full_name.toLowerCase())) picks.push({ repo, trend: null });
   const out = [];
-  for (const repo of repos.slice(0, 12)) {
+  for (const { repo, trend } of picks) {
+    if (out.length >= 12) break;
+    const text = `${repo.full_name} ${repo.description || ''} ${(repo.topics || []).join(' ')} ${(trend?.keywords || []).join(' ')}`;
+    if (repo.fork || repo.archived || (trend ? repo.stargazers_count < 100 : false) || riskyRepo(text) || !matchesKeywords(text, niche.keywords)) continue;
     const sources = [{ title: `${repo.full_name} trên GitHub (${repo.stargazers_count} sao)`, url: repo.html_url }];
-    if (repo.homepage && /^https?:\/\//.test(repo.homepage) && domainOf(repo.homepage) !== 'github.com') sources.push({ title: `Trang chủ ${repo.name}`, url: repo.homepage });
-    const hn = (await hackerNews(repo.full_name, 10)).find(h => h.url.includes(repo.full_name) || h.title.toLowerCase().includes(repo.name.toLowerCase()));
-    if (hn) sources.push({ title: `Thảo luận trên Hacker News: ${hn.title}`, url: hn.discussion });
-    if (sources.length >= 2) out.push({ topic: `${repo.full_name}: ${repo.description || ''}`.slice(0, 300), sources: sources.slice(0, 3), extra: { readme: repo.full_name } });
+    if (trend) sources.push({ title: `${repo.full_name} trên Trendshift (hạng ${trend.rank} repo đang lên)`, url: trend.trendshift });
+    if (repo.homepage && /^https?:\/\//.test(repo.homepage) && !['github.com', 'trendshift.io'].includes(domainOf(repo.homepage))) sources.push({ title: `Trang chủ ${repo.name}`, url: repo.homepage });
+    if (sources.length < 3) {
+      const hn = (await hackerNews(repo.full_name, 10)).find(h => h.url.includes(repo.full_name) || h.title.toLowerCase().includes(repo.name.toLowerCase()));
+      if (hn) sources.push({ title: `Thảo luận trên Hacker News: ${hn.title}`, url: hn.discussion });
+    }
+    if (sources.length >= 2) out.push({ topic: `${repo.full_name}${trend ? ` (Trendshift hạng ${trend.rank})` : ''}: ${repo.description || ''}`.slice(0, 300), sources: sources.slice(0, 3), extra: { readme: repo.full_name } });
   }
   return out;
 }
