@@ -6,6 +6,60 @@ import * as E from './engine.mjs?v=1';
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const LETTERS = ['A', 'B', 'C', 'D'], LEVELS = ['Dễ', 'Vừa', 'Khó'];
+const COMFORTS = [
+  'Tiếc quá, suýt nữa thì đúng rồi! Không sao đâu, biết thêm một câu hay cũng là lời rồi — làm lại từ đầu nhé!',
+  'Câu này hơi lắt léo thật! Bạn đã làm rất tốt rồi, hít một hơi rồi bắt đầu lại ván mới nha.',
+  'Thua keo này ta bày keo khác! Mỗi lần vấp là một lần nhớ lâu hơn, cùng thử lại từ câu 1 nào.',
+  'Đừng buồn nhé, ngay cả cao thủ cũng hay dính bẫy câu này lắm! Khởi động lại chuỗi mới thôi.',
+  'Sai một nhịp thôi mà! Đầu óc đã nóng máy rồi, ván mới chắc chắn chuỗi đúng sẽ dài hơn.',
+  'Không sao cả, chơi vui là chính! Đọc nhanh lời giải rồi mình quay về vạch xuất phát nhé.'
+];
+let lastComfort = -1;
+function pickComfort() {
+  let idx = Math.floor(Math.random() * COMFORTS.length);
+  if (idx === lastComfort) idx = (idx + 1) % COMFORTS.length;
+  lastComfort = idx;
+  return COMFORTS[idx];
+}
+
+// ---------- Âm thanh đúng / sai (Web Audio API) ----------
+let audioCtx = null;
+function playSound(ok) {
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return;
+    if (!audioCtx) audioCtx = new Ctx();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const now = audioCtx.currentTime;
+    const notes = ok
+      ? [
+          { f: 523.25, t: 0, d: 0.11, type: 'triangle', g: 0.16 },
+          { f: 659.25, t: 0.09, d: 0.11, type: 'triangle', g: 0.18 },
+          { f: 783.99, t: 0.18, d: 0.14, type: 'triangle', g: 0.2 },
+          { f: 1046.5, t: 0.28, d: 0.24, type: 'sine', g: 0.22 }
+        ]
+      : [
+          { f: 392.0, t: 0, d: 0.16, type: 'sawtooth', g: 0.11 },
+          { f: 311.13, t: 0.14, d: 0.18, type: 'sawtooth', g: 0.11 },
+          { f: 246.94, t: 0.3, d: 0.32, type: 'triangle', g: 0.15 }
+        ];
+    for (const n of notes) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = n.type;
+      osc.frequency.setValueAtTime(n.f, now + n.t);
+      if (!ok) osc.frequency.exponentialRampToValueAtTime(n.f * 0.92, now + n.t + n.d);
+      gain.gain.setValueAtTime(0.001, now + n.t);
+      gain.gain.exponentialRampToValueAtTime(n.g, now + n.t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + n.t);
+      osc.stop(now + n.t + n.d + 0.02);
+    }
+  } catch { /* trình duyệt chặn âm thanh thì bỏ qua */ }
+}
+
 const store = {
   get(k) { try { return localStorage.getItem('dovui:' + k); } catch { return null; } },
   set(k, v) { try { localStorage.setItem('dovui:' + k, v); } catch { /* chỉ là tiện ích */ } }
@@ -21,7 +75,7 @@ const showBest = () => { $('#best').textContent = best.score; $('#best-streak').
 showBest();
 
 // ---------- Phần hiển thị dùng chung ----------
-function renderQuestion(q, { num, group: g }) {
+function renderQuestion(q, { num }) {
   $('#q-num').textContent = num;
   $('#q-group').textContent = GROUPS[q.c] || GROUPS.logic;
   $('#q-level').textContent = LEVELS[q.lv - 1];
@@ -68,25 +122,36 @@ function revealOptions(right, pick) {
     if (i === right) o.classList.add('is-right'); else if (i === pick) o.classList.add('is-wrong');
   }
 }
-function showFeedback({ ok, gain, explain, silent }) {
-  $('#fb-title').textContent = silent ? 'Hết giờ' : ok ? 'Chính xác!' : 'Chưa đúng rồi';
+function showFeedback({ ok, gain, explain, silent, comfort }) {
+  $('#fb-title').textContent = silent ? 'Hết giờ' : ok ? 'Chính xác!' : 'Chưa đúng rồi — Làm lại từ đầu nhé!';
   $('#fb-points').textContent = ok ? `+${gain} điểm` : '';
-  $('#fb-explain').textContent = explain;
+  $('#fb-explain').textContent = comfort ? `${explain} — ${comfort}` : explain;
   $('#feedback').hidden = false;
 }
 
 // ---------- Chơi một mình ----------
-const S = { q: null, num: 0, score: 0, streak: 0, right: 0, bestRun: 0, lives: 3, used: new Set(), life: {}, removed: [], hint: false, done: false };
+const S = { q: null, num: 0, score: 0, streak: 0, right: 0, bestRun: 0, lives: 1, used: new Set(), life: {}, removed: [], hint: false, done: false, autoTimer: 0 };
 
+function saveBestRun() {
+  if (S.score > best.score) { best.score = S.score; store.set('best', best.score); }
+  if (S.bestRun > best.streak) { best.streak = S.bestRun; store.set('best-streak', best.streak); }
+  showBest();
+}
+function soloResetRun(keepUsed) {
+  clearTimeout(S.autoTimer);
+  const used = keepUsed ? S.used : new Set();
+  Object.assign(S, { num: 0, score: 0, streak: 0, right: 0, bestRun: 0, lives: 1, used, life: { fifty: 1, audience: 1, friend: 1, swap: 1 }, removed: [], hint: false, done: false });
+}
 function soloBegin() {
   mode = 'solo';
-  Object.assign(S, { num: 0, score: 0, streak: 0, right: 0, bestRun: 0, lives: 3, used: new Set(), life: { fifty: 1, audience: 1, friend: 1, swap: 1 } });
-  $('#lives-wrap').hidden = false; $('#timer-wrap').hidden = true; $('#board-wrap').hidden = true;
-  $('#next').hidden = false; $('#fb-auto').hidden = true; $('#swap-note').hidden = true;
+  soloResetRun(false);
+  $('#lives-wrap').hidden = true; $('#timer-wrap').hidden = true; $('#board-wrap').hidden = true;
+  $('#next').hidden = true; $('#fb-auto').hidden = true; $('#swap-note').hidden = true;
   show('play');
   soloNext();
 }
 function soloNext(replace) {
+  clearTimeout(S.autoTimer);
   const g = group();
   let q;
   for (let tries = 0; tries < 12; tries++) {
@@ -96,6 +161,7 @@ function soloNext(replace) {
   S.used.add(q.id); S.q = q; S.removed = []; S.hint = false; S.done = false;
   if (!replace) S.num++;
   $('#bar').style.width = '100%';
+  $('#swap-note').hidden = true;
   renderQuestion(q, { num: S.num });
   setLifelines(S.life, false);
   updateSoloStats();
@@ -104,16 +170,46 @@ function updateSoloStats() { $('#score').textContent = S.score; $('#streak').tex
 function soloPick(i) {
   if (S.done || S.removed.includes(i)) return;
   S.done = true;
+  clearTimeout(S.autoTimer);
   const q = S.q, ok = i === q.a;
+  playSound(ok);
   let gain = 0;
-  if (ok) { S.right++; S.streak++; S.bestRun = Math.max(S.bestRun, S.streak); gain = E.points({ lv: q.lv, hint: S.hint, streak: S.streak }); S.score += gain; }
-  else { S.streak = 0; S.lives--; }
-  revealOptions(q.a, i);
-  setLifelines(S.life, true);
-  updateSoloStats();
-  showFeedback({ ok, gain, explain: q.e });
-  $('#next').textContent = S.lives > 0 ? 'Câu tiếp' : 'Xem kết quả';
-  $('#next').focus({ preventScroll: true });
+  if (ok) {
+    S.right++; S.streak++; S.bestRun = Math.max(S.bestRun, S.streak);
+    gain = E.points({ lv: q.lv, hint: S.hint, streak: S.streak });
+    S.score += gain;
+    saveBestRun();
+    revealOptions(q.a, i);
+    setLifelines(S.life, true);
+    updateSoloStats();
+    showFeedback({ ok: true, gain, explain: q.e });
+    $('#next').hidden = true;
+    $('#fb-auto').textContent = 'Câu tiếp theo sẽ tự hiện ra.';
+    $('#fb-auto').hidden = false;
+    S.autoTimer = setTimeout(() => {
+      if (mode === 'solo' && S.done) soloNext();
+    }, 1300);
+  } else {
+    saveBestRun();
+    S.streak = 0; S.lives = 0;
+    revealOptions(q.a, i);
+    setLifelines(S.life, true);
+    updateSoloStats();
+    const comfort = pickComfort();
+    showFeedback({ ok: false, gain: 0, explain: q.e, comfort });
+    $('#next').textContent = 'Chơi lại từ đầu';
+    $('#next').hidden = false;
+    $('#fb-auto').textContent = 'Đang tự động quay về câu 1…';
+    $('#fb-auto').hidden = false;
+    S.autoTimer = setTimeout(() => {
+      if (mode === 'solo' && S.done) {
+        soloResetRun(true);
+        soloNext();
+        $('#swap-note').textContent = comfort;
+        $('#swap-note').hidden = false;
+      }
+    }, 3200);
+  }
 }
 function soloLife(k) {
   if (S.done) return;
@@ -126,15 +222,6 @@ function soloLife(k) {
   else { soloNext(true); $('#swap-note').hidden = true; }
   setLifelines(S.life, false);
   if (S.hint) $('#hint').disabled = true;
-}
-function soloFinish() {
-  const rank = S.score >= 400 ? 'Bậc thầy câu đố' : S.score >= 200 ? 'Đầu óc nhạy bén' : S.score >= 80 ? 'Khá lắm, thử lại nhé' : 'Khởi động thôi, chơi lại nào';
-  if (S.score > best.score) { best.score = S.score; store.set('best', best.score); }
-  if (S.bestRun > best.streak) { best.streak = S.bestRun; store.set('best-streak', best.streak); }
-  showBest();
-  $('#end-rank').textContent = rank;
-  $('#end-score').textContent = S.score; $('#end-right').textContent = S.right; $('#end-streak').textContent = S.bestRun; $('#end-best').textContent = best.score;
-  show('end');
 }
 
 // ---------- Chơi nhiều người ----------
@@ -228,7 +315,7 @@ function renderRoom(m) {
   }
   // đang chơi
   $('#lives-wrap').hidden = true; $('#timer-wrap').hidden = false; $('#board-wrap').hidden = false;
-  $('#next').hidden = true; $('#fb-auto').hidden = false;
+  $('#next').hidden = true; $('#fb-auto').textContent = 'Câu tiếp theo sẽ tự hiện ra.'; $('#fb-auto').hidden = false;
   $('#stop-room').hidden = m.you !== 0;
   show('play');
   const newQ = !prev || prev.round !== m.round || prev.q?.id !== m.q.id;
@@ -254,7 +341,9 @@ function renderRoom(m) {
     revealOptions(m.reveal.a, mine?.pick ?? null);
     setLifelines(m.life, true);
     const res = m.reveal.results.find(x => x.seat === m.you);
-    showFeedback({ ok: !!res?.ok, gain: res?.gain || 0, explain: m.reveal.e, silent: res && res.pick === null });
+    if (prev?.status !== 'reveal' && res) playSound(!!res.ok);
+    const silent = res && res.pick === null;
+    showFeedback({ ok: !!res?.ok, gain: res?.gain || 0, explain: m.reveal.e, silent, comfort: !res?.ok && !silent ? pickComfort() : '' });
     setStatus('');
   }
   clearInterval(M.timer);
@@ -272,6 +361,7 @@ function onPick(i) { if (mode === 'solo') soloPick(i); else if (M.state?.status 
 function onLife(k) { if (mode === 'solo') soloLife(k); else if (M.state?.status === 'asking') send({ t: 'life', n: M.state.round, k }); }
 
 function setTab(name) {
+  clearTimeout(S.autoTimer);
   $('#tab-solo').setAttribute('aria-selected', String(name === 'solo'));
   $('#tab-multi').setAttribute('aria-selected', String(name === 'multi'));
   if (name === 'solo') { leaveRoom(false); mode = 'solo'; show('start'); } else { mode = 'multi'; show(M.room ? 'room' : 'lobby'); }
@@ -280,8 +370,12 @@ $('#tab-solo').addEventListener('click', () => setTab('solo'));
 $('#tab-multi').addEventListener('click', () => setTab('multi'));
 $('#start').addEventListener('click', soloBegin);
 $('#again').addEventListener('click', soloBegin);
-$('#change').addEventListener('click', () => show('start'));
-$('#next').addEventListener('click', () => { if (S.lives > 0) soloNext(); else soloFinish(); });
+$('#change').addEventListener('click', () => { clearTimeout(S.autoTimer); show('start'); });
+$('#next').addEventListener('click', () => {
+  clearTimeout(S.autoTimer);
+  if (S.lives > 0) soloNext();
+  else { soloResetRun(true); soloNext(); }
+});
 for (const b of $$('[data-life]')) b.addEventListener('click', () => onLife(b.dataset.life));
 $('#hint').addEventListener('click', () => onLife('hint'));
 $('#create-room').addEventListener('click', () => guard(async () => { setStatus('Đang tạo phòng…'); const d = await api('/rooms', { name: playerName() }); store.set('seat:' + d.room, JSON.stringify({ token: d.token, at: Date.now() })); enterRoom(d.room); }));
