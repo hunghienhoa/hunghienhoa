@@ -1,49 +1,49 @@
-// Cờ Cá Ngựa Pixel: bàn 15×15 vẽ bằng canvas, ngựa pixel, xúc xắc có hoạt cảnh; chơi với máy, chung một máy hoặc online.
+// Cờ Cá Ngựa: bàn 15×15 vẽ bằng canvas, quân ngựa, xúc xắc có hoạt cảnh; chơi với máy, chung một máy hoặc online.
 import * as R from './rules.mjs?v=1';
-import { $, sfx, soundButton, off, hash, px, digits, brackets, pointer, banner, hideBanner, say, tabs, choice, renderPlayers, Online, LEVEL_NAMES, store } from '../kit.js?v=3';
+import { $, sfx, soundButton, setup, off, ctxOf, UI_FONT, rrect, brackets, pointer, banner, hideBanner, say, tabs, choice, renderPlayers, Online, LEVEL_NAMES, store } from '../kit.js?v=4';
 
-const canvas = $('#board'), g = canvas.getContext('2d', { alpha: false });
-const dice = $('#dice'), dg = dice.getContext('2d');
 const W = 300, H = 300, C = 20;
+const canvas = $('#board'), g = setup(canvas, W, H, { alpha: false });
+const dice = $('#dice'), dg = setup(dice, 28, 28);
 const HUE = [['#c8323c', '#f3b7b4', '#8e1f28'], ['#2f6fd0', '#b9d0f3', '#1b4489'], ['#f0b400', '#fbe39a', '#9c7400'], ['#2e9e5b', '#b6e3c7', '#1b6a3b']];
 const S = { mode: 'ai', state: null, view: null, me: 0, level: 'vua', disp: null, anim: null, busy: false, hint: null, online: null, rolling: 0 };
 
 // ---------- Vẽ bàn ----------
 let layer = null;
 function buildLayer() {
-  const c = off(W, H), b = c.getContext('2d');
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) px(b, x, y, hash(x, y) < 0.07 ? '#f3e6cc' : '#fbf2e3');
-  const cell = (r, col, fill, edge = '#1d1f55') => { b.fillStyle = edge; b.fillRect(col * C, r * C, C, C); b.fillStyle = fill; b.fillRect(col * C + 1, r * C + 1, C - 2, C - 2); b.fillStyle = 'rgba(255,255,255,.55)'; b.fillRect(col * C + 2, r * C + 2, C - 4, 2); };
+  const c = off(W, H), b = ctxOf(c);
+  b.fillStyle = '#fbf2e3'; b.fillRect(0, 0, W, H);
+  const cell = (r, col, fill) => {
+    rrect(b, col * C + 1, r * C + 1, C - 2, C - 2, 5); b.fillStyle = fill; b.fill();
+    b.lineWidth = 1; b.strokeStyle = 'rgba(29,31,85,.3)'; b.stroke();
+  };
   for (let color = 0; color < 4; color++) {
     const [r0, c0, r1, c1] = R.stableArea(color), [main, light, dark] = HUE[color];
-    b.fillStyle = dark; b.fillRect(c0 * C, r0 * C, (c1 - c0 + 1) * C, (r1 - r0 + 1) * C);
-    b.fillStyle = main; b.fillRect(c0 * C + 3, r0 * C + 3, (c1 - c0 + 1) * C - 6, (r1 - r0 + 1) * C - 6);
-    b.fillStyle = '#fbf2e3'; b.fillRect(c0 * C + 14, r0 * C + 14, (c1 - c0 + 1) * C - 28, (r1 - r0 + 1) * C - 28);
-    for (const [r, col] of R.stableCells(color)) { b.fillStyle = light; b.fillRect(col * C - 6, r * C - 6, 32, 32); b.fillStyle = dark; b.fillRect(col * C - 6, r * C + 24, 32, 2); }
+    const x = c0 * C, y = r0 * C, w = (c1 - c0 + 1) * C, h = (r1 - r0 + 1) * C;
+    rrect(b, x + 2, y + 2, w - 4, h - 4, 18); b.fillStyle = main; b.fill(); b.lineWidth = 2; b.strokeStyle = dark; b.stroke();
+    rrect(b, x + 14, y + 14, w - 28, h - 28, 12); b.fillStyle = '#fbf2e3'; b.fill();
+    for (const [r, col] of R.stableCells(color)) { b.beginPath(); b.arc(col * C + C / 2, r * C + C / 2, 13, 0, Math.PI * 2); b.fillStyle = light; b.fill(); b.lineWidth = 1.5; b.strokeStyle = dark; b.stroke(); }
   }
   for (const [r, col] of R.PATH) cell(r, col, '#ffffff');
+  b.font = `800 10px ${UI_FONT}`; b.textAlign = 'center'; b.textBaseline = 'middle';
   for (let color = 0; color < 4; color++) {
-    const [main, light] = HUE[color];
+    const [main, light, dark] = HUE[color];
     const [sr, sc] = R.PATH[R.startOf(color)]; cell(sr, sc, main);
-    for (let h = 1; h <= 6; h++) { const [r, col] = R.homeCell(color, h); cell(r, col, light); digits(b, h, col * C + 8, r * C + 7, HUE[color][2]); }
-    const [gr, gc] = R.PATH[R.absolute(color, R.GATE)]; b.fillStyle = main; b.fillRect(gc * C + 7, gr * C + 7, 6, 6);
+    for (let h = 1; h <= 6; h++) { const [r, col] = R.homeCell(color, h); cell(r, col, light); b.fillStyle = dark; b.fillText(h, col * C + C / 2, r * C + C / 2 + 0.5); }
+    const [gr, gc] = R.PATH[R.absolute(color, R.GATE)]; b.beginPath(); b.arc(gc * C + C / 2, gr * C + C / 2, 3, 0, Math.PI * 2); b.fillStyle = main; b.fill();
   }
-  b.fillStyle = '#ffdc38'; b.fillRect(7 * C + 4, 7 * C + 4, C - 8, C - 8); b.fillStyle = '#1d1f55'; b.fillRect(7 * C + 8, 7 * C + 8, 4, 4);
+  rrect(b, 7 * C + 2, 7 * C + 2, C - 4, C - 4, 6); b.fillStyle = '#ffdc38'; b.fill(); b.lineWidth = 1.5; b.strokeStyle = '#1d1f55'; b.stroke();
+  b.beginPath(); b.arc(7 * C + C / 2, 7 * C + C / 2, 2.5, 0, Math.PI * 2); b.fillStyle = '#1d1f55'; b.fill();
   return c;
 }
-const HORSE = ['....##......', '...####.....', '..##o###....', '.########...', '##########..', '###..#####..', '......####..', '.....#####..', '....######..', '...#######..', '..#########.', '..#########.'];
-const sprites = new Map();
-function horseSprite(color, lift) {
-  const key = color + ':' + lift;
-  if (sprites.has(key)) return sprites.get(key);
-  const c = off(16, 16), b = c.getContext('2d'), [main, light, dark] = HUE[color];
-  const filled = (x, y) => HORSE[y]?.[x] && HORSE[y][x] !== '.';
-  for (let y = -1; y <= 12; y++) for (let x = -1; x <= 12; x++) {
-    if (filled(x, y)) px(b, x + 2, y + 2, HORSE[y][x] === 'o' ? '#fff' : (x + y < 9 ? light : x + y > 15 ? dark : main));
-    else if ([[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => filled(x + dx, y + dy))) px(b, x + 2, y + 2, '#1d1f55');
-  }
-  sprites.set(key, c);
-  return c;
+function drawHorse(color, x, y) {
+  const [main, light, dark] = HUE[color];
+  g.fillStyle = 'rgba(29,31,85,.25)'; g.beginPath(); g.ellipse(x, y + 7, 6.5, 2, 0, 0, Math.PI * 2); g.fill();
+  const body = g.createLinearGradient(x - 6, 0, x + 6, 0); body.addColorStop(0, light); body.addColorStop(0.45, main); body.addColorStop(1, dark);
+  g.fillStyle = body; g.strokeStyle = '#1d1f55'; g.lineWidth = 1; g.lineJoin = 'round';
+  g.beginPath(); g.moveTo(x - 6.5, y + 6.5); g.quadraticCurveTo(x - 6, y + 4, x - 3, y - 1); g.lineTo(x + 3, y - 1); g.quadraticCurveTo(x + 6, y + 4, x + 6.5, y + 6.5); g.closePath(); g.fill(); g.stroke();
+  const head = g.createRadialGradient(x - 1.5, y - 7, 0.5, x, y - 5, 5); head.addColorStop(0, light); head.addColorStop(1, main);
+  g.fillStyle = head; g.beginPath(); g.arc(x, y - 4.5, 4.4, 0, Math.PI * 2); g.fill(); g.stroke();
 }
 const center = ([r, col]) => [col * C + C / 2, r * C + C / 2];
 function horsePos(seat, h) {
@@ -52,29 +52,27 @@ function horsePos(seat, h) {
 }
 function render() {
   if (!S.disp) return;
-  g.imageSmoothingEnabled = false;
+  g.imageSmoothingEnabled = true;
   layer ||= buildLayer();
-  g.drawImage(layer, 0, 0);
+  g.drawImage(layer, 0, 0, W, H);
   const st = S.disp, now = performance.now();
   const legal = canAct() && S.view.phase === 'move' ? R.legalMoves(S.view, S.view.turn) : [];
   for (let seat = 0; seat < st.n; seat++) for (let h = 0; h < 4; h++) {
     const [x, y] = horsePos(seat, h), moving = S.anim && S.anim.seat === seat && S.anim.h === h;
-    g.fillStyle = 'rgba(29,31,85,.25)'; g.fillRect(x - 6, y + 6, 12, 2);
-    g.drawImage(horseSprite(st.colors[seat], 0), Math.round(x - 8), Math.round(y - 9 - (moving ? 3 : 0)));
+    drawHorse(st.colors[seat], x, y - (moving ? 3 : 0));
   }
-  if (legal.length && Math.floor(now / 280) % 2 === 0) for (const m of legal) { const [x, y] = horsePos(S.view.turn, m.h); brackets(g, x - 10, y - 10, 20, 20, '#ffdc38', 5); }
-  if (S.hint) { const [x, y] = horsePos(S.view.turn, S.hint.h); brackets(g, x - 11, y - 11, 22, 22, '#303487', 6); }
-  if (S.flash) { const [x, y] = S.flash; brackets(g, x - 11, y - 11, 22, 22, '#c8323c', 6); }
+  if (legal.length && Math.floor(now / 280) % 2 === 0) for (const m of legal) { const [x, y] = horsePos(S.view.turn, m.h); brackets(g, x - 10, y - 10, 20, 20, '#ffdc38'); }
+  if (S.hint) { const [x, y] = horsePos(S.view.turn, S.hint.h); brackets(g, x - 11, y - 11, 22, 22, '#303487'); }
+  if (S.flash) { const [x, y] = S.flash; brackets(g, x - 11, y - 11, 22, 22, '#c8323c'); }
   if (legal.length || S.anim || S.hint || S.flash) requestAnimationFrame(render);
 }
 const PIPS = { 1: [[1, 1]], 2: [[0, 0], [2, 2]], 3: [[0, 0], [1, 1], [2, 2]], 4: [[0, 0], [2, 0], [0, 2], [2, 2]], 5: [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]], 6: [[0, 0], [2, 0], [0, 1], [2, 1], [0, 2], [2, 2]] };
 function drawDice(n, color = '#c8323c') {
-  dg.imageSmoothingEnabled = false;
-  dg.fillStyle = '#1d1f55'; dg.fillRect(0, 0, 28, 28);
-  dg.fillStyle = '#fffdf5'; dg.fillRect(2, 2, 24, 24);
-  dg.fillStyle = '#e8dcc3'; dg.fillRect(2, 22, 24, 4); dg.fillRect(22, 2, 4, 24);
+  dg.clearRect(0, 0, 28, 28);
+  const gr = dg.createLinearGradient(0, 0, 28, 28); gr.addColorStop(0, '#ffffff'); gr.addColorStop(1, '#e8dcc3');
+  rrect(dg, 1, 1, 26, 26, 6); dg.fillStyle = gr; dg.fill(); dg.lineWidth = 1.2; dg.strokeStyle = '#1d1f55'; dg.stroke();
   if (!n) return;
-  for (const [x, y] of PIPS[n]) { dg.fillStyle = n === 1 || n === 6 ? color : '#1d1f55'; dg.fillRect(5 + x * 7, 5 + y * 7, 4, 4); }
+  for (const [x, y] of PIPS[n]) { dg.fillStyle = n === 1 || n === 6 ? color : '#1d1f55'; dg.beginPath(); dg.arc(7 + x * 7, 7 + y * 7, 2.3, 0, Math.PI * 2); dg.fill(); }
 }
 
 // ---------- Người chơi ----------

@@ -1,7 +1,8 @@
-// Cờ Tướng Pixel: vẽ bàn cờ pixel 32-bit trên canvas, ba chế độ (máy, hai người, online), âm thanh chiptune.
+// Cờ Tướng: vẽ bàn cờ vector mượt trên canvas, ba chế độ (máy, hai người, online), âm thanh chiptune.
 import { Game, RED, BLACK, other, colorOf, kind, row, col, sq, HAN, LETTERS, REASONS, START_FEN } from './core.mjs?v=1';
 
 const $ = s => document.querySelector(s);
+const K = 3; // canvas vẽ ở độ phân giải gấp K lần để nét mượt
 const canvas = $('#board'), ctx = canvas.getContext('2d', { alpha: false });
 const W = 288, H = 320, X0 = 24, Y0 = 25, CELL = 30;
 const C = { ink: '#1d1f55', blue: '#303487', yellow: '#ffdc38', cream: '#fbf2e3', red: '#c8323c', redDark: '#8e1f28', line: '#4a2c12', frame: '#5a3818', wood: ['#e6c58a', '#dfbb7d', '#ecd09a', '#d9b373'] };
@@ -37,18 +38,10 @@ function sfx(name) {
   for (const [f, s, d, t, v] of seq) tone(f, s, d, t, v);
 }
 
-// ---------- Vẽ pixel ----------
+// ---------- Vẽ ----------
+canvas.width = W * K; canvas.height = H * K;
 const off = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
 const hash = (x, y) => { let h = x * 374761393 + y * 668265263; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
-const px = (g, x, y, color) => { g.fillStyle = color; g.fillRect(x, y, 1, 1); };
-function line(g, x0, y0, x1, y1, color) { // Bresenham: đường chéo pixel sắc nét
-  const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
-  let err = dx + dy;
-  for (;;) { px(g, x0, y0, color); if (x0 === x1 && y0 === y1) break; const e2 = 2 * err; if (e2 >= dy) { err += dy; x0 += sx; } if (e2 <= dx) { err += dx; y0 += sy; } }
-}
-const DIGITS = ['111101101101111', '010110010010111', '111001111100111', '111001111001111', '101101111001001', '111100111001111', '111100111101111', '111001001001001', '111101111101111', '111101111001111'];
-function digit(g, n, x, y, color) { const bits = DIGITS[n]; for (let i = 0; i < 15; i++) if (bits[i] === '1') px(g, x + (i % 3), y + ((i / 3) | 0), color); }
-
 const HAN_FONT = '"Noto Serif SC","Noto Serif CJK SC","Songti SC","STSong","SimSun","Noto Sans SC","Noto Sans CJK SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB",serif';
 function glyphMask(text, size, font, weight = 700) {
   const n = 24, c = off(n, n), g = c.getContext('2d', { willReadFrequently: true });
@@ -63,118 +56,96 @@ function glyphMask(text, size, font, weight = 700) {
 const hanAvailable = (() => { try { const a = JSON.stringify(glyphMask('帥', 15, HAN_FONT)), b = JSON.stringify(glyphMask('將', 15, HAN_FONT)); return a !== b && a.length > 40; } catch { return false; } })();
 if (!hanAvailable) S.han = false;
 
-const sprites = new Map();
-function pieceSprite(p, mode = 'normal') {
-  const key = p + mode + (S.han ? 'h' : 'v');
-  if (sprites.has(key)) return sprites.get(key);
-  const c = off(30, 30), g = c.getContext('2d'), red = colorOf(p) === RED;
-  const ink = red ? C.red : C.ink;
-  for (let y = 0; y < 30; y++) for (let x = 0; x < 30; x++) {
-    const dx = x + 0.5 - 15, dy = y + 0.5 - 15, d = Math.hypot(dx, dy);
-    if (d > 13.5) continue;
-    if (d > 12.4) { px(g, x, y, '#3a2410'); continue; }
-    const t = (-dx * 0.6 - dy * 0.8) / 12.4;
-    let tone = t > 0.55 ? '#fff4d8' : t > 0.12 ? '#f6e3b6' : t > -0.4 ? '#ecd29a' : '#d6b373';
-    if (mode === 'ghost') tone = '#efe1c2';
-    if (d > 9.4 && d <= 10.5) tone = ink;
-    px(g, x, y, tone);
-  }
+const UI_FONT = '"Be Vietnam Pro",system-ui,sans-serif';
+function drawPiece(g, p, x, y, lift = 0, mode) {
+  const red = colorOf(p) === RED, ink = red ? C.red : C.ink, cy = y - lift;
+  g.fillStyle = 'rgba(58,36,16,.28)'; g.beginPath(); g.ellipse(x, y + 12, 12 + lift * 0.4, 3.4, 0, 0, Math.PI * 2); g.fill();
+  const gr = g.createRadialGradient(x - 4, cy - 5, 2, x, cy, 13.5);
+  gr.addColorStop(0, '#fff8e4'); gr.addColorStop(1, mode === 'ghost' ? '#e6d7b6' : '#e2c58c');
+  g.fillStyle = gr; g.beginPath(); g.arc(x, cy, 13.5, 0, Math.PI * 2); g.fill();
+  g.lineWidth = 1.2; g.strokeStyle = '#3a2410'; g.stroke();
+  g.lineWidth = 1; g.strokeStyle = ink; g.beginPath(); g.arc(x, cy, 10.4, 0, Math.PI * 2); g.stroke();
   const k = kind(p);
-  const mask = S.han ? glyphMask(HAN[k][red ? 0 : 1], 15, HAN_FONT) : glyphMask(LETTERS[k], LETTERS[k].length > 1 ? 10 : 13, '"Be Vietnam Pro",system-ui,sans-serif', 800);
-  for (const [x, y] of mask) { px(g, x + 3, y + 3, ink); }
-  sprites.set(key, c);
-  return c;
+  g.fillStyle = ink; g.textAlign = 'center'; g.textBaseline = 'middle';
+  if (S.han) { g.font = `700 16px ${HAN_FONT}`; g.fillText(HAN[k][red ? 0 : 1], x, cy + 1); }
+  else { g.font = `800 ${LETTERS[k].length > 1 ? 10 : 13}px ${UI_FONT}`; g.fillText(LETTERS[k], x, cy + 1); }
 }
 
 let boardLayer = null;
 function buildBoard() {
-  const c = off(W, H), g = c.getContext('2d');
-  // Gỗ: nền nhiễu 4 tông + vân gỗ ngang (dither kiểu 32-bit).
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-    const grain = Math.sin(y * 0.55 + Math.sin(x * 0.045 + y * 0.02) * 2.2);
-    const r = hash(x, y);
-    px(g, x, y, grain > 0.86 ? C.wood[3] : r < 0.12 ? C.wood[1] : r > 0.92 ? C.wood[2] : C.wood[0]);
-  }
-  // Viền khung hai lớp.
-  g.fillStyle = C.frame;
-  g.fillRect(X0 - 10, Y0 - 10, 8 * CELL + 20, 2); g.fillRect(X0 - 10, Y0 + 9 * CELL + 8, 8 * CELL + 20, 2);
-  g.fillRect(X0 - 10, Y0 - 10, 2, 9 * CELL + 20); g.fillRect(X0 + 8 * CELL + 8, Y0 - 10, 2, 9 * CELL + 20);
-  g.fillStyle = C.line;
-  for (let r = 0; r < 10; r++) g.fillRect(X0, Y0 + r * CELL, 8 * CELL + 1, 1);
-  for (let c2 = 0; c2 < 9; c2++) {
-    if (c2 === 0 || c2 === 8) g.fillRect(X0 + c2 * CELL, Y0, 1, 9 * CELL);
-    else { g.fillRect(X0 + c2 * CELL, Y0, 1, 4 * CELL); g.fillRect(X0 + c2 * CELL, Y0 + 5 * CELL, 1, 4 * CELL); }
-  }
+  const c = off(W * K, H * K), g = c.getContext('2d');
+  g.scale(K, K);
+  const wood = g.createLinearGradient(0, 0, W, H);
+  wood.addColorStop(0, '#efd4a0'); wood.addColorStop(0.5, '#e6c58a'); wood.addColorStop(1, '#dfbb7d');
+  g.fillStyle = wood; g.fillRect(0, 0, W, H);
+  g.strokeStyle = 'rgba(138,90,34,.07)'; g.lineWidth = 1;
+  for (let y = 3; y < H; y += 5) { g.beginPath(); for (let x = 0; x <= W; x += 8) { const yy = y + Math.sin(x * 0.045 + y * 0.3) * 1.6; x ? g.lineTo(x, yy) : g.moveTo(x, yy); } g.stroke(); }
+  g.strokeStyle = C.frame; g.lineWidth = 3; g.lineJoin = 'round';
+  g.strokeRect(X0 - 8, Y0 - 8, 8 * CELL + 16, 9 * CELL + 16);
+  g.strokeStyle = C.line; g.lineWidth = 1.2; g.lineCap = 'round';
   const P = (r, c2) => [X0 + c2 * CELL, Y0 + r * CELL];
-  for (const [a, b] of [[[0, 3], [2, 5]], [[0, 5], [2, 3]], [[7, 3], [9, 5]], [[7, 5], [9, 3]]]) line(g, ...P(...a), ...P(...b), C.line);
+  g.beginPath();
+  for (let r = 0; r < 10; r++) { g.moveTo(X0, Y0 + r * CELL); g.lineTo(X0 + 8 * CELL, Y0 + r * CELL); }
+  for (let c2 = 0; c2 < 9; c2++) {
+    if (c2 === 0 || c2 === 8) { g.moveTo(X0 + c2 * CELL, Y0); g.lineTo(X0 + c2 * CELL, Y0 + 9 * CELL); }
+    else { g.moveTo(X0 + c2 * CELL, Y0); g.lineTo(X0 + c2 * CELL, Y0 + 4 * CELL); g.moveTo(X0 + c2 * CELL, Y0 + 5 * CELL); g.lineTo(X0 + c2 * CELL, Y0 + 9 * CELL); }
+  }
+  for (const [a, b] of [[[0, 3], [2, 5]], [[0, 5], [2, 3]], [[7, 3], [9, 5]], [[7, 5], [9, 3]]]) { g.moveTo(...P(...a)); g.lineTo(...P(...b)); }
+  g.stroke();
   // Dấu vị trí pháo và tốt.
   const marks = [[2, 1], [2, 7], [7, 1], [7, 7], ...[0, 2, 4, 6, 8].flatMap(c2 => [[3, c2], [6, c2]])];
+  g.beginPath();
   for (const [r, c2] of marks) {
     const [x, y] = P(r, c2);
     for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
       if ((c2 === 0 && sx < 0) || (c2 === 8 && sx > 0)) continue;
-      g.fillRect(x + sx * 3 + (sx < 0 ? -3 : 0), y + sy * 3, 4, 1);
-      g.fillRect(x + sx * 3, y + sy * 3 + (sy < 0 ? -3 : 0), 1, 4);
+      g.moveTo(x + sx * 7, y + sy * 3); g.lineTo(x + sx * 3, y + sy * 3); g.lineTo(x + sx * 3, y + sy * 7);
     }
   }
-  // Sông: chữ pixel.
+  g.stroke();
+  // Sông.
   const riverY = Y0 + 4 * CELL + 15;
   const left = S.han ? ['楚', '河'] : ['SỞ', 'HÀ'], right = S.han ? ['漢', '界'] : ['HÁN', 'GIỚI'];
-  const drawWord = (text, cx) => {
-    const mask = S.han ? glyphMask(text, 16, HAN_FONT) : glyphMask(text, 11, '"Be Vietnam Pro",system-ui,sans-serif', 800);
-    for (const [x, y] of mask) px(g, cx - 12 + x, riverY - 12 + y, C.frame);
-  };
+  g.fillStyle = C.frame; g.globalAlpha = 0.85; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.font = S.han ? `700 17px ${HAN_FONT}` : `800 11px ${UI_FONT}`;
+  const drawWord = (text, cx) => g.fillText(text, cx, riverY + 1);
   drawWord(left[0], X0 + 1.4 * CELL); drawWord(left[1], X0 + 2.6 * CELL); drawWord(right[0], X0 + 5.4 * CELL); drawWord(right[1], X0 + 6.6 * CELL);
+  g.globalAlpha = 1;
   boardLayer = c;
 }
 function drawFiles(g) {
   // Số cột: phía trên là cột của bên ở trên, phía dưới là của bên ở dưới (đếm từ phải sang trái của người ngồi).
+  g.font = `700 8px ${UI_FONT}`; g.textAlign = 'center'; g.textBaseline = 'middle';
   for (let i = 0; i < 9; i++) {
-    const x = X0 + i * CELL - 1;
+    const x = X0 + i * CELL;
     const topColor = S.flip ? RED : BLACK, bottomColor = other(topColor);
     const c2 = S.flip ? 8 - i : i;
     const top = topColor === BLACK ? c2 + 1 : 9 - c2, bottom = bottomColor === RED ? 9 - c2 : c2 + 1;
-    digit(g, top, x, 4, topColor === RED ? C.red : C.ink);
-    digit(g, bottom, x, H - 9, bottomColor === RED ? C.red : C.ink);
+    g.fillStyle = topColor === RED ? C.red : C.ink; g.fillText(top, x, 6);
+    g.fillStyle = bottomColor === RED ? C.red : C.ink; g.fillText(bottom, x, H - 6);
   }
 }
 
 const dispR = r => (S.flip ? 9 - r : r), dispC = c2 => (S.flip ? 8 - c2 : c2);
 const pos = i => [X0 + dispC(col(i)) * CELL, Y0 + dispR(row(i)) * CELL];
-function brackets(g, i, radius, color, len = 4) {
+function brackets(g, i, radius, color) {
   const [x, y] = pos(i);
-  for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
-    const cx = x + sx * radius, cy = y + sy * radius;
-    g.fillStyle = color;
-    g.fillRect(sx < 0 ? cx : cx - len + 1, cy, len, 2 * (sy < 0 ? 1 : 1));
-    g.fillRect(sx < 0 ? cx : cx - 1, sy < 0 ? cy : cy - len + 1, 2, len);
-  }
+  g.strokeStyle = color; g.lineWidth = 2; g.beginPath(); g.roundRect(x - radius, y - radius, radius * 2, radius * 2, 7); g.stroke();
 }
 function diamond(g, x, y, fill, edge) {
-  for (let dy = -3; dy <= 3; dy++) for (let dx = -3; dx <= 3; dx++) {
-    const m = Math.abs(dx) + Math.abs(dy);
-    if (m === 3) px(g, x + dx, y + dy, edge); else if (m < 3) px(g, x + dx, y + dy, fill);
-  }
-}
-function drawShadow(g, x, y, lift = 0) {
-  g.fillStyle = 'rgba(58,36,16,.32)';
-  for (let dy = -2; dy <= 2; dy++) { const w = Math.round(Math.sqrt(1 - (dy / 3) ** 2) * (12 + lift)); g.fillRect(x - w + 1, y + 12 + dy + lift, w * 2, 1); }
-}
-function drawPiece(g, p, x, y, lift = 0, mode) {
-  drawShadow(g, x, y, lift);
-  g.drawImage(pieceSprite(p, mode), x - 15, y - 15 - lift);
+  g.fillStyle = fill; g.strokeStyle = edge; g.lineWidth = 1; g.beginPath(); g.arc(x, y, 3.6, 0, Math.PI * 2); g.fill(); g.stroke();
 }
 
 let raf = 0;
 function frame(now) {
   raf = 0;
   const g = ctx, game = S.game;
-  g.imageSmoothingEnabled = false;
+  g.imageSmoothingEnabled = true;
   if (!boardLayer) buildBoard();
   let ox = 0, oy = 0;
-  if (S.shake > now) { ox = Math.round((hash(now | 0, 1) - 0.5) * 3); oy = Math.round((hash(1, now | 0) - 0.5) * 3); }
-  g.setTransform(1, 0, 0, 1, ox, oy);
-  g.drawImage(boardLayer, 0, 0);
+  if (S.shake > now) { ox = (hash(now | 0, 1) - 0.5) * 3; oy = (hash(1, now | 0) - 0.5) * 3; }
+  g.setTransform(K, 0, 0, K, ox * K, oy * K);
+  g.drawImage(boardLayer, 0, 0, W, H);
   drawFiles(g);
   const last = game.history[game.history.length - 1];
   if (last) { brackets(g, last.from, 9, 'rgba(255,220,56,.85)', 3); brackets(g, last.to, 14, C.yellow, 5); }
@@ -195,7 +166,7 @@ function frame(now) {
   if (anim) {
     const t = Math.min(1, (now - anim.start) / anim.dur), e = 1 - (1 - t) ** 3;
     const [x0, y0] = pos(anim.from), [x1, y1] = pos(anim.to);
-    drawPiece(g, anim.piece, Math.round(x0 + (x1 - x0) * e), Math.round(y0 + (y1 - y0) * e), Math.round(Math.sin(Math.PI * t) * 5));
+    drawPiece(g, anim.piece, x0 + (x1 - x0) * e, y0 + (y1 - y0) * e, Math.sin(Math.PI * t) * 5);
   }
   if (S.selected >= 0) {
     const blink = Math.floor(now / 300) % 2 === 0;
@@ -212,9 +183,9 @@ function frame(now) {
   for (const pt of S.particles) {
     const t = (now - pt.born) / 1000;
     g.fillStyle = pt.color;
-    g.fillRect(Math.round(pt.x + pt.vx * t), Math.round(pt.y + pt.vy * t + 160 * t * t), pt.size, pt.size);
+    g.beginPath(); g.arc(pt.x + pt.vx * t, pt.y + pt.vy * t + 160 * t * t, pt.size / 2 + 0.5, 0, Math.PI * 2); g.fill();
   }
-  g.setTransform(1, 0, 0, 1, 0, 0);
+  g.setTransform(K, 0, 0, K, 0, 0);
   if (S.anim || S.particles.length || S.selected >= 0 || S.shake > now || (game.inCheck() && !game.result) || (S.cursor >= 0 && document.activeElement === canvas)) request();
 }
 const request = () => { if (!raf) raf = requestAnimationFrame(frame); };
@@ -659,7 +630,7 @@ $('#sound').addEventListener('click', () => { S.sound = !S.sound; store.set('sou
 const glyphLabel = () => { $('#glyphs').textContent = S.han ? 'Chữ quân: Hán' : 'Chữ quân: Việt'; };
 $('#glyphs').addEventListener('click', () => {
   if (!hanAvailable && !S.han) { say('Máy của bạn chưa có phông chữ Hán, nên quân cờ dùng chữ Việt.'); return; }
-  S.han = !S.han; store.set('glyph', S.han ? 'han' : 'viet'); sprites.clear(); boardLayer = null; glyphLabel(); update(); request();
+  S.han = !S.han; store.set('glyph', S.han ? 'han' : 'viet'); boardLayer = null; glyphLabel(); update(); request();
 });
 
 // ---------- Khởi động ----------
@@ -670,7 +641,7 @@ if (fromLink && /^[A-Z0-9]{6}$/i.test(fromLink)) {
   setMode('online', false);
   api('/rooms/' + fromLink.toUpperCase()).then(() => enterRoom(fromLink.toUpperCase())).catch(e => { say(e.message); newGame(); });
 } else newGame();
-document.fonts?.ready?.then(() => { sprites.clear(); boardLayer = null; request(); });
+document.fonts?.ready?.then(() => { boardLayer = null; request(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) request(); });
 
 // ---------- Toàn màn hình ----------

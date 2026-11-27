@@ -1,9 +1,9 @@
-// Ô Ăn Quan Pixel: bàn gỗ vẽ bằng canvas, rải quân có hoạt cảnh, chơi với máy, hai người hoặc online.
+// Ô Ăn Quan: bàn gỗ vẽ bằng canvas, rải quân có hoạt cảnh, chơi với máy, hai người hoặc online.
 import * as R from './rules.mjs?v=1';
-import { $, sfx, soundButton, off, hash, px, digits, disc, brackets, pointer, banner, hideBanner, say, tabs, choice, renderPlayers, Online, LEVEL_NAMES, store } from '../kit.js?v=3';
+import { $, sfx, soundButton, setup, off, ctxOf, hash, rrect, UI_FONT, disc, brackets, pointer, banner, hideBanner, say, tabs, choice, renderPlayers, Online, LEVEL_NAMES, store } from '../kit.js?v=4';
 
-const canvas = $('#board'), g = canvas.getContext('2d', { alpha: false });
 const W = 352, H = 140, CW = 48, CH = 52, GX = 56, TOP = 16, BOT = 72;
+const canvas = $('#board'), g = setup(canvas, W, H, { alpha: false });
 const S = { mode: 'ai', state: null, me: 0, level: 'vua', disp: null, hand: null, busy: false, selected: -1, hint: null, view: null, online: null, flash: null };
 
 // ---------- Hình học ----------
@@ -21,55 +21,52 @@ const dirRight = seat => (seat === bottomSeat() ? 1 : -1);
 // ---------- Vẽ ----------
 let layer = null;
 function buildLayer() {
-  const c = off(W, H), b = c.getContext('2d');
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-    const grain = Math.sin(y * 0.7 + Math.sin(x * 0.05) * 2);
-    px(b, x, y, grain > 0.85 ? '#7a4a22' : hash(x, y) < 0.1 ? '#94602f' : '#8a5a2b');
-  }
-  b.fillStyle = '#5a3818'; b.fillRect(2, 10, W - 4, 2); b.fillRect(2, H - 12, W - 4, 2);
+  const c = off(W, H), b = ctxOf(c);
+  const wood = b.createLinearGradient(0, 0, W, H); wood.addColorStop(0, '#966133'); wood.addColorStop(1, '#7f5226');
+  b.fillStyle = wood; b.fillRect(0, 0, W, H);
+  b.strokeStyle = 'rgba(58,36,16,.14)'; b.lineWidth = 1;
+  for (let y = 3; y < H; y += 5) { b.beginPath(); for (let x = 0; x <= W; x += 8) { const yy = y + Math.sin(x * 0.05 + y * 0.4) * 1.5; x ? b.lineTo(x, yy) : b.moveTo(x, yy); } b.stroke(); }
+  b.strokeStyle = '#5a3818'; b.lineWidth = 3; b.strokeRect(1.5, 1.5, W - 3, H - 3);
   return c;
 }
 function drawCell(r, quan, active) {
+  const fill = active ? '#f6dfa8' : '#ecd09a';
   if (quan) {
-    const cx = r.x + (r.x < W / 2 ? r.w : 0), cy = r.y + r.h / 2;
-    for (let y = r.y; y < r.y + r.h; y++) for (let x = r.x; x < r.x + r.w; x++) {
-      const dx = (x + 0.5 - cx) / r.w, dy = (y + 0.5 - cy) / (r.h / 2);
-      const d = dx * dx + dy * dy;
-      if (d > 1) continue;
-      px(g, x, y, d > 0.86 ? '#3a2410' : hash(x, y) < 0.08 ? '#e2bf86' : active ? '#f3d89d' : '#ecd09a');
-    }
+    g.beginPath(); g.ellipse(r.x + r.w / 2, r.y + r.h / 2, r.w / 2, r.h / 2, 0, 0, Math.PI * 2);
+    g.fillStyle = fill; g.fill(); g.lineWidth = 2; g.strokeStyle = '#3a2410'; g.stroke();
     return;
   }
-  g.fillStyle = '#3a2410'; g.fillRect(r.x + 1, r.y, r.w - 2, r.h);
-  g.fillStyle = active ? '#f3d89d' : '#ecd09a'; g.fillRect(r.x + 3, r.y + 2, r.w - 6, r.h - 4);
-  g.fillStyle = '#d9b373'; g.fillRect(r.x + 3, r.y + r.h - 5, r.w - 6, 3); g.fillRect(r.x + r.w - 6, r.y + 2, 3, r.h - 4);
+  rrect(g, r.x + 1, r.y, r.w - 2, r.h, 10); g.fillStyle = '#3a2410'; g.fill();
+  const gr = g.createLinearGradient(0, r.y, 0, r.y + r.h); gr.addColorStop(0, '#d9b373'); gr.addColorStop(0.25, fill); gr.addColorStop(1, fill);
+  rrect(g, r.x + 3, r.y + 2, r.w - 6, r.h - 4, 8); g.fillStyle = gr; g.fill();
 }
 const PEBBLE = [['#ffffff', '#e8e4dc', '#c9c2b4', '#9d9484'], ['#f6e3b6', '#e7cc8f', '#c9a96a', '#9a7a44'], ['#dfe7f3', '#c3cfe2', '#98a8c3', '#6d7c98']];
 function drawStones(r, i, n, big, ghost) {
   const cx = r.x + r.w / 2, cy = r.y + r.h / 2;
-  if (big) disc(g, Math.round(cx + (r.x < W / 2 ? 6 : -6)), Math.round(cy - 8), 8, ['#8a8fd6', '#5a5fb8', '#303487', '#1d1f55']);
+  if (big) disc(g, cx + (r.x < W / 2 ? 6 : -6), cy - 8, 8, ['#8a8fd6', '#5a5fb8', '#303487', '#1d1f55'], '#1d1f55');
   const shown = Math.min(n, 24);
   for (let k = 0; k < shown; k++) {
     const a = hash(i * 31 + k, 7) * Math.PI * 2, rad = (hash(k, i * 13 + 3) ** 0.7) * (r.w / 2 - 9);
-    const x = Math.round(cx + Math.cos(a) * rad), y = Math.round(cy + Math.sin(a) * rad * 0.8 + (big ? 10 : 0));
-    disc(g, x, y, n <= 10 ? 3 : 2, PEBBLE[(i + k) % 3], ghost ? '#8a7a66' : '#4a3a2a');
+    const x = cx + Math.cos(a) * rad, y = cy + Math.sin(a) * rad * 0.8 + (big ? 10 : 0);
+    disc(g, x, y, n <= 10 ? 3.4 : 2.7, PEBBLE[(i + k) % 3], ghost ? '#8a7a66' : '#4a3a2a');
   }
   if (n > 0 || big) {
     const label = n + (big ? 10 : 0);
-    g.fillStyle = 'rgba(29,31,85,.85)';
-    const w = String(label).length * 4 + 3;
-    g.fillRect(r.x + 4, r.y + r.h - 12, w, 8);
-    digits(g, label, r.x + 6, r.y + r.h - 10, big ? '#ffdc38' : '#fbf2e3');
+    g.font = `800 7px ${UI_FONT}`;
+    const w = g.measureText(String(label)).width + 7;
+    rrect(g, r.x + 4, r.y + r.h - 13, w, 9, 4.5); g.fillStyle = 'rgba(29,31,85,.85)'; g.fill();
+    g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = big ? '#ffdc38' : '#fbf2e3';
+    g.fillText(label, r.x + 4 + w / 2, r.y + r.h - 8.3);
   }
 }
 function arrow(x, y, dir, color) {
-  for (let k = 0; k < 6; k++) { g.fillStyle = color; g.fillRect(dir > 0 ? x + k : x - k, y - (5 - k), 1, (5 - k) * 2 + 1); }
+  g.fillStyle = color; g.beginPath(); g.moveTo(x, y - 5); g.lineTo(x + dir * 6, y); g.lineTo(x, y + 5); g.closePath(); g.fill();
 }
 function render() {
   if (!S.disp) return;
-  g.imageSmoothingEnabled = false;
+  g.imageSmoothingEnabled = true;
   layer ||= buildLayer();
-  g.drawImage(layer, 0, 0);
+  g.drawImage(layer, 0, 0, W, H);
   const st = S.disp, turn = S.view?.turn ?? -1;
   for (let i = 0; i < 12; i++) {
     const r = rect(i), quan = i === 0 || i === 6;
@@ -77,17 +74,17 @@ function render() {
     drawCell(r, quan, mineTurn);
     drawStones(r, i, st.small[i], st.big[i] > 0);
   }
-  if (S.flash) { const r = rect(S.flash.i); brackets(g, r.x + 1, r.y, r.w - 2, r.h, S.flash.color, 6); }
-  if (S.hint) { const r = rect(S.hint.pit); brackets(g, r.x + 2, r.y + 1, r.w - 4, r.h - 2, '#303487', 6); const right = S.hint.dir === dirRight(S.view.turn); arrow(right ? r.x + r.w - 10 : r.x + 9, r.y + r.h / 2, right ? 1 : -1, '#303487'); }
+  if (S.flash) { const r = rect(S.flash.i); brackets(g, r.x + 1, r.y, r.w - 2, r.h, S.flash.color); }
+  if (S.hint) { const r = rect(S.hint.pit); brackets(g, r.x + 2, r.y + 1, r.w - 4, r.h - 2, '#303487'); const right = S.hint.dir === dirRight(S.view.turn); arrow(right ? r.x + r.w - 10 : r.x + 9, r.y + r.h / 2, right ? 1 : -1, '#303487'); }
   if (S.selected >= 0) {
     const r = rect(S.selected), blink = Math.floor(performance.now() / 300) % 2;
-    brackets(g, r.x + 2, r.y + 1, r.w - 4, r.h - 2, blink ? '#ffdc38' : '#1d1f55', 6);
+    brackets(g, r.x + 2, r.y + 1, r.w - 4, r.h - 2, blink ? '#ffdc38' : '#1d1f55');
     arrow(r.x + 9, r.y + r.h / 2, -1, '#c8323c'); arrow(r.x + r.w - 10, r.y + r.h / 2, 1, '#c8323c');
   }
   if (S.hand) {
     const r = rect(S.hand.at), x = r.x + r.w / 2, y = r.y - 2;
-    g.fillStyle = '#ffdc38'; g.fillRect(x - 9, y - 9, 18, 10); g.fillStyle = '#1d1f55'; g.fillRect(x - 9, y + 1, 18, 1);
-    digits(g, S.hand.n, x - 6, y - 7, '#1d1f55');
+    rrect(g, x - 10, y - 11, 20, 12, 6); g.fillStyle = '#ffdc38'; g.fill(); g.lineWidth = 1; g.strokeStyle = '#1d1f55'; g.stroke();
+    g.font = `800 8px ${UI_FONT}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = '#1d1f55'; g.fillText(S.hand.n, x, y - 4.8);
   }
   if (S.selected >= 0 || S.hint) requestAnimationFrame(render);
 }
