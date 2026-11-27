@@ -410,3 +410,65 @@ initialize();
   window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, {passive: true});
   bar.addEventListener('focusin', () => bar.classList.remove('is-hidden'));
 })();
+
+
+// Ngách nội dung cho hệ thống đăng bài tự động (bảng ai_niches trên Supabase; chỉ có ở bản cloud).
+let niches = [];
+const NICHE_TYPES = { ai_news: 'Tin AI', tech_deep_dive: 'Công nghệ chuyên sâu', github_trending: 'Dự án GitHub' };
+const nicheBody = (niche, changes = {}) => ({ name: niche.name, slug: niche.slug, category_type: niche.categoryType, keywords: niche.keywords, rss_sources: niche.rssSources, system_tone: niche.systemTone, post_category: niche.postCategory, is_active: niche.isActive, ...changes });
+function renderNiches() {
+  const target = $('#niches-list');
+  if (!target) return;
+  const active = niches.filter(n => n.isActive).length, postsTotal = niches.reduce((a, n) => a + n.stats.posts, 0), words = niches.reduce((a, n) => a + n.stats.totalWords, 0);
+  $('#niche-summary').textContent = `${active}/${niches.length} ngách đang bật · ${postsTotal} bài tự động · ${words.toLocaleString('vi-VN')} từ`;
+  if (!niches.length) { empty(target, 'Chưa có ngách nào. Thêm ngách đầu tiên ở khung bên cạnh.'); return; }
+  target.replaceChildren(...niches.map(niche => {
+    const card = make('article', undefined, 'niche-card' + (niche.isActive ? '' : ' is-off'));
+    const head = make('div', undefined, 'niche-head');
+    head.append(make('h3', niche.name), make('span', niche.isActive ? 'Đang bật' : 'Đang tắt', 'niche-state'));
+    const meta = make('p', `${NICHE_TYPES[niche.categoryType] || niche.categoryType} · ${niche.postCategory} · ${niche.keywords.length} từ khóa · ${niche.rssSources.length} nguồn RSS`);
+    const stats = make('p', `${niche.stats.posts} bài (${niche.stats.published} đã đăng) · trung bình ${niche.stats.averageWords.toLocaleString('vi-VN')} từ · tổng ${niche.stats.totalWords.toLocaleString('vi-VN')} từ`, 'niche-stats');
+    const used = make('small', niche.lastUsedAt ? `Dùng gần nhất: ${new Date(niche.lastUsedAt).toLocaleString('vi-VN')}` : 'Chưa dùng lần nào');
+    const controls = make('div', undefined, 'item-actions');
+    controls.append(
+      action(niche.isActive ? 'Tắt' : 'Bật', async () => { await api(`/api/admin/niches/${niche.id}`, { method: 'PUT', body: JSON.stringify(nicheBody(niche, { is_active: !niche.isActive })) }); await loadNiches(); message($('#niche-status'), `Đã ${niche.isActive ? 'tắt' : 'bật'} ngách “${niche.name}”.`); }, 'outline'),
+      action('Sửa', async () => { editNiche(niche); $('#niche-form').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 'outline'),
+      action('Xóa', async () => { if (!confirm(`Xóa ngách “${niche.name}”? Các bài đã đăng vẫn giữ nguyên.`)) return; await api(`/api/admin/niches/${niche.id}`, { method: 'DELETE' }); await loadNiches(); message($('#niche-status'), 'Đã xóa ngách.'); }, 'outline danger')
+    );
+    card.append(head, meta, stats, used, controls);
+    return card;
+  }));
+}
+function editNiche(niche) {
+  const form = $('#niche-form'); if (!form?.elements) return;
+  form.reset();
+  form.elements.namedItem('id').value = niche?.id || '';
+  form.elements.namedItem('name').value = niche?.name || '';
+  form.elements.namedItem('slug').value = niche?.slug || '';
+  form.elements.namedItem('category_type').value = niche?.categoryType || 'ai_news';
+  form.elements.namedItem('post_category').value = niche?.postCategory || 'Góc nhìn';
+  form.elements.namedItem('keywords').value = (niche?.keywords || []).join('\n');
+  form.elements.namedItem('rss_sources').value = (niche?.rssSources || []).join('\n');
+  form.elements.namedItem('system_tone').value = niche?.systemTone || '';
+  form.elements.namedItem('is_active').checked = niche ? niche.isActive : true;
+  $('#niche-form-title').textContent = niche ? `Sửa ngách “${niche.name}”` : 'Thêm ngách mới';
+  message($('#niche-status'));
+}
+async function loadNiches() {
+  try { niches = (await api('/api/admin/niches')).niches || []; renderNiches(); }
+  catch (error) { message($('#niche-status'), LOCAL ? 'Ngách nội dung chỉ có trên bản cloud (admin.hunghienhoa.com).' : error.message, true); }
+}
+$('#refresh-niches')?.addEventListener?.('click', () => loadNiches());
+$('#new-niche')?.addEventListener?.('click', () => editNiche());
+$('#niche-form')?.addEventListener?.('submit', async event => {
+  event.preventDefault();
+  const form = event.target, id = form.elements.namedItem('id').value, button = $('#save-niche');
+  const body = { name: form.elements.namedItem('name').value, slug: form.elements.namedItem('slug').value.trim().toLowerCase(), category_type: form.elements.namedItem('category_type').value, post_category: form.elements.namedItem('post_category').value, keywords: form.elements.namedItem('keywords').value, rss_sources: form.elements.namedItem('rss_sources').value, system_tone: form.elements.namedItem('system_tone').value, is_active: form.elements.namedItem('is_active').checked };
+  button.disabled = true;
+  try {
+    await api(id ? `/api/admin/niches/${id}` : '/api/admin/niches', { method: id ? 'PUT' : 'POST', body: JSON.stringify(body) });
+    await loadNiches(); editNiche(); message($('#niche-status'), id ? 'Đã lưu thay đổi của ngách.' : 'Đã thêm ngách mới.');
+  } catch (error) { message($('#niche-status'), error.message, true); }
+  finally { button.disabled = false; }
+});
+document.querySelector('[data-panel="niches"]')?.addEventListener?.('click', () => { if (!niches.length) loadNiches(); });

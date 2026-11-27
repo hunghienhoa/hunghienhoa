@@ -1,4 +1,4 @@
-import { readingMinutes, filterPosts, articleBlocks, inlineTokens, safeCoverURL } from './core.mjs?v=media-3';
+import { readingMinutes, filterPosts, articleBlocks, inlineTokens, safeCoverURL } from './core.mjs?v=media-4';
 
 const $ = selector => document.querySelector(selector);
 const API = String(window.HUNG_API_BASE || '').replace(/\/$/, '');
@@ -164,7 +164,7 @@ async function loadPosts() {
 function appendInline(node,text) {
   for(const token of inlineTokens(text)) {
     if(token.type==='text')node.append(document.createTextNode(token.text));
-    else {const child=element(token.type,'',token.text);if(token.type==='a'){child.href=token.href;child.target='_blank';child.rel='noopener noreferrer';}node.append(child);}
+    else {const child=element(token.type,'',token.text);if(token.type==='a'){child.href=token.href;child.target='_blank';child.rel=/^https?:\/\/(?:[\w-]+\.)*hunghienhoa\.com(?:\/|$)/.test(token.href)?'noopener noreferrer':'nofollow noopener noreferrer';}node.append(child);}
   }
 }
 function renderBody(content) {
@@ -176,6 +176,14 @@ function renderBody(content) {
       const figure=element('figure','article-image'),image=element('img');
       image.src=safeCoverURL(block.src,API,location.origin);image.alt=block.text;image.loading='lazy';image.decoding='async';
       figure.append(image);if(block.text)figure.append(element('figcaption','',block.text));nodes.push(figure);continue;
+    }
+    if (block.type === 'table') {
+      list=null;
+      const box=element('div','article-table'),table=element('table'),head=element('thead'),body=element('tbody'),headRow=element('tr');
+      for(const cell of block.header){const th=element('th');appendInline(th,cell);headRow.append(th);}
+      head.append(headRow);
+      for(const row of block.rows){const tr=element('tr');for(const cell of row){const td=element('td');appendInline(td,cell);tr.append(td);}body.append(tr);}
+      table.append(head,body);box.append(table);nodes.push(box);continue;
     }
     if (block.type === 'code') {
       list=null;

@@ -123,3 +123,8 @@
 }
 .ribbon-shell+.feed{padding-top:clamp(48px,6vw,84px)}
 .note-card b{text-wrap:balance}
+.article-table{overflow-x:auto;border:1px solid var(--hh-hair);border-radius:18px;background:var(--hh-card)}
+.article-table table{width:100%;min-width:480px;border-collapse:collapse;font-size:15px;line-height:1.55}
+.article-table th,.article-table td{padding:10px 14px;border-bottom:1px solid var(--hh-hair);text-align:left;vertical-align:top}
+.article-table th{background:color-mix(in srgb,var(--blue) 8%,#fff);font-weight:600}
+.article-table tr:last-child td{border-bottom:0}

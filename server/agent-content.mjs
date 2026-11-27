@@ -103,7 +103,8 @@ function inlineHtml(text) {
   return inlineTokens(String(text??'')).map(token=>{
     const text=escapeHtml(token.text);
     if(token.type==='text')return text;
-    if(token.type==='a')return `<a href="${escapeHtml(token.href)}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+    // Liên kết ra ngoài website mang nofollow (nguồn tham khảo của bài tự động), liên kết nội bộ thì không.
+    if(token.type==='a')return `<a href="${escapeHtml(token.href)}" target="_blank" rel="${/^https?:\/\/(?:[\w-]+\.)*hunghienhoa\.com(?:\/|$)/.test(token.href)?'noopener noreferrer':'nofollow noopener noreferrer'}">${text}</a>`;
     return `<${token.type}>${text}</${token.type}>`;
   }).join('');
 }
@@ -116,6 +117,7 @@ export function articleHtml(content,origin=ORIGINS.blog) {
     else if(block.type==='image'){const src=safeCoverURL(block.src,'',origin);if(src)html+=`<figure class="article-image"><img src="${escapeHtml(src)}" alt="${escapeHtml(block.text)}" loading="lazy">${block.text?`<figcaption>${escapeHtml(block.text)}</figcaption>`:''}</figure>`;}
     else if(block.type==='code')html+=`<section class="article-code"><div class="code-bar"><span>${escapeHtml(block.language||'Đoạn mã')}</span></div><pre><code>${escapeHtml(block.text)}</code></pre></section>`;
     else if(block.type==='hr')html+='<hr>';
+    else if(block.type==='table')html+=`<div class="article-table"><table><thead><tr>${block.header.map(c=>`<th>${inlineHtml(c)}</th>`).join('')}</tr></thead><tbody>${block.rows.map(r=>`<tr>${r.map(c=>`<td>${inlineHtml(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
     else {const tag=block.type==='quote'?'blockquote':block.type;html+=`<${tag}>${inlineHtml(block.text)}</${tag}>`;}
   }
   return html+(list?`</${list}>`:'');

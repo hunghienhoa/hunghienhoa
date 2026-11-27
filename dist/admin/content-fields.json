@@ -2694,6 +2694,12 @@
     "default": "Dung lượng & hạn mức"
   },
   {
+    "key": "admin-065",
+    "page": "admin",
+    "label": "Ngách nội dung",
+    "default": "Ngách nội dung"
+  },
+  {
     "key": "admin-014",
     "page": "admin",
     "label": "Ảnh chụp của khách không được gửi hoặc lưu ở đây.",
@@ -2920,6 +2926,102 @@
     "page": "admin",
     "label": "Chỉ dùng số liệu tự động từ API, không dùng dữ liệu nhập tay. Chỉ số thiếu quyền hoặc chưa được API ",
     "default": "Chỉ dùng số liệu tự động từ API, không dùng dữ liệu nhập tay. Chỉ số thiếu quyền hoặc chưa được API hỗ trợ được ghi rõ; không mặc định bằng 0. Ngày và tháng Cloudflare theo UTC (ngày mới lúc 07:00 Việt Nam). Hạn mức Free tham khảo tài liệu nhà cung cấp ngày 11/11/2026. Tab theo dõi và cảnh báo, không tự xóa dữ liệu hay chặn dịch vụ."
+  },
+  {
+    "key": "admin-066",
+    "page": "admin",
+    "label": "ĐĂNG BÀI TỰ ĐỘNG",
+    "default": "ĐĂNG BÀI TỰ ĐỘNG"
+  },
+  {
+    "key": "admin-067",
+    "page": "admin",
+    "label": "nội dung.",
+    "default": "nội dung."
+  },
+  {
+    "key": "admin-068",
+    "page": "admin",
+    "label": "Ngách",
+    "default": "Ngách"
+  },
+  {
+    "key": "admin-069",
+    "page": "admin",
+    "label": "Mỗi ngày lúc 08:30 và 20:15, hệ thống chọn ngách đang bật đã lâu chưa dùng nhất, gom 2–3 nguồn độc l",
+    "default": "Mỗi ngày lúc 08:30 và 20:15, hệ thống chọn ngách đang bật đã lâu chưa dùng nhất, gom 2–3 nguồn độc lập rồi viết một bài tối thiểu 2.500 từ. Bật, tắt hoặc sửa từ khóa và nguồn RSS ở đây."
+  },
+  {
+    "key": "admin-070",
+    "page": "admin",
+    "label": "Thêm ngách mới",
+    "default": "Thêm ngách mới"
+  },
+  {
+    "key": "admin-071",
+    "page": "admin",
+    "label": "Tên ngách",
+    "default": "Tên ngách"
+  },
+  {
+    "key": "admin-072",
+    "page": "admin",
+    "label": "Đường dẫn (chữ thường không dấu)",
+    "default": "Đường dẫn (chữ thường không dấu)"
+  },
+  {
+    "key": "admin-073",
+    "page": "admin",
+    "label": "Loại nguồn",
+    "default": "Loại nguồn"
+  },
+  {
+    "key": "admin-074",
+    "page": "admin",
+    "label": "Chuyên mục trên blog",
+    "default": "Chuyên mục trên blog"
+  },
+  {
+    "key": "admin-075",
+    "page": "admin",
+    "label": "mỗi dòng một từ hoặc cách nhau dấu phẩy; để trống là nhận mọi chủ đề",
+    "default": "mỗi dòng một từ hoặc cách nhau dấu phẩy; để trống là nhận mọi chủ đề"
+  },
+  {
+    "key": "admin-076",
+    "page": "admin",
+    "label": "Từ khóa",
+    "default": "Từ khóa"
+  },
+  {
+    "key": "admin-077",
+    "page": "admin",
+    "label": "mỗi dòng một địa chỉ https://",
+    "default": "mỗi dòng một địa chỉ https://"
+  },
+  {
+    "key": "admin-078",
+    "page": "admin",
+    "label": "Nguồn RSS",
+    "default": "Nguồn RSS"
+  },
+  {
+    "key": "admin-079",
+    "page": "admin",
+    "label": "hướng dẫn cách viết cho ngách này",
+    "default": "hướng dẫn cách viết cho ngách này"
+  },
+  {
+    "key": "admin-080",
+    "page": "admin",
+    "label": "Giọng văn",
+    "default": "Giọng văn"
+  },
+  {
+    "key": "admin-081",
+    "page": "admin",
+    "label": "Đang bật",
+    "default": "Đang bật"
   },
   {
     "key": "admin-043",

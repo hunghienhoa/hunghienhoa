@@ -28,7 +28,7 @@ assert.ok(rendered.includes('<h2>Tiêu đề riêng</h2>')&&rendered.includes('<
 assert.ok(rendered.includes('<ol><li>Đầu</li><li>Sau</li></ol><ul>')&&rendered.includes('<blockquote>Trích dẫn</blockquote>'));
 assert.ok(rendered.includes('  giữ thụt dòng $&')&&rendered.includes('&lt;script&gt;'));
 assert.ok(!rendered.includes('<script>')&&!rendered.includes('href="javascript:'));
-assert.ok(rendered.includes('rel="noopener noreferrer"')&&rendered.includes('a=1&amp;b=2'));
+assert.ok(rendered.includes('rel="nofollow noopener noreferrer"')&&rendered.includes('a=1&amp;b=2'));
 
 const post={id:'1',slug:'published',title:'PUBLIC-ARTICLE $& </title><script>bad()</script>',excerpt:'Mô tả riêng $& "quoted"',content,category:'Thiết kế',publishedAt:Date.UTC(2026,10,13),tags:['<script>bad</script>'],coverUrl:'/api/posts/1/cover.webp',status:'published'};
 const template=fs.readFileSync('dist/blog/index.html','utf8');
