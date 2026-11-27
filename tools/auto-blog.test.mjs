@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { countWords, slugify, parseFeed, corroborate, assembleArticle, cleanMarkdown, matchesKeywords, trimSource, domainOf, parseTrendshift, riskyRepo } from '../scripts/auto-blog-lib.mjs';
+import { countWords, slugify, parseFeed, corroborate, assembleArticle, cleanMarkdown, matchesKeywords, trimSource, domainOf, parseTrendshift, riskyRepo, placeIllustration, safeSvg, outlineSvg } from '../scripts/auto-blog-lib.mjs';
 import { articleBlocks } from '../dist/blog/core.mjs';
 import worker from '../worker/index.mjs';
 
@@ -87,4 +87,21 @@ test('pipeline: đọc bảng repo đang lên của Trendshift (JSON-LD) và lo�
   assert.deepEqual(parseTrendshift(''), []);
   for (const name of ['someone/game-cheat-menu', 'x/Claude-BugHunter', 'y/wifi_cracker', 'z/discord-token-stealer']) assert.ok(riskyRepo(name), name);
   for (const name of ['nexu-io/opengame', 'pingdotgg/t3code', 'google-gemini/gemini-api-cli', 'acme/chat-ui']) assert.ok(!riskyRepo(name), name);
+});
+
+test('pipeline: ảnh minh họa đặt sau chương đầu, SVG chỉ giữ hình vẽ thuần, luôn có ảnh dự phòng', () => {
+  const content = 'Sapo mở bài.\n\n## Bối cảnh\n\nĐoạn một.\n\n## Cách hoạt động\n\nĐoạn hai.\n\n## Kết luận\n\nHết.';
+  const placed = placeIllustration(content, 'Sơ đồ [cách] hoạt động', 1);
+  assert.match(placed, /Đoạn một\.\n\n!\[Sơ đồ cách hoạt động\]\(image:1\)\n\n## Cách hoạt động/);
+  assert.match(placeIllustration('Chỉ có sapo.', '', 2), /Chỉ có sapo\.\n\n!\[Minh họa\]\(image:2\)\n$/);
+  const media = placed.replace('(image:1)', '(/api/media/12345678-1234-1234-1234-123456789abc.webp)');
+  assert.ok(articleBlocks(media).some(block => block.type === 'image' && block.text === 'Sơ đồ cách hoạt động'), 'sau khi database thay chỗ đặt ảnh, blog vẽ được ảnh');
+  assert.ok(safeSvg('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><defs><marker id="m"/></defs><path d="M0 0" marker-end="url(#m)"/><text>Chữ</text></svg>'));
+  for (const bad of ['<svg><script>alert(1)</script></svg>', '<svg><image href="https://x.test/a.png"/></svg>', '<svg onload="x()"></svg>', '<svg><rect fill="url(https://x.test)"/></svg>', '<svg><foreignObject/></svg>', '<svg><style>@import url(x)</style></svg>', '<p>không phải svg</p>'])
+    assert.equal(safeSvg(bad), '', bad);
+  const outline = outlineSvg('Tiêu đề <bài> & "thử"', content);
+  assert.ok(safeSvg(outline), 'ảnh dự phòng cũng qua bộ lọc');
+  assert.match(outline, /Tiêu đề &lt;bài&gt; &amp; &quot;thử&quot;/);
+  assert.match(outline, /Bối cảnh/);
+  assert.doesNotMatch(outline, /Kết luận/);
 });

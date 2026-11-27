@@ -125,3 +125,33 @@ export function parseTrendshift(html) {
 const RISKY_REPO = /\b(cheat|aimbot|wallhack|crack(ed|er)?|keygen|bypass|exploit|0day|hack(ing|tool)?|bughunt(er)?|pentest|red.?team|c2|rat|stealer|malware|ransom|spoof(er)?|injector|jailbreak|unlock(er)?|carding|phish(ing)?|ddos|botnet|piracy|warez|torrent|free.?(robux|vbucks))\b/i;
 export function riskyRepo(text) { return RISKY_REPO.test(String(text || '').replace(/[_-]+/g, ' ')); }
 
+
+// ---------- Ảnh minh họa trong bài ----------
+// Bài gửi lên dùng chỗ đặt "![Chú thích](image:1)" trên một dòng riêng; hàm agent_publish_post lưu ảnh và thay
+// bằng /api/media/<uuid>.webp. Ảnh đặt sau chương đầu tiên (trước tiêu đề "## " thứ hai), hoặc cuối bài nếu không có.
+export function placeIllustration(content, caption, key = 1) {
+  const alt = String(caption || 'Minh họa').replace(/[\[\]\r\n]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 180) || 'Minh họa';
+  const line = `![${alt}](image:${key})`;
+  const text = String(content || '');
+  const headings = [...text.matchAll(/^## .+$/gm)];
+  if (headings.length < 2) return `${text.replace(/\s+$/, '')}\n\n${line}\n`;
+  const at = headings[1].index;
+  return `${text.slice(0, at).replace(/\s+$/, '')}\n\n${line}\n\n${text.slice(at)}`;
+}
+
+// SVG do Claude vẽ chỉ được là hình vẽ thuần: không script, không liên kết/tải tài nguyên ngoài, không ảnh nhúng.
+export function safeSvg(svg) {
+  const text = String(svg || '').trim();
+  if (!/^<svg[\s>]/i.test(text) || !/<\/svg>\s*$/i.test(text) || text.length > 60000) return '';
+  if (/<(script|foreignObject|image|iframe|use|a|style)\b|\bon\w+\s*=|(?:xlink:)?href\s*=|url\(\s*['"]?(?!#)|@import|javascript:|<!ENTITY|<!DOCTYPE/i.test(text)) return '';
+  return text;
+}
+
+const escapeXml = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
+// Ảnh dự phòng luôn tạo được: thẻ "Bài này có gì" liệt kê các chương chính, tông kem/xanh tím/vàng của website.
+export function outlineSvg(title, content) {
+  const chapters = [...String(content || '').matchAll(/^## (.+)$/gm)].map(m => m[1].trim()).filter(h => !/^(Câu hỏi thường gặp|Kết luận|Nguồn tham khảo)/i.test(h)).slice(0, 6);
+  const clip = (s, n) => (s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s);
+  const rows = chapters.map((h, i) => `<g transform="translate(90 ${250 + i * 66})"><circle cx="22" cy="-8" r="22" fill="#ffdc38"/><text x="22" y="0" font-size="22" font-weight="700" text-anchor="middle" fill="#303487">${i + 1}</text><text x="64" y="0" font-size="26" fill="#303487">${escapeXml(clip(h, 62))}</text></g>`).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="${Math.max(675, 300 + chapters.length * 66)}" viewBox="0 0 1200 ${Math.max(675, 300 + chapters.length * 66)}" font-family="DejaVu Sans, Arial, sans-serif"><rect width="100%" height="100%" fill="#fbf2e3"/><rect x="24" y="24" width="1152" height="${Math.max(627, 252 + chapters.length * 66)}" rx="36" fill="none" stroke="#303487" stroke-width="4"/><text x="90" y="120" font-size="22" font-weight="700" letter-spacing="3" fill="#f0b400">BÀI NÀY CÓ GÌ</text><text x="90" y="178" font-size="38" font-weight="700" fill="#303487">${escapeXml(clip(String(title || ''), 52))}</text>${rows}</svg>`;
+}
