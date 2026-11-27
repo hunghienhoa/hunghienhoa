@@ -42,3 +42,10 @@ test('đăng ký mã: chỉ chuyển mã sang hàm Supabase, cửa sổ đóng t
   assert.equal((await send('Bearer ma-moi-du-dai-0123456789')).status, 403);
   assert.equal((await worker.fetch(new Request('https://hunghienhoa.com/api/agent/enroll'), env)).status, 405);
 });
+
+test('blog.hunghienhoa.com: trang chuyển 308 về /blog/, API đăng bài chạy thẳng', async () => {
+  const { publicRedirect } = await import('../server/agent-content.mjs');
+  assert.equal(publicRedirect('https://blog.hunghienhoa.com/api/agent/publish'), null);
+  assert.equal(publicRedirect('https://blog.hunghienhoa.com/api/agent/context'), null);
+  assert.equal(publicRedirect('https://blog.hunghienhoa.com/bai-viet').href, 'https://hunghienhoa.com/blog/bai-viet');
+});
