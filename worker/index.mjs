@@ -172,7 +172,7 @@ function postData(row, admin = false) {
 
 // Ngách nội dung cho pipeline đăng bài tự động (bảng ai_niches, chỉ quản trị đọc/ghi).
 const NICHE_SELECT = 'id,name,slug,category_type,keywords,rss_sources,system_tone,post_category,is_active,last_used_at';
-const NICHE_TYPES = ['github_trending', 'ai_news', 'tech_deep_dive', 'tips'];
+const NICHE_TYPES = ['github_trending', 'ai_news', 'tech_deep_dive', 'tips', 'guide'];
 function niche(value) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) fail(400, 'Dữ liệu ngách chưa hợp lệ.');
   const text = (v, min, max, label) => { const s = typeof v === 'string' ? v.trim() : ''; if (s.length < min || s.length > max) fail(400, `${label} cần từ ${min} đến ${max} ký tự.`); return s; };

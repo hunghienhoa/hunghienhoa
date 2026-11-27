@@ -63,6 +63,7 @@ test('Worker: quản trị ngách cần đăng nhập, kiểm tra dữ liệu v�
   assert.equal((await call('POST', '/api/admin/niches', { name: 'Mới', slug: 'Có Dấu', category_type: 'tech_deep_dive' })).status, 400);
   assert.equal((await call('POST', '/api/admin/niches', { name: 'Mới', slug: 'moi', category_type: 'khac' })).status, 400);
   assert.equal((await call('POST', '/api/admin/niches', { name: 'Thủ thuật hay', slug: 'thu-thuat-hay', category_type: 'tips', post_category: 'Thủ thuật' })).status, 201);
+  assert.equal((await call('POST', '/api/admin/niches', { name: 'Dựng video AI · Cài đặt', slug: 'video-ai-cai-dat', category_type: 'guide', post_category: 'Dựng video AI', rss_sources: 'https://github.com/openai/codex/releases.atom' })).status, 201);
   assert.equal((await call('POST', '/api/admin/niches', { name: 'Mới', slug: 'moi', category_type: 'tech_deep_dive', rss_sources: 'http://khong-an-toan.test/feed' })).status, 400);
   const created = await call('POST', '/api/admin/niches', { name: 'Mới', slug: 'moi', category_type: 'tech_deep_dive', keywords: 'rust, wasm\nrust', is_active: false });
   assert.equal(created.status, 201);
