@@ -6,12 +6,6 @@
     "default": "Đến nội dung chính"
   },
   {
-    "key": "main-003",
-    "page": "main",
-    "label": "hhh",
-    "default": "hhh"
-  },
-  {
     "key": "main-139",
     "page": "main",
     "label": "Bài viết",
@@ -348,7 +342,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "main-256",
+    "key": "main-259",
     "page": "main",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -382,12 +376,6 @@
     "page": "main",
     "label": "0898.29.8886",
     "default": "0898.29.8886"
-  },
-  {
-    "key": "main-212",
-    "page": "main",
-    "label": "hhh",
-    "default": "hhh"
   },
   {
     "key": "main-213",
@@ -558,13 +546,7 @@
     "default": "Góc tò mò"
   },
   {
-    "key": "blog-004",
-    "page": "blog",
-    "label": "hhh",
-    "default": "hhh"
-  },
-  {
-    "key": "blog-092",
+    "key": "blog-096",
     "page": "blog",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -702,7 +684,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "blog-093",
+    "key": "blog-097",
     "page": "blog",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -736,12 +718,6 @@
     "page": "blog",
     "label": "0898.29.8886",
     "default": "0898.29.8886"
-  },
-  {
-    "key": "blog-054",
-    "page": "blog",
-    "label": "hhh",
-    "default": "hhh"
   },
   {
     "key": "blog-055",
@@ -912,13 +888,7 @@
     "default": "Hộp Ảnh"
   },
   {
-    "key": "photobooth-105",
-    "page": "photobooth",
-    "label": "hhh",
-    "default": "hhh"
-  },
-  {
-    "key": "photobooth-207",
+    "key": "photobooth-211",
     "page": "photobooth",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -1602,7 +1572,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "photobooth-208",
+    "key": "photobooth-212",
     "page": "photobooth",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -1636,12 +1606,6 @@
     "page": "photobooth",
     "label": "0898.29.8886",
     "default": "0898.29.8886"
-  },
-  {
-    "key": "photobooth-165",
-    "page": "photobooth",
-    "label": "hhh",
-    "default": "hhh"
   },
   {
     "key": "photobooth-166",
@@ -1812,13 +1776,7 @@
     "default": "Snap Video"
   },
   {
-    "key": "snaptik-004",
-    "page": "snaptik",
-    "label": "hhh",
-    "default": "hhh"
-  },
-  {
-    "key": "snaptik-087",
+    "key": "snaptik-091",
     "page": "snaptik",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -2106,7 +2064,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "snaptik-088",
+    "key": "snaptik-092",
     "page": "snaptik",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -2140,12 +2098,6 @@
     "page": "snaptik",
     "label": "0898.29.8886",
     "default": "0898.29.8886"
-  },
-  {
-    "key": "snaptik-060",
-    "page": "snaptik",
-    "label": "hhh",
-    "default": "hhh"
   },
   {
     "key": "snaptik-061",
@@ -2316,13 +2268,7 @@
     "default": "Làm Nét"
   },
   {
-    "key": "lamnet-004",
-    "page": "lamnet",
-    "label": "hhh",
-    "default": "hhh"
-  },
-  {
-    "key": "lamnet-102",
+    "key": "lamnet-106",
     "page": "lamnet",
     "label": "Trang chủ",
     "default": "Trang chủ"
@@ -2700,7 +2646,7 @@
     "default": "Cùng trò chuyện"
   },
   {
-    "key": "lamnet-103",
+    "key": "lamnet-107",
     "page": "lamnet",
     "label": "Nhắn Hùng nhé.",
     "default": "Nhắn Hùng nhé."
@@ -2734,12 +2680,6 @@
     "page": "lamnet",
     "label": "0898.29.8886",
     "default": "0898.29.8886"
-  },
-  {
-    "key": "lamnet-075",
-    "page": "lamnet",
-    "label": "hhh",
-    "default": "hhh"
   },
   {
     "key": "lamnet-076",

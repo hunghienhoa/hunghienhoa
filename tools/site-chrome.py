@@ -39,7 +39,7 @@ SOCIALS = [
 
 
 def header(section, app, links, cta):
-    brand = '<a class="sitebar-brand" href="/" aria-label="Hùng Hiền Hòa, về trang chủ">hhh<span>.</span>' + (f'<small>{app}</small>' if app else '') + '</a>'
+    brand = '<a class="sitebar-brand" href="/" aria-label="Hùng Hiền Hòa, về trang chủ"><img class="brand-mark" src="/assets/logo.svg" alt="" width="36" height="36" aria-hidden="true">' + (f'<small>{app}</small>' if app else '') + '</a>'
     nav = ''.join(f'<a href="{href}"{extra}>{label}</a>' for href, label, extra in links)
     # Trang con có liên kết "Trang chủ" đứng đầu (icon ngôi nhà + chữ) để quay về rõ ràng, không chỉ dựa vào logo.
     if section != 'main':
@@ -66,7 +66,7 @@ def footer():
             '<div class="footer-cta-actions"><a class="btn btn-sun contact-button" href="mailto:hunghienhoa2110@gmail.com?subject=Ch%C3%A0o%20H%C3%B9ng">Gửi email cho Hùng <span class="ic ic-arrow-up-right" aria-hidden="true"></span></a>'
             '<div class="footer-cta-lines"><a class="contact-email" id="contact-email" href="mailto:hunghienhoa2110@gmail.com">hunghienhoa2110@gmail.com</a><a class="contact-phone" href="tel:+84898298886">0898.29.8886</a></div>'
             f'<ul class="social-links" aria-label="Mạng xã hội">{socials}</ul><p class="social-note" id="wechat-status" role="status"></p></div></section>'
-            '<div class="footer-main"><div class="footer-about"><a class="footer-logo" href="/">hhh<span>.</span></a><p>Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.</p></div>'
+            '<div class="footer-main"><div class="footer-about"><a class="footer-logo" href="/" aria-label="Hùng Hiền Hòa, về trang chủ"><img class="brand-mark" src="/assets/logo.svg" alt="" width="48" height="48" aria-hidden="true"></a><p>Góc chia sẻ của Hùng Hiền Hòa: chuyện sáng tạo, hình ảnh và vài công cụ nhỏ hữu ích.</p></div>'
             '<nav class="footer-col" aria-label="Khám phá"><h2>Khám phá</h2><ul><li><a href="/">Trang chủ</a></li><li><a href="/blog/">Góc tò mò</a></li><li><a href="/#ve-hung">Về Hùng</a></li><li><a href="#contact">Liên hệ</a></li></ul></nav>'
             '<nav class="footer-col" aria-label="Công cụ"><h2>Công cụ</h2><ul><li><a href="/photobooth/">Hộp Ảnh</a></li><li><a href="/snaptik/">Snap Video</a></li><li><a href="/lamnet/">Làm Nét Ảnh</a></li></ul></nav>'
             '<nav class="footer-col" aria-label="Game Pixel"><h2>Game Pixel</h2><ul><li><a href="/game/">Tất cả game</a></li><li><a href="/cotuong/">Cờ Tướng</a></li><li><a href="/game/tien-len/">Tiến Lên</a></li><li><a href="/game/phom/">Phỏm (Tá Lả)</a></li><li><a href="/game/ba-cay/">Ba Cây</a></li><li><a href="/game/ca-ngua/">Cờ Cá Ngựa</a></li><li><a href="/game/o-an-quan/">Ô Ăn Quan</a></li></ul></nav>'
@@ -113,7 +113,7 @@ RIBBONS = {
     'cookie-va-quang-cao.html': (['Rõ ràng từng điều', 'Riêng tư được tôn trọng', 'Có thắc mắc cứ hỏi'], 'before', '<footer class="site-footer">', ''),
     '404.html': (['Ơ, lạc mất rồi', 'Về trang chủ nhé'], 'before', '</body>', ''),
 }
-BAND_RE = re.compile(r'<div class="(?:ribbon-shell )?topic-band"[^>]*>.*?(?:</div><!--/band-->|</div></div>)', re.S)
+BAND_RE = re.compile(r'(?:</div><!--/band-->\s*)*<div class="(?:ribbon-shell )?topic-band"[^>]*>.*?</div><!--/band-->\n?', re.S)
 
 
 def ribbon(items, extra_class=''):
@@ -144,7 +144,7 @@ for name in RIBBONS:
     if only and name not in only:
         continue
     path = DIST / name
-    path.write_text(place_ribbon(name, path.read_text(encoding='utf-8')), encoding='utf-8')
+    path.write_text(place_ribbon(name, path.read_text(encoding='utf-8')), encoding='utf-8', newline='\n')
 for name, (section, app, links, cta) in PAGES.items():
     if only and name not in only:
         continue
@@ -162,5 +162,5 @@ for name, (section, app, links, cta) in PAGES.items():
         if old_footer: source = source[:old_footer.start()] + source[old_footer.end():]
     else:
         source = source[:old_footer.start()] + keep_edits(old_footer.group(0), new_footer) + source[old_footer.end():]
-    path.write_text(source, encoding='utf-8')
+    path.write_text(source, encoding='utf-8', newline='\n')
 print(f'PASS: thanh điều hướng và footer chung cho {len(PAGES)} trang.')
