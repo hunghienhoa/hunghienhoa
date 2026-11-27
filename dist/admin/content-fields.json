@@ -20,8 +20,8 @@
   {
     "key": "main-241",
     "page": "main",
-    "label": "Game Pixel",
-    "default": "Game Pixel"
+    "label": "Trò chơi",
+    "default": "Trò chơi"
   },
   {
     "key": "main-005",
@@ -63,7 +63,7 @@
     "key": "main-154",
     "page": "main",
     "label": "Blog của Hùng về sáng tạo, hình ảnh và những điều nhỏ mà thú vị. Kèm vài tiện ích miễn phí và một bà",
-    "default": "Blog của Hùng về sáng tạo, hình ảnh và những điều nhỏ mà thú vị. Kèm vài tiện ích miễn phí và một bàn cờ tướng pixel, dùng ngay trên trình duyệt."
+    "default": "Blog của Hùng về sáng tạo, hình ảnh và những điều nhỏ mà thú vị. Kèm vài tiện ích miễn phí và một bàn cờ tướng, dùng ngay trên trình duyệt."
   },
   {
     "key": "main-155",
@@ -248,14 +248,14 @@
   {
     "key": "main-242",
     "page": "main",
-    "label": "Trò chơi pixel",
-    "default": "Trò chơi pixel"
+    "label": "Chơi ngay",
+    "default": "Chơi ngay"
   },
   {
     "key": "main-243",
     "page": "main",
-    "label": "Game Pixel",
-    "default": "Game Pixel"
+    "label": "Trò chơi",
+    "default": "Trò chơi"
   },
   {
     "key": "main-244",
@@ -440,8 +440,8 @@
   {
     "key": "main-250",
     "page": "main",
-    "label": "Game Pixel",
-    "default": "Game Pixel"
+    "label": "Trò chơi",
+    "default": "Trò chơi"
   },
   {
     "key": "main-251",
@@ -782,8 +782,8 @@
   {
     "key": "blog-086",
     "page": "blog",
-    "label": "Game Pixel",
-    "default": "Game Pixel"
+    "label": "Trò chơi",
+    "default": "Trò chơi"
   },
   {
     "key": "blog-087",
@@ -1670,8 +1670,8 @@
   {
     "key": "photobooth-201",
     "page": "photobooth",
-    "label": "Game Pixel",
-    "default": "Game Pixel"
+    "label": "Trò chơi",
+    "default": "Trò chơi"
   },
   {
     "key": "photobooth-202",
@@ -2162,8 +2162,8 @@
   {
     "key": "snaptik-081",
     "page": "snaptik",
-    "label": "Game Pixel",
-    "default": "Game Pixel"
+    "label": "Trò chơi",
+    "default": "Trò chơi"
   },
   {
     "key": "snaptik-082",
@@ -2744,8 +2744,8 @@
   {
     "key": "lamnet-096",
     "page": "lamnet",
-    "label": "Game Pixel",
-    "default": "Game Pixel"
+    "label": "Trò chơi",
+    "default": "Trò chơi"
   },
   {
     "key": "lamnet-097",

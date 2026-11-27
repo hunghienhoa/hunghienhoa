@@ -1,5 +1,5 @@
 {
-  "admin/app.js?v=2026-11": "b9d065f8d6bce77b",
+  "admin/app.js?v=2026-11b": "0179e91a0b5d5186",
   "admin/editor.js?v=media-3": "cfc4d2e3211119b2",
   "admin/media.js?v=1": "1727dce15c0aee2d",
   "admin/style.css?v=2026-16": "4c3098d8cdff80cc",
@@ -27,8 +27,8 @@
   "game/tien-len/app.js?v=4": "2139dab6f3723f73",
   "game/tien-len/rules.mjs?v=1": "0c4ce612e749674f",
   "home.css?v=14": "a271ab69bd87c869",
-  "i18n-en.js?v=14": "1080f60b3152fdc1",
-  "i18n.js?v=13": "e49144abc9cd9da5",
+  "i18n-en.js?v=15": "2c523217f07601ac",
+  "i18n.js?v=14": "1ba0281e9618e0e6",
   "lamnet/app.js?v=9": "d28f99363a7f7daf",
   "lamnet/core.mjs?v=3": "247a6722e22afc6c",
   "lamnet/style.css?v=11": "08c8d9a023985919",
