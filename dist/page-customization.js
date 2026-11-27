@@ -25,9 +25,9 @@
       if (typeof value==='string' && /^https:\/\//i.test(value)) link.href=value;
     }
     const copy=document.querySelector('#wechat-copy');
-    if (copy && socials.wechat) {copy.dataset.wechatId=socials.wechat;copy.querySelector('small').textContent=socials.wechat;copy.setAttribute('aria-label','Sao chép mã WeChat '+socials.wechat);}
-    for (const email of document.querySelectorAll('.contact-email')) {email.textContent=site.email;email.href='mailto:'+site.email;}
-    for (const phone of document.querySelectorAll('.contact-phone')) {phone.firstChild.textContent=site.phone+' ';phone.href='tel:'+site.phone.replace(/[^+\d]/g,'');}
+    if (copy && typeof socials.wechat==='string' && socials.wechat) {copy.dataset.wechatId=socials.wechat;const label=copy.querySelector('small');if(label)label.textContent=socials.wechat;copy.title='WeChat '+socials.wechat;copy.setAttribute('aria-label','Sao chép mã WeChat '+socials.wechat);}
+    if (typeof site.email==='string' && site.email) for (const email of document.querySelectorAll('.contact-email')) {email.textContent=site.email;email.href='mailto:'+site.email;}
+    if (typeof site.phone==='string' && site.phone) for (const phone of document.querySelectorAll('.contact-phone')) {if(phone.firstChild)phone.firstChild.textContent=site.phone+' ';phone.href='tel:'+site.phone.replace(/[^+\d]/g,'');}
     };
     window.addEventListener('hung-content-ready',apply);
     apply();

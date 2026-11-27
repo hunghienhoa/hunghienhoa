@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {ADSENSE_CLIENT,adsenseHtml} from '../server/adsense.mjs';
-for(const page of ['dist','dist/blog','dist/photobooth','dist/snaptik']) {
+for(const page of ['dist','dist/blog','dist/photobooth']) {
   const html=readFileSync(page+'/index.html','utf8');
   const head=html.split('</head>')[0];
   assert.equal((head.match(/adsbygoogle\.js\?client=/g)||[]).length,0);
@@ -13,6 +13,10 @@ for(const page of ['dist','dist/blog','dist/photobooth','dist/snaptik']) {
   assert.notEqual(adsenseHtml(html,'another-nonce').csp,result.csp);
   assert.ok(result.csp.includes("base-uri 'self'"));
 }
+// Snap Video (tải video mạng xã hội) không gắn mã quảng cáo: AdSense không cho đặt quảng cáo trên trang hỗ trợ tải nội dung của người khác.
+const snap=readFileSync('dist/snaptik/index.html','utf8');
+assert.ok(!snap.includes(ADSENSE_CLIENT)&&!snap.includes('adsbygoogle'));
+assert.equal(adsenseHtml(snap,'nonce'),null);
 const admin=readFileSync('dist/admin/index.html','utf8');
 assert.ok(!admin.includes('adsbygoogle')&&!admin.includes(ADSENSE_CLIENT));
 assert.equal(adsenseHtml(admin,'nonce'),null);
