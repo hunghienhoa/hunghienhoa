@@ -170,6 +170,35 @@ function postData(row, admin = false) {
   };
 }
 
+// Ngách nội dung cho pipeline đăng bài tự động (bảng ai_niches, chỉ quản trị đọc/ghi).
+const NICHE_SELECT = 'id,name,slug,category_type,keywords,rss_sources,system_tone,post_category,is_active,last_used_at';
+const NICHE_TYPES = ['github_trending', 'ai_news', 'tech_deep_dive'];
+function niche(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) fail(400, 'Dữ liệu ngách chưa hợp lệ.');
+  const text = (v, min, max, label) => { const s = typeof v === 'string' ? v.trim() : ''; if (s.length < min || s.length > max) fail(400, `${label} cần từ ${min} đến ${max} ký tự.`); return s; };
+  const list = (v, max, check, label) => { const items = (Array.isArray(v) ? v : String(v || '').split(/[\n,]/)).map(s => String(s).trim()).filter(Boolean); if (items.length > max || items.some(s => s.length > 300 || !check(s))) fail(400, `${label} chưa hợp lệ.`); return [...new Set(items)]; };
+  const name = text(value.name, 2, 80, 'Tên ngách');
+  const slug = text(value.slug, 2, 60, 'Đường dẫn ngách');
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) fail(400, 'Đường dẫn ngách chỉ gồm chữ thường không dấu, số và gạch ngang.');
+  if (!NICHE_TYPES.includes(value.category_type)) fail(400, 'Loại ngách chưa hợp lệ.');
+  return {
+    name, slug, category_type: value.category_type,
+    keywords: list(value.keywords, 30, () => true, 'Từ khóa'),
+    rss_sources: list(value.rss_sources, 15, s => /^https:\/\/[^\s]+$/.test(s), 'Nguồn RSS (cần https://)'),
+    system_tone: text(value.system_tone ?? '', 0, 2000, 'Giọng văn'),
+    post_category: text(value.post_category || 'Góc nhìn', 2, 60, 'Chuyên mục'),
+    is_active: value.is_active !== false
+  };
+}
+function nicheData(row, posts) {
+  const words = posts.map(p => Number(p.word_count) || 0).filter(Boolean);
+  return {
+    id: String(row.id), name: row.name, slug: row.slug, categoryType: row.category_type, keywords: row.keywords || [], rssSources: row.rss_sources || [],
+    systemTone: row.system_tone || '', postCategory: row.post_category, isActive: !!row.is_active, lastUsedAt: row.last_used_at ? Date.parse(row.last_used_at) : null,
+    stats: { posts: posts.length, published: posts.filter(p => p.status === 'published').length, totalWords: words.reduce((a, b) => a + b, 0), averageWords: words.length ? Math.round(words.reduce((a, b) => a + b, 0) / words.length) : 0 }
+  };
+}
+
 function frameData(row) {
   return { id: row.id, name: row.name, authorName: row.author_name, authorLink: row.author_link || '', design: row.design, imageUrl: `/api/frames/${row.id}/image`, createdAt: Date.parse(row.created_at) };
 }
@@ -270,6 +299,19 @@ async function publicApi(request, env, route, ctx) {
     if (!response.ok) fail(response.status === 400 ? 400 : response.status === 401 || response.status === 403 ? 401 : 502, response.status === 401 || response.status === 403 ? 'Mã đăng bài chưa đúng.' : `Không đăng được bài: ${String(result?.message || 'lỗi không rõ').slice(0, 120)}`);
     await purge(postKeys(result?.slug));
     return json(result, 201);
+  }
+  // Pipeline đăng bài tự động hỏi ngách tới lượt, số bài đã đăng hôm nay và lọc URL nguồn chưa dùng (cần mã đăng bài).
+  if (route === '/api/agent/context') {
+    if (request.method !== 'POST') fail(405, 'Phương thức chưa được hỗ trợ.');
+    const token = bearer(request);
+    if (!token) fail(401, 'Thiếu mã đăng bài.');
+    if (env.SNAPTIK_LIMIT && !(await env.SNAPTIK_LIMIT.limit({ key: 'agent:' + (request.headers.get('CF-Connecting-IP') || 'unknown') })).success) fail(429, 'Bạn thao tác hơi nhanh. Hãy chờ một phút rồi thử lại.');
+    const body = await readJson(request, 400000);
+    const urls = Array.isArray(body?.urls) ? body.urls.filter(u => typeof u === 'string' && /^https?:\/\//.test(u) && u.length <= 2000).slice(0, 200) : [];
+    const response = await fetch(new URL('/rest/v1/rpc/agent_pipeline_context', env.SUPABASE_URL), { method: 'POST', headers: { apikey: env.SUPABASE_PUBLISHABLE_KEY, 'x-agent-token': token, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_urls: urls }) });
+    const result = await response.json().catch(() => null);
+    if (!response.ok) fail(response.status === 401 || response.status === 403 ? 401 : 502, response.status === 401 || response.status === 403 ? 'Mã đăng bài chưa đúng.' : 'Chưa lấy được ngữ cảnh đăng bài.');
+    return json(result);
   }
   // Đăng ký (hoặc thay) mã đăng bài: chỉ chạy khi chủ trang vừa mở cửa sổ ngắn trong database (agent_settings.enroll_until).
   // Môi trường của lịch đăng bài tự gắn mã vào yêu cầu; database chỉ lưu bản băm, không ai phải xem hay dán mã.
@@ -432,6 +474,27 @@ async function adminApi(request, env, route) {
     const id = decodeURIComponent(match[1]);
     const rows = await rest(env, 'posts', { method: 'DELETE', token, query: { id: `eq.${id}`, select: 'slug' }, prefer: 'return=representation' });
     await purge([...postKeys(rows?.[0]?.slug), `cover:${id}`]);
+    return json({ ok: true });
+  }
+  if (route === '/api/admin/niches' && request.method === 'GET') {
+    const [rows, posts] = await Promise.all([
+      rest(env, 'ai_niches', { token, query: { select: NICHE_SELECT, order: 'id.asc' } }),
+      rest(env, 'posts', { token, query: { select: 'niche_id,word_count,status', niche_id: 'not.is.null' } })
+    ]);
+    return json({ niches: rows.map(row => nicheData(row, posts.filter(p => String(p.niche_id) === String(row.id)))) });
+  }
+  if (route === '/api/admin/niches' && request.method === 'POST') {
+    const rows = await rest(env, 'ai_niches', { method: 'POST', token, query: { select: NICHE_SELECT }, body: niche(await readJson(request)), prefer: 'return=representation' });
+    return json({ niche: nicheData(rows[0], []) }, 201);
+  }
+  match = route.match(/^\/api\/admin\/niches\/(\d{1,12})$/);
+  if (match && request.method === 'PUT') {
+    const rows = await rest(env, 'ai_niches', { method: 'PATCH', token, query: { id: `eq.${match[1]}`, select: NICHE_SELECT }, body: niche(await readJson(request)), prefer: 'return=representation' });
+    if (!rows?.[0]) fail(404, 'Không tìm thấy ngách.');
+    return json({ niche: nicheData(rows[0], []) });
+  }
+  if (match && request.method === 'DELETE') {
+    await rest(env, 'ai_niches', { method: 'DELETE', token, query: { id: `eq.${match[1]}` }, prefer: 'return=minimal' });
     return json({ ok: true });
   }
   if (route === '/api/admin/submissions' && request.method === 'GET') {

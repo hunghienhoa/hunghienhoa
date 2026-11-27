@@ -1,0 +1,15 @@
+{
+  "name": "hunghienhoa-auto-blog",
+  "private": true,
+  "type": "module",
+  "description": "Pipeline đăng bài tự động cho hunghienhoa.com (GitHub Actions + Claude API + Supabase qua Worker).",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "post": "node auto-post.mjs",
+    "dry-run": "DRY_RUN=1 node auto-post.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.14.0",
+    "sharp": "0.35.5"
+  }
+}

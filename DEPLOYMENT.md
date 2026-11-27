@@ -137,3 +137,23 @@ Làm Nét có lựa chọn AI đám mây (làm nét ảnh và tạo ảnh mới)
 - Bản cục bộ tiếp tục dùng cookie/CSRF và SQLite riêng; dữ liệu trên máy và dữ liệu Supabase online là hai bộ dữ liệu khác nhau. Không tự đồng bộ database riêng lên GitHub.
 - `cf` beta trên máy Windows hiện in `spawn UNKNOWN` ở bước mô phỏng Miniflare, nhưng build output, upload và triển khai production đều thành công. GitHub Actions chạy Ubuntu; bước smoke kiểm tra trang thật sau mỗi lần deploy.
 - WebP guard chỉ cần Python chuẩn; Pillow chỉ cần khi chạy chuyển đổi ảnh, không cần để kiểm tra `--check`.
+
+## Đăng bài tự động (GitHub Actions + Claude API)
+
+Workflow `.github/workflows/auto-blog.yml` chạy `scripts/auto-post.mjs` lúc **08:30** và **20:15** giờ Việt Nam (cron `30 1 * * *`, `15 13 * * *` theo UTC). Mỗi lượt:
+
+1. Hỏi `POST /api/agent/context` (cần mã đăng bài): ngách đang bật có `last_used_at` cũ nhất, số bài hôm nay.
+2. Gom chủ đề theo loại ngách: `github_trending` dùng GitHub Search (repo tạo trong 7 ngày, ≥ 40 sao) + Hacker News; `ai_news`/`tech_deep_dive` dùng RSS của ngách + Hacker News. Mỗi chủ đề cần 2–3 nguồn khác tên miền và chưa có trong `crawled_sources`; nội dung đọc qua Jina Reader.
+3. Gọi Claude (`claude-opus-5-5`, streaming, `fallbacks: "default"`) 3 lượt nối tiếp: (1) tiêu đề, meta, sapo, 3 chương đầu, dạng JSON có cấu trúc; (2) 4 chương chuyên sâu có bảng so sánh và ví dụ kỹ thuật; (3) ứng dụng thực tế, 5 câu hỏi thường gặp, kết luận. Dưới `MIN_WORDS` (mặc định 2.500) thì viết bù chương Case Study, tối đa 2 lần; vẫn thiếu thì không đăng.
+4. Ảnh bìa: Workers AI của website (`/api/lamnet/ai`) → WebP 1024×576; lỗi thì vẽ ảnh trừu tượng SVG không chữ.
+5. `POST /api/agent/publish`: Supabase kiểm tra mã, giới hạn 2 bài/ngày, từ chối nguồn đã dùng, ghi `crawled_sources`, cập nhật `last_used_at`; Worker xóa cache trang blog. Cuối bài có mục "Nguồn tham khảo & Tài liệu kỹ thuật"; link ra ngoài mang `rel="nofollow noopener noreferrer"`.
+
+Database: `supabase/migrations/20261127030000_auto_blog_pipeline.sql` (bảng `ai_niches`, `crawled_sources`, cột `posts.niche_id/word_count/sources_cited`, RLS chỉ cho quản trị, 3 ngách mẫu). Bài vẫn nằm trong bảng `posts` có sẵn (cột `content` là markdown) và ảnh bìa lưu ở `cover_base64` như bài viết tay, để trang blog hiện có đọc được ngay. Quản lý ngách ở **admin.hunghienhoa.com → 07 Ngách nội dung** (bật/tắt, từ khóa, RSS, giọng văn, thống kê số từ).
+
+Thiết lập một lần:
+
+1. GitHub → Settings → Secrets and variables → Actions → thêm `ANTHROPIC_API_KEY` và `AGENT_PUBLISH_TOKEN` (chuỗi ngẫu nhiên ≥ 16 ký tự; tùy chọn `JINA_API_KEY`). Có thể đặt Variables `CLAUDE_MODEL`, `CLAUDE_EFFORT`, `MIN_WORDS`.
+2. Đăng ký mã: mở cửa sổ 10 phút trong Supabase (SQL ở đầu `20261127010509_agent_enroll_token.sql`), rồi chạy workflow **Đăng bài tự động** chế độ `enroll`. Database chỉ lưu bản băm.
+3. Chạy chế độ `dry-run` để xem bài và ảnh bìa (artifact `bai-chay-thu`), rồi để lịch tự chạy.
+
+Chi phí: mỗi bài gọi Claude 3–5 lượt; với `claude-opus-5-5` ở effort `medium`, ước tính vài chục nghìn token đầu ra mỗi bài (khoảng 0,5–1 USD/bài theo giá công bố), tính vào tài khoản Claude API. Đổi `CLAUDE_EFFORT` hoặc `CLAUDE_MODEL` để cân chất lượng và chi phí.

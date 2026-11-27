@@ -21,7 +21,16 @@ export function articleBlocks(content) {
   const blocks = [];
   let paragraph = [];
   const flush = () => { if (paragraph.length) blocks.push({ type: 'p', text: paragraph.join(' ') }); paragraph = []; };
-  let fence = null, code = [];
+  let fence = null, code = [], table = [];
+  // Bảng markdown kiểu GitHub: dòng tiêu đề, dòng phân cách |---|, rồi các dòng dữ liệu (tối đa 40 dòng × 8 cột).
+  const cells = row => row.replace(/^\|/, '').replace(/\|$/, '').split('|').map(cell => cell.trim()).slice(0, 8);
+  const finishTable = () => {
+    if (!table.length) return;
+    if (table.length >= 2 && /^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?$/.test(table[1])) {
+      blocks.push({ type: 'table', text: '', header: cells(table[0]), rows: table.slice(2, 42).map(cells) });
+    } else for (const row of table) blocks.push({ type: 'p', text: row });
+    table = [];
+  };
   for (const raw of String(content ?? '').slice(0, 100000).split(/\r?\n/)) {
     const line = raw.trim();
     const marker = /^(`{3,}|~{3,})([\w+-]*)\s*$/.exec(line);
@@ -30,6 +39,8 @@ export function articleBlocks(content) {
       else code.push(raw);
       continue;
     }
+    if (/^\|.*\|$/.test(line)) { flush(); table.push(line); continue; }
+    finishTable();
     if (marker) { flush(); fence={marker:marker[1],language:marker[2]}; continue; }
     if (/^\s{4}|^\t/.test(raw)) { flush(); const previous=blocks.at(-1); const text=raw.replace(/^( {4}|\t)/,''); if(previous?.type==='code'&&!previous.language)previous.text+='\n'+text;else blocks.push({type:'code',text,language:''});continue; }
     if (/^(?:---+|\*\*\*+)\s*$/.test(line)) {flush();blocks.push({type:'hr',text:''});continue;}
@@ -46,6 +57,7 @@ export function articleBlocks(content) {
   }
   if(fence)blocks.push({type:'code',text:code.join('\n'),language:fence.language});
   flush();
+  finishTable();
   return blocks;
 }
 

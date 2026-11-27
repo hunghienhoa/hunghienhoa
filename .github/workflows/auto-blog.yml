@@ -1,0 +1,83 @@
+# Đăng bài tự động lên https://hunghienhoa.com/blog/ hai lần mỗi ngày (giờ Việt Nam, UTC+7):
+#   08:30 = 01:30 UTC, 20:15 = 13:15 UTC. GitHub có thể trễ vài phút khi hàng đợi đông.
+# Chạy tay (Actions → Đăng bài tự động → Run workflow):
+#   publish  viết và đăng một bài (vẫn tôn trọng giới hạn 2 bài/ngày)
+#   dry-run  viết bài và ảnh bìa, tải về dạng artifact để xem, KHÔNG đăng
+#   enroll   đăng ký mã AGENT_PUBLISH_TOKEN với website (chủ trang mở cửa sổ 10 phút trong database trước)
+# Secrets cần có: ANTHROPIC_API_KEY, AGENT_PUBLISH_TOKEN; tùy chọn JINA_API_KEY. Xem scripts/.env.example.
+name: Đăng bài tự động
+
+on:
+  schedule:
+    - cron: '30 1 * * *'
+    - cron: '15 13 * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Chế độ chạy
+        type: choice
+        options: [publish, dry-run, enroll]
+        default: dry-run
+
+concurrency:
+  group: auto-blog
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: scripts
+    steps:
+      - name: Lấy mã nguồn
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Cài Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: scripts/package-lock.json
+
+      - name: Đăng ký mã đăng bài
+        if: inputs.mode == 'enroll'
+        env:
+          AGENT_PUBLISH_TOKEN: ${{ secrets.AGENT_PUBLISH_TOKEN }}
+        run: |
+          if [ -z "$AGENT_PUBLISH_TOKEN" ]; then echo "::error::Chưa có secret AGENT_PUBLISH_TOKEN"; exit 1; fi
+          curl -fsS -X POST https://hunghienhoa.com/api/agent/enroll \
+            -H "Authorization: Bearer $AGENT_PUBLISH_TOKEN" -H 'User-Agent: hunghienhoa-auto-blog/1.0' \
+            -w '\nHTTP %{http_code}\n'
+
+      - name: Cài thư viện
+        if: inputs.mode != 'enroll'
+        run: npm ci --no-audit --no-fund
+
+      - name: Viết và đăng bài
+        if: inputs.mode != 'enroll'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AGENT_PUBLISH_TOKEN: ${{ secrets.AGENT_PUBLISH_TOKEN }}
+          JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL || 'claude-opus-5-5' }}
+          CLAUDE_EFFORT: ${{ vars.CLAUDE_EFFORT || 'medium' }}
+          MIN_WORDS: ${{ vars.MIN_WORDS || '2500' }}
+          DRY_RUN: ${{ inputs.mode == 'dry-run' && '1' || '' }}
+        run: node auto-post.mjs
+
+      - name: Lưu bài chạy thử
+        if: inputs.mode == 'dry-run' && always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: bai-chay-thu
+          path: scripts/out/
+          if-no-files-found: ignore
+          retention-days: 7
