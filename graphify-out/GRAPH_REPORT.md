@@ -1,17 +1,17 @@
 # Graph Report - hunghienhoa  (2026-11-27)
 
 ## Corpus Check
-- 125 files · ~98,857 words
+- 125 files · ~98,952 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 18 file(s) not represented in the graph (top: .woff2 12, (none) 3, .base64 2)
 
 ## Summary
-- 1170 nodes · 2056 edges · 84 communities (66 shown, 18 thin omitted)
+- 1170 nodes · 2057 edges · 84 communities (66 shown, 18 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c35555dc`
+- Built from commit: `62a43ab9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -112,11 +112,11 @@
   INCIDENT-RESPONSE.md → worker/visits.mjs
 - `Làm Nét` --references--> `VisitCounter`  [INFERRED]
   PROJECT.md → worker/visits.mjs
-- `withSecurity()` --calls--> `adsenseHtml()`  [EXTRACTED]
-  worker/index.mjs → server/adsense.mjs
 - `handle()` --calls--> `pageContext()`  [EXTRACTED]
   worker/index.mjs → server/agent-content.mjs
 - `handle()` --calls--> `representation()`  [EXTRACTED]
+  worker/index.mjs → server/agent-content.mjs
+- `withSecurity()` --calls--> `publicHtml()`  [EXTRACTED]
   worker/index.mjs → server/agent-content.mjs
 
 ## Import Cycles
@@ -395,16 +395,16 @@ Nodes (5): ads, base, {chromium}, errors, local
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `VisitCounter` connect `server.mjs` to `index.mjs`, `Quy trình ứng phó sự cố`, `dashboard.test.mjs`?**
-  _High betweenness centrality (0.042) - this node is a cross-community bridge._
+  _High betweenness centrality (0.062) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `handle()` (e.g. with `frameData()` and `pendingData()`) actually correct?**
   _`handle()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Should `index.mjs` be split into smaller, more focused modules?**
   _Cohesion score 0.09764309764309764 - nodes in this community are weakly interconnected._
-- **Why does `createApp()` connect `createApp` to `index.mjs`, `fail`, `agent-content.mjs`, `browser-audit.mjs`, `server.mjs`, `snaptik.test.mjs`, `lamnet-ai.test.mjs`, `browser-usage-audit.mjs`, `server.test.mjs`, `browser-adsense-readiness.mjs`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **Why does `Hướng dẫn mã nguồn — Hùng Hiền Hòa` connect `Hướng dẫn mã nguồn — Hùng Hiền Hòa` to `server.mjs`, `README.md`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **Should `validate-findings.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.06451612903225806 - nodes in this community are weakly interconnected._
 - **Why does `Làm Nét` connect `server.mjs` to `Hướng dẫn mã nguồn — Hùng Hiền Hòa`?**
-  _High betweenness centrality (0.021) - this node is a cross-community bridge._
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
 - **Should `validate-coverage-ledger.cjs` be split into smaller, more focused modules?**
   _Cohesion score 0.0670807453416149 - nodes in this community are weakly interconnected._

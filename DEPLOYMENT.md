@@ -45,7 +45,7 @@ Zone `hunghienhoa.com` đã **Active**. Website chỉ còn một tên miền: m�
 | `hunghienhoa.com/lamnet/` | Làm Nét |
 | `admin.hunghienhoa.com` | Bảng quản trị (`hunghienhoa.com/admin/` chuyển 308 sang đây) |
 
-Các subdomain cũ của trang công khai (`blog.`, `photobooth.`, `snap.`, `lamnet.`) đã bỏ hẳn; mọi trang và API chạy trên `hunghienhoa.com`. Lịch đăng bài tự động gọi `https://hunghienhoa.com/api/agent/publish`; mã đăng bài là network secret của môi trường Claude chạy lịch, gắn cho host `hunghienhoa.com` (header Authorization). Đổi hoặc đăng ký mã mới: mở cửa sổ 10 phút bằng SQL (xem `supabase/migrations/20261127010509_agent_enroll_token.sql`), rồi từ môi trường đó gọi `curl -X POST https://hunghienhoa.com/api/agent/enroll`; database chỉ lưu bản băm SHA-256.
+Mọi trang chạy trên `hunghienhoa.com`. `blog.hunghienhoa.com` chỉ còn là cổng API nội bộ cho lịch đăng bài tự động trong Claude (môi trường "hunghienhoa-blog-tu-dong" gắn mã đăng bài theo host này): `/api/*` chạy thẳng, còn khách vào trang sẽ được chuyển 308 về `hunghienhoa.com/blog/`. Đừng gỡ host này khỏi `cloudflare.config.ts` khi lịch còn dùng. Đổi hoặc đăng ký mã mới: mở cửa sổ 10 phút bằng SQL (xem `supabase/migrations/20261127010509_agent_enroll_token.sql`), rồi từ môi trường đó gọi `curl -X POST https://hunghienhoa.com/api/agent/enroll`; database chỉ lưu bản băm SHA-256.
 
 ## GitHub → Cloudflare tự triển khai
 

@@ -7,7 +7,9 @@ export default defineConfig({
     entrypoint: "./worker/index.mjs",
     compatibilityDate: "2026-11-09",
     compatibilityFlags: ["nodejs_compat"],
-    domains: ["hunghienhoa.com", "www.hunghienhoa.com", "admin.hunghienhoa.com"],
+    // blog.hunghienhoa.com chỉ là cổng API nội bộ cho lịch đăng bài tự động (mã đăng bài của môi trường Claude gắn theo host này);
+    // khách vào sẽ được chuyển 308 về hunghienhoa.com/blog/.
+    domains: ["hunghienhoa.com", "www.hunghienhoa.com", "admin.hunghienhoa.com", "blog.hunghienhoa.com"],
     env: {
       VISITS: bindings.durableObject({ worker: "hunghienhoa", exportName: "VisitCounter" }),
       ASSETS: bindings.assets(),

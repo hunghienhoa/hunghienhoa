@@ -26,6 +26,8 @@ export function publicRedirect(input) {
     return url;
   }
   const legacy=LEGACY_HOSTS[url.hostname];
+  // API trên blog.hunghienhoa.com chạy thẳng (lịch đăng bài tự động gọi /api/agent/* qua host này; POST không theo 308).
+  if(legacy&&url.pathname.startsWith('/api/'))return url.protocol==='https:'&&url.href===new URL(input).href?null:url;
   if(legacy&&!['/ads.txt','/robots.txt'].includes(url.pathname)&&!url.pathname.startsWith('/api/'))url.pathname=legacy+url.pathname;
   url.hostname='hunghienhoa.com';
   if(/^\/snap(?:\/|$)/.test(url.pathname))url.pathname='/snaptik'+url.pathname.slice(5);
