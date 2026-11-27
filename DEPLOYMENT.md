@@ -168,7 +168,7 @@ Chi phí: mỗi bài gọi Claude 3–5 lượt; với `claude-opus-5-5` ở eff
 
 ## Khu Game Pixel (`/game/`)
 
-- Trang tổng hợp `/game/` và ba game: `/game/tien-len/`, `/game/ca-ngua/`, `/game/o-an-quan/` (Cờ Tướng vẫn ở `/cotuong/`). Phần dùng chung: `dist/game/kit.js` (âm thanh, vẽ pixel, danh sách người chơi, phần online) và `dist/game/pixel.css`.
+- Trang tổng hợp `/game/` và các game: `/game/tien-len/`, `/game/phom/`, `/game/ba-cay/` (Cờ Tướng vẫn ở `/cotuong/`; `/game/ca-ngua/` và `/game/o-an-quan/` đã gỡ, được chuyển về `/game/`). Phần dùng chung: `dist/game/kit.js` (âm thanh, vẽ pixel, danh sách người chơi, phần online) và `dist/game/pixel.css`.
 - Luật mỗi game ở `dist/game/<game>/rules.mjs`, dùng chung cho trình duyệt và máy chủ: `setup`, `apply` (kiểm tra và trả trạng thái mới), `view` (chỉ phần người đó được thấy — bài trên tay người khác bị ẩn), `turn`, `bot`.
 - Online dùng Durable Object `GameRoom` (binding `GAMEROOM`, `worker/game-room.mjs`): phòng `<game>:<MÃ>`, ghép trận `lobby:<game>`; 2–4 ghế, ghế trống được máy lấp khi bấm Bắt đầu, hết giờ lượt (Tiến Lên 30 giây, Cá Ngựa 20 giây, Ô Ăn Quan 40 giây) hoặc rớt mạng thì máy đi hộ; xúc xắc và chia bài do máy chủ làm. API: `POST /api/game/rooms`, `POST /api/game/match`, `GET /api/game/rooms/<game>/<MÃ>`, WebSocket `/api/game/ws?game=&room=`.
 - Tiến Lên chỉ tính điểm trong phòng cho vui: không tiền, không cược, không đổi thưởng (giữ đúng chính sách quảng cáo).

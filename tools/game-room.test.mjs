@@ -30,9 +30,8 @@ const ago = (room, ms) => { room.room.turnStart = Date.now() - ms; };
 test('phòng game: số ghế theo từng game', () => {
   assert.equal(capacityFor('tien-len', 3), 3);
   assert.equal(capacityFor('tien-len', 9), 4);
-  assert.equal(capacityFor('o-an-quan', 4), 2);
-  assert.equal(capacityFor('ca-ngua', 2), 2);
-  assert.deepEqual(Object.keys(GAMES).sort(), ['ba-cay', 'ca-ngua', 'o-an-quan', 'phom', 'tien-len']);
+  assert.equal(capacityFor('ba-cay', 9), 4);
+  assert.deepEqual(Object.keys(GAMES).sort(), ['ba-cay', 'phom', 'tien-len']);
 });
 
 test('phòng tiến lên: 2 người + 2 máy chơi hết ván, bài người khác bị ẩn, hết giờ thì máy đi hộ', async () => {
@@ -73,42 +72,6 @@ test('phòng tiến lên: 2 người + 2 máy chơi hết ván, bài người kh
   assert.equal(a.last('state').round, 2);
 });
 
-test('phòng ô ăn quan: đủ 2 người tự bắt đầu, sai lượt bị từ chối, nước cũ chỉ nhận lại trạng thái', async () => {
-  const { room, created } = await create('o-an-quan');
-  const a = connect(room), b = connect(room);
-  await say(room, a, { t: 'hello', token: created.token });
-  await say(room, b, { t: 'hello', name: 'Bình' });
-  const st = a.last('state');
-  assert.equal(st.status, 'playing');
-  const turn = st.turn, mover = turn === 0 ? a : b, other = turn === 0 ? b : a;
-  await say(room, other, { t: 'act', action: { pit: 1, dir: 1 }, n: 0 });
-  assert.equal(other.last('error').message, 'Chưa tới lượt bạn.');
-  const pit = turn === 0 ? 3 : 9;
-  await say(room, mover, { t: 'act', action: { pit, dir: 1 }, n: 0 });
-  assert.equal(a.last('state').view.moves, 1);
-  assert.ok(a.last('state').view.last.steps.length > 3);
-  const count = mover.sent.length;
-  await say(room, mover, { t: 'act', action: { pit, dir: 1 }, n: 0 });
-  assert.ok(mover.sent.length === count + 1);
-  await say(room, a, { t: 'emote', e: '😂' });
-  assert.deepEqual(b.last('emote'), { t: 'emote', seat: 0, e: '😂' });
-});
-
-test('phòng cá ngựa: xúc xắc do máy chủ đổ, chơi một mình với 3 máy tới hết ván', async () => {
-  const { room, created } = await create('ca-ngua', 4);
-  const a = connect(room);
-  await say(room, a, { t: 'hello', token: created.token });
-  await say(room, a, { t: 'start' });
-  const rules = GAMES['ca-ngua'];
-  let guard = 0;
-  while (room.room.status === 'playing' && guard++ < 6000) {
-    if (room.turnSeat() === 0) await quick(room, a, { t: 'act', action: rules.bot(room.room.match, 0, Math.random), n: room.room.match.moves });
-    else { ago(room, 1000); await room.alarm(); }
-  }
-  assert.equal(room.room.status, 'ended');
-  assert.equal(a.last('state').totals.reduce((x, y) => x + y, 0), 0);
-});
-
 test('phòng game: ghép trận nhanh theo từng game', async () => {
   const objects = new Map(), env = {};
   env.GAMEROOM = { idFromName: n => n, get: n => { if (!objects.has(n)) objects.set(n, new GameRoom(makeCtx(), env)); const o = objects.get(n); return { fetch: (url, init) => o.fetch(new Request(url, init)) }; } };
@@ -119,7 +82,7 @@ test('phòng game: ghép trận nhanh theo từng game', async () => {
   const host = connect(room); await say(room, host, { t: 'hello', token: first.token });
   const second = await (await lobby.fetch('https://lobby/match', { method: 'POST', body: JSON.stringify({ game: 'tien-len' }) })).json();
   assert.deepEqual(second, { room: first.room, game: 'tien-len', matched: true });
-  const other = await (await env.GAMEROOM.get('lobby:o-an-quan').fetch('https://lobby/match', { method: 'POST', body: JSON.stringify({ game: 'o-an-quan' }) })).json();
+  const other = await (await env.GAMEROOM.get('lobby:phom').fetch('https://lobby/match', { method: 'POST', body: JSON.stringify({ game: 'phom' }) })).json();
   assert.equal(other.matched, false, 'game khác không ghép chung');
 });
 

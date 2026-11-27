@@ -40,7 +40,7 @@ export function setupFullscreen() {
   const arcade = $('.arcade');
   if (!arcade || arcade.dataset.fsReady) return;
   arcade.dataset.fsReady = '1';
-  const landscape = arcade.dataset.fs === 'landscape' || /\/(tien-len|phom|ba-cay|o-an-quan)(\/|$)/.test(location.pathname);
+  const landscape = arcade.dataset.fs === 'landscape' || /\/(tien-len|phom|ba-cay)(\/|$)/.test(location.pathname);
   if (landscape) arcade.dataset.fs = 'landscape';
   const wrap = arcade.closest('.arcade-wrap') || document.documentElement;
   let active = false, wasNative = false;
