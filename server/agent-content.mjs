@@ -119,6 +119,7 @@ export function articleHtml(content,origin=ORIGINS.blog) {
     else if(block.type==='image'){const src=safeCoverURL(block.src,'',origin);if(src)html+=`<figure class="article-image"><img src="${escapeHtml(src)}" alt="${escapeHtml(block.text)}" loading="lazy">${block.text?`<figcaption>${escapeHtml(block.text)}</figcaption>`:''}</figure>`;}
     else if(block.type==='code')html+=`<section class="article-code"><div class="code-bar"><span>${escapeHtml(block.language||'Đoạn mã')}</span></div><pre><code>${escapeHtml(block.text)}</code></pre></section>`;
     else if(block.type==='hr')html+='<hr>';
+    else if(block.type==='download')html+=`<p class="article-download"><a class="download-btn" href="${escapeHtml(block.href)}" target="_blank" rel="nofollow noopener noreferrer"><span class="download-icon" aria-hidden="true">↓</span>${escapeHtml(block.text)}</a></p>`;
     else if(block.type==='table')html+=`<div class="article-table"><table><thead><tr>${block.header.map(c=>`<th>${inlineHtml(c)}</th>`).join('')}</tr></thead><tbody>${block.rows.map(r=>`<tr>${r.map(c=>`<td>${inlineHtml(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
     else {const tag=block.type==='quote'?'blockquote':block.type;html+=`<${tag}>${inlineHtml(block.text)}</${tag}>`;}
   }

@@ -257,3 +257,19 @@ textarea[name="content"]{font-size:15px;line-height:1.7}
 .editor-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:10px}
 .editor-head b{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;opacity:.8}
 @media(max-width:760px){.posts-tools{grid-template-columns:minmax(0,1fr)}#posts-list{grid-template-columns:minmax(0,1fr)}}
+/* Cùng một kiểu cho mọi mục có danh sách: khung danh sách dạng thẻ trải rộng, trình soạn chỉ mở khi Thêm/Sửa. */
+.head-actions{display:flex;flex-wrap:wrap;gap:10px}
+.niche-layout,.niche-layout.editing{grid-template-columns:minmax(0,1fr)}
+.niche-layout:not(.editing) .niche-editor,.niche-layout.editing .list-pane{display:none}
+.list-pane{display:grid;gap:12px;padding:16px;border:1px solid var(--hh-hair);border-radius:22px;background:var(--hh-card)}
+.niche-list{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+.niche-card{display:flex;flex-direction:column;gap:2px;padding:14px 16px;border-radius:14px;background:#fff}
+.niche-card .item-actions{margin-top:auto;padding-top:10px}
+.niche-card.just-saved{outline:2px solid var(--blue);outline-offset:2px}
+.niche-editor{position:static;max-width:860px;padding:24px;border:1px solid var(--hh-hair);border-radius:26px;background:var(--hh-card)}
+.editor-head h2{margin:0;font-size:13px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;opacity:.8}
+.items{grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:10px;padding:16px;border:1px solid var(--hh-hair);border-radius:22px;background:var(--hh-card)}
+.items .item{border-radius:14px;background:#fff}
+.items:has(>.empty:only-child){padding:0;border:0;background:none}
+.download-box .download-hint{margin-top:8px;font-size:12px;opacity:.85}
+@media(max-width:760px){.niche-list,.items{grid-template-columns:minmax(0,1fr)}.items{padding:10px}.niche-editor{padding:16px}}

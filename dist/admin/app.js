@@ -112,9 +112,26 @@ function renderFrames(pending) {
     card.append(image, copy); return card;
   }));
 }
+// Nút tải xuống lưu trong nội dung bài thành một dòng riêng @[Chữ trên nút](https://link) (blog vẽ thành nút).
+// Trình soạn tách dòng đó ra hai ô Link tải / Chữ trên nút, lúc lưu ghép lại vào cuối bài.
+const DOWNLOAD_LINE = /^@\[([^\]\r\n]{1,60})\]\((https:\/\/[^\s)]{1,1000})\)$/;
+function splitDownload(content = '') {
+  const lines = String(content).split(/\r?\n/), index = lines.findIndex(line => DOWNLOAD_LINE.test(line.trim()));
+  if (index < 0) return { content: String(content), url: '', label: '' };
+  const [, label, url] = DOWNLOAD_LINE.exec(lines[index].trim()); lines.splice(index, 1);
+  return { content: lines.join('\n').replace(/\n{3,}/g, '\n\n').replace(/\s+$/, ''), url, label };
+}
+function joinDownload(content, url, label) {
+  const link = String(url || '').trim(), text = String(label || '').replace(/[\[\]\r\n]/g, ' ').trim().slice(0, 60) || 'Tải xuống';
+  if (!link) return content;
+  if (!/^https:\/\/[^\s()]{1,1000}$/.test(link)) throw new Error('Link tải phải bắt đầu bằng https:// và không có khoảng trắng.');
+  return String(content).replace(/\s+$/, '') + '\n\n@[' + text + '](' + link + ')';
+}
 function editPost(post) {
   const form = $('#post-form'); form.reset();
   for (const key of ['id', 'title', 'slug', 'excerpt', 'content', 'category', 'status']) form.elements.namedItem(key).value = post?.[key] || (key === 'status' ? 'draft' : '');
+  const download = splitDownload(post?.content || ''); form.elements.namedItem('content').value = download.content;
+  form.elements.namedItem('downloadUrl').value = download.url; form.elements.namedItem('downloadLabel').value = download.label;
   form.elements.tags.value = (post?.tags || []).join(', '); form.elements.isSample.checked = !!post?.isSample;
   coverData = undefined; $('#post-cover').value = ''; $('#cover-preview').hidden = !post?.coverUrl;
   $('#post-form textarea[name="content"]').dispatchEvent(new Event('input'));
@@ -231,6 +248,7 @@ $('#post-form').addEventListener('submit', async event => {
   try {
     const values = Object.fromEntries(new FormData(form)); const id = values.id; delete values.id;
     values.tags = String(values.tags || '').split(',').map(tag => tag.trim()).filter(Boolean); values.isSample = form.elements.isSample.checked;
+    values.content = joinDownload(values.content, values.downloadUrl, values.downloadLabel); delete values.downloadUrl; delete values.downloadLabel;
     if (coverData !== undefined) values.coverDataUrl = coverData;
     const response = await api('/api/admin/posts' + (id ? '/' + encodeURIComponent(id) : ''), { method: id ? 'PUT' : 'POST', body: JSON.stringify(values) });
     if (auto) {
@@ -447,9 +465,10 @@ function renderNiches() {
   if (!target) return;
   const active = niches.filter(n => n.isActive).length, postsTotal = niches.reduce((a, n) => a + n.stats.posts, 0), words = niches.reduce((a, n) => a + n.stats.totalWords, 0);
   $('#niche-summary').textContent = `${active}/${niches.length} ngách đang bật · ${postsTotal} bài tự động · ${words.toLocaleString('vi-VN')} từ`;
-  if (!niches.length) { empty(target, 'Chưa có ngách nào. Thêm ngách đầu tiên ở khung bên cạnh.'); return; }
-  target.replaceChildren(...niches.map(niche => {
-    const card = make('article', undefined, 'niche-card' + (niche.isActive ? '' : ' is-off'));
+  if (!niches.length) { empty(target, 'Chưa có ngách nào. Bấm Thêm ngách mới ＋ để bắt đầu.'); return; }
+  const sorted = [...niches].sort((a, b) => b.isActive - a.isActive || String(a.name).localeCompare(String(b.name), 'vi'));
+  target.replaceChildren(...sorted.map(niche => {
+    const card = make('article', undefined, 'niche-card' + (niche.isActive ? '' : ' is-off')); card.dataset.id = String(niche.id); card.dataset.state = niche.isActive ? 'on' : 'off';
     const head = make('div', undefined, 'niche-head');
     head.append(make('h3', niche.name), make('span', niche.isActive ? 'Đang bật' : 'Đang tắt', 'niche-state'));
     const meta = make('p', `${NICHE_TYPES[niche.categoryType] || niche.categoryType} · ${niche.postCategory} · ${niche.keywords.length} từ khóa · ${niche.rssSources.length} nguồn RSS`);
@@ -464,6 +483,16 @@ function renderNiches() {
     card.append(head, meta, stats, used, controls);
     return card;
   }));
+  filterNicheList();
+}
+function filterNicheList() {
+  const query = ($('#niches-filter')?.value || '').toLocaleLowerCase('vi-VN').trim(), state = $('#niches-state-filter')?.value || '';
+  for (const card of document.querySelectorAll('#niches-list .niche-card')) card.hidden = (!!query && !card.textContent.toLocaleLowerCase('vi-VN').includes(query)) || (!!state && card.dataset.state !== state);
+}
+function closeNiche(note = '', savedId = '') {
+  $('.niche-layout')?.classList.toggle('editing', false);
+  message($('#niche-status'), note);
+  if (savedId) for (const card of document.querySelectorAll('#niches-list .niche-card')) card.classList.toggle('just-saved', card.dataset.id === String(savedId));
 }
 function editNiche(niche) {
   const form = $('#niche-form'); if (!form?.elements) return;
@@ -478,7 +507,7 @@ function editNiche(niche) {
   form.elements.namedItem('system_tone').value = niche?.systemTone || '';
   form.elements.namedItem('is_active').checked = niche ? niche.isActive : true;
   $('#niche-form-title').textContent = niche ? `Sửa ngách “${niche.name}”` : 'Thêm ngách mới';
-  message($('#niche-status'));
+  message($('#niche-status')); $('.niche-layout')?.classList.toggle('editing', true);
 }
 async function loadNiches() {
   try { niches = (await api('/api/admin/niches')).niches || []; renderNiches(); }
@@ -486,14 +515,17 @@ async function loadNiches() {
 }
 $('#refresh-niches')?.addEventListener?.('click', () => loadNiches());
 $('#new-niche')?.addEventListener?.('click', () => editNiche());
+$('#close-niche')?.addEventListener?.('click', () => closeNiche());
+$('#niches-filter')?.addEventListener?.('input', filterNicheList);
+$('#niches-state-filter')?.addEventListener?.('change', filterNicheList);
 $('#niche-form')?.addEventListener?.('submit', async event => {
   event.preventDefault();
   const form = event.target, id = form.elements.namedItem('id').value, button = $('#save-niche');
   const body = { name: form.elements.namedItem('name').value, slug: form.elements.namedItem('slug').value.trim().toLowerCase(), category_type: form.elements.namedItem('category_type').value, post_category: form.elements.namedItem('post_category').value, keywords: form.elements.namedItem('keywords').value, rss_sources: form.elements.namedItem('rss_sources').value, system_tone: form.elements.namedItem('system_tone').value, is_active: form.elements.namedItem('is_active').checked };
   button.disabled = true;
   try {
-    await api(id ? `/api/admin/niches/${id}` : '/api/admin/niches', { method: id ? 'PUT' : 'POST', body: JSON.stringify(body) });
-    await loadNiches(); editNiche(); message($('#niche-status'), id ? 'Đã lưu thay đổi của ngách.' : 'Đã thêm ngách mới.');
+    const saved = await api(id ? `/api/admin/niches/${id}` : '/api/admin/niches', { method: id ? 'PUT' : 'POST', body: JSON.stringify(body) });
+    await loadNiches(); closeNiche(id ? `Đã lưu thay đổi của ngách “${body.name}”.` : `Đã thêm ngách “${body.name}”.`, id || saved?.niche?.id || '');
   } catch (error) { message($('#niche-status'), error.message, true); }
   finally { button.disabled = false; }
 });

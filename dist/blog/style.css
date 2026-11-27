@@ -128,3 +128,10 @@
 .article-table th,.article-table td{padding:10px 14px;border-bottom:1px solid var(--hh-hair);text-align:left;vertical-align:top}
 .article-table th{background:color-mix(in srgb,var(--blue) 8%,#fff);font-weight:600}
 .article-table tr:last-child td{border-bottom:0}
+
+/* Nút tải xuống trong bài (dòng @[chữ](link) do admin thêm). */
+.article-download{margin:28px 0;text-align:center}
+.article-download .download-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:12px 28px;border-radius:999px;background:var(--blue);color:var(--cream);font-weight:600;text-decoration:none;box-shadow:var(--hh-shadow-sm);transition:transform .15s ease,background .15s ease}
+.article-download .download-btn:hover,.article-download .download-btn:focus-visible{background:color-mix(in srgb,var(--blue) 88%,var(--yellow));transform:translateY(-1px)}
+.download-icon{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--yellow);color:var(--blue);font-weight:700}
+@media(prefers-reduced-motion:reduce){.article-download .download-btn{transition:none}.article-download .download-btn:hover{transform:none}}

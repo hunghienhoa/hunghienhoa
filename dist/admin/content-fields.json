@@ -2874,6 +2874,36 @@
     "default": "Đường dẫn ngắn"
   },
   {
+    "key": "admin-083",
+    "page": "admin",
+    "label": "Tải xuống",
+    "default": "Tải xuống"
+  },
+  {
+    "key": "admin-084",
+    "page": "admin",
+    "label": "dán link Google Drive, Mega, GitHub… (https://)",
+    "default": "dán link Google Drive, Mega, GitHub… (https://)"
+  },
+  {
+    "key": "admin-085",
+    "page": "admin",
+    "label": "Link tải",
+    "default": "Link tải"
+  },
+  {
+    "key": "admin-086",
+    "page": "admin",
+    "label": "Chữ trên nút",
+    "default": "Chữ trên nút"
+  },
+  {
+    "key": "admin-087",
+    "page": "admin",
+    "label": "Nút hiện ở cuối bài; bấm vào là mở link trong tab mới. Để trống link thì không có nút.",
+    "default": "Nút hiện ở cuối bài; bấm vào là mở link trong tab mới. Để trống link thì không có nút."
+  },
+  {
     "key": "admin-064",
     "page": "admin",
     "label": "Ảnh bìa",

@@ -49,6 +49,9 @@ export function articleBlocks(content) {
     if (!line) { flush(); continue; }
     const image=/^!\[([^\]\r\n]{0,200})\]\((\/api\/media\/[a-f0-9-]{36}\.webp)\)$/.exec(line);
     if(image) {flush();blocks.push({type:'image',text:image[1],src:image[2]});continue;}
+    // Nút tải xuống do trình soạn admin thêm: một dòng riêng @[Chữ trên nút](https://link).
+    const download=/^@\[([^\]\r\n]{1,60})\]\((https:\/\/[^\s)]{1,1000})\)$/.exec(line);
+    if(download) {flush();blocks.push({type:'download',text:download[1],href:download[2]});continue;}
     const heading = /^(#{1,3})\s+(.+)$/.exec(line);
     if (heading) { flush(); blocks.push({ type: heading[1].length === 3 ? 'h3' : 'h2', text: heading[2] }); continue; }
     if (/^[-*]\s+/.test(line)) { flush(); blocks.push({ type: 'li', text: line.replace(/^[-*]\s+/, '') }); continue; }

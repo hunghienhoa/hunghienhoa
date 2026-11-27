@@ -65,3 +65,7 @@ assert.equal(settingsNodes['#blog-title'].textContent,'Tên góc mới');
 assert.deepEqual(settingsNodes['#blog-title'].parts,['Tên ','góc mới']); // phần cuối thành cụm nghiêng lớn của tiêu đề lockup
 assert.equal(settingsNodes['#blog-intro'].textContent,'Lời giới thiệu mới');
 assert.equal(settingsEvents[0],'hung-content-ready');
+// Nút tải xuống: chỉ nhận dòng riêng @[chữ](https://…); http, javascript: hay dòng lẫn chữ khác vẫn là đoạn văn.
+assert.deepEqual(articleBlocks('Trước\n\n@[Tải bản gốc](https://drive.google.com/file/d/abc/view)\n\nSau').map(b=>b.type),['p','download','p']);
+assert.deepEqual(articleBlocks('@[Tải](https://example.com/a)')[0],{type:'download',text:'Tải',href:'https://example.com/a'});
+for(const line of ['@[Tải](http://example.com)','@[Tải](javascript:alert(1))','Xem @[Tải](https://example.com)'])assert.ok(!articleBlocks(line).some(b=>b.type==='download'),line);
