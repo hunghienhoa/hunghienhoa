@@ -2814,6 +2814,12 @@
     "default": "Viết và sửa"
   },
   {
+    "key": "admin-082",
+    "page": "admin",
+    "label": "Bài mới",
+    "default": "Bài mới"
+  },
+  {
     "key": "admin-033",
     "page": "admin",
     "label": "Tiêu đề",

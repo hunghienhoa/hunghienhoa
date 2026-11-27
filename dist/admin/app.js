@@ -119,14 +119,28 @@ function editPost(post) {
   coverData = undefined; $('#post-cover').value = ''; $('#cover-preview').hidden = !post?.coverUrl;
   $('#post-form textarea[name="content"]').dispatchEvent(new Event('input'));
   if (post?.coverUrl) setImage($('#cover-preview'), post.coverUrl); else $('#cover-preview').removeAttribute('src');
-  message($('#post-status'));
+  message($('#post-status')); delete form.dataset.dirty;
+  $('#post-editor-mode').textContent = post ? 'Sửa bài' : 'Bài mới';
+  $('.post-layout').classList.toggle('editing', true); message($('#posts-status'));
 }
+// Đóng trình soạn, quay về danh sách bài; savedId (nếu có) được viền nổi để Hùng thấy bài vừa lưu nằm đâu.
+function closeEditor(note = '', savedId = '') {
+  $('.post-layout').classList.toggle('editing', false); delete $('#post-form').dataset.dirty;
+  message($('#posts-status'), note);
+  if (savedId) for (const entry of document.querySelectorAll('#posts-list .post-entry')) entry.classList.toggle('just-saved', entry.dataset.id === String(savedId));
+}
+const postTime = post => Number(post.publishedAt || post.createdAt || 0);
 function renderPosts() {
   const target = $('#posts-list');
   if (!posts.length) { empty(target, 'Chưa có bài viết. Bắt đầu một câu chuyện nhỏ nhé.'); return; }
-  target.replaceChildren(...posts.map(post => {
-    const card = make('article', undefined, 'post-entry'); card.append(make('h3', post.title), make('p', `${post.status === 'published' ? 'Đã xuất bản' : 'Bản nháp'}${post.isSample ? ' · Bài viết mẫu' : ''}`));
-    const controls = make('div', undefined, 'item-actions'); controls.append(action('Sửa bài', async () => { editPost(post); $('#post-form').scrollIntoView({ behavior: 'smooth', block: 'start' }); }), action('Xóa bài', async () => { if (!confirm(`Xóa hẳn bài “${post.title}”?`)) return; await api(`/api/admin/posts/${encodeURIComponent(post.id)}`, { method: 'DELETE' }); editPost(); await loadAll(); message($('#page-status'), 'Đã xóa bài viết.'); }, 'danger')); card.append(controls); return card;
+  // Bản nháp lên đầu (đang làm dở), sau đó bài đã xuất bản mới nhất trước.
+  const sorted = [...posts].sort((a, b) => (b.status === 'draft') - (a.status === 'draft') || postTime(b) - postTime(a));
+  target.replaceChildren(...sorted.map(post => {
+    const card = make('article', undefined, 'post-entry'); card.dataset.id = String(post.id); card.dataset.status = post.status;
+    const meta = make('p', undefined, 'post-meta'), time = postTime(post);
+    meta.append(make('span', post.status === 'published' ? 'Đã xuất bản' : 'Bản nháp', post.status === 'published' ? 'badge' : 'badge draft'), make('span', [time ? new Date(time).toLocaleDateString('vi-VN') : '', post.category, post.isSample ? 'Bài viết mẫu' : ''].filter(Boolean).join(' · ')));
+    card.append(make('h3', post.title), meta);
+    const controls = make('div', undefined, 'item-actions'); controls.append(action('Sửa bài', async () => { editPost(post); $('#post-form').scrollIntoView({ behavior: 'smooth', block: 'start' }); }), action('Xóa bài', async () => { if (!confirm(`Xóa hẳn bài “${post.title}”?`)) return; await api(`/api/admin/posts/${encodeURIComponent(post.id)}`, { method: 'DELETE' }); await loadAll(); closeEditor('Đã xóa bài viết.'); }, 'danger')); card.append(controls); return card;
   }));
   if (typeof Event === 'function') $('#posts-filter')?.dispatchEvent?.(new Event('input'));
 }
@@ -223,8 +237,11 @@ $('#post-form').addEventListener('submit', async event => {
       if (response.post?.id) form.elements.id.value = response.post.id;
       coverData = undefined;
       const postData = await api('/api/admin/posts'); posts = postData.posts; renderPosts(); renderStats();
-    } else { await loadAll(); if (response.post) editPost(response.post); }
-    message($('#post-status'), values.status === 'published' ? `Đã lưu lúc ${clock()} và cập nhật ngay trên web.` : `Đã lưu bản nháp lúc ${clock()}. Chọn Xuất bản để bài hiện trên web.`);
+      message($('#post-status'), values.status === 'published' ? `Đã lưu lúc ${clock()} và cập nhật ngay trên web.` : `Đã lưu bản nháp lúc ${clock()}. Chọn Xuất bản để bài hiện trên web.`);
+    } else {
+      await loadAll();
+      closeEditor(values.status === 'published' ? `Đã lưu “${values.title}” lúc ${clock()} và cập nhật ngay trên web.` : `Đã lưu bản nháp “${values.title}” lúc ${clock()}. Mở Sửa bài, chọn Xuất bản để bài hiện trên web.`, response.post?.id || id);
+    }
   } catch (error) { message($('#post-status'), error.message, true); } finally { button.disabled = false; }
 });
 $('#site-form').addEventListener('submit', async event => {
@@ -325,9 +342,18 @@ $('#customize-search').addEventListener('input',event=>{
   if(event.target.value.trim()){$('.basic-settings').hidden=true;$('#customize-form').hidden=false;for(const button of document.querySelectorAll('#content-tabs button'))button.setAttribute('aria-pressed','false');}
   else applyTabs();
 });
-$('#posts-filter')?.addEventListener('input',event=>{
-  const query=event.target.value.toLocaleLowerCase('vi-VN').trim();
-  for(const entry of document.querySelectorAll('#posts-list .post-entry'))entry.hidden=!!query&&!entry.textContent.toLocaleLowerCase('vi-VN').includes(query);
+function filterPostList(){
+  const query=($('#posts-filter')?.value||'').toLocaleLowerCase('vi-VN').trim(),status=$('#posts-status-filter')?.value||'';
+  for(const entry of document.querySelectorAll('#posts-list .post-entry'))entry.hidden=(!!query&&!entry.textContent.toLocaleLowerCase('vi-VN').includes(query))||(!!status&&entry.dataset.status!==status);
+}
+$('#posts-filter')?.addEventListener('input',filterPostList);
+$('#posts-status-filter')?.addEventListener('change',filterPostList);
+// Về danh sách: còn thay đổi chưa lưu thì lưu luôn (lưu tay tự đóng); ô bắt buộc còn trống thì hỏi trước khi bỏ.
+$('#close-post')?.addEventListener('click',()=>{
+  const form=$('#post-form');
+  if(form.dataset.dirty!=='1')return closeEditor();
+  if(form.checkValidity())return form.requestSubmit($('#save-post'));
+  if(confirm('Bài còn ô bắt buộc trống nên chưa lưu được. Bỏ thay đổi và về danh sách?'))closeEditor();
 });
 $('#customize-form').addEventListener('submit',async event=>{
   event.preventDefault();const button=$('#save-customization');button.disabled=true;
@@ -381,11 +407,11 @@ if (typeof MutationObserver === 'function') {
     const form = $(formSelector), button = $(buttonSelector);
     const queue = event => {
       if (event.target.type === 'search' || event.target.id === 'editor-columns' || event.target.type === 'file') return;
-      clearTimeout(pending.get(form)); badge('dirty', 'Có thay đổi, sắp tự lưu…');
+      clearTimeout(pending.get(form)); form.dataset.dirty = '1'; badge('dirty', 'Có thay đổi, sắp tự lưu…');
       pending.set(form, setTimeout(() => autosave(form, button, statusSelector), 1500));
     };
     form.addEventListener('input', queue); form.addEventListener('change', queue);
-    form.addEventListener('submit', () => { clearTimeout(pending.get(form)); pending.delete(form); });
+    form.addEventListener('submit', () => { clearTimeout(pending.get(form)); pending.delete(form); if (!form.dataset.autosave) waitIdle(button).then(() => { if (!pending.size && !$(statusSelector).classList.contains('error') && !(formSelector === '#post-form' && $('#posts-status').classList.contains('error'))) badge('saved', `Đã lưu ${clock()} · đã lên web`); }); });
   }
   window.addEventListener('beforeunload', event => { if (pending.size) { event.preventDefault(); event.returnValue = ''; } });
 }

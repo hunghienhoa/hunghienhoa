@@ -237,3 +237,23 @@ textarea[name="content"]{font-size:15px;line-height:1.7}
 .niche-editor{position:sticky;top:96px}
 .niche-editor label small{display:block;font-weight:400;font-size:12px;opacity:.85}
 @media(max-width:1100px){.niche-layout{grid-template-columns:minmax(0,1fr)}.niche-editor{position:static}}
+
+/* Bài viết: mặc định chỉ hiện danh sách; bấm Viết bài mới hoặc Sửa bài mới mở trình soạn, lưu xong tự đóng. */
+.post-layout,.post-layout.editing{grid-template-columns:minmax(0,1fr)}
+.post-layout:not(.editing) .post-editor,.post-layout.editing .posts-pane{display:none}
+.post-layout .posts-pane{position:static;max-height:none;overflow:visible;padding:16px}
+.posts-tools{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:10px}
+#posts-status:empty{display:none}
+#posts-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.post-entry{display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:14px 16px;text-align:left}
+.post-entry .post-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.post-entry .badge{padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;background:var(--yellow);color:var(--blue)}
+.post-entry .badge.draft{background:transparent;border:1px solid var(--hh-hair)}
+.post-entry .item-actions{flex-direction:row;justify-content:flex-start;margin-top:auto;padding-top:6px}
+.post-entry.just-saved{outline:2px solid var(--blue);outline-offset:2px}
+.post-editor .post-side{grid-template-columns:minmax(0,1fr)}.post-side>*{min-width:0}
+@media(max-width:1280px){.post-editor .post-side{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.post-editor .post-side{grid-template-columns:minmax(0,1fr)}}
+.editor-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.editor-head b{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;opacity:.8}
+@media(max-width:760px){.posts-tools{grid-template-columns:minmax(0,1fr)}#posts-list{grid-template-columns:minmax(0,1fr)}}
