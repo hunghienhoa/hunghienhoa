@@ -12,10 +12,11 @@ fetch(siteAPI + '/api/site', { credentials: 'omit', cache: 'no-store' }).then(re
   set('footer>span', '© 2026 ' + site.displayName + ' · Được tạo nên bằng sự tò mò.');
   document.title = site.displayName + ' — Blog chia sẻ và công cụ tiện ích';
   const email = document.querySelector('#contact-email');
-  email.textContent = site.email; email.href = 'mailto:' + site.email;
-  document.querySelector('.contact-button').href = 'mailto:' + site.email + '?subject=' + encodeURIComponent('Chào ' + site.shortName + ', mình có một ý tưởng');
+  if (email && site.email) { email.textContent = site.email; email.href = 'mailto:' + site.email; }
+  const contact = document.querySelector('.contact-button');
+  if (contact && site.email) contact.href = 'mailto:' + site.email + '?subject=' + encodeURIComponent('Chào ' + site.shortName + ', mình có một ý tưởng');
   const phone = document.querySelector('.contact-phone');
-  phone.firstChild.textContent = site.phone + ' '; phone.href = 'tel:' + site.phone.replace(/[^+\d]/g, '');
+  if (phone?.firstChild && site.phone) { phone.firstChild.textContent = site.phone + ' '; phone.href = 'tel:' + site.phone.replace(/[^+\d]/g, ''); }
   document.querySelector('.draft-label')?.remove();
   window.dispatchEvent(new Event('hung-content-ready'));
 }).catch(() => { /* Nội dung trong HTML vẫn dùng được khi chưa có máy chủ nội dung. */ });

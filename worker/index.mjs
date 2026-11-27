@@ -16,7 +16,7 @@ const SUBMISSION_SELECT = 'id,name,author_name,author_contact,author_link,design
 
 // shortcut: chưa thêm 'preload' vì khó gỡ khỏi danh sách trình duyệt; thêm khi chủ trang chắc chắn muốn.
 const HSTS = 'max-age=63072000; includeSubDomains';
-const PERMISSIONS = 'accelerometer=(), autoplay=(), bluetooth=(), camera=(self), display-capture=(), geolocation=(), gyroscope=(), hid=(), magnetometer=(), microphone=(), midi=(), payment=(), serial=(), usb=(), interest-cohort=()';
+const PERMISSIONS = 'accelerometer=(), autoplay=(), camera=(self), display-capture=(), geolocation=(), gyroscope=(), hid=(), magnetometer=(), microphone=(), midi=(), payment=(), serial=(), usb=(), interest-cohort=()';
 const DEV_ONLY = /(?:^|\/)README\.md$|\.test\.mjs$/i;
 const VERSIONED_CACHE = 'public, max-age=31536000, immutable';
 const FONT_CACHE = 'public, max-age=2592000';
