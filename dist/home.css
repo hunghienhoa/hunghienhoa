@@ -76,8 +76,8 @@
 .tool-visual{position:relative;display:grid;place-items:center;height:230px;overflow:hidden;border-radius:24px}
 .tool-photo .tool-visual{background:linear-gradient(150deg,color-mix(in srgb,var(--yellow) 75%,var(--cream)),color-mix(in srgb,var(--yellow) 28%,var(--cream)))}
 .tool-snap .tool-visual{background:linear-gradient(150deg,color-mix(in srgb,var(--blue) 10%,#fff),color-mix(in srgb,var(--blue) 28%,#fff))}
-.tool-chess .tool-visual{background:#e6c58a}
-.chess-shot{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+.tool-chess .tool-visual{background:linear-gradient(150deg,color-mix(in srgb,var(--blue) 14%,#fff),color-mix(in srgb,var(--yellow) 45%,var(--cream)))}
+.chess-shot{width:100%;height:100%;object-fit:cover}
 /* Minh họa thẻ công cụ: mỗi hình vẽ trong khung 230×230 (.art) rồi thu nhỏ theo khung trên điện thoại. */
 .art{position:relative;display:block;flex:none;width:230px;height:230px}
 .strip{position:absolute;top:22px;display:grid;gap:5px;width:70px;padding:7px 7px 22px;background:#fff;box-shadow:0 18px 28px -16px rgba(0,0,0,.45)}
