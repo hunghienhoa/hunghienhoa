@@ -30,7 +30,8 @@
 .compare canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .compare .before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
 .handle{position:absolute;top:0;bottom:0;left:var(--pos);z-index:2;width:3px;margin-left:-1.5px;background:var(--yellow);box-shadow:0 0 0 1px var(--blue);pointer-events:none}
-.handle::after{content:'⇆';position:absolute;top:50%;left:50%;translate:-50% -50%;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--blue);color:var(--yellow);font-size:18px;font-weight:700}
+.handle::after{content:'';position:absolute;top:50%;left:50%;translate:-50% -50%;width:42px;height:42px;border-radius:50%;background:var(--blue)}
+.handle::before{content:'';position:absolute;top:50%;left:50%;z-index:1;translate:-50% -50%;width:20px;height:20px;background:var(--yellow);-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
 .compare input[type=range]{position:absolute;inset:0;z-index:3;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize}
 .compare:focus-within{outline:3px solid var(--blue);outline-offset:3px}
 .tag{position:absolute;top:12px;z-index:2;padding:5px 11px;border-radius:999px;background:var(--blue);color:var(--cream);font-size:12px;font-weight:700;letter-spacing:1px}

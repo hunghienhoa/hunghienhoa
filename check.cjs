@@ -24,7 +24,7 @@ for (const sourceFile of sourceFiles.filter(file => /\.(html|css)$/.test(file)))
 // Một bộ phông dùng chung ở /fonts, khai báo trong /ui.css cho mọi trang.
 assert.ok(css.includes("font-family:'Be Vietnam Pro'") && css.includes("font-family:'Playfair Display'"));
 for (const name of ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold', 'Black', 'Italic', 'SemiBoldItalic', 'BoldItalic']) assert.equal(fs.readFileSync(`dist/fonts/BeVietnamPro-${name}.woff2`).subarray(0, 4).toString(), 'wOF2');
-for (const page of ['index.html', 'blog/index.html', 'photobooth/index.html', 'photobooth/shoot.html', 'snaptik/index.html', 'lamnet/index.html', 'cotuong/index.html', 'game/index.html', 'game/tien-len/index.html', 'game/ca-ngua/index.html', 'game/o-an-quan/index.html', 'admin/index.html', '404.html']) assert.ok(fs.readFileSync(`dist/${page}`, 'utf8').includes('/ui.css?v='), `${page} phải dùng /ui.css`);
+for (const page of ['index.html', 'blog/index.html', 'photobooth/index.html', 'photobooth/shoot.html', 'snaptik/index.html', 'lamnet/index.html', 'cotuong/index.html', 'game/index.html', 'game/tien-len/index.html', 'game/phom/index.html', 'game/ba-cay/index.html', 'game/ca-ngua/index.html', 'game/o-an-quan/index.html', 'admin/index.html', '404.html']) assert.ok(fs.readFileSync(`dist/${page}`, 'utf8').includes('/ui.css?v='), `${page} phải dùng /ui.css`);
 assert.equal((html.match(/<h1\b/g) || []).length, 1);
 assert.ok(css.includes('prefers-reduced-motion'));
 console.log('PASS: assets, anchors, JS syntax and reduced-motion support.');
@@ -61,3 +61,14 @@ console.log('PASS: project links use native new tabs without popup scripts.');
   }
   console.log('PASS: WeChat starts empty, success clears after 3s, denied-copy fallback stays visible.');
 })().catch(error => { console.error(error); process.exitCode = 1; });
+// Icon phải là SVG (.ic trong /ui.css), không dùng ký tự mũi tên/dấu cộng giả làm icon trên giao diện.
+{
+  const glyph = /[↗↓↑←→＋✕☰↻✦▶⇆]/;
+  const files = fs.readdirSync('dist', { recursive: true }).map(String).filter(name => /\.(html|css|m?js)$/.test(name) && !/\.test\.mjs$|i18n/.test(name));
+  for (const name of files) {
+    const code = fs.readFileSync(`dist/${name}`, 'utf8').replace(/\/\*[\s\S]*?\*\/|^\s*\/\/.*$/gm, '');
+    assert.ok(!glyph.test(code), `${name}: dùng icon SVG (<span class="ic ic-…">) thay cho ký tự ${code.match(glyph)?.[0]}`);
+  }
+  console.log('PASS: icon dùng SVG, không dùng ký tự mũi tên.');
+}
+

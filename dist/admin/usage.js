@@ -25,7 +25,7 @@ function renderUsage(report) {
     const button=make('button',info.name);button.type='button';button.dataset.usageProvider=provider;button.setAttribute('aria-controls','usage-'+provider);button.addEventListener('click',()=>selectUsageProvider(provider));navigation.append(button);
     const card=make('section',undefined,'paper usage-provider'),heading=make('div',undefined,'view-head');card.id='usage-'+provider;
     heading.append(make('h2',info.name));
-    const link=make('a','Dashboard ↗','outline');link.href=info.dashboard;link.target='_blank';link.rel='noopener noreferrer';heading.append(link);card.append(heading);
+    const link=withIcon(make('a','Dashboard','outline'),'arrow-up-right');link.href=info.dashboard;link.target='_blank';link.rel='noopener noreferrer';heading.append(link);card.append(heading);
     const metrics=report.metrics.filter(row=>row.provider===provider),known=metrics.filter(row=>row.used!==null),unknown=metrics.filter(row=>row.used===null);
     if(!known.length) card.append(make('p','Chưa nhận được dữ liệu API của dịch vụ này. Hệ thống sẽ tự thử lại.','view-note'));
     for(const metric of known) card.append(usageMetric(metric));
@@ -35,7 +35,7 @@ function renderUsage(report) {
       card.append(details);
     }
     const explanation=make('details',undefined,'usage-explanation');explanation.append(make('summary','Kết nối & cách tính'),make('p',report.connections?.[provider]||'Số liệu cloud được đồng bộ trên bản online.'),make('p',info.note));
-    const source=make('a','Tài liệu hạn mức Free ↗');source.href=info.source;source.target='_blank';source.rel='noopener noreferrer';explanation.append(source);card.append(explanation);list.append(card);
+    const source=withIcon(make('a','Tài liệu hạn mức Free'),'arrow-up-right');source.href=info.source;source.target='_blank';source.rel='noopener noreferrer';explanation.append(source);card.append(explanation);list.append(card);
   }
   selectUsageProvider(usageProvider);
 }

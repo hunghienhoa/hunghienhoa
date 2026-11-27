@@ -8,6 +8,8 @@ const state = { posts: [], query: '', category: '', loaded: false, limit: PAGE_S
 let blogName = 'Góc nhỏ của Hùng';
 let articleRequest = 0;
 
+// Icon SVG thật (định nghĩa trong /ui.css), không dùng ký tự mũi tên.
+function icon(name) { const node = document.createElement('span'); node.className = 'ic ic-' + name; node.setAttribute('aria-hidden', 'true'); return node; }
 function element(tag, className = '', text = '') {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -72,7 +74,7 @@ function renderFeatured(post) {
   copy.append(element('span', 'eyebrow', 'MỞ TRANG NÀY TRƯỚC NHÉ'), metadata(post), element('h2', '', post.title));
   if (post.excerpt) copy.append(element('p', '', post.excerpt));
   const cta = element('span', 'read-link', 'Đọc tiếp câu chuyện');
-  cta.append(element('span', '', '↗'));
+  cta.append(' ', icon('arrow-up-right'));
   copy.append(cta);
   link.append(makeArt(post), copy);
   $('#featured').replaceChildren(link);
@@ -84,7 +86,7 @@ function renderCard(post, index) {
   copy.append(metadata(post), element('h3', '', post.title));
   if (post.excerpt) copy.append(element('p', '', post.excerpt));
   const cta = element('span', 'card-read', 'Mở trang viết');
-  cta.append(element('span', '', '↗'));
+  cta.append(' ', icon('arrow-up-right'));
   copy.append(cta);
   link.append(makeArt(post, index + 1), copy);
   return link;
@@ -181,7 +183,7 @@ function renderBody(content) {
       list=null;
       const box=element('p','article-download'),link=element('a','download-btn');
       link.href=block.href;link.target='_blank';link.rel='nofollow noopener noreferrer';
-      link.append(element('span','download-icon','↓'),document.createTextNode(block.text));link.firstChild.setAttribute('aria-hidden','true');
+      const badge=element('span','download-icon');badge.setAttribute('aria-hidden','true');badge.append(icon('download'));link.append(badge,document.createTextNode(block.text));
       box.append(link);nodes.push(box);continue;
     }
     if (block.type === 'table') {

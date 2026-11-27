@@ -281,10 +281,7 @@ textarea[name="content"]{font-size:15px;line-height:1.7}
   body:has(#workspace:not([hidden])) .menu-toggle{display:inline-flex}
   .menu-toggle{align-items:center;gap:10px;min-height:42px;max-width:52vw;padding:0 14px 0 12px;border:1.5px solid var(--hh-hair);border-radius:999px;background:#fff;font-size:14px}
   .menu-toggle strong{overflow:hidden;font-weight:600;white-space:nowrap;text-overflow:ellipsis}
-  .menu-icon,.menu-icon::before,.menu-icon::after{display:block;width:18px;height:2px;border-radius:2px;background:currentColor}
-  .menu-icon{position:relative;flex:none}
-  .menu-icon::before,.menu-icon::after{content:'';position:absolute;left:0}
-  .menu-icon::before{top:-6px}.menu-icon::after{top:6px}
+  .menu-toggle .ic{font-size:20px}
   .admin-page:has(#workspace:not([hidden]))>header>.brand{display:none}
   .admin-page>header>.brand{font-size:22px}
   .admin-page:has(#workspace:not([hidden]))>header>a:last-of-type{display:none}
@@ -297,7 +294,7 @@ textarea[name="content"]{font-size:15px;line-height:1.7}
   .menu-drawer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
   .menu-drawer-title{font-size:13px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;opacity:.8}
   .menu-site-link strong{font-weight:600}
-  .menu-close{display:grid;place-items:center;flex:none;width:42px;height:42px;border:1.5px solid var(--hh-hair);border-radius:50%;font-size:16px}
+  .menu-close{display:grid;place-items:center;flex:none;width:42px;height:42px;border:1.5px solid var(--hh-hair);border-radius:50%;font-size:18px}
   .menu-site-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:12px;border:1.5px solid var(--hh-hair);border-radius:999px;font-size:14px;font-weight:600}
   .menu-backdrop:not([hidden]){display:block;position:fixed;inset:0;z-index:35;background:color-mix(in srgb,var(--blue) 35%,transparent)}
   body.menu-open{overflow:hidden}

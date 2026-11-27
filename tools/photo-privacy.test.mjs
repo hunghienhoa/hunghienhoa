@@ -278,7 +278,7 @@ assert.equal(elements.get('#photo-count').textContent,'0 / 4');
 vm.runInContext('loadPhoto = savedLoadPhoto;',context);
 console.log('PASS: failed multi-import releases decoded photos; transparent artwork applies as an independent frame; approved landing links preserve public frame IDs.');
 
-assert.ok(html.includes('Tải mẫu khung PNG ↓') && !html.includes('Tải mẫu bố cục SVG'));
+assert.ok(html.includes('Tải mẫu khung PNG <span class="ic ic-arrow-down"') && !html.includes('Tải mẫu bố cục SVG'));
 assert.ok(script.includes('mau-khung-hop-anh-707x2000.png'));
 context.Image=class extends TestImage{constructor(){super();this.width=707;this.height=2000;}};
 document.createElement=tag=>{const element=priorCreate(tag);if(tag==='canvas')element.context.getImageData=()=>({data:new Uint8ClampedArray([0,0,0,0])});return element;};

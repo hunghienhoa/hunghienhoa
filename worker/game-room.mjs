@@ -1,16 +1,18 @@
-// Phòng chơi online dùng chung cho các game pixel (Tiến Lên, Cờ Cá Ngựa, Ô Ăn Quan) — Durable Object, WebSocket ngủ đông.
+// Phòng chơi online dùng chung cho các game pixel (Tiến Lên, Phỏm, Ba Cây, Cờ Cá Ngựa, Ô Ăn Quan) — Durable Object, WebSocket ngủ đông.
 // Luật mỗi game nằm trong dist/game/<game>/rules.mjs (dùng chung với trình duyệt): setup, apply, view, turn, bot.
 // Máy chủ giữ toàn bộ trạng thái (bài trên tay, xúc xắc), chỉ gửi cho mỗi người phần họ được thấy.
 // Ghế trống được máy lấp khi bắt đầu; người chơi hết giờ lượt (hoặc rớt mạng) thì máy đi hộ để ván không bị treo.
 import * as tienLen from '../dist/game/tien-len/rules.mjs';
 import * as caNgua from '../dist/game/ca-ngua/rules.mjs';
 import * as oAnQuan from '../dist/game/o-an-quan/rules.mjs';
+import * as phom from '../dist/game/phom/rules.mjs';
+import * as baCay from '../dist/game/ba-cay/rules.mjs';
 import { ROOM_ALPHABET, isRoomCode, roomCode, cleanName, EMOTES } from './xiangqi.mjs';
 
-export const GAMES = { 'tien-len': tienLen, 'ca-ngua': caNgua, 'o-an-quan': oAnQuan };
+export const GAMES = { 'tien-len': tienLen, 'ca-ngua': caNgua, 'o-an-quan': oAnQuan, phom, 'ba-cay': baCay };
 export const isGame = g => typeof g === 'string' && Object.prototype.hasOwnProperty.call(GAMES, g);
 export { ROOM_ALPHABET, isRoomCode, roomCode };
-const BOT_DELAY = { 'tien-len': 1100, 'ca-ngua': 850, 'o-an-quan': 1300 };
+const BOT_DELAY = { 'tien-len': 1100, 'ca-ngua': 850, 'o-an-quan': 1300, phom: 1100, 'ba-cay': 750 };
 const IDLE_MS = 2 * 3600_000, MATCH_WAIT_MS = 5 * 60_000, MAX_MESSAGE = 4096;
 const rng = () => crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296;
 const newToken = () => btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(18)))).replace(/[+/=]/g, c => ({ '+': '-', '/': '_', '=': '' }[c]));

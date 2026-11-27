@@ -28,7 +28,7 @@ document.documentElement.classList.add('js');
     media.setAttribute('aria-hidden', 'true');
     media.append(src ? image(src) : el('span', 'post-initial', (post.title || '✳').trim().charAt(0).toLocaleUpperCase('vi-VN')));
     const body = el('span', 'post-body');
-    body.append(meta(post), el('b', 'post-title', post.title || 'Bài viết'), el('span', 'post-excerpt', post.excerpt || ''), el('span', 'post-more', 'Đọc bài ↗'));
+    body.append(meta(post), el('b', 'post-title', post.title || 'Bài viết'), el('span', 'post-excerpt', post.excerpt || ''), (() => { const more = el('span', 'post-more', 'Đọc bài '), icon = el('span', 'ic ic-arrow-up-right'); icon.setAttribute('aria-hidden', 'true'); more.append(icon); return more; })());
     link.append(media, body);
     item.append(link);
     return item;

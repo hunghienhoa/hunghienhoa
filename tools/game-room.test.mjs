@@ -32,7 +32,7 @@ test('phòng game: số ghế theo từng game', () => {
   assert.equal(capacityFor('tien-len', 9), 4);
   assert.equal(capacityFor('o-an-quan', 4), 2);
   assert.equal(capacityFor('ca-ngua', 2), 2);
-  assert.deepEqual(Object.keys(GAMES).sort(), ['ca-ngua', 'o-an-quan', 'tien-len']);
+  assert.deepEqual(Object.keys(GAMES).sort(), ['ba-cay', 'ca-ngua', 'o-an-quan', 'phom', 'tien-len']);
 });
 
 test('phòng tiến lên: 2 người + 2 máy chơi hết ván, bài người khác bị ẩn, hết giờ thì máy đi hộ', async () => {
@@ -133,4 +133,25 @@ test('Worker: API phòng game kiểm tra game, nguồn và mã phòng', async ()
   assert.equal((await post({ game: 'tien-len' }, 'https://evil.example')).status, 403);
   assert.equal((await worker.fetch(new Request('https://hunghienhoa.com/api/game/ws?game=tien-len&room=ABC234', { headers: { Upgrade: 'websocket', Origin: 'https://evil.example' } }), env)).status, 403);
   assert.equal((await worker.fetch(new Request('https://hunghienhoa.com/api/game/ws?game=poker&room=ABC234', { headers: { Upgrade: 'websocket', Origin: 'https://hunghienhoa.com' } }), env)).status, 400);
+});
+
+test('phòng phỏm và ba cây: chơi với máy tới hết ván, bài người khác bị ẩn', async () => {
+  for (const game of ['phom', 'ba-cay']) {
+    const { room, created } = await create(game, 3);
+    const a = connect(room);
+    await say(room, a, { t: 'hello', token: created.token });
+    await say(room, a, { t: 'start' });
+    const first = a.last('state');
+    assert.equal(first.status, 'playing');
+    if (game === 'phom') { assert.ok(first.view.hand.length >= 9); assert.equal(first.view.hands, undefined); }
+    else assert.ok(first.view.cards.every(h => h.every(x => x === null)));
+    const rules = GAMES[game];
+    let guard = 0;
+    while (room.room.status === 'playing' && guard++ < 400) {
+      if (room.turnSeat() === 0) await quick(room, a, { t: 'act', action: rules.bot(room.room.match, 0, Math.random), n: room.room.match.moves });
+      else { ago(room, 2000); await room.alarm(); }
+    }
+    assert.equal(room.room.status, 'ended', game);
+    assert.equal(a.last('state').totals.reduce((x, y) => x + y, 0), 0);
+  }
 });

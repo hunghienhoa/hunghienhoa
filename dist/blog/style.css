@@ -133,5 +133,6 @@
 .article-download{margin:28px 0;text-align:center}
 .article-download .download-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:12px 28px;border-radius:999px;background:var(--blue);color:var(--cream);font-weight:600;text-decoration:none;box-shadow:var(--hh-shadow-sm);transition:transform .15s ease,background .15s ease}
 .article-download .download-btn:hover,.article-download .download-btn:focus-visible{background:color-mix(in srgb,var(--blue) 88%,var(--yellow));transform:translateY(-1px)}
-.download-icon{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--yellow);color:var(--blue);font-weight:700}
+.download-icon{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:50%;background:var(--yellow);color:var(--blue);font-size:16px}
+.download-icon .ic{display:block}
 @media(prefers-reduced-motion:reduce){.article-download .download-btn{transition:none}.article-download .download-btn:hover{transform:none}}

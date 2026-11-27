@@ -12,6 +12,8 @@ let refreshPromise, submissionExpiryTimer, authVersion = 0;
 const privateImageUrls = new Set();
 if (LOCAL) { $('#email').hidden = true; $('#email').required = false; $('label[for="email"]').hidden = true; }
 const message = (element, text = '', error = false) => { element.textContent = text; element.classList.toggle('error', error); };
+// Icon SVG thật từ /ui.css (không dùng ký tự): withIcon(make('a','Chữ'),'arrow-up-right').
+const withIcon = (element, name) => { const icon = document.createElement('span'); icon.className = 'ic ic-' + name; icon.setAttribute?.('aria-hidden', 'true'); element.append(' ', icon); return element; };
 const make = (tag, text, className) => { const element = document.createElement(tag); if (text !== undefined) element.textContent = text; if (className) element.className = className; return element; };
 function readSession() { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)) || null; } catch { sessionStorage.removeItem(SESSION_KEY); return null; } }
 function saveSession(value) { session = value; if (value) sessionStorage.setItem(SESSION_KEY, JSON.stringify(value)); else sessionStorage.removeItem(SESSION_KEY); }
@@ -90,7 +92,7 @@ async function api(path, options = {}, asBlob = false) {
 function action(text, handler, style = '') { const button = make('button', text, style); button.type = 'button'; button.addEventListener('click', async () => { button.disabled = true; try { await handler(); } catch (error) { message($('#page-status'), error.message, true); } finally { button.disabled = false; } }); return button; }
 function empty(container, text) { container.replaceChildren(make('p', text, 'empty')); }
 function renderStats() { $('#stats').replaceChildren(...[[submissions.length, 'Khung chờ duyệt'], [frames.length, 'Khung trong thư viện'], [posts.filter(post => post.status === 'published').length, 'Bài đã xuất bản']].map(([count, label]) => { const card = make('div', undefined, 'stat'); card.append(make('b', String(count)), make('span', label)); return card; })); }
-function creditLink(url) { try { const parsed = new URL(url); if (!['http:', 'https:'].includes(parsed.protocol)) return null; const a = make('a', 'Trang của tác giả ↗'); a.href = parsed.href; a.target = '_blank'; a.rel = 'noopener noreferrer'; return a; } catch { return null; } }
+function creditLink(url) { try { const parsed = new URL(url); if (!['http:', 'https:'].includes(parsed.protocol)) return null; const a = withIcon(make('a', 'Trang của tác giả'), 'arrow-up-right'); a.href = parsed.href; a.target = '_blank'; a.rel = 'noopener noreferrer'; return a; } catch { return null; } }
 function renderFrames(pending) {
   const list = pending ? submissions : frames;
   const target = $(pending ? '#submissions-list' : '#frames-list');
@@ -306,7 +308,7 @@ async function loadCustomization(settings) {
   for(const [page,name] of Object.entries({main:'Trang chủ',blog:'Góc tò mò (Blog)',photobooth:'Hộp Ảnh',snaptik:'Snap Video',lamnet:'Làm Nét',cotuong:'Cờ Tướng',game:'Game Pixel',admin:'Trang quản trị'})) {
     const group=make('details');group.append(make('summary',name));
     const pageUrl={main:'/',blog:'/blog/',photobooth:'/photobooth/',snaptik:'/snaptik/',lamnet:'/lamnet/',cotuong:'/cotuong/',game:'/game/'}[page];
-    if(pageUrl){const open=make('a','Mở trang này trong thẻ mới ↗','page-link');open.href=SITE+pageUrl;open.target='_blank';open.rel='noopener';group.append(open);}
+    if(pageUrl){const open=withIcon(make('a','Mở trang này trong thẻ mới','page-link'),'arrow-up-right');open.href=SITE+pageUrl;open.target='_blank';open.rel='noopener';group.append(open);}
     const grid=make('div',undefined,'field-grid');group.append(grid);
     for(const field of contentFields.filter(field=>field.page===page)) {
       const label=make('label',field.label,'custom-field'),input=make('textarea');input.rows=2;input.maxLength=3000;input.dataset.textKey=field.key;input.value=settings.pageTexts?.[field.key] ?? field.default;
@@ -489,7 +491,7 @@ function renderNiches() {
   if (!target) return;
   const active = niches.filter(n => n.isActive).length, postsTotal = niches.reduce((a, n) => a + n.stats.posts, 0), words = niches.reduce((a, n) => a + n.stats.totalWords, 0);
   $('#niche-summary').textContent = `${active}/${niches.length} ngách đang bật · ${postsTotal} bài tự động · ${words.toLocaleString('vi-VN')} từ`;
-  if (!niches.length) { empty(target, 'Chưa có ngách nào. Bấm Thêm ngách mới ＋ để bắt đầu.'); return; }
+  if (!niches.length) { empty(target, 'Chưa có ngách nào. Bấm Thêm ngách mới để bắt đầu.'); return; }
   const sorted = [...niches].sort((a, b) => b.isActive - a.isActive || String(a.name).localeCompare(String(b.name), 'vi'));
   target.replaceChildren(...sorted.map(niche => {
     const card = make('article', undefined, 'niche-card' + (niche.isActive ? '' : ' is-off')); card.dataset.id = String(niche.id); card.dataset.state = niche.isActive ? 'on' : 'off';

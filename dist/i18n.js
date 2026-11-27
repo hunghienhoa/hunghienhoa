@@ -42,6 +42,21 @@
     [/^(\d+) điểm · (\d+) quan$/, (a, b) => `${a} points · ${b} mandarin${b === '1' ? '' : 's'}`],
     [/^Chuồng (\d)\/4$/, n => `Home ${n}/4`],
     [/^(\d+) lá$/, n => `${n} cards`],
+    [/^Nọc: (\d+) lá$/, n => `Stock: ${n} cards`],
+    [/^(\d+) lá · vòng (\d+)\/(\d+)$/, (c, r, m) => `${c} cards · round ${r}/${m}`],
+    [/^(\d+)\/(\d+) lá$/, (a, b) => `${a}/${b} cards`],
+    [/^Rác: (\d+) điểm$/, n => `Deadwood: ${n} pts`],
+    [/^(\d+)đ$/, n => `${n} pts`],
+    [/^(.+) vừa đánh$/, who => `${tr(who) || who} just discarded`],
+    [/^(.+) đang suy nghĩ…$/, who => `${tr(who) || who} is thinking…`],
+    [/^(.+) đang nặn bài…$/, who => `${tr(who) || who} is flipping cards…`],
+    [/^Tới lượt bạn: có thể Ăn lá (.+) hoặc Bốc nọc\.$/, c => `Your turn: you can Take ${tr(c) || c} or Draw from the stock.`],
+    [/^Đã chọn (.+): bấm Đánh\.$/, c => `Selected ${tr(c) || c}: click Discard.`],
+    [/^Gợi ý: đã chọn lá (.+), bấm Đánh\.$/, c => `Hint: selected ${tr(c) || c}, click Discard.`],
+    [/^Nặn lá bài thứ (\d+)$/, n => `Flip card ${n}`],
+    [/^(\d+) nút$/, n => `${n} pts`],
+    [/^Bạn thắng! \((.+)\)$/, s => `You win! (${tr(s) || s})`],
+    [/^(.+) thắng \((.+)\)$/, (w, s) => `${tr(w) || w} wins (${tr(s) || s})`],
     [/^(\d+) – (\d+) điểm$/, (a, b) => `${a} – ${b} points`],
     [/^(.+) · (\d+) – (\d+) điểm$/, (t, a, b) => `${tr(t) || t} · ${a} – ${b} points`],
     [/^(3|4|5|6|7|8|9|10|J|Q|K|A|2) (bích|chuồn|rô|cơ)$/, (r, s) => `${r} of ${{ 'bích': 'spades', 'chuồn': 'clubs', 'rô': 'diamonds', 'cơ': 'hearts' }[s]}`],
@@ -172,7 +187,7 @@
     if (loading) return;
     loading = true;
     // Số phiên bản ?v= nằm ngay trong đường dẫn để tools/asset-versions.mjs báo lỗi khi đổi từ điển mà quên tăng v.
-    import('./i18n-en.js?v=12').then(module => { dict = module.default || {}; loading = false; done(); })
+    import('./i18n-en.js?v=13').then(module => { dict = module.default || {}; loading = false; done(); })
       .catch(() => { loading = false; root.classList.remove('i18n-wait'); });
   }
 

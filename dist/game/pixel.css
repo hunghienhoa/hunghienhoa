@@ -190,3 +190,38 @@ button.pcard:focus-visible{outline:3px solid var(--yellow);outline-offset:1px}
 .game-cta{justify-self:start;margin-top:4px;padding:8px 14px;background:var(--yellow);box-shadow:inset 0 0 0 3px var(--ink),0 4px 0 var(--ink);font-size:14px;font-weight:700}
 @media(max-width:1100px){.game-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.game-grid{grid-template-columns:minmax(0,1fr)}.game-card{box-shadow:inset 0 0 0 3px var(--ink),4px 4px 0 var(--blue)}}
+
+/* Phỏm và Ba Cây */
+.pcard.back{background:var(--blue);color:transparent;box-shadow:inset 0 0 0 2px var(--ink),inset 0 0 0 4px var(--cream),inset 0 0 0 6px var(--blue),inset 0 0 0 7px var(--yellow),3px 3px 0 rgba(0,0,0,.35)}
+.pcard.back>*{visibility:hidden}
+button.pcard.locked{box-shadow:inset 0 0 0 2px var(--ink),inset 0 -6px 0 var(--yellow),3px 3px 0 rgba(0,0,0,.35)}
+.pcard.eat-glow{outline:3px solid var(--yellow);outline-offset:2px;animation:blink 1s steps(2) infinite}
+.table-center{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap}
+.pile-stack{display:grid;justify-items:center;gap:4px;color:var(--cream);font-size:12px;font-weight:600}
+.pile-stack button{padding:0;background:none}
+.pile-stack button:disabled{cursor:default;opacity:1}
+.melds{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px}
+.meld{display:flex;padding:2px 4px;background:rgba(255,220,56,.25);box-shadow:inset 0 0 0 2px var(--yellow)}
+.meld .pcard,.discard-row .pcard{width:28px;height:40px;margin-left:-10px;padding:1px 3px;font-size:11px}
+.meld .pcard .suit,.discard-row .pcard .suit{font-size:13px}
+.meld .pcard:first-child,.discard-row .pcard:first-child{margin-left:0}
+.discard-row{display:flex;flex-wrap:wrap;justify-content:center;min-height:20px;opacity:.95}
+.dead{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;margin-top:4px;opacity:.85}
+.dead .pcard{width:28px;height:40px;margin-left:-8px;font-size:11px;padding:1px 3px;filter:grayscale(.4)}
+.dead .pcard .suit{font-size:13px}
+.points-tag{display:inline-block;margin-top:2px;padding:1px 6px;background:var(--ink);color:var(--yellow);font-size:12px}
+.my-zone{display:grid;gap:4px;justify-items:center}
+.seat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center}
+.seat-box{display:grid;justify-items:center;gap:6px;padding:10px;background:rgba(0,0,0,.22);color:var(--cream);box-shadow:inset 0 0 0 2px rgba(0,0,0,.35)}
+.seat-box.turn{background:rgba(255,220,56,.28);box-shadow:inset 0 0 0 3px var(--yellow)}
+.seat-box.me{box-shadow:inset 0 0 0 3px var(--cream)}
+.seat-box.win{background:var(--yellow);color:var(--ink)}
+.seat-name{font-size:14px;font-weight:700}
+.seat-cards{display:flex;gap:6px}
+.seat-cards .pcard{margin-left:0}
+.seat-cards button.pcard{cursor:pointer}
+.seat-score{min-height:22px;padding:2px 8px;background:var(--ink);color:var(--yellow);font-size:13px;font-weight:700}
+.seat-score:empty{visibility:hidden}
+.flip-in{animation:flip .35s steps(4)}
+@keyframes flip{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+@media(max-width:640px){.seat-grid{gap:6px}.seat-box{padding:6px}.seat-cards{gap:3px}}
