@@ -340,7 +340,7 @@ export function createApp(options = {}) {
     const pageURL=new URL(req.url,`http://${req.headers.host}`),ctxPage=pageContext(pageURL);
     const redirect=publicRedirect(pageURL);
     if(redirect){res.writeHead(308,{Location:redirect.href});return res.end();}
-    if(pageURL.pathname==='/favicon.ico'){res.writeHead(301,{Location:'/assets/star.svg'});return res.end();}
+    if(pageURL.pathname==='/favicon.ico'){res.writeHead(301,{Location:'/assets/logo.svg'});return res.end();}
     const data={
       site:async()=>JSON.parse(getSetting('site')),
       posts:async()=>db.prepare("SELECT slug,title,excerpt,is_sample,published_at,updated_at FROM posts WHERE status='published' ORDER BY published_at DESC,id").all().map(row=>({...row,isSample:!!row.is_sample})),
