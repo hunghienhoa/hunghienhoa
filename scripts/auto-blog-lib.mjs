@@ -100,3 +100,28 @@ export function trimSource(text, max = 12000) {
 export function vietnamDate(now = Date.now()) {
   return new Date(now + 7 * 3600_000).toISOString().slice(0, 10);
 }
+
+// Trendshift (https://trendshift.io): bảng xếp hạng repo GitHub đang lên theo ngày/tuần. Trang công khai có sẵn
+// JSON-LD ItemList (robots.txt cho phép đọc trang, chặn /api/ nên không gọi API). Trả về [{rank, name, github,
+// trendshift, description, language, keywords}] theo thứ hạng; bỏ mục không có link github.com/owner/repo.
+export function parseTrendshift(html) {
+  const out = [];
+  for (const match of String(html || '').matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    let data;
+    try { data = JSON.parse(match[1]); } catch { continue; }
+    if (data?.['@type'] !== 'ItemList' || !Array.isArray(data.itemListElement)) continue;
+    for (const entry of data.itemListElement) {
+      const item = entry?.item || {}, github = String(item.codeRepository || item.url || '');
+      const repo = /^https:\/\/github\.com\/([\w.-]+\/[\w.-]+)\/?$/.exec(github)?.[1];
+      if (!repo || !/^https:\/\/trendshift\.io\/repositories\/\d+$/.test(String(entry.url || ''))) continue;
+      out.push({ rank: Number(entry.position) || out.length + 1, name: repo, github: `https://github.com/${repo}`, trendshift: entry.url,
+        description: String(item.description || '').trim(), language: String(item.programmingLanguage || ''), keywords: Array.isArray(item.keywords) ? item.keywords.map(String) : [] });
+    }
+  }
+  return out.sort((a, b) => a.rank - b.rank);
+}
+
+// Repo không nên viết bài: công cụ gian lận/bẻ khóa/tấn công, phần mềm độc hại, lách bản quyền.
+const RISKY_REPO = /\b(cheat|aimbot|wallhack|crack(ed|er)?|keygen|bypass|exploit|0day|hack(ing|tool)?|bughunt(er)?|pentest|red.?team|c2|rat|stealer|malware|ransom|spoof(er)?|injector|jailbreak|unlock(er)?|carding|phish(ing)?|ddos|botnet|piracy|warez|torrent|free.?(robux|vbucks))\b/i;
+export function riskyRepo(text) { return RISKY_REPO.test(String(text || '').replace(/[_-]+/g, ' ')); }
+

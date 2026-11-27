@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { countWords, slugify, parseFeed, corroborate, assembleArticle, cleanMarkdown, matchesKeywords, trimSource, domainOf } from '../scripts/auto-blog-lib.mjs';
+import { countWords, slugify, parseFeed, corroborate, assembleArticle, cleanMarkdown, matchesKeywords, trimSource, domainOf, parseTrendshift, riskyRepo } from '../scripts/auto-blog-lib.mjs';
 import { articleBlocks } from '../dist/blog/core.mjs';
 import worker from '../worker/index.mjs';
 
@@ -70,4 +70,21 @@ test('Worker: quản trị ngách cần đăng nhập, kiểm tra dữ liệu v�
   const sent = JSON.parse(calls.at(-1).init.body);
   assert.deepEqual([sent.keywords, sent.is_active, sent.post_category], [['rust', 'wasm'], false, 'Góc nhìn']);
   assert.equal((await call('DELETE', '/api/admin/niches/2')).status, 200);
+});
+
+test('pipeline: đọc bảng repo đang lên của Trendshift (JSON-LD) và loại repo rủi ro', () => {
+  const list = { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: [
+    { '@type': 'ListItem', position: 2, url: 'https://trendshift.io/repositories/22', item: { name: 'acme/agent-kit', description: 'Toolkit cho AI agent', codeRepository: 'https://github.com/acme/agent-kit', programmingLanguage: 'TypeScript', keywords: ['AI agent'] } },
+    { '@type': 'ListItem', position: 1, url: 'https://trendshift.io/repositories/11', item: { name: 'demo/fast-db', codeRepository: 'https://github.com/demo/fast-db' } },
+    { '@type': 'ListItem', position: 3, url: 'https://evil.test/x', item: { codeRepository: 'https://github.com/bad/link' } },
+    { '@type': 'ListItem', position: 4, url: 'https://trendshift.io/repositories/44', item: { codeRepository: 'javascript:alert(1)' } }
+  ] };
+  const html = `<script type="application/ld+json">{"@type":"WebSite"}</script><script type="application/ld+json">${JSON.stringify(list)}</script><script type="application/ld+json">{bad json</script>`;
+  const items = parseTrendshift(html);
+  assert.deepEqual(items.map(i => [i.rank, i.name, i.trendshift]), [[1, 'demo/fast-db', 'https://trendshift.io/repositories/11'], [2, 'acme/agent-kit', 'https://trendshift.io/repositories/22']]);
+  assert.equal(items[1].github, 'https://github.com/acme/agent-kit');
+  assert.deepEqual(items[1].keywords, ['AI agent']);
+  assert.deepEqual(parseTrendshift(''), []);
+  for (const name of ['someone/game-cheat-menu', 'x/Claude-BugHunter', 'y/wifi_cracker', 'z/discord-token-stealer']) assert.ok(riskyRepo(name), name);
+  for (const name of ['nexu-io/opengame', 'pingdotgg/t3code', 'google-gemini/gemini-api-cli', 'acme/chat-ui']) assert.ok(!riskyRepo(name), name);
 });
